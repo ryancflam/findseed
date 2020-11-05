@@ -1,0 +1,7 @@
+token = ""
+prefix = "!"
+creationDate = "29 October 2020"
+cmcKey = ""
+owmKey = ""
+fixerKey = ""
+rapidApiKey = ""
