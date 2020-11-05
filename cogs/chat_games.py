@@ -190,7 +190,6 @@ class ChatGames(commands.Cog, name="Chat Games"):
             game.revealSquares()
         else:
             title = "Battleship"
-            await ctx.channel.send(f"```{game.displayBoard(True)}```")
         await ctx.channel.send(f"`{ctx.author.name} has left {title} for idling too long.`")
 
     async def rowOrCol(self, ctx, game, choice, ms):

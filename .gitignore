@@ -1,0 +1,7 @@
+info.py
+test.py
+test2.py
+data.json
+.idea/
+*/__pycache__
+venv/
