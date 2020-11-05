@@ -161,19 +161,19 @@ async def reactionRemove(reaction, user):
         return
 
 
-async def getRequest(url, headers=None, params=None):
+async def getRequest(url, headers=None, params=None, timeout=None):
     if headers is None:
         headers = {}
     async with AsyncClient() as session:
-        res = await session.get(url, headers=headers, params=params)
+        res = await session.get(url, headers=headers, params=params, timeout=timeout)
     return res
 
 
-async def getImage(url, headers=None, params=None):
+async def getImage(url, headers=None, params=None, timeout=None):
     if headers is None:
         headers = {}
     async with AsyncClient() as session:
-        res = await session.get(url, headers=headers, params=params)
+        res = await session.get(url, headers=headers, params=params, timeout=timeout)
         if res.status_code != 200:
             return None
         return BytesIO(res.content)

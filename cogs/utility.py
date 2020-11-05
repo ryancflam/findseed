@@ -124,7 +124,7 @@ class Utility(commands.Cog, name="Utility"):
                     callsign = "None"
                 status = str(data["status"]["text"])
                 aircraft = f"{str(data['aircraft']['model']['text'])} ({str(data['aircraft']['model']['code'])})"
-                reg = data['aircraft']['registration']
+                reg = data["aircraft"]["registration"]
                 airline = data["airline"]["name"]
                 originname = data["airport"]["origin"]["name"]
                 if originname is None:

@@ -110,7 +110,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
                                              "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord"])
     async def wr(self, ctx):
-        await ctx.channel.send("This may take a while, please be patient...")
+        await ctx.channel.send("Getting speedrun.com data. Please wait...")
         try:
             e = Embed(
                 title="Minecraft Speedrun World Records",

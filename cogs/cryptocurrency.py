@@ -11,7 +11,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
-                      aliases=["cp", "cmc", "coinmarketcap", "btc", "bitcoin", "coin"], usage="[coin ticker]")
+                      aliases=["cp", "cmc", "coinmarketcap", "coin"], usage="[coin ticker]")
     async def cryptoprice(self, ctx, coin:str="btc"):
         coin = coin.upper()
         url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol={coin}&convert=USD"
@@ -68,6 +68,43 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!", "Be sure to use the ticker. (e.g. `btc`)")
         else:
             e = funcs.errorEmbed(None, "Possible server error.")
+        await ctx.channel.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="bitcoin", description="Gets current information about the Bitcoin network.",
+                      aliases=["btc", "bitcoinnetwork", "bn"])
+    async def bitcoin(self, ctx):
+        await ctx.channel.send("Getting Bitcoin information. Please wait...")
+        try:
+            data = await funcs.getRequest("https://blockchain.info/stats?format=json")
+            blockchain = data.json()
+            data = await funcs.getRequest("https://api.blockcypher.com/v1/btc/main")
+            blockchain2 = data.json()
+            data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
+            blockchain3 = data.json()
+            e = Embed(title="Bitcoin Network", description="https://www.blockchain.com/stats")
+            height = blockchain2["height"]
+            blockreward = 50
+            halvingheight = 210000
+            while height >= halvingheight:
+                halvingheight += 210000
+                blockreward /= 2
+            bl = halvingheight - height
+            e.set_thumbnail(url="https://s2.coinmarketcap.com/static/img/coins/128x128/1.png")
+            e.add_field(name="Market Price", value=f"`{blockchain['market_price_usd']} USD`")
+            e.add_field(name="Minutes Between Blocks", value=f"`{blockchain['minutes_between_blocks']}`")
+            e.add_field(name="Mining Difficulty", value=f"`{blockchain['difficulty']}`")
+            e.add_field(name="Hash Rate", value=f"`{int(int(blockchain['hash_rate'])/1000)} TH/s`")
+            e.add_field(name="Trade Volume (24h)", value=f"`{blockchain['trade_volume_btc']} BTC`")
+            e.add_field(name="Total Transactions (24h)", value=f"`{blockchain['n_tx']}`")
+            e.add_field(name="Block Height", value=f"`{height}`")
+            e.add_field(name="Next Halving Height", value=f"`{halvingheight} ({bl} block{'' if bl==1 else 's'} left)`")
+            e.add_field(name="Block Reward", value=f"`{blockreward} BTC`")
+            e.add_field(name="Unconfirmed Transactions", value=f"`{blockchain2['unconfirmed_count']}`")
+            e.add_field(name="Full Nodes", value=f"`{blockchain3['total_nodes']}`")
+            e.add_field(name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc']*0.00000001, 8)} BTC`")
+        except Exception:
+            e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.channel.send(embed=e)
 
 
