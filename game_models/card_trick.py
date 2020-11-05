@@ -3,9 +3,11 @@ from random import sample
 
 class PlayingCards:
     def __init__(self):
-        self.number = ["A  ", "2  ", "3  ", "4  ", "5  ", "6  ", "7  ", "8  ", "9  ", "10 ", "J  ", "Q  ", "K  "]
-        self.suit = ["♠", "♦", "♥", "♣"]
-        self.cards = [x + y for y in self.suit for x in self.number]
+        self.__number = ["A  ", "2  ", "3  ", "4  ", "5  ", "6  ", "7  ", "8  ", "9  ", "10 ", "J  ", "Q  ", "K  "]
+        self.__suit = ["♠", "♦", "♥", "♣"]
+
+    def getCards(self):
+        return [x + y for y in self.__suit for x in self.__number]
 
     @staticmethod
     def returnCardName(card):
@@ -45,7 +47,7 @@ class PlayingCards:
 
 class CardTrick:
     def __init__(self):
-        self.sample = sample(PlayingCards().cards, 21)
+        self.__sample = sample(PlayingCards().getCards(), 21)
 
     @staticmethod
     def piles(deck):
@@ -72,4 +74,4 @@ class CardTrick:
         return prst
 
     def getSample(self):
-        return self.sample
+        return self.__sample

@@ -237,10 +237,10 @@ class ChatGames(commands.Cog, name="Chat Games"):
             return yy
 
     async def gameOptions(self, ctx, game):
-        squares = "squares"
-        if 90 - game.getUncovered() == 1:
-            squares = "square"
-        await ctx.channel.send(f"`{ctx.author.name} has {90 - game.getUncovered()} {squares} left to uncover.`")
+        squaresLeft = 90 - game.getUncovered()
+        await ctx.channel.send(
+            f"`{ctx.author.name} has {90 - game.getUncovered()} square{'' if squaresLeft==1 else 's'} left to uncover.`"
+        )
         await ctx.channel.send("`Would you like to reveal, flag, or unflag a location?`")
         try:
             msg = await self.client.wait_for(
@@ -475,7 +475,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
         else:
             lives = game.getLives()
             await ctx.channel.send(
-                f"`{ctx.author.name} has won Hangman with {'' if lives!=10 else 'all '}{lives} live{'s' if lives!=1 else ''} left!`"
+                f"`{ctx.author.name} has won Hangman with " + \
+                f"{'' if lives!=10 else 'all '}{lives} li{'ves' if lives!=1 else 'fe'} left!`"
             )
         m, s = game.getTime()
         await ctx.channel.send(f"`Elapsed time: {m}m {s}s`")

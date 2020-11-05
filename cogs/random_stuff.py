@@ -72,7 +72,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         else:
             if "neo" in something.casefold():
                 quotes = choice([
-                    "hold up... Stick it up yours you flawed brony"
+                    "hold up... Stick it up yours you flawed brony",
+                    "wait hang on..."
                 ])
             else:
                 quotes = choice([
@@ -129,7 +130,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     " are immersed in their holistic vagueries",
                     " is worse than thinking that cooperation and teamwork somehow magically outperform an individual's" + \
                     f" competence and intellect by {dq}creating{dq} genius with average people's synergy.",
-                    " socializes too much that he has mental health concerns.",
+                    " socializes so much that he has mental health concerns.",
                     " did absloutely **** all to resolve the pandemic and did close to nothing to prepare" + \
                     " themselves to it and let alone did they do anything to functionally resolve problems.",
                     "'s utter contradictory mindset is the biggest problem and cruelty that has ever endorsed the human race",
@@ -139,7 +140,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     " is the epitome of unadaptability: it is conservative, change resistant and irrational.",
                     " won't accept that smart working and learning is the future",
                     " is not ready to live with the freedom and responsibility of being an individual.",
-                    " shouldn't just forget, rationalize or justify his limitations.",
+                    " shouldn't just forget, rationalize, or justify his limitations.",
                     " misses the point that science is both an individual and cooperative effort at different times",
                     " ignores that natural selection favors the culture of empathy, team players, social and altruistic " + \
                     "people, ignoring the fact there are other fundamental traits and other strategies that are selected.",

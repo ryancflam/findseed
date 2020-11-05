@@ -18,7 +18,7 @@ class Hangman:
             "┌----\n|   |\n|   O\n|\n|\n|\n|\n|\n|8 lives\n└-------",
             "┌----\n|   |\n|\n|\n|\n|\n|\n|\n|9 lives\n└-------"
         ]
-        self.__word = self.randomWord()
+        self.__word = self.__randomWord()
         self.__dashes = str("-" * len(self.__word))
         self.__lives = 10
         self.__guesses = set()
@@ -41,14 +41,14 @@ class Hangman:
         return self.__hangmanpics[self.__lives]
 
     @staticmethod
-    def randomWord():
+    def __randomWord():
         with open(f"{funcs.getPath()}/game_models/hangman_words.txt", "r") as f:
             lines = f.readlines()
         f.close()
         return choice(lines)[:-1]
 
     @staticmethod
-    def dash(secret, d, r):
+    def __dash(secret, d, r):
         result = ""
         for i in range(len(secret)):
             if secret[i] == r:
@@ -61,7 +61,7 @@ class Hangman:
         if guess.lower() in self.__guesses:
             raise Exception("You have guessed this letter before.")
         elif guess.lower() in self.__word:
-            self.__dashes = self.dash(self.__word, self.__dashes, guess.lower())
+            self.__dashes = self.__dash(self.__word, self.__dashes, guess.lower())
             self.__guesses.add(guess.lower())
             return True
         else:
