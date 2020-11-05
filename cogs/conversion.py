@@ -11,7 +11,10 @@ class Conversion(commands.Cog, name="Conversion"):
 
     @staticmethod
     def formatting(text):
-        return "```" + text[:2042] + "```"
+        output = "```" + text[:2042] + "```"
+        if output == "``````":
+            raise Exception
+        return output
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",
