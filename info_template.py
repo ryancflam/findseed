@@ -1,6 +1,6 @@
 token = ""
 prefix = "!"
-creationDate = "29 October 2020"
+creationDate = ""
 cmcKey = ""
 owmKey = ""
 fixerKey = ""
