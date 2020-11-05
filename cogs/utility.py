@@ -31,10 +31,12 @@ class Utility(commands.Cog, name="Utility"):
             if searchtype == "":
                 total = data["world_total"]
             else:
-                if searchtype.casefold().startswith("united states") or searchtype.casefold().startswith("america"):
+                if searchtype.casefold() == "us" or searchtype.casefold().startswith("united states") \
+                        or searchtype.casefold().startswith("america"):
                     searchtype = "usa"
                 elif searchtype.casefold().startswith("united kingdom") or searchtype.casefold().startswith("great britain") \
-                        or searchtype.casefold().startswith("britain") or searchtype.casefold().startswith("england"):
+                        or searchtype.casefold().startswith("britain") or searchtype.casefold().startswith("england") \
+                        or searchtype.casefold() == "gb":
                     searchtype = "uk"
                 elif searchtype.casefold().startswith("hk"):
                     searchtype = "hong kong"
