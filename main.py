@@ -5,8 +5,7 @@ from discord import Intents, Game
 from discord.ext import commands
 
 import info
-import funcs
-
+from other_utils import funcs
 
 intents = Intents.default()
 intents.members = True

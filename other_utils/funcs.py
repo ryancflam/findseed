@@ -1,6 +1,6 @@
+import os
 import ast
 from httpx import AsyncClient
-from os import path
 from io import BytesIO
 from random import randint
 
@@ -64,7 +64,7 @@ eyeData = {
 
 
 def getPath():
-    return path.dirname(path.realpath(__file__))
+    return os.path.dirname(os.path.realpath(__file__)).replace("\other_utils", "").replace("/other_utils", "")
 
 
 def randomEyes():
@@ -177,3 +177,62 @@ async def getImage(url, headers=None, params=None, timeout=None):
         if res.status_code != 200:
             return None
         return BytesIO(res.content)
+
+morse = {
+    "A": ".-",
+    "B": "-...",
+    "C": "-.-.",
+    "D": "-..",
+    "E": ".",
+    "F": "..-.",
+    "G": "--.",
+    "H": "....",
+    "I": "..",
+    "J": ".---",
+    "K": "-.-",
+    "L": ".-..",
+    "M": "--",
+    "N": "-.",
+    "O": "---",
+    "P": ".--.",
+    "Q": "--.-",
+    "R": ".-.",
+    "S": "...",
+    "T": "-",
+    "U": "..-",
+    "V": "...-",
+    "W": ".--",
+    "X": "-..-",
+    "Y": "-.--",
+    "Z": "--..",
+    "0": "-----",
+    "1": ".----",
+    "2": "..---",
+    "3": "...--",
+    "4": "....-",
+    "5": ".....",
+    "6": "-....",
+    "7": "--...",
+    "8": "---..",
+    "9": "----.",
+    " ": "/",
+    ".": ".-.-.-",
+    ",": "--..--",
+    ":": "---...",
+    "?": "..--..",
+    '"':".-..-.",
+    "'": ".----.",
+    "-": "-....-",
+    "/": "-..-.",
+    "@": ".--.-.",
+    "=": "-...-",
+    "(": "-.--.",
+    ")": "-.--.-",
+    "+": ".-.-.",
+    "&": ".-...",
+    ";": "-.-.-.",
+    "_": "..--.-",
+    "$": "...-..-",
+    "¿": "..-.-",
+    "¡": "--...-"
+}

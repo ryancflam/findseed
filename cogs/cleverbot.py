@@ -3,7 +3,7 @@ from re import sub
 from discord.ext import commands
 
 import info
-import funcs
+from other_utils import funcs
 
 
 class Cleverbot(commands.Cog, name="Cleverbot"):

@@ -1,7 +1,7 @@
 from random import sample
 from time import time
 
-import funcs
+from other_utils import funcs
 
 
 class BullsAndCows:

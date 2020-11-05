@@ -7,7 +7,7 @@ from discord import Embed
 from discord.ext import commands
 
 import info
-import funcs
+from other_utils import funcs
 
 
 class Utility(commands.Cog, name="Utility"):
@@ -94,7 +94,7 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(name="New Deaths Today", value=f"`{total['new_deaths']}`")
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
         except Exception:
-            e = funcs.errorEmbed(None, "Invalid input or server error.")
+            e = funcs.errorEmbed(None,"Invalid input or server error.")
         await ctx.channel.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -109,7 +109,7 @@ class Utility(commands.Cog, name="Utility"):
         url = "https://api.flightradar24.com/common/v1/flight/list.json?" + \
               f"&fetchBy=flight&page=1&limit=25&query={flightstr}"
         try:
-            res = await funcs.getRequest(url, headers={"User-agent": "*"})
+            res = await funcs.getRequest(url, headers={"User-agent":"*"})
             allflights = res.json()
             fdd = allflights["result"]["response"]["data"]
             dago, eta = "", ""
@@ -188,7 +188,7 @@ class Utility(commands.Cog, name="Utility"):
                 e.add_field(name=eta, value=f"`{duration}`")
             e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.")
         except Exception:
-            e = funcs.errorEmbed(None, "Unknown flight or server error.")
+            e = funcs.errorEmbed(None,"Unknown flight or server error.")
         await ctx.channel.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -223,7 +223,7 @@ class Utility(commands.Cog, name="Utility"):
             e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.")
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
         except:
-            e = funcs.errorEmbed(None, "Unknown location or server error.")
+            e = funcs.errorEmbed(None,"Unknown location or server error.")
         await ctx.channel.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -231,7 +231,7 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["t", "translator", "trans", "tr"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text:str=""):
         if not dest:
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
         else:
             if dest.casefold() not in constants.LANGUAGES.keys():
                 e = funcs.errorEmbed(
@@ -240,7 +240,7 @@ class Utility(commands.Cog, name="Utility"):
                     " for a list of language codes. (Scroll down for `LANGUAGES`)"
                 )
             else:
-                output = Translator().translate(text, dest=dest.casefold()).text
+                output = Translator().translate(text.casefold(), dest=dest.casefold()).text
                 e = Embed(title="Translate", description=f"`{output}`")
         await ctx.channel.send(embed=e)
 
@@ -268,26 +268,26 @@ class Utility(commands.Cog, name="Utility"):
                 amount *= data["rates"][output[2]]
             await ctx.channel.send(f"The current price of **{initialamount} {output[1]}** in **{output[2]}**: `{amount}`")
         except:
-            await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))
+            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input or unknown currency."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="wiki", description="Returns a Wikipedia article.",
                       aliases=["wikipedia"], usage="<article>")
     async def wiki(self, ctx, *, page:str=""):
         if page == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
         else:
             wikiurl = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles="
             try:
-                res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_')}")
+                res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_')}")
                 data = res.json()
                 wikipage = data["query"]
                 if list(wikipage["pages"])[0] == "-1":
-                    res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_').title()}")
+                    res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_').title()}")
                     data = res.json()
                     wikipage = data["query"]
                     if list(wikipage["pages"])[0] == "-1":
-                        await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid article."))
+                        await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid article."))
                         return
                 if wikipage["pages"][list(wikipage["pages"])[0]]["extract"].casefold().startswith(f"{page} may refer to:\n\n"):
                     try:
@@ -295,11 +295,11 @@ class Utility(commands.Cog, name="Utility"):
                         page = wikipage["pages"][list(wikipage["pages"])[0]]["extract"].split(
                             splitthing, 1
                         )[1].split("\n", 1)[1].split(",", 1)[0]
-                        res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_')}")
+                        res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_')}")
                         data = res.json()
                         wikipage = data["query"]
                         if wikipage["pages"][list(wikipage["pages"])[0]] == "-1":
-                            await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid article."))
+                            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid article."))
                             return
                     except IndexError:
                         pass
@@ -314,7 +314,7 @@ class Utility(commands.Cog, name="Utility"):
                 logo = "https://cdn.discordapp.com/attachments/659771291858894849/677853982718165001/1122px-Wikipedia-logo-v2.png"
                 e.set_thumbnail(url=logo)
             except Exception:
-                e = funcs.errorEmbed(None, "Invalid input or server error.")
+                e = funcs.errorEmbed(None,"Invalid input or server error.")
         await ctx.channel.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -322,7 +322,7 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["lyric"], usage="<song keywords>")
     async def lyrics(self, ctx, *, keywords:str=""):
         if keywords == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
             await ctx.channel.send(embed=e)
         else:
             try:
@@ -379,7 +379,7 @@ class Utility(commands.Cog, name="Utility"):
                             edited.set_footer(text=f"Page {page} of {allpages}")
                             await msg.edit(embed=edited)
             except Exception:
-                e = funcs.errorEmbed(None, "Invalid keywords or server error.")
+                e = funcs.errorEmbed(None,"Invalid keywords or server error.")
                 await ctx.channel.send(embed=e)
 
 

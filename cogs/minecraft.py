@@ -6,7 +6,7 @@ from scipy import stats
 from discord import Embed, File
 from discord.ext import commands
 
-import funcs
+from other_utils import funcs
 
 
 class Minecraft(commands.Cog, name="Minecraft"):
@@ -18,7 +18,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["fs", "eye", "eyes", "seed", "f", "s"])
     async def findseed(self, ctx):
         eyes = funcs.randomEyes()
-        with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
+        with open(f"{funcs.getPath()}/data.json","r", encoding="utf-8") as f:
             data = json.load(f)
         odds = funcs.eyeData[str(eyes)]["percent"]
         onein = funcs.eyeData[str(eyes)]["onein"]
@@ -37,7 +37,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         highestTotal = data["highest"]["found"]
         data["calls"] += 1
         calls = data["calls"]
-        with open(f"{funcs.getPath()}/data.json", "w") as f:
+        with open(f"{funcs.getPath()}/data.json","w") as f:
             json.dump(data, f, sort_keys=True, indent=4)
         file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
         if not update:
@@ -86,7 +86,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             )
             e.set_image(url=skin)
         except Exception:
-            e = funcs.errorEmbed(None, "Invalid skin or server error.")
+            e = funcs.errorEmbed(None,"Invalid skin or server error.")
         await ctx.channel.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -97,10 +97,10 @@ class Minecraft(commands.Cog, name="Minecraft"):
         try:
             n = int(trades)
             if not 2 <= n <= 999:
-                await ctx.channel.send(embed=funcs.errorEmbed(None, "Value must be between 2 and 999."))
+                await ctx.channel.send(embed=funcs.errorEmbed(None,"Value must be between 2 and 999."))
                 return
         except ValueError:
-            await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
             return
         x = sum(stats.binom.pmf([i for i in range(2, n+1)], n, 20/423))
         await ctx.channel.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
@@ -141,7 +141,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                           f"{ms if ms!=0 else ''}{'ms ' if ms!=0 else ''}(by {runner})`")
                 count += 1
         except Exception:
-            e = funcs.errorEmbed(None, "Possible server error.")
+            e = funcs.errorEmbed(None,"Possible server error.")
         await ctx.channel.send(embed=e)
 
 

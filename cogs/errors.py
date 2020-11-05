@@ -1,6 +1,6 @@
 from discord.ext import commands
 
-import funcs
+from other_utils import funcs
 
 
 class Errors(commands.Cog, name="Errors"):
@@ -16,11 +16,11 @@ class Errors(commands.Cog, name="Errors"):
             )
         elif isinstance(error, commands.NotOwner):
             await ctx.channel.send(
-                embed=funcs.errorEmbed("Insufficient privileges!", "Only the bot owner can use this.")
+                embed=funcs.errorEmbed("Insufficient privileges!","Only the bot owner can use this.")
             )
         elif isinstance(error, commands.UserInputError):
             await ctx.channel.send(
-                embed=funcs.errorEmbed("Invalid arguments!", "Correct usage: " + \
+                embed=funcs.errorEmbed("Invalid arguments!","Correct usage: "+ \
                                        f"`{self.client.command_prefix}{ctx.command.name} {ctx.command.usage}`")
             )
 

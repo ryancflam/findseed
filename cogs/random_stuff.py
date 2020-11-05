@@ -4,36 +4,13 @@ from asyncio import sleep
 import discord
 from discord.ext import commands
 
-import funcs
+from other_utils import funcs
 
 
 class RandomStuff(commands.Cog, name="Random Stuff"):
     def __init__(self, client:commands.Bot):
         self.client = client
         self.activeSpinners = []
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="diu", description="Diu.", aliases=["dllm"])
-    async def diu(self, ctx):
-        await ctx.channel.send(
-            "我唔撚柒鳩屌你個冚家剷含撚笨柒個老母個生滋甩毛嘅爛臭化花柳白濁梅毒" + \
-            "性冷感閪都唔撚柒得陰陽面邊大邊細豬閪燉糯米雙番閪遮面長短腳谷精上腦" + \
-            "陽萎笨柒周頭發炎陰蝨周圍跳白竇臭滴蟲入鳩祖宗十八代食屎撈屄周揈揈白痴戇鳩閪"
-        )
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="mlp", description="The worst thing ever in existence.")
-    async def mlp(self, ctx):
-        if randint(0, 1) == 0:
-            await ctx.channel.send(
-                "That indefinably fallacious, thrice damned, abhorrent primitive, " + \
-                "superbly and imperfectly obnoxious and ironically audience " + \
-                "biased, stupid idiotic medieval mental torture machine"
-            )
-        else:
-            url = "https://media.discordapp.net/attachments/769899860253736990/772731790791278602/unknown.png"
-            file = discord.File(await funcs.getImage(url), "mlp.png")
-            await ctx.channel.send(file=file)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dadjoke", description="Sends a random dad joke.", aliases=["dj", "joke"])
@@ -47,9 +24,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt"], usage="<input>")
     async def trumpthinks(self, ctx, *, something:str=""):
         if something == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
         elif len(something) > 100:
-            e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
+            e = funcs.errorEmbed(None,"Please enter 100 characters or less.")
         else:
             res = await funcs.getRequest("https://api.whatdoestrumpthink.com/api/v1/quotes")
             quotes = choice(list(res.json()["messages"]["personalized"]))
@@ -66,9 +43,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["nt", "plsneo", "neosays", "neo", "neot"], usage="<input>")
     async def neothinks(self, ctx, *, something:str=""):
         if something == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
         elif len(something) > 100:
-            e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
+            e = funcs.errorEmbed(None,"Please enter 100 characters or less.")
         else:
             if "neo" in something.casefold():
                 quotes = choice([
@@ -110,9 +87,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["at", "plsaudible", "audiblesays", "audible", "audiblet"], usage="<input>")
     async def audiblethinks(self, ctx, *, something:str=""):
         if something == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
         elif len(something) > 100:
-            e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
+            e = funcs.errorEmbed(None,"Please enter 100 characters or less.")
         else:
             if "audible" in something.casefold():
                 quotes = choice([
@@ -198,7 +175,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             "https://media.discordapp.net/attachments/362589047018749955/761920398102364170/unknown.png",
             "https://media.discordapp.net/attachments/769899860253736990/772088052407074836/neo_logic_meme.jpg"
         ])
-        file = discord.File(await funcs.getImage(url), "neo.png")
+        file = discord.File(await funcs.getImage(url),"neo.png")
         await ctx.channel.send(file=file)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -209,7 +186,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             "https://media.discordapp.net/attachments/769899860253736990/772100077111738408/PicsArt_10-21-03.07.47.jpg",
             "https://media.discordapp.net/attachments/769899860253736990/772101368412373012/PicsArt_10-31-03.14.46.png",
         ])
-        file = discord.File(await funcs.getImage(url), "audible.png")
+        file = discord.File(await funcs.getImage(url),"audible.png")
         await ctx.channel.send(file=file)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -217,7 +194,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["spin", "spinner", "youspinmerightround"])
     async def fidgetspinner(self, ctx):
         if ctx.author.id in self.activeSpinners:
-            await ctx.channel.send(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
+            await ctx.channel.send(embed=funcs.errorEmbed(None,"Your fidget spinner is still spinning, please wait!"))
             return
         self.activeSpinners.append(ctx.message.author.id)
         try:
@@ -228,7 +205,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://files.gamebanana.com/img/ico/sprays/593404c44a588.gif",
                 "https://gifimage.net/wp-content/uploads/2017/11/fidget-spinner-gif-transparent-6.gif"
             ])
-            file = discord.File(await funcs.getImage(url), "spinner.gif")
+            file = discord.File(await funcs.getImage(url),"spinner.gif")
             await ctx.channel.send(
                 f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name} has spun a fidget spinner. " + \
                 "Let's see how long it lasts...** <:fidgetspinner:675314386784485376>", file=file
@@ -241,7 +218,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             )
             self.activeSpinners.remove(ctx.message.author.id)
         except:
-            await ctx.channel.send(embed=funcs.errorEmbed(None, "An error occurred. Please try again later."))
+            await ctx.channel.send(embed=funcs.errorEmbed(None,"An error occurred. Please try again later."))
             try:
                 self.activeSpinners.remove(ctx.message.author.id)
             except ValueError:

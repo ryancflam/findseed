@@ -6,7 +6,7 @@ from asyncio import TimeoutError
 import discord
 from discord.ext import commands
 
-import funcs
+from other_utils import funcs
 
 
 class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
@@ -32,7 +32,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def say(self, ctx, *, output:str=""):
         if output == "":
-            e = funcs.errorEmbed(None, "Cannot send empty message.")
+            e = funcs.errorEmbed(None,"Cannot send empty message.")
             await ctx.channel.send(embed=e)
             return
         await ctx.channel.send(output.replace("@everyone", "everyone").replace("@here", "here"))
@@ -53,7 +53,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def eval(self, ctx, *, code:str=""):
         if code == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+            e = funcs.errorEmbed(None,"Cannot process empty input.")
         else:
             try:
                 fnName = "_eval_expr"
@@ -69,13 +69,13 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                     "commands": commands,
                     "ctx": ctx,
                     "__import__": __import__,
-                    "funcs": funcs
+                    "funcs":funcs
                 }
                 exec(compile(parsed, filename="<ast>", mode="exec"), env)
                 res = (await eval(f"{fnName}()", env))
                 e = discord.Embed(description=f"```\n{str(res)}```")
             except Exception:
-                e = funcs.errorEmbed(None, "Error processing input.")
+                e = funcs.errorEmbed(None,"Error processing input.")
         await ctx.channel.send(embed=e)
 
 

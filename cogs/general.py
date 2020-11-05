@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 
 import info
-import funcs
+from other_utils import funcs
 
 
 class General(commands.Cog, name="General"):
@@ -40,7 +40,7 @@ class General(commands.Cog, name="General"):
     async def botinfo(self, ctx):
         appinfo = await self.client.application_info()
         e = discord.Embed(description=appinfo.description)
-        with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
+        with open(f"{funcs.getPath()}/data.json","r", encoding="utf-8") as f:
             data = load(f)
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
@@ -65,12 +65,13 @@ class General(commands.Cog, name="General"):
     async def help(self, ctx, *cmd):
         prefix = self.client.command_prefix
         if not cmd:
+            ignored = ["Bot Owner Only", "Easter Eggs"]
             e = discord.Embed(
                 title="Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):
-                if cog == "Bot Owner Only" or len(self.client.get_cog(cog).get_commands()) == 0:
+                if cog in ignored or len(self.client.get_cog(cog).get_commands()) == 0:
                     continue
                 commandList = ""
                 for command in sorted(self.client.get_cog(cog).get_commands(), key=lambda x: x.name):
@@ -94,7 +95,7 @@ class General(commands.Cog, name="General"):
                         aliasText += f"`{prefix}{alias}`, "
                     e.add_field(name="Aliases", value=aliasText[:-2])
             else:
-                e = funcs.errorEmbed(None, "Unknown command.")
+                e = funcs.errorEmbed(None,"Unknown command.")
         await ctx.channel.send(embed=e)
 
 

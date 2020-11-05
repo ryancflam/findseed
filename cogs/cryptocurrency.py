@@ -2,7 +2,7 @@ from discord import Embed
 from discord.ext import commands
 
 import info
-import funcs
+from other_utils import funcs
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
@@ -63,11 +63,11 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
             e.set_footer(text="Data provided by: coinmarketcap.com")
         elif r.status_code == 429:
-            e = funcs.errorEmbed(None, "Too many requests.")
+            e = funcs.errorEmbed(None,"Too many requests.")
         elif r.status_code == 400:
-            e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!", "Be sure to use the ticker. (e.g. `btc`)")
+            e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!","Be sure to use the ticker. (e.g. `btc`)")
         else:
-            e = funcs.errorEmbed(None, "Possible server error.")
+            e = funcs.errorEmbed(None,"Possible server error.")
         await ctx.channel.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -104,7 +104,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Full Nodes", value=f"`{blockchain3['total_nodes']}`")
             e.add_field(name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc']*0.00000001, 8)} BTC`")
         except Exception:
-            e = funcs.errorEmbed(None, "Possible server error, please try again later.")
+            e = funcs.errorEmbed(None,"Possible server error, please try again later.")
         await ctx.channel.send(embed=e)
 
 

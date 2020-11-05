@@ -1,7 +1,7 @@
 from time import time
 from random import randint
 
-import funcs
+from other_utils import funcs
 
 
 class Battleship:
