@@ -2,8 +2,8 @@ from time import time
 from asyncio import TimeoutError
 from random import randint, choice
 from string import ascii_lowercase
-from akinator.async_aki import Akinator
 from akinator import CantGoBackAnyFurther
+from akinator.async_aki import Akinator
 
 from discord import Embed
 from discord.ext import commands
@@ -42,7 +42,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
         game = await aki.start_game()
         while aki.progression <= 80:
             try:
-                await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage))
+                await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage).set_footer(
+                    text=f"Progress: {round(aki.progression / 80 * 100, 2)}% | Called by: {ctx.author.name}"))
                 resp = await self.client.wait_for(
                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
                     timeout=60

@@ -7,6 +7,7 @@ from discord import Embed, File
 from discord.ext import commands
 
 from other_utils import funcs
+from other_utils import eye_data
 
 
 class Minecraft(commands.Cog, name="Minecraft"):
@@ -20,8 +21,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
         eyes = funcs.randomEyes()
         with open(f"{funcs.getPath()}/data.json","r", encoding="utf-8") as f:
             data = json.load(f)
-        odds = funcs.eyeData[str(eyes)]["percent"]
-        onein = funcs.eyeData[str(eyes)]["onein"]
+        odds = eye_data.eyeData[str(eyes)]["percent"]
+        onein = eye_data.eyeData[str(eyes)]["onein"]
         if eyes >= data["highest"]["number"]:
             if eyes > data["highest"]["number"]:
                 data["highest"]["found"] = 1
@@ -61,8 +62,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def eyeodds(self, ctx):
         msg = ""
         for i in range(13):
-            odds = funcs.eyeData[str(i)]["percent"]
-            msg += f"{i} eye - `{odds}% (1 in {funcs.eyeData[str(i)]['onein']})`\n"
+            odds = eye_data.eyeData[str(i)]["percent"]
+            msg += f"{i} eye - `{odds}% (1 in {eye_data.eyeData[str(i)]['onein']})`\n"
         await ctx.send(msg)
 
     @commands.cooldown(1, 3, commands.BucketType.user)

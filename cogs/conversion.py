@@ -2,6 +2,7 @@ from discord import Embed
 from discord.ext import commands
 
 from other_utils import funcs
+from other_utils import morse_data
 from other_utils.brainfuck import BrainfuckInterpreter
 
 
@@ -77,7 +78,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 output = ""
                 for char in text:
                     try:
-                        output += funcs.morse[char.upper()] + " "
+                        output += morse_data.morse[char.upper()] + " "
                     except:
                         continue
                 output = output[:-1]
@@ -115,7 +116,7 @@ class Conversion(commands.Cog, name="Conversion"):
                         if spaces == 2:
                             output += " "
                         else:
-                            output += list(funcs.morse.keys())[list(funcs.morse.values()).index(ctext)]
+                            output += list(morse_data.morse.keys())[list(morse_data.morse.values()).index(ctext)]
                             ctext = ""
                 e = Embed(
                     title="Text to Morse Code",
