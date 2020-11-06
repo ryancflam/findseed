@@ -40,8 +40,9 @@ class General(commands.Cog, name="General"):
     async def botinfo(self, ctx):
         appinfo = await self.client.application_info()
         e = discord.Embed(description=appinfo.description)
-        with open(f"{funcs.getPath()}/data.json","r", encoding="utf-8") as f:
+        with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
             data = load(f)
+        f.close()
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Library", value=f"`discord.py {discord.__version__}`")

@@ -72,7 +72,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         await aki.win()
         e = Embed(
             title="Akinator",
-            description="I think it is **{0.first_guess[name]} {0.first_guess[description]}**\n\nWas I right?".format(aki)
+            description="I think it is **{0.first_guess[name]} - {0.first_guess[description]}**\n\nWas I right?".format(aki)
         )
         e.set_footer(text=f"Thanks for playing, {ctx.author.name}!")
         e.set_image(url=aki.first_guess["absolute_picture_path"])

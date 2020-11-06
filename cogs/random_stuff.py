@@ -1,7 +1,7 @@
 from random import choice, randint
 from asyncio import sleep
 
-import discord
+from discord import Embed, Member, File
 from discord.ext import commands
 
 from other_utils import funcs
@@ -30,7 +30,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         else:
             res = await funcs.getRequest("https://api.whatdoestrumpthink.com/api/v1/quotes")
             quotes = choice(list(res.json()["messages"]["personalized"]))
-            e = discord.Embed(
+            e = Embed(
                 title=f"What does Trump think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
             )
@@ -74,7 +74,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://media.discordapp.net/attachments/769899860253736990/772818443585191936/unknown.png",
                 "https://media.discordapp.net/attachments/769899860253736990/773133850108624916/2019-02-24.png"
             ])
-            e = discord.Embed(
+            e = Embed(
                 title=f"What does Neo think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
             )
@@ -149,7 +149,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://media.discordapp.net/attachments/766326653538271232/772817547074601000/unknown.png",
                 "https://media.discordapp.net/attachments/769899860253736990/773121703009714176/Screenshot_20201103_104927.jpg"
             ])
-            e = discord.Embed(
+            e = Embed(
                 title=f"What does Audible think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
             )
@@ -160,34 +160,11 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
                       usage="[@mention]")
-    async def roast(self, ctx, member:discord.Member=""):
+    async def roast(self, ctx, member:Member=""):
         if member == "":
             member = ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
         await ctx.send(res.json()["insult"].replace("You are", f"{member.display_name} is"))
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="neomeme", description="Neo.")
-    async def neo(self, ctx):
-        url = choice([
-            "https://media.discordapp.net/attachments/362589047018749955/759806426230161466/unknown.png",
-            "https://media.discordapp.net/attachments/362589047018749955/764478615164420106/unknown.png",
-            "https://media.discordapp.net/attachments/362589047018749955/761920398102364170/unknown.png",
-            "https://media.discordapp.net/attachments/769899860253736990/772088052407074836/neo_logic_meme.jpg"
-        ])
-        file = discord.File(await funcs.getImage(url),"neo.png")
-        await ctx.send(file=file)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="audiblememe", description="Audible Individualism intensifies.")
-    async def audible(self, ctx):
-        url = choice([
-            "https://media.discordapp.net/attachments/769899860253736990/772099297189560340/unknown.png",
-            "https://media.discordapp.net/attachments/769899860253736990/772100077111738408/PicsArt_10-21-03.07.47.jpg",
-            "https://media.discordapp.net/attachments/769899860253736990/772101368412373012/PicsArt_10-31-03.14.46.png",
-        ])
-        file = discord.File(await funcs.getImage(url),"audible.png")
-        await ctx.send(file=file)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="fidgetspinner", description="Spins a fidget spinner.",
@@ -205,7 +182,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://files.gamebanana.com/img/ico/sprays/593404c44a588.gif",
                 "https://gifimage.net/wp-content/uploads/2017/11/fidget-spinner-gif-transparent-6.gif"
             ])
-            file = discord.File(await funcs.getImage(url),"spinner.gif")
+            file = File(await funcs.getImage(url),"spinner.gif")
             await ctx.send(
                 f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name} has spun a fidget spinner. " + \
                 "Let's see how long it lasts...** <:fidgetspinner:675314386784485376>", file=file
@@ -227,7 +204,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="lovecalc", description="Calculates the love percentage between two users.",
                       aliases=["love", "lovecalculator"], usage="<@mention> [@mention]")
-    async def lovecalc(self, ctx, first:discord.Member=None, second:discord.Member=None):
+    async def lovecalc(self, ctx, first:Member=None, second:Member=None):
         if first is None:
             await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
             return

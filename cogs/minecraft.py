@@ -1,7 +1,7 @@
-import json
 from base64 import b64decode
 from time import time
 from scipy import stats
+from json import load, loads, dump
 
 from discord import Embed, File
 from discord.ext import commands
@@ -19,8 +19,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["fs", "eye", "eyes", "seed", "f", "s"])
     async def findseed(self, ctx):
         eyes = funcs.randomEyes()
-        with open(f"{funcs.getPath()}/data.json","r", encoding="utf-8") as f:
-            data = json.load(f)
+        with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+        f.close()
         odds = eye_data.eyeData[str(eyes)]["percent"]
         onein = eye_data.eyeData[str(eyes)]["onein"]
         if eyes >= data["highest"]["number"]:
@@ -38,8 +39,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
         highestTotal = data["highest"]["found"]
         data["calls"] += 1
         calls = data["calls"]
-        with open(f"{funcs.getPath()}/data.json","w") as f:
-            json.dump(data, f, sort_keys=True, indent=4)
+        with open(f"{funcs.getPath()}/data.json", "w") as f:
+            dump(data, f, sort_keys=True, indent=4)
+        f.close()
         file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
         if not update:
             foundTime = f"{funcs.timeDifferenceStr(time(), highestTime)}"
@@ -79,7 +81,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 f"https://sessionserver.mojang.com/session/minecraft/profile/{str(data.json()['id'])}"
             )
             data = b64decode(res.json()["properties"][0]["value"])
-            data = json.loads(data)
+            data = loads(data)
             skin = data["textures"]["SKIN"]["url"]
             e = Embed(
                 title="Minecraft User",

@@ -1,5 +1,5 @@
-import os
 import ast
+from os import path
 from httpx import AsyncClient
 from io import BytesIO
 from random import randint
@@ -8,7 +8,7 @@ from discord import Embed, Colour
 
 
 def getPath():
-    return os.path.dirname(os.path.realpath(__file__)).replace("\other_utils", "").replace("/other_utils", "")
+    return path.dirname(path.realpath(__file__))[:-12]
 
 
 def randomEyes():

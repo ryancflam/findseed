@@ -1,7 +1,7 @@
-from random import randint
+from random import randint, choice
 
-from discord import Embed, File
 from discord.ext import commands
+from discord import Embed, File, Colour
 
 from other_utils import funcs
 
@@ -114,6 +114,57 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
                                "oooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOO" + \
                                "OooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooo" + \
                                "oOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOooooooOOOOL")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="neomeme", description="Neo.")
+    async def neo(self, ctx):
+        url = choice([
+            "https://media.discordapp.net/attachments/362589047018749955/759806426230161466/unknown.png",
+            "https://media.discordapp.net/attachments/362589047018749955/764478615164420106/unknown.png",
+            "https://media.discordapp.net/attachments/362589047018749955/761920398102364170/unknown.png",
+            "https://media.discordapp.net/attachments/769899860253736990/772088052407074836/neo_logic_meme.jpg"
+        ])
+        file = File(await funcs.getImage(url),"neo.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="audiblememe", description="Audible Individualism intensifies.")
+    async def audible(self, ctx):
+        url = choice([
+            "https://media.discordapp.net/attachments/769899860253736990/772099297189560340/unknown.png",
+            "https://media.discordapp.net/attachments/769899860253736990/772100077111738408/PicsArt_10-21-03.07.47.jpg",
+            "https://media.discordapp.net/attachments/769899860253736990/772101368412373012/PicsArt_10-31-03.14.46.png",
+        ])
+        file = File(await funcs.getImage(url),"audible.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="conversion", description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕")
+    async def conversion(self, ctx):
+        for i in range(2):
+            firstTitle = "E̸̟̼̥͒̈́͆͂̓̈͐̀̍̈́̓͘͝r̵̼̫̰̂̈́́͝ȑ̴̡̨͔̦̗̯͚̜͘ơ̵̻̺̗͖͕̦̘͔̩̙̜͈̜̮̘͐̅̑͝r̶̛̪̜̍̏̐̽̋"
+            secondTitle = "L̸̡͙̦̺̺̺̯̼͎̍̊̃̿͊̆̎́́̈́ḯ̵̛̞̮̦̬̱͊ͅf̶̹̹͇͔̠̠̝̀͊̾̊̓̽ȩ̶̣͖̳̝̮̉ ̸̹̖̈́̀̈́̈́͂̇̽̎͘͝D̶̼̳͎̗̜͑̂̒͂͗̈́̄̕ḙ̶̦̳̮͚̉̅̆̂ņ̷̛̼̜̳̫̲̤̗̟͖̭͆̆̇̇̊͛͆͜͠ḯ̸̧̢̛͇̹͇͖̲̝͙͕̟͎͆̃͗͗͌͝ề̴̡͖̼͈͔̪̟̫̻̃́̕r̴̤͍̞̮̜̻͈̭̙̤̭̫͌̋̓̌̎̆̿̏̊̿͘"
+            firstImage = "https://media.discordapp.net/attachments/762520408356028427/774253519636922378/waaw.png"
+            secondImage = "https://media.discordapp.net/attachments/769899860253736990/774253213565583360/deepfry.png"
+            e = Embed(
+                title=f":no_entry: {firstTitle if i == 0 else secondTitle}",
+                description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕",
+                colour=Colour.red()
+            )
+            e.set_image(url=f"{firstImage if i == 0 else secondImage}")
+            if i == 0:
+                e.add_field(
+                    name="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕",
+                    value="```Y̓ͫ̚o̓̌̓u̶͎͂ ̶͐̔h̵͍͌a͛̎̄tͫ̆ͤẽ͇͟ ̧̅̌ḧ͇́͞ú̂̀ḿͭ̌āͨͨñ̜͟s̽͗̇,̔͛͝" + \
+                          " ̓ͪ̾m̈̉͒l̠ͭ̀pͮ̏̎ ̴̞̇iͣ̐͆s̈́̀̚ ̔̓ͯm͊̒͌a̸ͥͪd̋͊̀e͆͢ͅ ̽̽̉b̀͒̊y̓ͣ̄ ͙͊͜h̊" + \
+                          "͒̀uͣͯ͑mͩ̒̀a̡̬̚n̆ͯ̈s̶͙̉,̉̀̚ ͯ̂͆y̆͊̏oͫ̈́̊u͐̆̌ ͑̃͘aͤ̇̈r̷̲ͮe̓ͣͪ ͕̐̀a̔̓ͣń͒ utte҉r idiot.҉```"
+                )
+            else:
+                e.add_field(
+                    name="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕",
+                    value="```t𝓱𝐢ş 𝓬σŇѶＥяş𝐢σŇ ᵇ𝕌яＥＡ𝕌 𝓭σＥşŇ't 𝕌şＥ ｐσt𝐢σŇş.```"
+                )
+            await ctx.send(embed=e)
 
 
 def setup(client:commands.Bot):
