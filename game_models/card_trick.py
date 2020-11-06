@@ -73,5 +73,9 @@ class CardTrick:
         prst += "======================="
         return prst
 
+    @staticmethod
+    def getCardNameImg(card):
+        return PlayingCards().returnCardName(card), PlayingCards().returnCardImage(card)
+
     def getSample(self):
         return self.__sample

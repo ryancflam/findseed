@@ -10,7 +10,7 @@ from discord.ext import commands
 
 from other_utils import funcs
 from game_models.bulls_and_cows import BullsAndCows
-from game_models.card_trick import CardTrick, PlayingCards
+from game_models.card_trick import CardTrick
 from game_models.minesweeper import Minesweeper
 from game_models.battleship import Battleship
 from game_models.hangman import Hangman
@@ -105,7 +105,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             try:
                 guess = int(message.content)
                 if not 1 <= guess <= 10000:
-                    await ctx.channel.send(embed=funcs.errorEmbed(None,"Input must be 1-10000 inclusive."))
+                    await ctx.channel.send(embed=funcs.errorEmbed(None, "Input must be 1-10000 inclusive."))
                 else:
                     attempts += 1
                     if guess < number:
@@ -121,7 +121,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
                     await ctx.channel.send(f"`Elapsed time: {m}m {s}s`")
                 else:
-                    await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
+                    await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input."))
         await ctx.channel.send(f"```The number was {number}.\n\nTotal attempts: {attempts}\n\n" + \
                                f"Thanks for playing, {ctx.author.name}!```")
         _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
@@ -199,9 +199,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels.append(ctx.channel.id)
         game = CardTrick()
         cardSample = game.getSample()
-        count = 0
-        while count != 3:
-            count += 1
+        for _ in range(3):
             p1, p2, p3 = game.piles(cardSample)
             await ctx.channel.send(f"```{game.showCards(p1, p2, p3)}```")
             while True:
@@ -218,7 +216,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                         return
                     choice = int(content)
                     if not 1 <= choice <= 3:
-                        await ctx.channel.send(embed=funcs.errorEmbed(None,"Input must be 1-3 inclusive."))
+                        await ctx.channel.send(embed=funcs.errorEmbed(None, "Input must be 1-3 inclusive."))
                     else:
                         cardSample = game.shuffle(choice, p1, p2, p3)
                         break
@@ -227,11 +225,11 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     self.gameChannels.remove(ctx.channel.id)
                     return
                 except ValueError:
-                    await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
-        yourCard = cardSample[10]
+                    await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input."))
+        cardName, cardImg = game.getCardNameImg(cardSample[10])
         e = Embed(title="21 Card Trick")
-        e.add_field(name=f"{ctx.author.name}'s Card", value=f"`{PlayingCards().returnCardName(yourCard)}`")
-        e.set_image(url=PlayingCards().returnCardImage(yourCard))
+        e.add_field(name=f"{ctx.author.name}'s Card", value=f"`{cardName}`")
+        e.set_image(url=cardImg)
         e.set_footer(text="Have I guessed it correctly?")
         await ctx.channel.send(embed=e)
         self.gameChannels.remove(ctx.channel.id)
@@ -267,7 +265,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     break
             except ValueError:
                 pass
-            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
+            await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input."))
             await ctx.channel.send(f"`Please enter a {rolCol}`")
             try:
                 msg = await self.client.wait_for(
@@ -307,7 +305,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 and decision.casefold() != "reveal" and decision.casefold() != "u" \
                 and decision.casefold() != "unflag" and decision.casefold() != "exit" \
                 and decision.casefold() != "quit" and decision.casefold() != "stop":
-            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
+            await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input."))
             await ctx.channel.send("`Would you like to reveal, flag, or unflag a location?`")
             try:
                 msg = await self.client.wait_for(
@@ -339,13 +337,13 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 if game.getDispboard()[yy][xx] == "F":
                     game.getDispboard()[yy][xx] = "."
                 else:
-                    await ctx.channel.send(embed=funcs.errorEmbed(None,"This location has already been revealed before."))
+                    await ctx.channel.send(embed=funcs.errorEmbed(None, "This location has already been revealed before."))
                     return
             else:
                 game.getDispboard()[yy][xx] = "F"
         elif decision.casefold() == "u" or decision.casefold() == "unflag":
             if game.getDispboard()[yy][xx] != "F":
-                await ctx.channel.send(embed=funcs.errorEmbed(None,"This location is not flagged."))
+                await ctx.channel.send(embed=funcs.errorEmbed(None, "This location is not flagged."))
                 return
             else:
                 game.getDispboard()[yy][xx] = "."
@@ -355,7 +353,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     await ctx.channel.send("`Watch out, you have previously flagged this location before!`")
                     return
                 else:
-                    await ctx.channel.send(embed=funcs.errorEmbed(None,"This location has already been revealed before."))
+                    await ctx.channel.send(embed=funcs.errorEmbed(None, "This location has already been revealed before."))
                     return
             else:
                 game.uncoverDots(xx, yy)
@@ -456,7 +454,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 else:
                     answer = "Scissors"
             else:
-                await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
+                await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid input."))
                 continue
             await ctx.channel.send(f"`{self.client.user.name} bot chose: {aic}`")
             if answer == aic:
@@ -508,9 +506,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     m, s = game.getTime()
                     await ctx.channel.send(f"`Elapsed time: {m}m {s}s`")
                 else:
-                    await ctx.channel.send(embed=funcs.errorEmbed(None,"You may only enter one letter at a time."))
+                    await ctx.channel.send(embed=funcs.errorEmbed(None, "You may only enter one letter at a time."))
             elif content.lower() not in ascii_lowercase:
-                await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid character(s)."))
+                await ctx.channel.send(embed=funcs.errorEmbed(None, "Invalid character(s)."))
                 continue
             else:
                 try:
