@@ -2,6 +2,8 @@ from time import time
 from asyncio import TimeoutError
 from random import randint, choice
 from string import ascii_lowercase
+from akinator.async_aki import Akinator
+from akinator import CantGoBackAnyFurther
 
 from discord import Embed
 from discord.ext import commands
@@ -27,6 +29,55 @@ class ChatGames(commands.Cog, name="Chat Games"):
             )
             return True
         return False
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="akinator", description="Play Akinator.", aliases=["ak", "akin", "aki"])
+    async def akinator(self, ctx):
+        if await self.checkGameInChannel(ctx):
+            return
+        self.gameChannels.append(ctx.channel.id)
+        akimage = "https://i.pinimg.com/originals/02/e3/02/02e3021cfd7210e2ebd2faac8ce289ba.png"
+        await ctx.send("Starting Akinator instance...")
+        aki = Akinator()
+        game = await aki.start_game()
+        while aki.progression <= 80:
+            try:
+                await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage))
+                resp = await self.client.wait_for(
+                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
+                    timeout=60
+                )
+            except TimeoutError:
+                await ctx.send(f"`{ctx.author.name} has left Akinator for idling too long.`")
+                self.gameChannels.remove(ctx.channel.id)
+                return
+            if resp.content.casefold() == "b":
+                try:
+                    game = await aki.back()
+                except CantGoBackAnyFurther:
+                    await ctx.send(embed=funcs.errorEmbed(None, "Cannot go back any further."))
+            elif resp.content.casefold().startswith("q"):
+                await ctx.send(f"`{ctx.author.name} has left Akinator.`")
+                self.gameChannels.remove(ctx.channel.id)
+                return
+            else:
+                try:
+                    game = await aki.answer(resp.content)
+                except:
+                    await ctx.send(embed=funcs.errorEmbed("Invalid answer!",
+                        "Valid options:\n\n`y` or `yes` for yes;\n`n` or `no` for no;\n" + \
+                        "`i` or `idk` for I don't know;\n`p` or `probably` for probably;\n" + \
+                        "`pn` or `probably not` for probably not;\n`b` for back;\n`q` or `quit` to quit the game."))
+        await aki.win()
+        e = Embed(
+            title="Akinator",
+            description="I think it is **{0.first_guess[name]} {0.first_guess[description]}**\n\nWas I right?".format(aki)
+        )
+        e.set_footer(text=f"Thanks for playing, {ctx.author.name}!")
+        e.set_image(url=aki.first_guess["absolute_picture_path"])
+        e.set_thumbnail(url=akimage)
+        await ctx.send(embed=e)
+        self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="guessthenumber", description="Play Guess the Number.", aliases=["gtn", "gn"])
@@ -187,7 +238,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
     async def gameIdle(self, ctx, game, ms):
         if ms:
             title = "Minesweeper"
-            game.revealSquares()
+            game.revealDots()
         else:
             title = "Battleship"
         await ctx.channel.send(f"`{ctx.author.name} has left {title} for idling too long.`")
@@ -227,7 +278,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             yy = msg.content
         if str(yy).casefold() == "quit" or str(yy).casefold() == "exit" or str(yy).casefold() == "stop":
             if ms:
-                game.revealSquares()
+                game.revealDots()
             return "quit"
         elif str(yy).casefold() == "time":
             m, s = game.getTime()
@@ -237,9 +288,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
             return yy
 
     async def gameOptions(self, ctx, game):
-        squaresLeft = 90 - game.getUncovered()
+        dotsLeft = 90 - game.getUncovered()
         await ctx.channel.send(
-            f"`{ctx.author.name} has {90 - game.getUncovered()} square{'' if squaresLeft==1 else 's'} left to uncover.`"
+            f"`{ctx.author.name} has {90 - game.getUncovered()} dot{'' if dotsLeft==1 else 's'} left to uncover.`"
         )
         await ctx.channel.send("`Would you like to reveal, flag, or unflag a location?`")
         try:
@@ -266,7 +317,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 return
             decision = msg.content
         if decision.casefold() == "quit" or decision.casefold() == "exit" or decision.casefold() == "stop":
-            game.revealSquares()
+            game.revealDots()
             return
         if decision.casefold() == "time":
             m, s = game.getTime()
@@ -306,7 +357,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     await ctx.channel.send(embed=funcs.errorEmbed(None,"This location has already been revealed before."))
                     return
             else:
-                game.uncoverSquares(xx, yy)
+                game.uncoverDots(xx, yy)
                 game.incrementAttempts()
         return
 
@@ -483,5 +534,5 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels.remove(ctx.channel.id)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(ChatGames(client))

@@ -64,7 +64,7 @@ class Minesweeper:
                 if self.__grid[r][c] != -1:
                     self.__grid[r][c] = minecount
 
-    def revealSquares(self):
+    def revealDots(self):
         xloc, yloc = 0, 0
         for x in self.__grid:
             for y in x:
@@ -106,7 +106,7 @@ class Minesweeper:
     def incrementAttempts(self):
         self.__attempts += 1
 
-    def uncoverSquares(self, xx, yy):
+    def uncoverDots(self, xx, yy):
         if self.__dispboard[yy][xx] == "F":
             return
         if self.__dispboard[yy][xx] != ".":
@@ -118,28 +118,28 @@ class Minesweeper:
             self.__dispboard[yy][xx] = " "
             if xx > 0:
                 if self.__grid[yy][xx-1] >= 0:
-                    self.uncoverSquares(xx-1, yy)
+                    self.uncoverDots(xx-1, yy)
                 if yy > 0:
                     if self.__grid[yy-1][xx-1] >= 0:
-                        self.uncoverSquares(xx-1, yy-1)
+                        self.uncoverDots(xx-1, yy-1)
             if yy > 0:
                 if self.__grid[yy-1][xx] >= 0:
-                    self.uncoverSquares(xx, yy-1)
+                    self.uncoverDots(xx, yy-1)
                     if xx < self.__col-1:
                         if self.__grid[yy-1][xx+1] >= 0:
-                            self.uncoverSquares(xx+1, yy-1)
+                            self.uncoverDots(xx+1, yy-1)
             if xx < self.__col-1:
                 if self.__grid[yy][xx+1] >= 0:
-                    self.uncoverSquares(xx+1, yy)
+                    self.uncoverDots(xx+1, yy)
                 if yy < self.__row-1:
                     if self.__grid[yy+1][xx+1] >= 0:
-                        self.uncoverSquares(xx+1, yy+1)
+                        self.uncoverDots(xx+1, yy+1)
             if yy < self.__row-1:
                 if self.__grid[yy+1][xx] >= 0:
-                    self.uncoverSquares(xx, yy+1)
+                    self.uncoverDots(xx, yy+1)
                 if xx > 0:
                     if self.__grid[yy+1][xx-1] >= 0:
-                       self.uncoverSquares(xx-1, yy+1)
+                       self.uncoverDots(xx-1, yy+1)
             return
         if self.__grid[yy][xx] == -1:
             self.__dispboard[yy][xx] = "●"

@@ -17,7 +17,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     async def dadjoke(self, ctx):
         headers = {"Accept": "application/json"}
         res = await funcs.getRequest("https://icanhazdadjoke.com/", headers=headers)
-        await ctx.channel.send(res.json()["joke"])
+        await ctx.send(res.json()["joke"])
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="trumpthinks", description="What Donald Trump thinks about something or someone.",
@@ -36,7 +36,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             )
             e.add_field(name="Trump Thinks", value=f"```{something} {quotes}```")
             e.set_thumbnail(url="https://cdn.discordapp.com/attachments/659771291858894849/673599147160502282/trumpface.png")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neothinks", description="What Neo thinks about something or someone.",
@@ -80,7 +80,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             )
             e.add_field(name=f"Neo Thinks", value=f"```{something}{quotes}```")
             e.set_thumbnail(url=thumbnail)
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="audiblethinks", description="What Audible thinks about something or someone.",
@@ -155,7 +155,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             )
             e.add_field(name=f"Audible Thinks", value=f"```{something}{quotes}```")
             e.set_thumbnail(url=thumbnail)
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
@@ -164,7 +164,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         if member == "":
             member = ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
-        await ctx.channel.send(res.json()["insult"].replace("You are", f"{member.display_name} is"))
+        await ctx.send(res.json()["insult"].replace("You are", f"{member.display_name} is"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neomeme", description="Neo.")
@@ -176,7 +176,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             "https://media.discordapp.net/attachments/769899860253736990/772088052407074836/neo_logic_meme.jpg"
         ])
         file = discord.File(await funcs.getImage(url),"neo.png")
-        await ctx.channel.send(file=file)
+        await ctx.send(file=file)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="audiblememe", description="Audible Individualism intensifies.")
@@ -187,14 +187,14 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             "https://media.discordapp.net/attachments/769899860253736990/772101368412373012/PicsArt_10-31-03.14.46.png",
         ])
         file = discord.File(await funcs.getImage(url),"audible.png")
-        await ctx.channel.send(file=file)
+        await ctx.send(file=file)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="fidgetspinner", description="Spins a fidget spinner.",
                       aliases=["spin", "spinner", "youspinmerightround"])
     async def fidgetspinner(self, ctx):
         if ctx.author.id in self.activeSpinners:
-            await ctx.channel.send(embed=funcs.errorEmbed(None,"Your fidget spinner is still spinning, please wait!"))
+            await ctx.send(embed=funcs.errorEmbed(None,"Your fidget spinner is still spinning, please wait!"))
             return
         self.activeSpinners.append(ctx.message.author.id)
         try:
@@ -206,24 +206,64 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://gifimage.net/wp-content/uploads/2017/11/fidget-spinner-gif-transparent-6.gif"
             ])
             file = discord.File(await funcs.getImage(url),"spinner.gif")
-            await ctx.channel.send(
+            await ctx.send(
                 f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name} has spun a fidget spinner. " + \
                 "Let's see how long it lasts...** <:fidgetspinner:675314386784485376>", file=file
             )
             randomSeconds = randint(5, 180)
             await sleep(randomSeconds)
-            await ctx.channel.send(
+            await ctx.send(
                 f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name}'s fidget spinner has just stopped " + \
                 f"spinning; it lasted {randomSeconds} seconds!** <:fidgetspinner:675314386784485376>"
             )
             self.activeSpinners.remove(ctx.message.author.id)
         except:
-            await ctx.channel.send(embed=funcs.errorEmbed(None,"An error occurred. Please try again later."))
+            await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Please try again later."))
             try:
                 self.activeSpinners.remove(ctx.message.author.id)
             except ValueError:
                 return
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="lovecalc", description="Calculates the love percentage between two users.",
+                      aliases=["love", "lovecalculator"], usage="<@mention> [@mention]")
+    async def lovecalc(self, ctx, first:discord.Member=None, second:discord.Member=None):
+        if first is None:
+            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return
+        if second is None:
+            second = ctx.author
+        try:
+            newlist = [first.id, second.id]
+            sentence = ""
+            for i in sorted(newlist):
+                sentence += str(i) + " loves "
+            sentence = sentence[:-7]
+            sentence = sentence.replace(" ", "").lower()
+            intermediate = ""
+            while len(sentence):
+                intermediate += str(sentence.count(sentence[0]))
+                sentence = sentence.replace(sentence[0], "")
+            while int(intermediate) > 100:
+                tmp = ""
+                for i in range(0, int(len(intermediate) / 2)):
+                    tmp += str(int(intermediate[i]) + int(intermediate[(i+1) * -1]))
+                if len(intermediate) % 2 > 0:
+                    tmp += intermediate[int(len(intermediate) % 2)]
+                intermediate = tmp
+            emoji = "!** :sparkling_heart:"
+            if 49 < int(intermediate) < 80:
+                emoji = "!** :heart:"
+            if int(intermediate) < 50:
+                emoji = "...** :brown_heart:"
+            if int(intermediate) < 20:
+                emoji = "...** :broken_heart:"
+            await ctx.send("The love percentage between " + \
+                                   f"**{first.name}** and **{second.name}** is **{intermediate}%{emoji}")
+        except Exception as ex:
+            print(ex)
+            await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 
-def setup(client):
+
+def setup(client:commands.Bot):
     client.add_cog(RandomStuff(client))

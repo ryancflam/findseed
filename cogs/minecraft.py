@@ -53,7 +53,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                   f", found {highestTotal} time{'' if highestTotal==1 else 's'})`")
         e.set_footer(text=f"The command has been called {calls} time{'' if calls==1 else 's'}. !eyeodds")
         e.set_image(url="attachment://portal.png")
-        await ctx.channel.send(embed=e, file=file)
+        await ctx.send(embed=e, file=file)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",
@@ -63,7 +63,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         for i in range(13):
             odds = funcs.eyeData[str(i)]["percent"]
             msg += f"{i} eye - `{odds}% (1 in {funcs.eyeData[str(i)]['onein']})`\n"
-        await ctx.channel.send(msg)
+        await ctx.send(msg)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="skin", description="Gets the skin of a Minecraft user.", aliases=["mcskin"],
@@ -87,7 +87,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             e.set_image(url=skin)
         except Exception:
             e = funcs.errorEmbed(None,"Invalid skin or server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="pearlbarter", description="Finds the probability of getting 2 or more ender pearl trades" + \
@@ -97,20 +97,20 @@ class Minecraft(commands.Cog, name="Minecraft"):
         try:
             n = int(trades)
             if not 2 <= n <= 999:
-                await ctx.channel.send(embed=funcs.errorEmbed(None,"Value must be between 2 and 999."))
+                await ctx.send(embed=funcs.errorEmbed(None,"Value must be between 2 and 999."))
                 return
         except ValueError:
-            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input."))
+            await ctx.send(embed=funcs.errorEmbed(None,"Invalid input."))
             return
         x = sum(stats.binom.pmf([i for i in range(2, n+1)], n, 20/423))
-        await ctx.channel.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
+        await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
                                f"8-16 pearls) in {n} gold is `{x * 100}%`. *(1 in {1 / x})*")
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
                                              "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord"])
     async def wr(self, ctx):
-        await ctx.channel.send("Getting speedrun.com data. Please wait...")
+        await ctx.send("Getting speedrun.com data. Please wait...")
         try:
             e = Embed(
                 title="Minecraft Speedrun World Records",
@@ -142,8 +142,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 count += 1
         except Exception:
             e = funcs.errorEmbed(None,"Possible server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(Minecraft(client))

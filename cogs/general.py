@@ -18,7 +18,7 @@ class General(commands.Cog, name="General"):
     @commands.command(name="ping", description="Shows the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
         ptime = int(round(time() * 1000))
-        msg = await ctx.channel.send(":ping_pong: Pong! `Pinging...`")
+        msg = await ctx.send(":ping_pong: Pong! `Pinging...`")
         ping = int(round(time() * 1000)) - ptime
         newmsg = f":ping_pong: Pong! `{ping} ms`"
         if ping >= 1000:
@@ -32,7 +32,7 @@ class General(commands.Cog, name="General"):
             description=f"[Invite Link](https://discord.com/oauth2/authorize?client_id={self.client.user.id}" + \
                         "&permissions=473196598&scope=bot)"
         )
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="botinfo", description="Shows information about the bot.",
@@ -57,7 +57,7 @@ class General(commands.Cog, name="General"):
         e.add_field(name="Disk Space Available",
                     value=f"`{round(float(dict(psutil.disk_usage('/')._asdict())['free'])/1024/1024/1024, 2)} GB`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="help", description="Shows a list of commands.", usage="[command]",
@@ -96,8 +96,8 @@ class General(commands.Cog, name="General"):
                     e.add_field(name="Aliases", value=aliasText[:-2])
             else:
                 e = funcs.errorEmbed(None,"Unknown command.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(General(client))

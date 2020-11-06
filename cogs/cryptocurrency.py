@@ -68,13 +68,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!","Be sure to use the ticker. (e.g. `btc`)")
         else:
             e = funcs.errorEmbed(None,"Possible server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bitcoin", description="Gets current information about the Bitcoin network.",
                       aliases=["btc", "bitcoinnetwork", "bn"])
     async def bitcoin(self, ctx):
-        await ctx.channel.send("Getting Bitcoin information. Please wait...")
+        await ctx.send("Getting Bitcoin information. Please wait...")
         try:
             data = await funcs.getRequest("https://blockchain.info/stats?format=json")
             blockchain = data.json()
@@ -105,8 +105,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc']*0.00000001, 8)} BTC`")
         except Exception:
             e = funcs.errorEmbed(None,"Possible server error, please try again later.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(Cryptocurrency(client))

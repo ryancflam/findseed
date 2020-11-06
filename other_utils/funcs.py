@@ -87,6 +87,13 @@ def errorEmbed(error, message):
     return e
 
 
+def formatting(text):
+    output = "```" + text[:2042] + "```"
+    if output == "``````":
+        raise Exception
+    return output
+
+
 def timeDifferenceStr(newTime, oldTime, noStr=False):
     seconds = newTime - oldTime
     days = seconds // 86400

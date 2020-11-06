@@ -23,7 +23,7 @@ def main():
     for cog in listdir(f"{funcs.getPath()}/cogs"):
         if cog.endswith(".py"):
             client.load_extension(f"cogs.{cog[:-3]}")
-    client.run(info.token)
+    client.run(info.token, bot=True, reconnect=True)
 
 
 if __name__ == "__main__":

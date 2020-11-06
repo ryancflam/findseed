@@ -9,13 +9,6 @@ class Conversion(commands.Cog, name="Conversion"):
     def __init__(self, client:commands.Bot):
         self.client = client
 
-    @staticmethod
-    def formatting(text):
-        output = "```" + text[:2042] + "```"
-        if output == "``````":
-            raise Exception
-        return output
-
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",
                       aliases=["ttbf", "t2bf"])
@@ -48,11 +41,11 @@ class Conversion(commands.Cog, name="Conversion"):
                     old = ordd
                 e = Embed(
                     title="Text to Brainfuck",
-                    description=self.formatting(output)
+                    description=funcs.formatting(output)
                 )
             except Exception:
                 e = funcs.errorEmbed(None,"Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="brainfucktotext", description="Converts Brainfuck to plain text.",
@@ -67,11 +60,11 @@ class Conversion(commands.Cog, name="Conversion"):
                     interpreter.step()
                 e = Embed(
                     title="Brainfuck to Text",
-                    description=self.formatting(interpreter.output.read())
+                    description=funcs.formatting(interpreter.output.read())
                 )
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttomorse", description="Converts plain text to Morse code.",
@@ -90,11 +83,11 @@ class Conversion(commands.Cog, name="Conversion"):
                 output = output[:-1]
                 e = Embed(
                     title="Text to Morse Code",
-                    description=self.formatting(output)
+                    description=funcs.formatting(output)
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="morsetotext", description="Converts Morse code to plain text.",
@@ -126,11 +119,11 @@ class Conversion(commands.Cog, name="Conversion"):
                             ctext = ""
                 e = Embed(
                     title="Text to Morse Code",
-                    description=self.formatting(output)
+                    description=funcs.formatting(output)
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttohex", description="Converts plain text to hexadecimal.",
@@ -142,11 +135,11 @@ class Conversion(commands.Cog, name="Conversion"):
             try:
                 e = Embed(
                     title="Text to Hexadecimal",
-                    description=self.formatting(text.encode('utf-8').hex())
+                    description=funcs.formatting(text.encode('utf-8').hex())
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hextotext", description="Converts hexadecimal to plain text.",
@@ -158,11 +151,11 @@ class Conversion(commands.Cog, name="Conversion"):
             try:
                 e = Embed(
                     title="Hexadecimal to Text",
-                    description=self.formatting(bytes.fromhex(text).decode("utf-8"))
+                    description=funcs.formatting(bytes.fromhex(text).decode("utf-8"))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttobinary", description="Converts plain text to binary.",
@@ -174,11 +167,11 @@ class Conversion(commands.Cog, name="Conversion"):
             try:
                 e = Embed(
                     title="Text to Binary",
-                    description=self.formatting(str("".join(f"{ord(i):08b}" for i in text)))
+                    description=funcs.formatting(str("".join(f"{ord(i):08b}" for i in text)))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="binarytotext", description="Converts binary to plain text.",
@@ -190,11 +183,11 @@ class Conversion(commands.Cog, name="Conversion"):
             try:
                 e = Embed(
                     title="Binary to Text",
-                    description=self.formatting("".join(chr(int(text[i*8:i*8+8], 2)) for i in range(len(text)//8)))
+                    description=funcs.formatting("".join(chr(int(text[i*8:i*8+8], 2)) for i in range(len(text)//8)))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="decimaltobinary", description="Converts decimal to binary.",
@@ -217,11 +210,11 @@ class Conversion(commands.Cog, name="Conversion"):
                 result = str(binary[::-1])
                 e = Embed(
                     title="Decimal to Binary",
-                    description=self.formatting(result)
+                    description=funcs.formatting(result)
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="binarytodecimal", description="Converts binary to decimal.",
@@ -237,20 +230,59 @@ class Conversion(commands.Cog, name="Conversion"):
                 result = 0
                 while binlength > 0:
                     digit = int(binnumber[binlength - 1])
-                    if digit !=0 and digit != 1:
-                        await ctx.channel.send(embed=funcs.errorEmbed(None, "Input must contain either 0 or 1."))
+                    if digit != 0 and digit != 1:
+                        await ctx.send(embed=funcs.errorEmbed(None, "Input must contain either 0 or 1."))
                         return
                     result += (digit * 2 ** power)
                     binlength -= 1
                     power += 1
                 e = Embed(
                     title="Binary to Decimal",
-                    description=self.formatting(str(result))
+                    description=funcs.formatting(str(result))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="binarytohex", description="Converts binary to hexadecimal.",
+                      aliases=["bth", "b2h", "binarytohexadecimal"])
+    async def binarytohex(self, ctx, *, text:str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                text = text.replace(" ", "")
+                hstr = "%0*X" % ((len(text) + 3) // 4, int(text, 2))
+                e = Embed(
+                    title="Binary to Hexadecimal",
+                    description=funcs.formatting(hstr)
+                )
+            except Exception:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="hextobinary", description="Converts hexadecimal to binary.",
+                      aliases=["htb", "h2b", "hexadecimaltobinary"])
+    async def hextobinary(self, ctx, *, text:str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                n = int(text.replace(" ", ""), 16)
+                bstr = ""
+                while n > 0:
+                    bstr = str(n % 2) + bstr
+                    n = n >> 1
+                e = Embed(
+                    title="Hexadecimal to Binary",
+                    description=funcs.formatting(str(bstr))
+                )
+            except Exception:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(Conversion(client))

@@ -34,5 +34,5 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
             await message.channel.send(f"{message.author.mention} {text}")
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(Cleverbot(client))

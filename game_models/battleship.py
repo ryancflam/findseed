@@ -73,7 +73,7 @@ class Battleship:
                         pass
                 else:
                     if self.__board[i][j] == "M":
-                        st+=" M"
+                        st += " M"
                     elif self.__board[i][j] == "X":
                         st += " X"
                     else:

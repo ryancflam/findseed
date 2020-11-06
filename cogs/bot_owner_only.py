@@ -16,15 +16,15 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
     async def restart(self, ctx):
-        await ctx.channel.send("Are you sure? You have 10 seconds to confirm by typing `yes`.")
+        await ctx.send("Are you sure? You have 10 seconds to confirm by typing `yes`.")
         try:
             await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=10
             )
         except TimeoutError:
-            await ctx.channel.send("Cancelling restart.")
+            await ctx.send("Cancelling restart.")
             return
-        await ctx.channel.send("Restarting...")
+        await ctx.send("Restarting...")
         system("sudo reboot")
         exit()
 
@@ -33,9 +33,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     async def say(self, ctx, *, output:str=""):
         if output == "":
             e = funcs.errorEmbed(None,"Cannot send empty message.")
-            await ctx.channel.send(embed=e)
+            await ctx.send(embed=e)
             return
-        await ctx.channel.send(output.replace("@everyone", "everyone").replace("@here", "here"))
+        await ctx.send(output.replace("@everyone", "everyone").replace("@here", "here"))
 
     @commands.command(name="servers", description="Returns a list of servers the bot is in.",
                       aliases=["sl", "serverlist"])
@@ -46,7 +46,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             serverList += "- " + str(server) + f" ({server.member_count})\n"
         serverList = serverList[:-1]
         newList = serverList[:1998]
-        await ctx.channel.send(f"`{newList}`")
+        await ctx.send(f"`{newList}`")
 
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate"], usage="<code>")
@@ -76,8 +76,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                 e = discord.Embed(description=f"```\n{str(res)}```")
             except Exception:
                 e = funcs.errorEmbed(None,"Error processing input.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(BotOwnerOnly(client))

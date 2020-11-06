@@ -1,7 +1,8 @@
 from time import time
 from datetime import datetime
-from googletrans import Translator, constants
+from urllib.parse import quote
 from asyncio import TimeoutError
+from googletrans import Translator, constants
 
 from discord import Embed
 from discord.ext import commands
@@ -95,14 +96,14 @@ class Utility(commands.Cog, name="Utility"):
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
         except Exception:
             e = funcs.errorEmbed(None,"Invalid input or server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="flight", description="Gets information about a flight",
                       aliases=["flightinfo", "flightradar"], usage="<flight number>")
     async def flight(self, ctx, *, flightstr:str=""):
         if flightstr == "":
-            await ctx.channel.send("Error: Empty input.")
+            await ctx.send("Error: Empty input.")
             return
         ph = "Unknown"
         flightstr = flightstr.upper().replace(" ","")
@@ -189,7 +190,7 @@ class Utility(commands.Cog, name="Utility"):
             e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.")
         except Exception:
             e = funcs.errorEmbed(None,"Unknown flight or server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="weather", description="Finds the current weather of a location.",
@@ -224,7 +225,7 @@ class Utility(commands.Cog, name="Utility"):
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
         except:
             e = funcs.errorEmbed(None,"Unknown location or server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="translate", description="Translates text to a different language.",
@@ -233,16 +234,19 @@ class Utility(commands.Cog, name="Utility"):
         if not dest:
             e = funcs.errorEmbed(None,"Cannot process empty input.")
         else:
-            if dest.casefold() not in constants.LANGUAGES.keys():
-                e = funcs.errorEmbed(
-                    "Invalid language code!",
-                    f"See [this](https://github.com/ssut/py-googletrans/blob/master/googletrans/constants.py)" + \
-                    " for a list of language codes. (Scroll down for `LANGUAGES`)"
-                )
-            else:
-                output = Translator().translate(text.casefold(), dest=dest.casefold()).text
-                e = Embed(title="Translate", description=f"`{output}`")
-        await ctx.channel.send(embed=e)
+            try:
+                if dest.casefold() not in constants.LANGUAGES.keys():
+                    e = funcs.errorEmbed(
+                        "Invalid language code!",
+                        f"See [this](https://github.com/ssut/py-googletrans/blob/master/googletrans/constants.py)" + \
+                        " for a list of language codes. (Scroll down for `LANGUAGES`)"
+                    )
+                else:
+                    output = Translator().translate(text.casefold(), dest=dest.casefold()).text
+                    e = Embed(title="Translate", description=funcs.formatting(output))
+            except Exception:
+                e = funcs.errorEmbed(None, "An error occurred. Invalid input?")
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="currency", description="Converts the price of one currency to another",
@@ -251,7 +255,7 @@ class Utility(commands.Cog, name="Utility"):
         try:
             output = [amount, fromC.upper(), toC.upper()]
         except:
-            await ctx.channel.send(
+            await ctx.send(
                 embed=funcs.errorEmbed("Invalid usage!",
                                        f"Use `{self.client.command_prefix}help currency` to see the correct usage.")
             )
@@ -266,9 +270,9 @@ class Utility(commands.Cog, name="Utility"):
                 amount = amount / data["rates"][output[1]]
             if output[2] != "EUR":
                 amount *= data["rates"][output[2]]
-            await ctx.channel.send(f"The current price of **{initialamount} {output[1]}** in **{output[2]}**: `{amount}`")
+            await ctx.send(f"The current price of **{initialamount} {output[1]}** in **{output[2]}**: `{amount}`")
         except:
-            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid input or unknown currency."))
+            await ctx.send(embed=funcs.errorEmbed(None,"Invalid input or unknown currency."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="wiki", description="Returns a Wikipedia article.",
@@ -287,7 +291,7 @@ class Utility(commands.Cog, name="Utility"):
                     data = res.json()
                     wikipage = data["query"]
                     if list(wikipage["pages"])[0] == "-1":
-                        await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid article."))
+                        await ctx.send(embed=funcs.errorEmbed(None,"Invalid article."))
                         return
                 if wikipage["pages"][list(wikipage["pages"])[0]]["extract"].casefold().startswith(f"{page} may refer to:\n\n"):
                     try:
@@ -299,7 +303,7 @@ class Utility(commands.Cog, name="Utility"):
                         data = res.json()
                         wikipage = data["query"]
                         if wikipage["pages"][list(wikipage["pages"])[0]] == "-1":
-                            await ctx.channel.send(embed=funcs.errorEmbed(None,"Invalid article."))
+                            await ctx.send(embed=funcs.errorEmbed(None,"Invalid article."))
                             return
                     except IndexError:
                         pass
@@ -315,7 +319,7 @@ class Utility(commands.Cog, name="Utility"):
                 e.set_thumbnail(url=logo)
             except Exception:
                 e = funcs.errorEmbed(None,"Invalid input or server error.")
-        await ctx.channel.send(embed=e)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
@@ -323,10 +327,10 @@ class Utility(commands.Cog, name="Utility"):
     async def lyrics(self, ctx, *, keywords:str=""):
         if keywords == "":
             e = funcs.errorEmbed(None,"Cannot process empty input.")
-            await ctx.channel.send(embed=e)
+            await ctx.send(embed=e)
         else:
             try:
-                await ctx.channel.send("Getting lyrics. Please wait...")
+                await ctx.send("Getting lyrics. Please wait...")
                 url = "https://some-random-api.ml/lyrics"
                 res = await funcs.getRequest(url, params={"title": keywords})
                 data = res.json()
@@ -342,7 +346,7 @@ class Utility(commands.Cog, name="Utility"):
                 page = 1
                 allpages = (len(originallyric) - 1) // 2048 + 1
                 e.set_footer(text=f"Page {page} of {allpages}")
-                msg = await ctx.channel.send(embed=e)
+                msg = await ctx.send(embed=e)
                 if originallyric != lyric2:
                     await msg.add_reaction("⏮")
                     await msg.add_reaction("⏭")
@@ -380,8 +384,22 @@ class Utility(commands.Cog, name="Utility"):
                             await msg.edit(embed=edited)
             except Exception:
                 e = funcs.errorEmbed(None,"Invalid keywords or server error.")
-                await ctx.channel.send(embed=e)
+                await ctx.send(embed=e)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="qr", description="Generates a QR code.", aliases=["qrcode"], usage="<input>")
+    async def qr(self, ctx, *, text:str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                e = Embed(title = "QR Code").set_image(
+                    url=f"http://api.qrserver.com/v1/create-qr-code/?data={quote(text)}&margin=25"
+                )
+            except Exception:
+                e = funcs.errorEmbed(None, "Invalid input or server error?")
+        await ctx.send(embed=e)
 
 
-def setup(client):
+def setup(client:commands.Bot):
     client.add_cog(Utility(client))
