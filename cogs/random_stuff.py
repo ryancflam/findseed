@@ -244,9 +244,30 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.command(name="8ball", description="Ask 8ball a question..",
                       aliases=["8b", "8"], usage="<input>")
     async def eightball(self, ctx, *, msg=""):
-        if msg == "":
-            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-            return
+        mention = ctx.author.mention
+        responses = [
+            "It is certain.",
+            "Reply hazy, try again.",
+            "It is decidedly so.",
+            "Without a doubt.",
+            "Yes, definitely.",
+            "You may rely on it.",
+            "As I see it, yes.",
+            "Most likely.",
+            "Outlook good.",
+            "Yes.",
+            "Signs point to yes.",
+            "Ask again later.",
+            "Better not tell you now.",
+            "Cannot predict now.",
+            "Concentrate and try again.",
+            "Don't count on it.",
+            "My reply is no.",
+            "My sources say no.",
+            "Outlook not so good.",
+            "Very doubtful."
+        ]
+        await ctx.send(f":8ball: {mention}: `{'Empty input...' if msg=='' else choice(responses)}`")
 
 
 def setup(client:commands.Bot):
