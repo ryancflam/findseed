@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 from os import listdir
 
 from discord import Intents, Game

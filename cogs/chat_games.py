@@ -392,7 +392,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         game = Battleship()
         while game.getShipcount() > 0:
             await ctx.channel.send(
-                f"```Attempt {game.getAttempts()+1} for {ctx.author.name}. {game.displayBoard(False)}```"
+                f"```Attempt {game.getAttempts()+1} for {ctx.author.name}. {game.displayBoard()}```"
             )
             await ctx.channel.send(
                 f"`{ctx.author.name} has {game.getShipcount()} ship{'' if game.getShipcount()==1 else 's'} left to find.`"

@@ -34,7 +34,7 @@ class General(commands.Cog, name="General"):
         )
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="botinfo", description="Shows information about the bot.",
                       aliases=["bi", "info", "cpu", "ram", "bot"])
     async def botinfo(self, ctx):
@@ -60,7 +60,7 @@ class General(commands.Cog, name="General"):
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="help", description="Shows a list of commands.", usage="[command]",
                       aliases=["cmds", "cmd", "h", "commands", "command"])
     async def help(self, ctx, *cmd):
