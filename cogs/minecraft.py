@@ -107,7 +107,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             return
         x = sum(stats.binom.pmf([i for i in range(2, n+1)], n, 20/423))
         await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
-                               f"8-16 pearls) in {n} gold is `{x * 100}%`. *(1 in {1 / x})*")
+                       f"8-16 pearls) in {n} gold is `{x * 100}%`. *(1 in {1 / x})*")
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \

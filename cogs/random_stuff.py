@@ -236,12 +236,12 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             if int(intermediate) < 20:
                 emoji = "...** :broken_heart:"
             await ctx.send("The love percentage between " + \
-                                   f"**{first.name}** and **{second.name}** is **{intermediate}%{emoji}")
+                           f"**{first.name}** and **{second.name}** is **{intermediate}%{emoji}")
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="8ball", description="Ask 8ball a question..",
+    @commands.command(name="8ball", description="Ask 8ball a question.",
                       aliases=["8b", "8"], usage="<input>")
     async def eightball(self, ctx, *, msg=""):
         mention = ctx.author.mention
