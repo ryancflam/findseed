@@ -6,16 +6,16 @@ from other_utils import funcs
 
 class Battleship:
     def __init__(self):
-        self.__size = 10
+        self.__boardSize = 10
         self.__carrier = 5
         self.__battleship = 4
         self.__cruiser = 3
         self.__submarine = 3
         self.__destroyer = 2
-        self.__ships = 5
         self.__shipcode = ["S", "A", "B", "C", "D"]
         self.__shipsize = [self.__cruiser, self.__carrier, self.__battleship, self.__cruiser, self.__destroyer]
-        self.__totalx = self.__cruiser + self.__carrier + self.__battleship + self.__cruiser + self.__destroyer
+        self.__totalx = sum(self.__shipsize)
+        self.__ships = len(self.__shipcode)
         self.__attempts = 0
         self.__start = time()
         self.__gameWon = False
@@ -24,9 +24,9 @@ class Battleship:
 
     def __createBoard(self):
         board = []
-        for r in range(self.__size):
+        for r in range(self.__boardSize):
             board.append([])
-            for c in range(self.__size):
+            for c in range(self.__boardSize):
                 board[r].append(".")
         return board
 
@@ -34,8 +34,8 @@ class Battleship:
         for i in range(len(self.__shipcode)):
             done = False
             while not done:
-                rand1 = randint(0, self.__size-1)
-                rand2 = randint(0, self.__size-1)
+                rand1 = randint(0, self.__boardSize-1)
+                rand2 = randint(0, self.__boardSize-1)
                 direction = randint(0, 2)
                 piece = 0
                 problem = False
@@ -48,13 +48,13 @@ class Battleship:
                         rand1 += 1
                     else:
                         rand2 += 1
-                    if rand1 > self.__size-1 or rand2 > self.__size-1:
+                    if rand1 > self.__boardSize-1 or rand2 > self.__boardSize-1:
                         problem = True
                     else:
                         piece += 1
                     if problem:
-                        for row in range(self.__size):
-                            for column in range(self.__size):
+                        for row in range(self.__boardSize):
+                            for column in range(self.__boardSize):
                                 if self.__board[row][column] == self.__shipcode[i]:
                                     self.__board[row][column] = "."
                 if piece == self.__shipsize[i] and not problem:
@@ -62,12 +62,12 @@ class Battleship:
 
     def displayBoard(self, showships):
         output = "Current board:\n\n  "
-        for i in range(self.__size):
+        for i in range(self.__boardSize):
             output += " " + str(i)
         output += "\n   -------------------\n"
-        for i in range(self.__size):
+        for i in range(self.__boardSize):
             output += f"{i}|"
-            for j in range(self.__size):
+            for j in range(self.__boardSize):
                 if showships:
                     output += f" {self.__board[i][j]}"
                     try:
@@ -87,7 +87,7 @@ class Battleship:
     def getTime(self):
         _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
         return m, s
-    
+
     def getShipcount(self):
         return self.__ships
 

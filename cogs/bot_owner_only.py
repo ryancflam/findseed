@@ -2,7 +2,6 @@ from os import system
 from sys import exit
 from ast import parse
 from asyncio import TimeoutError
-from subprocess import check_output, CalledProcessError
 
 import discord
 from discord.ext import commands
@@ -77,24 +76,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                 e = discord.Embed(description=f"```\n{str(res)}```")
             except Exception:
                 e = funcs.errorEmbed(None, "Error processing input.")
-        await ctx.send(embed=e)
-
-    @commands.command(name="terminal", description="Executes terminal commands. Proceed with caution.",
-                      aliases=["exec"], usage="<command(s)>")
-    @commands.is_owner()
-    async def eval(self, ctx, *, cmd:str=""):
-        if cmd == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
-        else:
-            cmdList = cmd.split(" ")
-            output = None
-            try:
-                output = check_output(cmdList)
-                output = output.decode("unicode_escape")
-            except CalledProcessError:
-                e = funcs.errorEmbed(None, f"```\n{output}```")
-            else:
-                e = discord.Embed(description=funcs.formatting("\n" + output))
         await ctx.send(embed=e)
 
 
