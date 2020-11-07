@@ -61,25 +61,28 @@ class Battleship:
                     done = True
 
     def displayBoard(self, showships):
-        st = "Current board:\n\n   0 1 2 3 4 5 6 7 8 9\n   -------------------\n"
+        output = "Current board:\n\n  "
         for i in range(self.__size):
-            st += f"{i}|"
+            output += " " + str(i)
+        output += "\n   -------------------\n"
+        for i in range(self.__size):
+            output += f"{i}|"
             for j in range(self.__size):
                 if showships:
-                    st += f" {self.__board[i][j]}"
+                    output += f" {self.__board[i][j]}"
                     try:
-                        st = st.replace("M", ".")
+                        output = output.replace("M", ".")
                     except:
                         pass
                 else:
                     if self.__board[i][j] == "M":
-                        st += " M"
+                        output += " M"
                     elif self.__board[i][j] == "X":
-                        st += " X"
+                        output += " X"
                     else:
-                        st += " ."
-            st += "\n"
-        return st
+                        output += " ."
+            output += "\n"
+        return output
 
     def getTime(self):
         _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)

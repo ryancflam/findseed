@@ -76,16 +76,16 @@ class Minesweeper:
         self.__gameEnd = True
 
     def displayBoard(self):
-        st = "  "
+        output = "  "
         for i in range(self.__col):
-            st += " " + str(i)
-        st += "\n   -------------------"
+            output += " " + str(i)
+        output += "\n   -------------------"
         for r in range(self.__row):
             s = str(r) + "|"
             for c in range(self.__col):
                 s += " " + self.__dispboard[r][c]
-            st += "\n" + s
-        return st
+            output += "\n" + s
+        return output
 
     def getTime(self):
         _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)

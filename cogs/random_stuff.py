@@ -237,9 +237,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 emoji = "...** :broken_heart:"
             await ctx.send("The love percentage between " + \
                                    f"**{first.name}** and **{second.name}** is **{intermediate}%{emoji}")
-        except Exception as ex:
-            print(ex)
+        except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="8ball", description="Ask 8ball a question..",
+                      aliases=["8b", "8"], usage="<input>")
+    async def eightball(self, ctx, *, msg=""):
+        if msg == "":
+            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return
 
 
 def setup(client:commands.Bot):
