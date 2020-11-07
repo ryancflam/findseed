@@ -13,7 +13,13 @@ class Battleship:
         self.__submarine = 3
         self.__destroyer = 2
         self.__shipcode = ["S", "A", "B", "C", "D"]
-        self.__shipsize = [self.__cruiser, self.__carrier, self.__battleship, self.__cruiser, self.__destroyer]
+        self.__shipsize = [
+            self.__cruiser,
+            self.__carrier,
+            self.__battleship,
+            self.__cruiser,
+            self.__destroyer
+        ]
         self.__ships = len(self.__shipcode)
         self.__totalx = sum(self.__shipsize)
         self.__attempts = 0
@@ -53,10 +59,10 @@ class Battleship:
                     else:
                         piece += 1
                     if problem:
-                        for row in range(self.__boardSize):
-                            for column in range(self.__boardSize):
-                                if self.__board[row][column] == self.__shipcode[i]:
-                                    self.__board[row][column] = "."
+                        for r in range(self.__boardSize):
+                            for c in range(self.__boardSize):
+                                if self.__board[r][c] == self.__shipcode[i]:
+                                    self.__board[r][c] = "."
                 if piece == self.__shipsize[i] and not problem:
                     done = True
 
