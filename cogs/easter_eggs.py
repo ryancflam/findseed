@@ -30,7 +30,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
             )
         else:
             url = "https://media.discordapp.net/attachments/769899860253736990/772731790791278602/unknown.png"
-            file = File(await funcs.getImage(url),"mlp.png")
+            file = File(await funcs.getImage(url), "mlp.png")
             await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -124,7 +124,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
             "https://media.discordapp.net/attachments/362589047018749955/761920398102364170/unknown.png",
             "https://media.discordapp.net/attachments/769899860253736990/772088052407074836/neo_logic_meme.jpg"
         ])
-        file = File(await funcs.getImage(url),"neo.png")
+        file = File(await funcs.getImage(url), "neo.png")
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -135,7 +135,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
             "https://media.discordapp.net/attachments/769899860253736990/772100077111738408/PicsArt_10-21-03.07.47.jpg",
             "https://media.discordapp.net/attachments/769899860253736990/772101368412373012/PicsArt_10-31-03.14.46.png",
         ])
-        file = File(await funcs.getImage(url),"audible.png")
+        file = File(await funcs.getImage(url), "audible.png")
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)

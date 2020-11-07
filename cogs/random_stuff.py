@@ -241,6 +241,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="avatar", description="Shows the avatar of a user.",
+                      aliases=["pfp"], usage="[@mention]")
+    async def avatar(self, ctx, *, user:Member=None):
+        user = user or ctx.author
+        format = "gif" if user.is_avatar_animated() else "png"
+        url = user.avatar_url_as(format=format if format != "gif" else None)
+        file = File(await funcs.getImage(str(url)), f"avatar.{format}")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="8ball", description="Ask 8ball a question.",
                       aliases=["8b", "8"], usage="<input>")
     async def eightball(self, ctx, *, msg=""):

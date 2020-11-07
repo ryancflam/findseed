@@ -66,7 +66,7 @@ class Battleship:
                 if piece == self.__shipsize[i] and not problem:
                     done = True
 
-    def displayBoard(self, showships):
+    def displayBoard(self, showships=False):
         output = "Current board:\n\n  "
         for i in range(self.__boardSize):
             output += " " + str(i)
