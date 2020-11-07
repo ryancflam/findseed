@@ -28,6 +28,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         system("sudo reboot")
         exit()
 
+    @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
+    @commands.is_owner()
+    async def gitpull(self, ctx):
+        system("cd findseed && git pull")
+        await ctx.send(":ok_hand:")
+
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
     @commands.is_owner()
     async def say(self, ctx, *, output:str=""):

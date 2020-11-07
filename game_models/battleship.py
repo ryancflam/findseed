@@ -14,8 +14,8 @@ class Battleship:
         self.__destroyer = 2
         self.__shipcode = ["S", "A", "B", "C", "D"]
         self.__shipsize = [self.__cruiser, self.__carrier, self.__battleship, self.__cruiser, self.__destroyer]
-        self.__totalx = sum(self.__shipsize)
         self.__ships = len(self.__shipcode)
+        self.__totalx = sum(self.__shipsize)
         self.__attempts = 0
         self.__start = time()
         self.__gameWon = False
