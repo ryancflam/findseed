@@ -30,6 +30,12 @@ class ChatGames(commands.Cog, name="Chat Games"):
             return True
         return False
 
+    @commands.command(name="cleargamechannels", description="Resets the game channel list.")
+    @commands.is_owner()
+    async def cleargamechannels(self, ctx):
+        self.gameChannels = []
+        await ctx.send(":ok_hand:")
+
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="akinator", description="Play Akinator.", aliases=["ak", "akin", "aki"])
     async def akinator(self, ctx):

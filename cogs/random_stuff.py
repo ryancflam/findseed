@@ -246,9 +246,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["pfp"], usage="[@mention]")
     async def avatar(self, ctx, *, user:Member=None):
         user = user or ctx.author
-        format = "gif" if user.is_avatar_animated() else "png"
-        url = user.avatar_url_as(format=format if format != "gif" else None)
-        file = File(await funcs.getImage(str(url)), f"avatar.{format}")
+        ext = "gif" if user.is_avatar_animated() else "png"
+        url = user.avatar_url_as(format=ext if ext != "gif" else None)
+        file = File(await funcs.getImage(str(url)), f"avatar.{ext}")
         await ctx.send(file=file)
 
     @commands.cooldown(1, 3, commands.BucketType.user)

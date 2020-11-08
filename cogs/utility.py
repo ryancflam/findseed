@@ -17,7 +17,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="covid", description="Gathers COVID-19 data.",
-                      aliases=["coronavirus", "corona", "covid19", "cv", "c19"], usage="[location]")
+                      aliases=["coronavirus", "corona", "covid19", "cv", "c19", "cv19"], usage="[location]")
     async def covid(self, ctx, *, searchtype:str=""):
         headers = {
             "x-rapidapi-host": "corona-virus-world-and-india-data.p.rapidapi.com",
@@ -256,8 +256,8 @@ class Utility(commands.Cog, name="Utility"):
             output = [amount, fromC.upper(), toC.upper()]
         except:
             await ctx.send(
-                embed=funcs.errorEmbed("Invalid usage!",
-                                       f"Use `{self.client.command_prefix}help currency` to see the correct usage.")
+                embed=funcs.errorEmbed(
+                    "Invalid usage!", f"Use `{self.client.command_prefix}help currency` to see the correct usage.")
             )
             return
         url = f"http://data.fixer.io/api/latest?access_key={info.fixerKey}"

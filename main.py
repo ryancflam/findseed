@@ -9,7 +9,9 @@ import info
 from other_utils import funcs
 
 
-client = commands.Bot(command_prefix=info.prefix, intents=Intents.all(), case_insensitive=True)
+client = commands.Bot(
+    command_prefix=info.prefix, intents=Intents.all(), case_insensitive=True
+)
 client.remove_command("help")
 
 

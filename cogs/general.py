@@ -66,16 +66,19 @@ class General(commands.Cog, name="General"):
     async def help(self, ctx, *cmd):
         prefix = self.client.command_prefix
         if not cmd:
-            ignored = ["Bot Owner Only", "Easter Eggs"]
+            ignoredCogs = ["Bot Owner Only", "Easter Eggs", "AC:NH"]
+            ignoredCmds = ["cleargamechannels"]
             e = discord.Embed(
                 title="Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):
-                if cog in ignored or len(self.client.get_cog(cog).get_commands()) == 0:
+                if cog in ignoredCogs or len(self.client.get_cog(cog).get_commands()) == 0:
                     continue
                 commandList = ""
                 for command in sorted(self.client.get_cog(cog).get_commands(), key=lambda x: x.name):
+                    if str(command) in ignoredCmds:
+                        continue
                     commandList += f"`{prefix}{command}`, "
                 e.add_field(name=cog, value=commandList[:-2], inline=False)
         else:
@@ -84,8 +87,9 @@ class General(commands.Cog, name="General"):
                 name = command.name
                 description = command.description
                 usage = command.usage
+                cog = command.cog_name
                 aliases = sorted(command.aliases)
-                e = discord.Embed(title="Command", description=f"**{prefix}{name}**")
+                e = discord.Embed(title="Command", description=f"**{prefix}{name}** ({cog})")
                 e.add_field(name="Description", value=f"```{description}```")
                 e.set_footer(text="Command usage: <> = Required; [] = Optional")
                 if usage:
