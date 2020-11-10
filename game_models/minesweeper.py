@@ -23,17 +23,16 @@ class Minesweeper:
             self.__grid.append([])
             for c in range(self.__col):
                 self.__grid[r].append(0)
-        for r in range(self.__row):
             self.__dispboard.append([])
             for c in range(self.__col):
                 self.__dispboard[r].append(".")
-        mp = 0
-        while mp != self.__mines:
-            mpc = randint(0, self.__col-1)
-            mpr = randint(0, self.__row-1)
-            if self.__grid[mpr][mpc] != -1:
-                self.__grid[mpr][mpc] =- 1
-                mp += 1
+        minePlacements = 0
+        while minePlacements != self.__mines:
+            mpCol = randint(0, self.__col-1)
+            mpRow = randint(0, self.__row-1)
+            if self.__grid[mpRow][mpCol] != -1:
+                self.__grid[mpRow][mpCol] = -1
+                minePlacements += 1
         for r in range(self.__row):
             for c in range(self.__col):
                 minecount = 0
