@@ -191,7 +191,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                             if len(game.getPlayerList()) < 2:
                                 await ctx.send("**Not enough players for Uno; stopping current game.**")
                             break
-                        elif decision.casefold().startswith("w"):
+                        elif decision.casefold().startswith("w ") or decision.casefold() == "w" \
+                                or decision.casefold().startswith("wild"):
                             await waitForInput.channel.send("`What colour would you like to use? " + \
                                                             "Please say the first letter of your preferred colour.`")
                             try:
