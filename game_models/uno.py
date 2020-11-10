@@ -238,6 +238,7 @@ class Uno:
                 self.__playerCycle.previousItem()
             self.__currentIndex = self.__playerCycle.getIndex()
         else:
+            self.__callout = False
             self.__gameEnd = True
 
     def startGame(self):
