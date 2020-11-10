@@ -128,3 +128,8 @@ async def getImage(url, headers=None, params=None, timeout=None):
         if res.status_code != 200:
             return None
         return BytesIO(res.content)
+
+async def decodeQR(link):
+    url = f"http://api.qrserver.com/v1/read-qr-code/?fileurl={link}"
+    res = await getRequest(url)
+    return res.json()[0]["symbol"][0]["data"]

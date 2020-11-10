@@ -6,10 +6,10 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-path = f"{funcs.getPath()}/assets/acnh"
+path = f"{funcs.getPath()}/assets/animal_crossing"
 
 
-class ACNH(commands.Cog, name="AC:NH"):
+class AnimalCrossing(commands.Cog, name="Animal Crossing"):
     def __init__(self, client:commands.Bot):
         self.client = client
         self.art = load(open(f"{path}/art.json", "r", encoding="utf8"))
@@ -204,4 +204,4 @@ class ACNH(commands.Cog, name="AC:NH"):
 
 
 def setup(client:commands.Bot):
-    client.add_cog(ACNH(client))
+    client.add_cog(AnimalCrossing(client))

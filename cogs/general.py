@@ -66,7 +66,7 @@ class General(commands.Cog, name="General"):
     async def help(self, ctx, *cmd):
         prefix = self.client.command_prefix
         if not cmd:
-            ignoredCogs = ["Bot Owner Only", "Easter Eggs", "AC:NH"]
+            ignoredCogs = ["Bot Owner Only", "Easter Eggs", "Animal Crossing"]
             ignoredCmds = ["cleargamechannels"]
             e = discord.Embed(
                 title="Commands List",

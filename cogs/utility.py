@@ -1,7 +1,7 @@
 from time import time
 from datetime import datetime
 from urllib.parse import quote
-from asyncio import TimeoutError
+from asyncio import TimeoutError, sleep
 from googletrans import Translator, constants
 
 from discord import Embed
@@ -387,17 +387,40 @@ class Utility(commands.Cog, name="Utility"):
                 await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="qr", description="Generates a QR code.", aliases=["qrcode"], usage="<input>")
-    async def qr(self, ctx, *, text:str=""):
+    @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg"], usage="<input>")
+    async def qrgen(self, ctx, *, text:str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
-                e = Embed(title = "QR Code").set_image(
+                e = Embed(title="QR Code").set_image(
                     url=f"http://api.qrserver.com/v1/create-qr-code/?data={quote(text)}&margin=25"
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Invalid input or server error?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr"],
+                      usage="<image URL/attachment>")
+    async def qrread(self, ctx):
+        await ctx.send("Reading image. Please wait...")
+        await sleep(3)
+        if ctx.message.attachments != [] or ctx.message.embeds != []:
+            try:
+                if ctx.message.attachments:
+                    qrlink = ctx.message.attachments[0].url
+                else:
+                    qrlink = ctx.message.embeds[0].thumbnail.url
+                qr = await funcs.decodeQR(qrlink)
+                if not qr:
+                    e = funcs.errorEmbed(None, "Cannot detect QR code. Maybe try making the image clearer?")
+                else:
+                    e = Embed(title="QR Code Message", description=funcs.formatting(qr))
+            except Exception as ex:
+                e = funcs.errorEmbed(None, str(ex))
+        else:
+            e = funcs.errorEmbed(None, "No attachment or URL detected, please try again.")
         await ctx.send(embed=e)
 
 
