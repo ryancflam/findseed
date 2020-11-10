@@ -4,7 +4,7 @@ from random import randint, shuffle
 from other_utils import funcs
 
 
-class Cycle:
+class PlayerCycle:
     def __init__(self, cycle):
         self.__cycle = cycle
         self.__index = 0
@@ -72,6 +72,22 @@ class Uno:
     def __newColouredCard(colour, cardType):
         return f"{colour} {cardType}"
 
+    @staticmethod
+    def __getColour(colour):
+        if colour.casefold().startswith("b"):
+            colour = "Blue"
+        elif colour.casefold().startswith("g"):
+            colour = "Green"
+        elif colour.casefold().startswith("y"):
+            colour = "Yellow"
+        elif colour.casefold().startswith("r"):
+            colour = "Red"
+        elif colour.casefold().startswith("w"):
+            colour = "Wild"
+        else:
+            colour = None
+        return colour
+
     def __createDeck(self):
         deck = []
         for i in range(13):
@@ -122,16 +138,7 @@ class Uno:
         return card
 
     def __getCardName(self, colour, cardType=None):
-        if colour.casefold().startswith("b"):
-            colour = "Blue"
-        if colour.casefold().startswith("g"):
-            colour = "Green"
-        if colour.casefold().startswith("y"):
-            colour = "Yellow"
-        if colour.casefold().startswith("r"):
-            colour = "Red"
-        if colour.casefold().startswith("w"):
-            colour = "Wild"
+        colour = self.__getColour(colour) or colour
         if colour != "Wild" and cardType is None:
             return None
         if cardType is None:
@@ -235,7 +242,7 @@ class Uno:
 
     def startGame(self):
         self.__startTime = time()
-        self.__playerCycle = Cycle(self.__playerList)
+        self.__playerCycle = PlayerCycle(self.__playerList)
         self.__currentIndex = self.__playerCycle.getIndex()
         self.__firstDeal()
         self.__createDiscard()
@@ -301,15 +308,8 @@ class Uno:
         if playDrawn:
             self.__nextPlayer(True)
         try:
-            if colour.casefold().startswith("b"):
-                colour = "Blue"
-            elif colour.casefold().startswith("g"):
-                colour = "Green"
-            elif colour.casefold().startswith("y"):
-                colour = "Yellow"
-            elif colour.casefold().startswith("r"):
-                colour = "Red"
-            else:
+            colour = self.__getColour(colour)
+            if colour is None or colour == "Wild":
                 raise Exception("Unknown colour.")
             card = f"Wild{' +4' if plusFour else ''}"
             self.__playerHands[self.__currentIndex].removeCard(card)
