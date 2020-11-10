@@ -42,7 +42,7 @@ class Hangman:
 
     @staticmethod
     def __randomWord():
-        with open(f"{funcs.getPath()}/game_models/hangman_words.txt", "r") as f:
+        with open(f"{funcs.getPath()}/assets/hangman_words.txt", "r") as f:
             lines = f.readlines()
         f.close()
         return choice(lines)[:-1]

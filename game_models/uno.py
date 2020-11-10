@@ -1,5 +1,3 @@
-# WIP NOT DONE YET
-
 from time import time
 from random import randint, shuffle
 
@@ -12,14 +10,11 @@ class Cycle:
         self.__index = 0
 
     def getIndex(self):
-        return self.__index
-
-    def getItem(self):
         try:
-            return self.__cycle[self.__index]
+            _ = self.__cycle[self.__index]
         except IndexError:
             self.__index = 0
-            return self.__cycle[self.__index]
+        return self.__index
 
     def nextItem(self):
         self.__index += 1
@@ -30,9 +25,6 @@ class Cycle:
         self.__index -= 1
         if self.__index < 0:
             self.__index = len(self.__cycle) - 1
-
-    def removeItem(self):
-        del self.__cycle[self.__index]
 
 
 class UnoPlayer:
@@ -56,40 +48,25 @@ class Uno:
     def __init__(self):
         self.__startTime = None
         self.__gameEnd = False
+        self.__winner = None
+        self.__secondPlace = None
+        self.__thirdPlace = None
+        self.__fourthPlace = None
         self.__reverseMode = False
+        self.__firstPlay = True
         self.__callout = False
+        self.__playedWF = False
+        self.__penalty = 0
         self.__playerList = []
         self.__playerHands = []
+        self.__originalPlayerCount = 0
         self.__playerCycle = None
         self.__currentIndex = None
+        self.__previousPlayer = None
         self.__colours = ["Blue", "Green", "Red", "Yellow"]
         self.__discardPile = []
         self.__deck = self.__createDeck()
         self.__validCards = self.__deck.copy()
-
-    def addPlayer(self, player):
-        self.__playerList.append(player)
-        self.__playerHands.append(UnoPlayer())
-
-    def removePlayer(self, player):
-        playerIndex = self.__playerList.index(player)
-        del self.__playerList[playerIndex]
-        del self.__playerHands[playerIndex]
-        self.__playerCycle.removeItem()
-        if len(self.__playerList) > 1:
-            if self.__reverseMode:
-                self.__playerCycle.previousItem()
-            self.__currentIndex = self.__playerCycle.getIndex()
-        else:
-            self.__gameEnd = True
-
-    def startGame(self):
-        self.__startTime = time()
-        self.__playerCycle = Cycle(self.__playerList)
-        self.__currentIndex = self.__playerCycle.getIndex()
-        self.__firstDeal()
-        self.__createDiscard()
-        _ = self.__checkDiscard()
 
     @staticmethod
     def __newColouredCard(colour, cardType):
@@ -132,31 +109,17 @@ class Uno:
 
     def __dealOne(self, handsObject):
         if len(self.__deck) == 0:
-            return None
+            discard = self.__discardPile[-1]
+            self.__discardPile.pop()
+            self.__deck = self.__discardPile.copy()
+            shuffle(self.__deck)
+            self.__discardPile = [discard]
+            if len(self.__deck) == 0:
+                return None
         card = self.__deck[randint(0, len(self.__deck) - 1)]
         handsObject.addCard(card)
         self.__deck.remove(card)
         return card
-
-    def drawCard(self):
-        drawnCards = []
-        card = self.__dealOne(self.__playerHands[self.__currentIndex])
-        if card is None:
-            return None
-        drawnCards.append(card)
-        affectedPlayer = self.__playerList[self.__currentIndex]
-        self.__nextPlayer()
-        discard = self.__discardPile[-1]
-        drawnCard = drawnCards[0]
-        wildCard = False
-        if drawnCard.contains("Wild") or drawnCard.split(" ")[0] == discard.split(" ")[0] \
-                or drawnCard.split(" ")[1] == discard.split(" ")[1]:
-            playable = True
-            if drawnCard.contains("Wild"):
-                wildCard = True
-        else:
-            playable = False
-        return drawnCards, affectedPlayer, playable, wildCard
 
     def __getCardName(self, colour, cardType=None):
         if colour.casefold().startswith("b"):
@@ -194,74 +157,29 @@ class Uno:
         except ValueError:
             return None
 
-    def saidUno(self):
-        self.__callout = False
-
-    def callout(self):
-        if self.__callout:
-            self.__nextPlayer(True)
-            drawnCards = []
-            for _ in range(2):
-                drawnCards.append(self.__dealOne(self.__playerHands[self.__currentIndex]))
-            self.__callout = False
-            return drawnCards
-        return None
-
-    def __checkIfLastCard(self):
+    def __calloutCheck(self):
         return len(self.__playerHands[self.__currentIndex].retrieveList()) == 1
 
-    def playWildCard(self, colour, plusFour=False):
-        try:
-            if colour.casefold().startswith("b"):
-                colour = "Blue"
-            elif colour.casefold().startswith("g"):
-                colour = "Green"
-            elif colour.casefold().startswith("y"):
-                colour = "Yellow"
-            elif colour.casefold().startswith("r"):
-                colour = "Red"
-            else:
-                raise Exception("Unknown colour.")
-            card = f"Wild{' +4' if plusFour else ''}"
-            self.__playerHands[self.__currentIndex].removeCard(card)
-            card = f"{colour} {card.replace(' ', '')}"
-            self.__discardPile.append(card)
-            self.__callout = self.__checkIfLastCard()
-            self.__nextPlayer()
-            affectedPlayer = self.__playerList[self.__currentIndex]
-            return self.__checkDiscard(), affectedPlayer, self.__callout
-        except Exception as ex:
-            raise Exception(str(ex))
-
-    def playColouredCard(self, card):
-        discard = self.__discardPile[-1]
-        card = card.casefold().replace(":", " ").replace("_", " ").replace("-", " ")
-        try:
-            colour, value = card.split(" ")
-            card = self.__getCardName(colour, value)
-            if card is None:
-                raise Exception("Invalid card. Please check your spelling.")
-        except IndexError:
-            raise Exception("Invalid card. Please add a space between the colour and the value.")
-        if discard == "Wild" or colour.casefold()[:1] == discard.casefold()[:1] \
-                or value.casefold()[:1] == discard.split(" ")[1].casefold()[:1]:
-            try:
-                self.__playerHands[self.__currentIndex].removeCard(card)
-                self.__discardPile.append(card)
-                self.__callout = self.__checkIfLastCard()
-                self.__nextPlayer()
-                affectedPlayer = self.__playerList[self.__currentIndex]
-                return self.__checkDiscard(), affectedPlayer, self.__callout
-            except Exception as ex:
-                raise Exception(str(ex))
-        else:
-            raise Exception("You cannot play that card!")
+    def __checkIfNoCardsLeft(self):
+        if len(self.__playerHands[self.__currentIndex].retrieveList()) == 0:
+            if not self.__winner:
+                self.__winner = self.__playerList[self.__currentIndex]
+            elif not self.__secondPlace:
+                self.__secondPlace = self.__playerList[self.__currentIndex]
+            elif not self.__thirdPlace:
+                self.__thirdPlace = self.__playerList[self.__currentIndex]
+            self.removePlayer(self.__playerList[self.__currentIndex], playedAllCards=True)
+            self.__nextPlayer(True)
+            if len(self.__playerList) == 1:
+                if self.__originalPlayerCount == 2:
+                    self.__secondPlace = self.__playerList[0]
+                elif self.__originalPlayerCount == 3:
+                    self.__thirdPlace = self.__playerList[0]
+                elif self.__originalPlayerCount == 4:
+                    self.__fourthPlace = self.__playerList[0]
 
     def __playReverse(self):
-        if self.__reverseMode:
-            self.__reverseMode = False
-        else:
-            self.__reverseMode = True
+        self.__reverseMode = not self.__reverseMode
 
     def __nextPlayer(self, backward=False):
         if self.__reverseMode and not backward or not self.__reverseMode and backward:
@@ -278,17 +196,167 @@ class Uno:
         elif discard.endswith("Reverse"):
             self.__playReverse()
             self.__nextPlayer()
+            if len(self.__playerList) > 2:
+                self.__nextPlayer()
+                if self.__firstPlay:
+                    for _ in range(2):
+                        self.__nextPlayer(True)
+            else:
+                if self.__firstPlay:
+                    self.__nextPlayer(True)
         elif "+" in discard:
-            for _ in range(int(discard.split("+")[1])):
+            if "+4" in discard and not self.__playedWF:
+                self.__playedWF = True
+                return None
+            for _ in range(int(discard.split("+")[1]) + self.__penalty):
                 drawnCards.append(self.__dealOne(self.__playerHands[self.__currentIndex]))
             self.__nextPlayer()
-        return drawnCards
+            self.__playedWF = False
+        self.__penalty = 0
+        self.__firstPlay = False
+        return sorted(drawnCards)
+
+    def addPlayer(self, player):
+        self.__playerList.append(player)
+        self.__playerHands.append(UnoPlayer())
+
+    def removePlayer(self, player, playedAllCards=False):
+        playerIndex = self.__playerList.index(player)
+        if not playedAllCards:
+            self.__originalPlayerCount -= 1
+        del self.__playerList[playerIndex]
+        del self.__playerHands[playerIndex]
+        if len(self.__playerList) > 1:
+            if self.__reverseMode:
+                self.__playerCycle.previousItem()
+            self.__currentIndex = self.__playerCycle.getIndex()
+        else:
+            self.__gameEnd = True
+
+    def startGame(self):
+        self.__startTime = time()
+        self.__playerCycle = Cycle(self.__playerList)
+        self.__currentIndex = self.__playerCycle.getIndex()
+        self.__firstDeal()
+        self.__createDiscard()
+        _ = self.__checkDiscard()
+        self.__originalPlayerCount = len(self.__playerList.copy())
+
+    def drawCard(self):
+        drawnCards = []
+        card = self.__dealOne(self.__playerHands[self.__currentIndex])
+        if card is None:
+            return None, None, False, False
+        drawnCards.append(card)
+        affectedPlayer = self.__playerList[self.__currentIndex]
+        self.__nextPlayer()
+        discard = self.__discardPile[-1]
+        drawnCard = drawnCards[0]
+        wildCard = False
+        if "Wild" in drawnCard or drawnCard.split(" ")[0] == discard.split(" ")[0] \
+                or drawnCard.split(" ")[1] == discard.split(" ")[1]:
+            playable = True
+            if "Wild" in drawnCard:
+                wildCard = True
+        else:
+            playable = False
+        return sorted(drawnCards), affectedPlayer, playable, wildCard
+
+    def saidUno(self):
+        self.__callout = False
+
+    def callout(self):
+        if self.__callout:
+            self.__nextPlayer(True)
+            drawnCards = []
+            for _ in range(2):
+                drawnCards.append(self.__dealOne(self.__playerHands[self.__currentIndex]))
+            self.__callout = False
+            self.__nextPlayer()
+            return sorted(drawnCards)
+        return None
+
+    def challengePlayer(self, challenge=False):
+        if self.__playedWF:
+            guilty = False
+            if challenge:
+                self.__nextPlayer(True)
+                for card in self.getHand(self.__playerList[self.__currentIndex]):
+                    if card.startswith("Wild"):
+                        continue
+                    else:
+                        accuseColour = card.split(" ")[0]
+                        discardColour = self.__discardPile[-2].split(" ")[0]
+                        if discardColour == accuseColour:
+                            guilty = True
+                            break
+                if not guilty:
+                    self.__nextPlayer()
+                    self.__penalty = 2
+            affectedPlayer = self.__playerList[self.__currentIndex]
+            return self.__checkDiscard(), affectedPlayer, guilty
+        return None, None, False
+
+    def playWildCard(self, colour, plusFour=False, playDrawn=False):
+        if playDrawn:
+            self.__nextPlayer(True)
+        try:
+            if colour.casefold().startswith("b"):
+                colour = "Blue"
+            elif colour.casefold().startswith("g"):
+                colour = "Green"
+            elif colour.casefold().startswith("y"):
+                colour = "Yellow"
+            elif colour.casefold().startswith("r"):
+                colour = "Red"
+            else:
+                raise Exception("Unknown colour.")
+            card = f"Wild{' +4' if plusFour else ''}"
+            self.__playerHands[self.__currentIndex].removeCard(card)
+            card = f"{colour} {card.replace(' ', '')}"
+            self.__discardPile.append(card)
+            self.__callout = self.__calloutCheck()
+            self.__checkIfNoCardsLeft()
+            self.__previousPlayer = self.__playerList[self.__currentIndex]
+            self.__nextPlayer()
+            affectedPlayer = self.__playerList[self.__currentIndex]
+            return self.__checkDiscard(), affectedPlayer, self.__callout
+        except Exception as ex:
+            raise Exception(str(ex))
+
+    def playColouredCard(self, card, playDrawn=False):
+        if playDrawn:
+            self.__nextPlayer(True)
+        discard = self.__discardPile[-1]
+        card = card.casefold().replace(":", " ").replace("_", " ").replace("-", " ")
+        try:
+            colour, value = card.split(" ")
+            card = self.__getCardName(colour, value)
+            if card is None:
+                raise Exception("Invalid card. Please check your spelling.")
+        except IndexError:
+            raise Exception("Invalid card. Please add a space between the colour and the value.")
+        if discard == "Wild" or colour.casefold()[:1] == discard.casefold()[:1] \
+                or value.casefold()[:1] == discard.split(" ")[1].casefold()[:1]:
+            try:
+                self.__playerHands[self.__currentIndex].removeCard(card)
+                self.__discardPile.append(card)
+                self.__callout = self.__calloutCheck()
+                self.__checkIfNoCardsLeft()
+                self.__previousPlayer = self.__playerList[self.__currentIndex]
+                self.__nextPlayer()
+                affectedPlayer = self.__playerList[self.__currentIndex]
+                return self.__checkDiscard(), affectedPlayer, self.__callout
+            except Exception as ex:
+                raise Exception(str(ex))
+        else:
+            raise Exception("You cannot play that card!")
+
+    def getPlayerRanking(self):
+        return self.__winner, self.__secondPlace, self.__thirdPlace, self.__fourthPlace
 
     def getDiscardPileCard(self):
         return self.__discardPile[-1]
-
-    def getTotalDrawableCards(self):
-        return len(self.__deck)
 
     def getPlayerList(self):
         return self.__playerList
@@ -296,11 +364,17 @@ class Uno:
     def getCurrentPlayer(self):
         return self.__playerList[self.__currentIndex]
 
+    def getPreviousPlayer(self):
+        return self.__previousPlayer
+
     def getHand(self, player):
-        return self.__playerHands[self.__playerList.index(player)].retrieveList()
+        return sorted(self.__playerHands[self.__playerList.index(player)].retrieveList())
 
     def getGameEndBool(self):
         return self.__gameEnd
+
+    def getCallout(self):
+        return self.__callout
 
     def getTime(self):
         _, m, s, _ = funcs.timeDifferenceStr(time(), self.__startTime, noStr=True)

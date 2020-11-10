@@ -18,6 +18,10 @@ class Errors(commands.Cog, name="Errors"):
             await ctx.send(
                 embed=funcs.errorEmbed("Insufficient privileges!", "Only the bot owner can use this.")
             )
+        elif isinstance(error, commands.NoPrivateMessage):
+            await ctx.send(
+                embed=funcs.errorEmbed(None, "This command can only be used in servers.")
+            )
         elif isinstance(error, commands.UserInputError):
             await ctx.send(
                 embed=funcs.errorEmbed("Invalid arguments!", "Correct usage: " + \
