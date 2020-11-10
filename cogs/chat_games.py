@@ -48,8 +48,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
 
     async def unoCallout(self, ctx, game, caller, victim):
         await caller.send(f"**== Uno ==**\n\nPsst, **{victim.name}** " + \
-                          "has not said 'uno' yet! Say `call` in this channel to make " + \
-                          "them draw two cards before this turn ends!")
+                          "has not said 'uno' yet! Say `call` in this channel to make" + \
+                          " them draw two cards before this turn ends!")
         while game.getCallout():
             try:
                 _ = await self.client.wait_for(
