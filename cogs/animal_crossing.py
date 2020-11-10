@@ -6,18 +6,18 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-path = f"{funcs.getPath()}/assets/animal_crossing"
+ASSETS_PATH = f"{funcs.getPath()}/assets/animal_crossing"
 
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing"):
     def __init__(self, client:commands.Bot):
         self.client = client
-        self.art = load(open(f"{path}/art.json", "r", encoding="utf8"))
-        self.bugs = load(open(f"{path}/bugs.json", "r", encoding="utf8"))
-        self.fish = load(open(f"{path}/fish.json", "r", encoding="utf8"))
-        self.fossils = load(open(f"{path}/fossils.json", "r", encoding="utf8"))
-        self.sea = load(open(f"{path}/sea_creatures.json", "r", encoding="utf8"))
-        self.villagers = load(open(f"{path}/villagers.json", "r", encoding="utf8"))
+        self.art = load(open(f"{ASSETS_PATH}/art.json", "r", encoding="utf8"))
+        self.bugs = load(open(f"{ASSETS_PATH}/bugs.json", "r", encoding="utf8"))
+        self.fish = load(open(f"{ASSETS_PATH}/fish.json", "r", encoding="utf8"))
+        self.fossils = load(open(f"{ASSETS_PATH}/fossils.json", "r", encoding="utf8"))
+        self.sea = load(open(f"{ASSETS_PATH}/sea_creatures.json", "r", encoding="utf8"))
+        self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
         self.logo = "https://media.discordapp.net/attachments/771698457391136798/" + \
                     "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
 
