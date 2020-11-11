@@ -19,9 +19,11 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not self.botDisguise or not message.channel == self.destChannel or message.author == self.client.user:
+        if message.author.bot or not self.botDisguise:
             return
-        await self.originChannel.send(f"{message.author} » {message.content}")
+        if message.channel == self.destChannel \
+                or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel):
+            await self.originChannel.send(f"{message.author} » {message.content}")
 
     def disableBotDisguise(self):
         self.botDisguise = False
@@ -66,8 +68,10 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             channelID = int(content)
             self.destChannel = self.client.get_channel(channelID)
             if not self.destChannel:
-                await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
-                return
+                self.destChannel = self.client.get_user(channelID)
+                if not self.destChannel:
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
+                    return
             self.botDisguise = True
             self.originChannel = ctx.channel
             self.client.loop.create_task(self.awaitBDStop(ctx))
