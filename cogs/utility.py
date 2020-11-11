@@ -387,7 +387,8 @@ class Utility(commands.Cog, name="Utility"):
                 await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg"], usage="<input>")
+    @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr"],
+                      usage="<input>")
     async def qrgen(self, ctx, *, text:str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
@@ -401,11 +402,13 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr"],
+    @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],
                       usage="<image URL/attachment>")
     async def qrread(self, ctx):
-        await ctx.send("Reading image. Please wait...")
-        await sleep(3)
+        await ctx.send("Reading image. Please wait... " + \
+                       "(URL embeds take longer to process than image attachments)")
+        if ctx.message.attachments == []:
+            await sleep(3)
         if ctx.message.attachments != [] or ctx.message.embeds != []:
             try:
                 if ctx.message.attachments:

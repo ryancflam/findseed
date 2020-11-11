@@ -134,7 +134,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             f"**Starting a game of Uno with {len(game.getPlayerList())} players. " + \
             "Input `hand` to see your hand of cards, `time` to see total elapsed time, or " + \
             "`quit` to quit the game (Note: You may only quit when it is your turn). " + \
-            "Remember to yell `uno` when you only have one card left!**"
+            "Remember to say `uno` when you only have one card left!**"
         )
         game.startGame()
         drawn, playable, wildCard, lastCard = [], False, False, False
@@ -144,7 +144,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
             hand = game.getHand(player)
             msg = f"`{', '.join(card for card in hand)}` ({len(hand)} left)"
             await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are player {str(count)}." + \
-                              f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}")
+                              f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}\n\n" + \
+                              "**Remember to say `uno` as soon as you play your second to last card!**")
             count += 1
         logo = "https://media.discordapp.net/attachments/668552771120791563/775240814636171324/logo.png"
         await ctx.send(f"`Say the name of a card in your hand to play it. " + \
