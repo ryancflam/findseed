@@ -75,18 +75,16 @@ class Uno:
     @staticmethod
     def __getColour(colour):
         if colour.casefold().startswith("b"):
-            colour = "Blue"
-        elif colour.casefold().startswith("g"):
-            colour = "Green"
-        elif colour.casefold().startswith("y"):
-            colour = "Yellow"
-        elif colour.casefold().startswith("r"):
-            colour = "Red"
-        elif colour.casefold().startswith("w"):
-            colour = "Wild"
-        else:
-            colour = None
-        return colour
+            return "Blue"
+        if colour.casefold().startswith("g"):
+            return "Green"
+        if colour.casefold().startswith("y"):
+            return "Yellow"
+        if colour.casefold().startswith("r"):
+            return "Red"
+        if colour.casefold().startswith("w"):
+            return "Wild"
+        return None
 
     def __createDeck(self):
         deck = []

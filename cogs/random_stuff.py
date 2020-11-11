@@ -123,7 +123,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     " ignores that natural selection favors the culture of empathy, team players, social and altruistic " + \
                     "people, ignoring the fact there are other fundamental traits and other strategies that are selected.",
                     " urges people to self-suppress their own skills in the place of the skills of others.",
-                    " shouldn't fire MLP and Disney writers to write its articles",
+                    " shouldn't hire MLP and Disney writers to write its articles",
                     " is like pressing a fork on a plate right next your ear except that you're also being physically " + \
                     "tortured in the process.",
                     " should be against human rights",

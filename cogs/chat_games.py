@@ -52,7 +52,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                           " them draw two cards before this turn ends!")
         while game.getCallout():
             try:
-                _ = await self.client.wait_for(
+                await self.client.wait_for(
                     "message", check=lambda m: m.author == caller and m.content.casefold() == "call", timeout=1
                 )
             except TimeoutError:
@@ -92,14 +92,13 @@ class ChatGames(commands.Cog, name="Chat Games"):
     def unoEmbedColour(card):
         if card.startswith("B"):
             return Colour.blue()
-        elif card.startswith("G"):
+        if card.startswith("G"):
             return Colour.green()
-        elif card.startswith("R"):
+        if card.startswith("R"):
             return Colour.red()
-        elif card.startswith("Y"):
+        if card.startswith("Y"):
             return Colour.orange()
-        else:
-            return Colour(0x23272A)
+        return Colour(0x23272A)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="uno", description="Play Uno.")

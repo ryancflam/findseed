@@ -6,12 +6,91 @@ from asyncio import TimeoutError
 import discord
 from discord.ext import commands
 
+import info
 from other_utils import funcs
 
 
 class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     def __init__(self, client:commands.Bot):
         self.client = client
+        self.botDisguise = False
+        self.destChannel = None
+        self.originChannel = None
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if not self.botDisguise or not message.channel == self.destChannel or message.author == self.client.user:
+            return
+        await self.originChannel.send(f"{message.author} » {message.content}")
+
+    async def awaitBDStop(self, ctx):
+        while self.botDisguise:
+            try:
+                msg = await self.client.wait_for(
+                    "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author,
+                    timeout=1
+                )
+                content = msg.content
+                if content.casefold().startswith("!q") or content.casefold().startswith(f"{info.prefix}bd") \
+                        or content.casefold().startswith(f"{info.prefix}botdisguise"):
+                    await ctx.send("Exiting bot disguise mode.")
+                    self.botDisguise = False
+                    self.destChannel = None
+                    self.originChannel = None
+            except TimeoutError:
+                continue
+
+    @commands.command(name="resetbotdisguise", description="Resets bot disguise mode.", aliases=["rbd"])
+    @commands.is_owner()
+    async def resetbotdisguise(self, ctx):
+        self.botDisguise = False
+        self.destChannel = None
+        self.originChannel = None
+        await ctx.send(":ok_hand:")
+
+    @commands.command(name="botdisguise", description="Enables bot disguise mode.", aliases=["bd"])
+    @commands.is_owner()
+    async def botdisguise(self, ctx):
+        if self.botDisguise:
+            return
+        await ctx.send("Please enter channel ID, or `cancel` to cancel.")
+        try:
+            msg = await self.client.wait_for(
+                "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=30
+            )
+            content = msg.content
+            if content.casefold().startswith("c") or content.startswith(info.prefix):
+                await ctx.send("Cancelling.")
+                return
+            channelID = int(content)
+            self.destChannel = self.client.get_channel(channelID)
+            if not self.destChannel:
+                await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
+                return
+            self.botDisguise = True
+            self.originChannel = ctx.channel
+            self.client.loop.create_task(self.awaitBDStop(ctx))
+            await ctx.send("You are now in bot disguise mode! Type `!q` to quit.")
+            while self.botDisguise:
+                try:
+                    msg = await self.client.wait_for(
+                        "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author,
+                        timeout=1
+                    )
+                except TimeoutError:
+                    continue
+                if not msg.content.startswith("!") and not msg.content.casefold().startswith(f"{info.prefix}bd") \
+                        and not msg.content.casefold().startswith(f"{info.prefix}botdisguise"):
+                    try:
+                        await self.destChannel.send(msg.content)
+                    except Exception as ex:
+                        await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        except TimeoutError:
+            await ctx.send("Cancelling.")
+            return
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
+            return
 
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
@@ -32,6 +111,15 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def gitpull(self, ctx):
         system("cd findseed && git pull")
+        await ctx.send(":ok_hand:")
+
+    @commands.command(name="pip", description="Executes a Pip command.", aliases=["pip3"], usage="<input>")
+    @commands.is_owner()
+    async def pip(self, ctx, *, cmd:str=""):
+        if cmd == "":
+            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return
+        system(f"pip3 {cmd}")
         await ctx.send(":ok_hand:")
 
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
