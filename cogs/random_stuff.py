@@ -182,8 +182,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         else:
             if "neo" in something.casefold():
                 quotes = choice([
-                    "hold up... Stick it up yours you flawed brony",
-                    "wait hang on..."
+                    " hold up... Stick it up yours you flawed brony",
+                    " wait hang on..."
                 ])
             else:
                 quotes = choice([
