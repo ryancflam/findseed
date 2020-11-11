@@ -71,7 +71,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     and userInput.casefold() != "exit" and userInput.casefold() != "leave":
                 try:
                     answer = await self.client.wait_for(
-                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=600
+                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=900
                     )
                 except TimeoutError:
                     await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
