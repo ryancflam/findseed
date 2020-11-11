@@ -558,7 +558,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         await ctx.send(f"`Please enter a {rolCol}`")
         try:
             msg = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=120
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
             )
         except TimeoutError:
             await self.gameIdle(ctx, game, ms)
@@ -577,7 +577,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             await ctx.send(f"`Please enter a {rolCol}`")
             try:
                 msg = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=120
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
                 )
             except TimeoutError:
                 await self.gameIdle(ctx, game, ms)
@@ -602,7 +602,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         await ctx.send("`Would you like to reveal, flag, or unflag a location?`")
         try:
             msg = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=120
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
             )
         except TimeoutError:
             await self.gameIdle(ctx, game, True)
@@ -617,7 +617,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             await ctx.send("`Would you like to reveal, flag, or unflag a location?`")
             try:
                 msg = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=120
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
                 )
             except TimeoutError:
                 await self.gameIdle(ctx, game, True)
@@ -747,7 +747,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             await ctx.send("`Rock, paper, or scissors?`")
             try:
                 msg = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=60
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=60
                 )
             except TimeoutError:
                 await ctx.send(f"`{ctx.author.name} has feft Rock Paper Scissors for idling too long.`")
@@ -793,7 +793,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             await ctx.send("`Please guess a letter.`")
             try:
                 guess = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=120
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
                 )
             except TimeoutError:
                 await ctx.send(f"`{ctx.author.name} has left Hangman for idling too long.`")

@@ -23,29 +23,30 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             return
         await self.originChannel.send(f"{message.author} » {message.content}")
 
+    def disableBotDisguise(self):
+        self.botDisguise = False
+        self.destChannel = None
+        self.originChannel = None
+
     async def awaitBDStop(self, ctx):
         while self.botDisguise:
             try:
                 msg = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author,
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
                     timeout=1
                 )
                 content = msg.content
                 if content.casefold().startswith("!q") or content.casefold().startswith(f"{info.prefix}bd") \
                         or content.casefold().startswith(f"{info.prefix}botdisguise"):
                     await ctx.send("Exiting bot disguise mode.")
-                    self.botDisguise = False
-                    self.destChannel = None
-                    self.originChannel = None
+                    self.disableBotDisguise()
             except TimeoutError:
                 continue
 
     @commands.command(name="resetbotdisguise", description="Resets bot disguise mode.", aliases=["rbd"])
     @commands.is_owner()
     async def resetbotdisguise(self, ctx):
-        self.botDisguise = False
-        self.destChannel = None
-        self.originChannel = None
+        self.disableBotDisguise()
         await ctx.send(":ok_hand:")
 
     @commands.command(name="botdisguise", description="Enables bot disguise mode.", aliases=["bd"])
@@ -56,7 +57,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         await ctx.send("Please enter channel ID, or `cancel` to cancel.")
         try:
             msg = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=30
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=30
             )
             content = msg.content
             if content.casefold().startswith("c") or content.startswith(info.prefix):
@@ -74,13 +75,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             while self.botDisguise:
                 try:
                     msg = await self.client.wait_for(
-                        "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author,
+                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
                         timeout=1
                     )
                 except TimeoutError:
                     continue
-                if not msg.content.startswith("!") and not msg.content.casefold().startswith(f"{info.prefix}bd") \
-                        and not msg.content.casefold().startswith(f"{info.prefix}botdisguise"):
+                if not msg.content.startswith("!q") and not msg.content.casefold().startswith(info.prefix):
                     try:
                         await self.destChannel.send(msg.content)
                     except Exception as ex:
@@ -98,7 +98,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         await ctx.send("Are you sure? You have 10 seconds to confirm by typing `yes`.")
         try:
             await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.message.channel and m.author == ctx.author, timeout=10
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=10
             )
         except TimeoutError:
             await ctx.send("Cancelling restart.")
