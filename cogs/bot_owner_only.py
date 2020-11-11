@@ -31,7 +31,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         self.originChannel = None
 
     async def awaitBDStop(self, ctx):
+        count = 0
         while self.botDisguise:
+            count += 1
+            if count == 120:
+                await ctx.send("Friendly reminder that you are still in bot disguise mode!")
+                count = 0
             try:
                 msg = await self.client.wait_for(
                     "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
