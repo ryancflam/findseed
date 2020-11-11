@@ -23,7 +23,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             return
         if message.channel == self.destChannel \
                 or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel):
-            await self.originChannel.send(f"{message.author} » {message.content}")
+            await self.originChannel.send(f"{message.author} » {message.content}" + \
+                                          f"{message.attachments[0].url if message.attachments else ''}")
 
     def disableBotDisguise(self):
         self.botDisguise = False
@@ -89,7 +90,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                     )
                 except TimeoutError:
                     continue
-                if not msg.content.startswith("!q") and not msg.content.casefold().startswith(info.prefix):
+                if not msg.content.casefold().startswith("!q") and not msg.content.startswith(info.prefix):
                     try:
                         await self.destChannel.send(msg.content)
                     except Exception as ex:

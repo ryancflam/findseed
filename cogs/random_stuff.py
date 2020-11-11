@@ -1,6 +1,7 @@
 import hashlib
-from random import choice, randint
+from json import load
 from asyncio import sleep
+from random import choice, randint, shuffle
 
 from discord import Embed, Member, File
 from discord.ext import commands
@@ -12,6 +13,139 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     def __init__(self, client:commands.Bot):
         self.client = client
         self.activeSpinners = []
+        self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",
+                      aliases=["pt", "mbti", "personality"])
+    async def personalitytest(self, ctx):
+        await ctx.send("```Note: You are about to take a non-professional personality test with 88 questions. " + \
+                       "The test should take around 15 to 30 minutes to complete. To select an answer, input " + \
+                       "either 'a', 'b', or 'c'. Try to leave out as many neutral answers as possible. There " + \
+                       "are no right or wrong answers.\n\nPlease note that this test does not consider the " + \
+                       "cognitive functions and is only designed purely for fun. For more accurate results, " + \
+                       "it is recommended that you study the eight cognitive functions and type yourself " + \
+                       "based on those functions with the help of a test that makes good use of them.\n\nIf " + \
+                       "you want to quit, input 'quit'. Otherwise, input 'test' to start the test.\n\n" + \
+                       "Questions provided by EDCampus.```")
+        try:
+            choice = await self.client.wait_for(
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
+            )
+        except TimeoutError:
+            await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
+            return
+        if choice.content.casefold() != "test":
+            await ctx.send(f"`{ctx.author.name} has left the personality test.`")
+            return
+        res = list(self.personalityTest["questions"])
+        e, i, s, n, t, f, j, p = 0, 0, 0, 0, 0, 0, 0, 0
+        ei = ["1.", "5.", "9.", "13", "17", "21", "25", "29", "33", "37", "41",
+              "45", "49", "53", "57", "61", "65", "69", "73", "77", "81", "85"]
+        sn = ["2.", "6.", "10", "14", "18", "22", "26", "30", "34", "38", "42",
+              "46", "50", "54", "58", "62", "66", "70", "74", "78", "82", "86"]
+        tf = ["3.", "7.", "11", "15", "19", "23", "27", "31", "35", "39", "43",
+              "47", "51", "55", "59", "63", "67", "71", "75", "79", "83", "87"]
+        choices = [0, 1]
+        questionNumbers = [i for i in range(88)]
+        questionCount, choiceCount = 1, 1
+        choice = None
+        shuffle(questionNumbers)
+        for x in questionNumbers:
+            title = res[x]["title"]
+            question = f"{title.split('. ')[1]}\n\n"
+            shuffle(choices)
+            for choice in choices:
+                if choiceCount == 1:
+                    sub = "a) "
+                    choiceCount = 2
+                else:
+                    sub = "b) "
+                    choiceCount = 1
+                question += sub + res[x]["selections"][choice] + "\n"
+            await ctx.send(f"```Question {questionCount} of 88 for {ctx.author.name}:\n\n{question[:-1]}\n" + \
+                           "c) none of the above/neutral.```")
+            try:
+                answer = await self.client.wait_for(
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
+                )
+            except TimeoutError:
+                await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
+                return
+            while answer.content.casefold() != "a" and answer.content.casefold() != "b" \
+                    and answer.content.casefold() != "c" and answer.content.casefold() != "quit" \
+                    and answer.content.casefold() != "exit" and answer.content.casefold() != "leave":
+                await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+                try:
+                    answer = await self.client.wait_for(
+                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
+                    )
+                except TimeoutError:
+                    await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
+                    return
+            if answer.content.casefold() == "quit" or answer.content.casefold() == "exit" \
+                    or answer.content.casefold() == "leave":
+                await ctx.send(f"`{ctx.author.name} has left the personality test.`")
+                return
+            if answer.content.casefold() == "a" and choice == 1 \
+                    or answer.content.casefold() == "b" and choice == 0:
+                if any(res[x]["title"].startswith(y) for y in ei):
+                    e += 1
+                elif any(res[x]["title"].startswith(y) for y in sn):
+                    s += 1
+                elif any(res[x]["title"].startswith(y) for y in tf):
+                    t += 1
+                else:
+                    j += 1
+            elif answer.content.casefold() == "b" and choice == 1 \
+                    or answer.content.casefold() == "a" and choice == 0:
+                if any(res[x]["title"].startswith(y) for y in ei):
+                    i += 1
+                elif any(res[x]["title"].startswith(y) for y in sn):
+                    n += 1
+                elif any(res[x]["title"].startswith(y) for y in tf):
+                    f += 1
+                else:
+                    p += 1
+            else:
+                if any(res[x]["title"].startswith(y) for y in ei):
+                    e += 0.5
+                    i += 0.5
+                elif any(res[x]["title"].startswith(y) for y in sn):
+                    s += 0.5
+                    n += 0.5
+                elif any(res[x]["title"].startswith(y) for y in tf):
+                    t += 0.5
+                    f += 0.5
+                else:
+                    j += 0.5
+                    p += 0.5
+            questionCount += 1
+        eifavour = e if e > i else i
+        snfavour = s if s > n else n
+        tffavour = t if t > f else f
+        jpfavour = j if j > p else p
+        eir = "Extraverted - " if e > i else "Extraverted/Introverted? - " if e == i else "Introverted - "
+        snr = "Sensing - " if s > n else "Sensing/Intuitive? - " if s == n else "Intuitive - "
+        tfr = "Thinking - " if t > f else "Thinking/Feeling? - " if t == f else "Feeling - "
+        jpr = "Judging - " if j > p else "Judging/Perceiving? - " if j == p else "Perceiving - "
+        eic = "E" if e > i else "X" if e == i else "I"
+        snc = "S" if s > n else "X" if s == n else "N"
+        tfc = "T" if t > f else "X" if t == f else "F"
+        jpc = "J" if j > p else "X" if j == p else "P"
+        eipercent = eifavour / 22
+        snpercent = snfavour / 22
+        tfpercent = tffavour / 22
+        jppercent = jpfavour / 22
+        eis = "{:.0%}".format(eipercent)
+        sns = "{:.0%}".format(snpercent)
+        tfs = "{:.0%}".format(tfpercent)
+        jps = "{:.0%}".format(jppercent)
+        await ctx.send(f"```== {ctx.author.name}'s Personality Test Result " + \
+                       f"==\n\n{eir}{eis}\n{snr}{sns}\n{tfr}{tfs}\n{jpr}{jps}\n\nYour four-letter " + \
+                       f"personality code is '{eic}{snc}{tfc}{jpc}'.\n\nOnce again, this test is " + \
+                       "only for fun and should not be treated like a professional assessment. " + \
+                       "Thank you for trying out this out!```")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dadjoke", description="Sends a random dad joke.", aliases=["dj", "joke"])
