@@ -19,7 +19,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot or not self.botDisguise:
+        if not self.botDisguise or message.author == self.client.user:
             return
         if message.channel == self.destChannel \
                 or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel):
@@ -92,7 +92,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                     continue
                 if not msg.content.casefold().startswith("!q") and not msg.content.startswith(info.prefix):
                     try:
-                        await self.destChannel.send(msg.content)
+                        await self.destChannel.send(f"{msg.content}" + \
+                                                    f"{msg.attachments[0].url if msg.attachments else ''}")
                     except Exception as ex:
                         await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
         except TimeoutError:

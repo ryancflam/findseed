@@ -30,7 +30,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                        "Questions provided by EDCampus.```")
         try:
             choice = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
             )
         except TimeoutError:
             await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
@@ -52,6 +52,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         choice = None
         shuffle(questionNumbers)
         for x in questionNumbers:
+            userInput = ""
             title = res[x]["title"]
             question = f"{title.split('. ')[1]}\n\n"
             shuffle(choices)
@@ -65,30 +66,27 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 question += sub + res[x]["selections"][choice] + "\n"
             await ctx.send(f"```Question {questionCount} of 88 for {ctx.author.name}:\n\n{question[:-1]}\n" + \
                            "c) none of the above/neutral.```")
-            try:
-                answer = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
-                )
-            except TimeoutError:
-                await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
-                return
-            while answer.content.casefold() != "a" and answer.content.casefold() != "b" \
-                    and answer.content.casefold() != "c" and answer.content.casefold() != "quit" \
-                    and answer.content.casefold() != "exit" and answer.content.casefold() != "leave":
-                await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            while userInput.casefold() != "a" and userInput.casefold() != "b" \
+                    and userInput.casefold() != "c" and userInput.casefold() != "quit" \
+                    and userInput.casefold() != "exit" and userInput.casefold() != "leave":
                 try:
                     answer = await self.client.wait_for(
-                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
+                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=600
                     )
                 except TimeoutError:
                     await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
                     return
-            if answer.content.casefold() == "quit" or answer.content.casefold() == "exit" \
-                    or answer.content.casefold() == "leave":
+                userInput = answer.content
+                if userInput.casefold() != "a" and userInput.casefold() != "b" \
+                        and userInput.casefold() != "c" and userInput.casefold() != "quit" \
+                        and userInput.casefold() != "exit" and userInput.casefold() != "leave":
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            if userInput.casefold() == "quit" or userInput.casefold() == "exit" \
+                    or userInput.casefold() == "leave":
                 await ctx.send(f"`{ctx.author.name} has left the personality test.`")
                 return
-            if answer.content.casefold() == "a" and choice == 1 \
-                    or answer.content.casefold() == "b" and choice == 0:
+            if userInput.casefold() == "a" and choice == 1 \
+                    or userInput.casefold() == "b" and choice == 0:
                 if any(res[x]["title"].startswith(y) for y in ei):
                     e += 1
                 elif any(res[x]["title"].startswith(y) for y in sn):
@@ -97,8 +95,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     t += 1
                 else:
                     j += 1
-            elif answer.content.casefold() == "b" and choice == 1 \
-                    or answer.content.casefold() == "a" and choice == 0:
+            elif userInput.casefold() == "b" and choice == 1 \
+                    or userInput.casefold() == "a" and choice == 0:
                 if any(res[x]["title"].startswith(y) for y in ei):
                     i += 1
                 elif any(res[x]["title"].startswith(y) for y in sn):
