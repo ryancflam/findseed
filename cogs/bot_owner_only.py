@@ -16,6 +16,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         self.botDisguise = False
         self.destChannel = None
         self.originChannel = None
+        self.bdReminder = 0
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -23,6 +24,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             return
         if message.channel == self.destChannel \
                 or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel):
+            self.bdReminder = 0
             await self.originChannel.send(f"{message.author} » {message.content}" + \
                                           f"{message.attachments[0].url if message.attachments else ''}")
 
@@ -30,20 +32,20 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         self.botDisguise = False
         self.destChannel = None
         self.originChannel = None
+        self.bdReminder = 0
 
     async def awaitBDStop(self, ctx):
-        count = 0
         while self.botDisguise:
-            count += 1
-            if count == 120:
+            self.bdReminder += 1
+            if self.bdReminder == 120:
                 await ctx.send("Friendly reminder that you are still in bot disguise mode!")
-                count = 0
+                self.bdReminder = 0
             try:
                 msg = await self.client.wait_for(
                     "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
                     timeout=1
                 )
-                count = 0
+                self.bdReminder = 0
                 content = msg.content
                 if content.casefold().startswith("!q") or content.casefold().startswith(f"{info.prefix}bd") \
                         or content.casefold().startswith(f"{info.prefix}botdisguise"):

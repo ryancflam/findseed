@@ -146,6 +146,13 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="handkerchief", description="Need a handkerchief?")
+    async def handkerchief(self, ctx):
+        url = "https://media.discordapp.net/attachments/771404776410972161/776318693969756160/al_doctor.jpg"
+        file = File(await funcs.getImage(url), "handkerchief.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name=">(", description="Just >(.")
     async def idontknowwhatthisis(self, ctx):
         url = "https://media.discordapp.net/attachments/771404776410972161/776320128953745428/angry.png"
