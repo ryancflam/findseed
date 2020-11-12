@@ -317,6 +317,19 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
+    @commands.command(name="blacklist", description="Gets the blacklist.", aliases=["bl"])
+    @commands.is_owner()
+    async def blacklist(self, ctx):
+        with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+            data = load(f)
+        f.close()
+        serverList = list(data["servers"])
+        userList = list(data["users"])
+        await ctx.send(
+            f"```Servers: {'None' if serverList == [] else ', '.join(str(server) for server in serverList)}" + \
+            f"\nUsers: {'None' if userList == [] else ', '.join(str(user) for user in userList)}```"
+        )
+
 
 def setup(client:commands.Bot):
     client.add_cog(BotOwnerOnly(client))
