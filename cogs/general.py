@@ -69,18 +69,23 @@ class General(commands.Cog, name="General"):
             ignoredCogs = ["Bot Owner Only", "Easter Eggs", "Animal Crossing"]
             ignoredCmds = ["cleargamechannels"]
             e = discord.Embed(
-                title="Commands List",
+                title=f"{self.client.user.name} Bot Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):
                 if cog in ignoredCogs or len(self.client.get_cog(cog).get_commands()) == 0:
                     continue
-                commandList = ""
-                for command in sorted(self.client.get_cog(cog).get_commands(), key=lambda x: x.name):
-                    if str(command) in ignoredCmds:
-                        continue
-                    commandList += f"`{prefix}{command}`, "
-                e.add_field(name=cog, value=commandList[:-2], inline=False)
+                e.add_field(
+                    name=cog,
+                    value=", ".join(
+                        f"`{prefix}{str(command)}`" for command in filter(
+                            lambda x: str(x) not in ignoredCmds, sorted(
+                                self.client.get_cog(cog).get_commands(), key=lambda y: y.name
+                            )
+                        )
+                    ),
+                    inline=False
+                )
         else:
             if self.client.get_command(cmd[0].replace(prefix, "")):
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
@@ -95,10 +100,9 @@ class General(commands.Cog, name="General"):
                 if usage:
                     e.add_field(name="Usage", value=f"```{prefix}{name} {usage}```")
                 if len(aliases) != 0:
-                    aliasText = ""
-                    for alias in aliases:
-                        aliasText += f"`{prefix}{alias}`, "
-                    e.add_field(name="Aliases", value=aliasText[:-2])
+                    e.add_field(
+                        name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
+                    )
             else:
                 e = funcs.errorEmbed(None,"Unknown command.")
         await ctx.send(embed=e)
