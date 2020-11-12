@@ -245,10 +245,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             return
         try:
             userID = int(userID)
-            appinfo = await self.client.application_info()
-            if userID == appinfo.owner.id:
+            if userID == ctx.author.id:
                 await ctx.send(embed=funcs.errorEmbed(
-                    None, "Are you trying to blacklist yourself, you idiot?"
+                    None, "Are you trying to blacklist yourself, you dumb retard??!@?@?#!?"
                 ))
                 return
             with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
