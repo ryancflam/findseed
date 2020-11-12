@@ -3,6 +3,7 @@ test.py
 test2.py
 test3.py
 data.json
+blacklist.json
 .idea/
 */__pycache__
 venv/

@@ -219,29 +219,18 @@ class Conversion(commands.Cog, name="Conversion"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="binarytodecimal", description="Converts binary to decimal.",
-                      aliases=["btd", "b2s"])
+                      aliases=["btd", "b2d"])
     async def binarytodecimal(self, ctx, *, text:str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
                 binnumber = text.replace(" ", "")
-                binlength = len(binnumber)
-                power = 0
-                result = 0
-                while binlength > 0:
-                    digit = int(binnumber[binlength - 1])
-                    if digit != 0 and digit != 1:
-                        await ctx.send(embed=funcs.errorEmbed(None, "Input must contain either 0 or 1."))
-                        return
-                    result += (digit * 2 ** power)
-                    binlength -= 1
-                    power += 1
                 e = Embed(
                     title="Binary to Decimal",
-                    description=funcs.formatting(str(result))
+                    description=funcs.formatting(str(int(binnumber, 2)))
                 )
-            except Exception:
+            except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
@@ -281,6 +270,40 @@ class Conversion(commands.Cog, name="Conversion"):
                     description=funcs.formatting(str(bstr))
                 )
             except Exception:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="hextodecimal", description="Converts hexadecimal to decimal.",
+                      aliases=["htd", "h2d"])
+    async def hextodecimal(self, ctx, *, text:str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                hexnumber = text.replace(" ", "")
+                e = Embed(
+                    title="Hexadecimal to Decimal",
+                    description=funcs.formatting(str(int(hexnumber, 16)))
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="decimaltohex", description="Converts decimal to hexadecimal.",
+                      aliases=["dth", "d2h"])
+    async def decimaltohex(self, ctx, *, text:str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = int(text.replace(" ", ""))
+                e = Embed(
+                    title="Decimal to Hexadecimal",
+                    description=funcs.formatting(hex(number).split("x")[-1])
+                )
+            except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 

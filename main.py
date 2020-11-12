@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from os import listdir
+from json import load
 
 from discord import Intents, Game
 from discord.ext import commands
@@ -19,6 +20,18 @@ client.remove_command("help")
 async def on_ready():
     print(f"Logged in as {client.user}")
     await client.change_presence(activity=Game("with seeds!"))
+
+
+@client.event
+async def on_message(message):
+    with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+        data = load(f)
+    f.close()
+    serverList = list(data["servers"])
+    userList = list(data["users"])
+    if message.author.id not in userList and \
+            (not message.guild or message.guild.id not in serverList):
+        await client.process_commands(message)
 
 
 def main():

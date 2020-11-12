@@ -1,6 +1,7 @@
 from os import system
 from sys import exit
 from ast import parse
+from json import load, dump
 from asyncio import TimeoutError
 
 import discord
@@ -175,13 +176,13 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     async def servers(self, ctx):
         serverList = ""
         for server in self.client.guilds:
-            serverList += "- " + str(server) + f" ({server.member_count})\n"
+            serverList += f"- {str(server.id)}: " + str(server) + f" ({server.member_count})\n"
         serverList = serverList[:-1]
         newList = serverList[:1998]
         await ctx.send(f"`{newList}`")
 
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
-                      aliases=["evaluate"], usage="<code>")
+                      aliases=["evaluate", "calc"], usage="<code>")
     @commands.is_owner()
     async def eval(self, ctx, *, code:str=""):
         if code == "":
@@ -209,6 +210,112 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             except Exception:
                 e = funcs.errorEmbed(None, "Error processing input.")
         await ctx.send(embed=e)
+
+    @commands.command(name="blacklistserver", description="Blacklists a server.",
+                      aliases=["bls"], usage="<server ID>")
+    @commands.is_owner()
+    async def blacklistserver(self, ctx, *, serverID=None):
+        if not serverID:
+            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return
+        try:
+            serverID = int(serverID)
+            with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+                data = load(f)
+            f.close()
+            serverList = list(data["servers"])
+            if serverID not in serverList:
+                serverList.append(serverID)
+                data["servers"] = serverList
+                with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
+                    dump(data, f, sort_keys=True, indent=4)
+                f.close()
+                await ctx.send("Added.")
+            else:
+                await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+
+    @commands.command(name="blacklistuser", description="Blacklists a user.",
+                      aliases=["blu"], usage="<user ID>")
+    @commands.is_owner()
+    async def blacklistuser(self, ctx, *, userID=None):
+        if not userID:
+            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return
+        try:
+            userID = int(userID)
+            appinfo = await self.client.application_info()
+            if userID == appinfo.owner.id:
+                await ctx.send(embed=funcs.errorEmbed(
+                    None, "Are you trying to blacklist yourself, you idiot?"
+                ))
+                return
+            with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+                data = load(f)
+            f.close()
+            userList = list(data["users"])
+            if userID not in userList:
+                userList.append(userID)
+                data["users"] = userList
+                with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
+                    dump(data, f, sort_keys=True, indent=4)
+                f.close()
+                await ctx.send("Added.")
+            else:
+                await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+
+    @commands.command(name="unblacklistserver", description="Unblacklists a server.",
+                      aliases=["ubls"], usage="<server ID>")
+    @commands.is_owner()
+    async def unblacklistserver(self, ctx, *, serverID=None):
+        if not serverID:
+            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return
+        try:
+            serverID = int(serverID)
+            with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+                data = load(f)
+            f.close()
+            serverList = list(data["servers"])
+            if serverID in serverList:
+                serverList.remove(serverID)
+                data["servers"] = serverList
+                with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
+                    dump(data, f, sort_keys=True, indent=4)
+                f.close()
+                await ctx.send("Removed.")
+            else:
+                await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+
+    @commands.command(name="unblacklistuser", description="Unblacklists a user.",
+                      aliases=["ublu"], usage="<user ID>")
+    @commands.is_owner()
+    async def unblacklistuser(self, ctx, *, userID=None):
+        if not userID:
+            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return
+        try:
+            userID = int(userID)
+            with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+                data = load(f)
+            f.close()
+            userList = list(data["users"])
+            if userID in userList:
+                userList.remove(userID)
+                data["users"] = userList
+                with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
+                    dump(data, f, sort_keys=True, indent=4)
+                f.close()
+                await ctx.send("Removed.")
+            else:
+                await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
 
 def setup(client:commands.Bot):
