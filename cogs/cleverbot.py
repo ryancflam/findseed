@@ -1,4 +1,5 @@
 from re import sub
+from json import load
 
 from discord.ext import commands
 
@@ -12,6 +13,14 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+            data = load(f)
+        f.close()
+        serverList = list(data["servers"])
+        userList = list(data["users"])
+        if message.author.id in userList or \
+                message.guild and message.guild.id in serverList:
+            return
         if self.client.user in message.mentions and not message.content.startswith(info.prefix):
             if message.author.bot:
                 return
