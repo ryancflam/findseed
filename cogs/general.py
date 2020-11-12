@@ -73,19 +73,18 @@ class General(commands.Cog, name="General"):
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):
-                if cog in ignoredCogs or len(self.client.get_cog(cog).get_commands()) == 0:
-                    continue
-                e.add_field(
-                    name=cog,
-                    value=", ".join(
-                        f"`{prefix}{str(command)}`" for command in filter(
-                            lambda x: str(x) not in ignoredCmds, sorted(
-                                self.client.get_cog(cog).get_commands(), key=lambda y: y.name
+                if cog not in ignoredCogs and len(self.client.get_cog(cog).get_commands()) != 0:
+                    e.add_field(
+                        name=cog,
+                        value=", ".join(
+                            f"`{prefix}{str(command)}`" for command in filter(
+                                lambda x: str(x) not in ignoredCmds, sorted(
+                                    self.client.get_cog(cog).get_commands(), key=lambda y: y.name
+                                )
                             )
-                        )
-                    ),
-                    inline=False
-                )
+                        ),
+                        inline=False
+                    )
         else:
             if self.client.get_command(cmd[0].replace(prefix, "")):
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
