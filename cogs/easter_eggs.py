@@ -146,6 +146,13 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name=">(", description="Just >(.")
+    async def idontknowwhatthisis(self, ctx):
+        url = "https://media.discordapp.net/attachments/771404776410972161/776320128953745428/angry.png"
+        file = File(await funcs.getImage(url), ">(.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="conversion", description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕")
     async def conversion(self, ctx):
         for i in range(2):

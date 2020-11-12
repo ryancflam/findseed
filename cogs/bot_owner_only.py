@@ -43,6 +43,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                     "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
                     timeout=1
                 )
+                count = 0
                 content = msg.content
                 if content.casefold().startswith("!q") or content.casefold().startswith(f"{info.prefix}bd") \
                         or content.casefold().startswith(f"{info.prefix}botdisguise"):
