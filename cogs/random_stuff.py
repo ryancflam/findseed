@@ -410,7 +410,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             "Outlook not so good.",
             "Very doubtful."
         ]
-        await ctx.send(f":8ball: {mention}: `{'Empty input...' if msg=='' else choice(responses)}`")
+        await ctx.send(f":8ball: {mention}: `{'Empty input...' if msg == '' else choice(responses)}`")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
