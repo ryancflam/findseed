@@ -128,12 +128,10 @@ class Utility(commands.Cog, name="Utility"):
                 reg = data["aircraft"]["registration"]
                 airline = data["airline"]["name"]
                 originname = data["airport"]["origin"]["name"]
-                if originname is None:
-                    continue
                 originiata = data["airport"]["origin"]["code"]["iata"]
                 originicao = data["airport"]["origin"]["code"]["icao"]
                 destname = data["airport"]["destination"]["name"]
-                if destname is None:
+                if not originname or not destname:
                     continue
                 destiata = data["airport"]["destination"]["code"]["iata"]
                 desticao = data["airport"]["destination"]["code"]["icao"]

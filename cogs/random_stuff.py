@@ -411,7 +411,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             "Very doubtful."
         ]
         await ctx.send(f":8ball: {mention}: `{'Empty input...' if msg=='' else choice(responses)}`")
-        
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
                       aliases=["hashing", "hashbrown"], usage="<algorithm> [input]")
@@ -455,6 +455,38 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     algo = "SHA512"
                     output = str(hashlib.sha512(msg.encode("utf-8")).hexdigest())
                 e = Embed(title=algo, description=funcs.formatting(output))
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
+                      aliases=["ud", "urbandictionary"], usage="<term>")
+    async def urban(self, ctx, *, term=""):
+        if term == "":
+            e = funcs.errorEmbed(None, "Empty input.")
+        else:
+            term = term.replace(" ", "%20")
+            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define?term={term}")
+            data = res.json()
+            terms = data["list"]
+            if len(terms) == 0:
+                e = funcs.errorEmbed(None, "Unknown term.")
+            else:
+                thumbnail = "https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                            "669142387330777115/urban-dictionary-android.png"
+                example = terms[0]["example"].replace("[", "").replace("]", "")
+                definition = terms[0]["definition"].replace("[", "").replace("]", "")
+                permalink = terms[0]["permalink"]
+                word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
+                e = Embed(title=word, description=permalink)
+                e.add_field(name="Definition", value=funcs.formatting(definition))
+                e.set_thumbnail(url=thumbnail)
+                if example:
+                    e.add_field(name="Example(s)", value=funcs.formatting(example))
+                e.set_footer(
+                    text=f"Submitted by {terms[0]['author']} | Approval rate: " + \
+                         f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
+                         f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎)"
+                )
         await ctx.send(embed=e)
 
 
