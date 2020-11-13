@@ -2,7 +2,7 @@ import psutil
 from json import load
 from time import time
 
-import discord
+from discord import Embed, __version__
 from discord.ext import commands
 
 import info
@@ -28,7 +28,7 @@ class General(commands.Cog, name="General"):
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="invite", description="Invite the bot to your server.")
     async def invite(self, ctx):
-        e = discord.Embed(
+        e = Embed(
             description=f"[Invite Link](https://discord.com/oauth2/authorize?client_id={self.client.user.id}" + \
                         "&permissions=473196598&scope=bot)"
         )
@@ -39,13 +39,13 @@ class General(commands.Cog, name="General"):
                       aliases=["bi", "info", "cpu", "ram", "bot"])
     async def botinfo(self, ctx):
         appinfo = await self.client.application_info()
-        e = discord.Embed(description=appinfo.description)
+        e = Embed(description=appinfo.description)
         with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
             data = load(f)
         f.close()
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
-        e.add_field(name="Library", value=f"`discord.py {discord.__version__}`")
+        e.add_field(name="Library", value=f"`discord.py {__version__}`")
         e.add_field(name="Creation Date", value=f"`{info.creationDate}`")
         e.add_field(name="Server Count", value=f"`{len(self.client.guilds)}`")
         e.add_field(name="User Count", value=f"`{len(set([i for i in self.client.users if not i.bot]))}`")
@@ -68,7 +68,7 @@ class General(commands.Cog, name="General"):
         if not cmd:
             ignoredCogs = ["Bot Owner Only", "Easter Eggs", "Animal Crossing"]
             ignoredCmds = ["cleargamechannels"]
-            e = discord.Embed(
+            e = Embed(
                 title=f"{self.client.user.name} Bot Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
@@ -93,7 +93,7 @@ class General(commands.Cog, name="General"):
                 usage = command.usage
                 cog = command.cog_name
                 aliases = sorted(command.aliases)
-                e = discord.Embed(title="Command", description=f"**{prefix}{name}** ({cog})")
+                e = Embed(title="Command", description=f"**{prefix}{name}** ({cog})")
                 e.add_field(name="Description", value=f"```{description}```")
                 e.set_footer(text="Command usage: <> = Required; [] = Optional")
                 if usage:

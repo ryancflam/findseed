@@ -3,7 +3,7 @@
 from os import listdir
 from json import load
 
-from discord import Intents, Game
+from discord import Activity, ActivityType, Intents, Status
 from discord.ext import commands
 
 import info
@@ -19,7 +19,8 @@ client.remove_command("help")
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
-    await client.change_presence(activity=Game("with seeds!"))
+    activity = Activity(name="for seeds...", type=ActivityType.watching)
+    await client.change_presence(activity=activity, status=Status.idle)
 
 
 @client.event
