@@ -3,7 +3,7 @@ from discord.ext import commands
 
 from other_utils import funcs
 from other_utils import morse_data
-from other_utils.brainfuck import BrainfuckInterpreter
+from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
 class Conversion(commands.Cog, name="Conversion"):
@@ -198,20 +198,10 @@ class Conversion(commands.Cog, name="Conversion"):
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
-                number = int(text)
-                binary = ""
-                while number != 0:
-                    number /= 2
-                    numberint = int(number)
-                    if number != numberint:
-                        binary += "1"
-                        number -= 0.5
-                    else:
-                        binary += "0"
-                result = str(binary[::-1])
+                number = text.replace(" ", "")
                 e = Embed(
-                    title="Decimal to Binary",
-                    description=funcs.formatting(result)
+                    title="Binary to Decimal",
+                    description=funcs.formatting(bin(int(number)).replace("0b", ""))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
