@@ -424,6 +424,92 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "No attachment or URL detected, please try again.")
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="compile", description="Compiles code.")
+    async def compile(self, ctx):
+        res = await funcs.getRequest("https://run.glot.io/languages")
+        data = res.json()
+        languages = [i["name"] for i in data]
+        output = ", ".join(f'`{j}`' for j in languages)
+        language = ""
+        await ctx.send(embed=Embed(title="Please select a language below or input `quit` to quit...",
+                                   description=output))
+        while language not in languages and language != "quit":
+            try:
+                option = await self.client.wait_for(
+                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
+                )
+                language = option.content.casefold()
+                if language not in languages and language != "quit":
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid language."))
+            except TimeoutError:
+                await ctx.send("Cancelling compilation...")
+                return
+        if language == "quit":
+            await ctx.send("Cancelling compilation...")
+            return
+        versionurl = f"https://run.glot.io/languages/{language}"
+        res = await funcs.getRequest(versionurl)
+        data = res.json()
+        url = data[0]["url"]
+        if len(data) != 1:
+            versions = [i["version"] for i in data]
+            output = ", ".join(f"`{j}`" for j in versions)
+            version = ""
+            await ctx.send(embed=Embed(title="Please select a version below or input `quit` to quit...",
+                                       description=output))
+            while version not in versions and version != "quit":
+                try:
+                    option = await self.client.wait_for(
+                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
+                    )
+                    version = option.content.casefold()
+                    if version not in versions and version != "quit":
+                        await ctx.send(embed=funcs.errorEmbed(None, "Invalid version."))
+                except TimeoutError:
+                    await ctx.send("Cancelling compilation...")
+                    return
+            if version == "quit":
+                await ctx.send("Cancelling compilation...")
+                return
+            url = f"{versionurl}/{version}"
+        await ctx.send("**You have 15 minutes to type out your code. Input `quit` to quit.**")
+        try:
+            option = await self.client.wait_for(
+                "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
+            )
+            code = option.content.replace("```", "")
+            if code == "quit":
+                await ctx.send("Cancelling compilation...")
+                return
+        except TimeoutError:
+            await ctx.send("Cancelling compilation...")
+            return
+        await ctx.send("**Please enter your desired file name including the extension.**")
+        try:
+            option = await self.client.wait_for(
+                "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
+            )
+            filename = option.content
+        except TimeoutError:
+            await ctx.send("Cancelling compilation...")
+            return
+        data = str({"files": [{"name": filename, "content": code}]})
+        headers = {
+            "Authorization": f"Token {info.glotIoKey}",
+            "Content-type": "application/json"
+        }
+        res = await funcs.postRequest(url=url, data=data, headers=headers)
+        try:
+            data = res.json()
+            stderr = data["stderr"]
+            if stderr == "":
+                await ctx.send(embed=Embed(title="Compilation", description=funcs.formatting(data["stdout"] or "None")))
+            else:
+                await ctx.send(embed=funcs.errorEmbed(data["error"], funcs.formatting(stderr)))
+        except AttributeError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
+
 
 def setup(client:commands.Bot):
     client.add_cog(Utility(client))

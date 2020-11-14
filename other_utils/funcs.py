@@ -32,7 +32,7 @@ def errorEmbed(error, message):
 
 
 def formatting(text):
-    output = "```" + text[:2042] + "```"
+    output = "```\n" + text[:2042] + "```"
     if output == "``````":
         raise Exception
     return output
@@ -115,6 +115,8 @@ async def reactionRemove(reaction, user):
 async def getRequest(url, headers=None, params=None, timeout=None):
     async with AsyncClient() as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
+        if res.status_code != 200:
+            return None
     return res
 
 
@@ -124,6 +126,14 @@ async def getImage(url, headers=None, params=None, timeout=None):
         if res.status_code != 200:
             return None
         return BytesIO(res.content)
+
+
+async def postRequest(url, data=None, headers=None, timeout=None):
+    async with AsyncClient() as session:
+        res = await session.post(url, data=data, headers=headers, timeout=timeout)
+        if res.status_code != 200:
+            return None
+    return res
 
 
 async def decodeQR(link):
