@@ -66,7 +66,7 @@ class IncrementalByteCellArray:
 
 class BrainfuckInterpreter:
     def __init__(self, commands:str):
-        self._commands = commands
+        self._commands = commands.replace(" ", "")
         self.input = IOStream()
         self.output = IOStream()
         self.instruction_pointer = 0
@@ -118,6 +118,8 @@ class BrainfuckInterpreter:
                 self.instruction_pointer = opening_bracket_index - 1
             else:
                 self._opening_bracket_indexes.pop(-1)
+        else:
+            raise ValueError("Invalid characters detected.")
 
     def step(self):
         self._interpret()
