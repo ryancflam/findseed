@@ -479,7 +479,7 @@ class Utility(commands.Cog, name="Utility"):
             option = await self.client.wait_for(
                 "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
             )
-            code = option.content.replace("```", "").replace('“', '"').replace("‘", "'")
+            code = option.content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
             if code == "quit":
                 await ctx.send("Cancelling compilation...")
                 return
