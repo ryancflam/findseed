@@ -439,7 +439,8 @@ class Utility(commands.Cog, name="Utility"):
                 option = await self.client.wait_for(
                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
                 )
-                language = option.content.casefold()
+                language = option.content.casefold().replace(" ", "").replace("#", "sharp").replace(
+                    "♯", "sharp").replace("++", "pp")
                 if language not in languages and language != "quit":
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid language."))
             except TimeoutError:
