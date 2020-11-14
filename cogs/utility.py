@@ -425,7 +425,7 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="compile", description="Compiles code.")
+    @commands.command(name="compile", description="Compiles code.", aliases=["comp"])
     async def compile(self, ctx):
         res = await funcs.getRequest("https://run.glot.io/languages")
         data = res.json()
@@ -478,14 +478,14 @@ class Utility(commands.Cog, name="Utility"):
             option = await self.client.wait_for(
                 "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
             )
-            code = option.content.replace("```", "")
+            code = option.content.replace("```", "").replace('“', '"').replace("‘", "'")
             if code == "quit":
                 await ctx.send("Cancelling compilation...")
                 return
         except TimeoutError:
             await ctx.send("Cancelling compilation...")
             return
-        await ctx.send("**Please enter your desired file name including the extension.**")
+        await ctx.send("**Please enter your desired file name including the extension.** (e.g. `main.py`)")
         try:
             option = await self.client.wait_for(
                 "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
