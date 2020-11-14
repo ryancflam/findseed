@@ -106,7 +106,6 @@ class BrainfuckInterpreter:
                     loop_end = self._look_forward()
                 except ValueError:
                     raise ValueError(f"No closing bracket for loop found on index: {self.instruction_pointer}")
-
                 self.instruction_pointer = loop_end
             else:
                 self._opening_bracket_indexes.append(self.instruction_pointer)
@@ -126,6 +125,3 @@ class BrainfuckInterpreter:
 
     def available(self):
         return not self.instruction_pointer >= len(self._commands)
-
-    def command(self):
-        return self._commands[self.instruction_pointer]

@@ -137,13 +137,27 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         await ctx.send("Are you sure? You have 10 seconds to confirm by typing `yes`.")
         try:
             await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=10
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
+                                           and m.content.casefold() == "yes",
+                timeout=10
             )
         except TimeoutError:
             await ctx.send("Cancelling restart.")
             return
-        await ctx.send("Restarting...")
-        system("sudo reboot")
+        gitpull = ""
+        await ctx.send("Pull from GitHub repository?")
+        try:
+            await self.client.wait_for(
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
+                                           and m.content.casefold() == "yes",
+                timeout=10
+            )
+            gitpull = "cd findseed && git pull && "
+        except TimeoutError:
+            await ctx.send("Not git-pulling. Commencing restart...")
+        else:
+            await ctx.send("Git-pulling. Commencing restart...")
+        system(f"{gitpull}sudo reboot")
         exit()
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])

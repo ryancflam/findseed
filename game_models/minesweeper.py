@@ -141,6 +141,13 @@ class Minesweeper:
                        self.uncoverDots(xx-1, yy+1)
             return
         if self.__grid[yy][xx] == -1:
+            if self.__attempts == 0:
+                while self.__grid[yy][xx] == -1:
+                    self.__grid = []
+                    self.__dispboard = []
+                    self.__createBoard()
+                self.uncoverDots(xx, yy)
+                return
             self.__dispboard[yy][xx] = "●"
             xloc = 0
             yloc = 0
