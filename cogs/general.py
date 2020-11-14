@@ -69,7 +69,7 @@ class General(commands.Cog, name="General"):
             ignoredCogs = ["Bot Owner Only", "Easter Eggs", "Animal Crossing"]
             ignoredCmds = ["cleargamechannels"]
             e = Embed(
-                title=f"{self.client.user.name} Bot Commands List",
+                title=f"{self.client.user.name} Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):

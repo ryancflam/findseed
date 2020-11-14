@@ -53,7 +53,7 @@ class Utility(commands.Cog, name="Utility"):
                 else:
                     total = i
             e = Embed(
-                title=f"COVID-19 Stats ({total['country_name'] if found else 'Global'})",
+                title=f"COVID-19 Statistics ({total['country_name'] if found else 'Global'})",
                 description="Statistics taken at: `" + data["statistic_taken_at"] + " UTC`"
             )
             e.set_thumbnail(
