@@ -184,7 +184,8 @@ class Conversion(commands.Cog, name="Conversion"):
             try:
                 e = Embed(
                     title="Binary to Text",
-                    description=funcs.formatting("".join(chr(int(text[i*8:i*8+8], 2)) for i in range(len(text)//8)))
+                    description=funcs.formatting("".join(chr(int(text[i*8:i*8+8], 2)) \
+                        for i in range(len(text)//8)))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -250,14 +251,10 @@ class Conversion(commands.Cog, name="Conversion"):
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
-                n = int(text.replace(" ", ""), 16)
-                bstr = ""
-                while n > 0:
-                    bstr = str(n % 2) + bstr
-                    n = n >> 1
+                number = int(text.replace(" ", ""), 16)
                 e = Embed(
                     title="Hexadecimal to Binary",
-                    description=funcs.formatting(str(bstr))
+                    description=funcs.formatting(bin(int(number)).replace("0b", ""))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
