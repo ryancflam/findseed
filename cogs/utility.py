@@ -526,13 +526,11 @@ class Utility(commands.Cog, name="Utility"):
             ]
             if lang not in codes:
                 codesList = ", ".join(f"`{code}` ({languages[codes.index(code)]})" for code in codes)
-                e = funcs.errorEmbed(
-                    "Invalid language code!",
-                    f"Valid options:\n\n{codesList}"
-                )
+                e = funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}")
             else:
                 try:
-                    res = await funcs.getRequest(f"https://api.dictionaryapi.dev/api/v2/entries/{lang}/{word}")
+                    url = f"https://api.dictionaryapi.dev/api/v2/entries/{lang}/{word}"
+                    res = await funcs.getRequest(url)
                     data = res.json()
                     word = data[0]["word"].title()
                     output = ""
