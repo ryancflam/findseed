@@ -25,17 +25,23 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if client.is_ready():
-        with open(
-                f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
-        ) as f:
-            data = load(f)
-        serverList = list(data["servers"])
-        userList = list(data["users"])
-        if message.author.id not in userList and \
-                (not message.guild or message.guild.id not in serverList):
-            await client.process_commands(message)
-        f.close()
+    ctx = await client.get_context(message)
+    if ctx.valid:
+        if client.is_ready():
+            with open(
+                    f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
+            ) as f:
+                data = load(f)
+            serverList = list(data["servers"])
+            userList = list(data["users"])
+            if message.author.id not in userList and \
+                    (not message.guild or message.guild.id not in serverList):
+                await client.process_commands(message)
+            f.close()
+        else:
+            await message.channel.send(
+                f"{client.user.name} is not ready yet, please wait a moment!"
+            )
 
 
 def main():
