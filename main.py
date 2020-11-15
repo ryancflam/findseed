@@ -39,7 +39,7 @@ async def on_message(message):
                 await client.process_commands(message)
             else:
                 await message.channel.send(
-                    f"{client.user.name} is not ready yet, please wait a moment!"
+                    f"{client.user.name} is not ready yet, please wait a bit!"
                 )
         f.close()
 

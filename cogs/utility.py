@@ -507,7 +507,7 @@ class Utility(commands.Cog, name="Utility"):
             if stderr == "":
                 await ctx.send(embed=Embed(title="Compilation", description=funcs.formatting(data["stdout"] or "None")))
             else:
-                await ctx.send(embed=funcs.errorEmbed(data["error"], funcs.formatting(stderr)))
+                await ctx.send(embed=funcs.errorEmbed(data["error"].title(), funcs.formatting(stderr)))
         except AttributeError:
             await ctx.send(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
 
