@@ -1,4 +1,5 @@
 from time import time
+from json import load
 from datetime import datetime
 from asyncio import TimeoutError
 from random import randint, choice
@@ -119,7 +120,12 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 )
             except TimeoutError:
                 continue
-            if joinGame.author.bot or joinGame.author in game.getPlayerList():
+            with open(
+                    f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
+            ) as f:
+                data = load(f)
+            f.close()
+            if joinGame.author.bot or joinGame.author in game.getPlayerList() or joinGame.author.id in list(data["users"]):
                 continue
             else:
                 game.addPlayer(joinGame.author)

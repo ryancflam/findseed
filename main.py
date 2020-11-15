@@ -36,10 +36,6 @@ async def on_message(message):
                 (not message.guild or message.guild.id not in serverList):
             await client.process_commands(message)
         f.close()
-    else:
-        await message.channel.send(
-            f"{client.user.name} is not ready yet, please wait a moment!"
-        )
 
 
 def main():
