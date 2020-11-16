@@ -57,6 +57,22 @@ async def on_ready():
 
 
 @client.event
+async def on_guild_join(server):
+    appinfo = await client.application_info()
+    await appinfo.owner.send(
+        f"{client.user.name} has been added to `{server.name}`."
+    )
+
+
+@client.event
+async def on_guild_remove(server):
+    appinfo = await client.application_info()
+    await appinfo.owner.send(
+        f"{client.user.name} has been removed from `{server.name}`."
+    )
+
+
+@client.event
 async def on_message(message):
     ctx = await client.get_context(message)
     if ctx.valid:
@@ -83,7 +99,9 @@ async def on_message(message):
                     f"{client.user.name} is not ready yet, please wait a bit!"
                 )
         else:
-            await message.channel.send(BLOCKED_MSG)
+            server = client.get_guild(723394668691193877)
+            if server and server.get_member(message.author.id):
+                await message.channel.send(BLOCKED_MSG)
         f.close()
 
 
