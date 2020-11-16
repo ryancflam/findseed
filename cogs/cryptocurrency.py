@@ -1,8 +1,9 @@
-from discord import Embed
+from discord import Embed, Colour
 from discord.ext import commands
 
 import info
 from other_utils import funcs
+from other_utils.bitcoin_address import BitcoinAddress
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
@@ -82,7 +83,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             blockchain2 = data.json()
             data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
             blockchain3 = data.json()
-            e = Embed(title="Bitcoin Network", description="https://www.blockchain.com/stats")
+            e = Embed(title="Bitcoin Network", description="https://www.blockchain.com/stats", colour=Colour.orange())
             height = blockchain2["height"]
             blockreward = 50
             halvingheight = 210000
@@ -94,18 +95,40 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Market Price", value=f"`{blockchain['market_price_usd']} USD`")
             e.add_field(name="Minutes Between Blocks", value=f"`{blockchain['minutes_between_blocks']}`")
             e.add_field(name="Mining Difficulty", value=f"`{blockchain['difficulty']}`")
-            e.add_field(name="Hash Rate", value=f"`{int(int(blockchain['hash_rate'])/1000)} TH/s`")
+            e.add_field(name="Hash Rate", value=f"`{int(int(blockchain['hash_rate']) / 1000)} TH/s`")
             e.add_field(name="Trade Volume (24h)", value=f"`{blockchain['trade_volume_btc']} BTC`")
             e.add_field(name="Total Transactions (24h)", value=f"`{blockchain['n_tx']}`")
             e.add_field(name="Block Height", value=f"`{height}`")
-            e.add_field(name="Next Halving Height", value=f"`{halvingheight} ({bl} block{'' if bl==1 else 's'} left)`")
+            e.add_field(name="Next Halving Height", value=f"`{halvingheight} ({bl} block{'' if bl == 1 else 's'} left)`")
             e.add_field(name="Block Reward", value=f"`{blockreward} BTC`")
             e.add_field(name="Unconfirmed Transactions", value=f"`{blockchain2['unconfirmed_count']}`")
             e.add_field(name="Full Nodes", value=f"`{blockchain3['total_nodes']}`")
-            e.add_field(name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc']*0.00000001, 8)} BTC`")
+            e.add_field(
+                name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc'] * 0.00000001, 8)} BTC`"
+            )
         except Exception:
             e = funcs.errorEmbed(None,"Possible server error, please try again later.")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="btcaddress", aliases=["baddrg", "bgenaddr", "address", "btcgenaddr", "btcaddrgen"],
+                      description="Generates a Bitcoin address. This command should only be used purely for fun.")
+    async def btcaddress(self, ctx):
+        address = BitcoinAddress()
+        pk, swif, shex = address.getAddr()
+        e = Embed(
+            title="New Bitcoin Address",
+            description=f"https://www.blockchain.com/btc/address/{pk}",
+            colour=Colour.orange()
+        ).set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={pk}")
+        e.add_field(name="Public Address",value=f"```{pk}```")
+        e.add_field(name="Private Key",value=f"```{swif}```")
+        e.add_field(name="Private Key in Hex",value=f"```{shex}```")
+        e.set_footer(text=f"Requested by: {ctx.author.name}")
+        await ctx.send("```WARNING: It is recommended that you do NOT use any Bitcoin address generated via this " + \
+                       "bot due to security reasons; this command was simply made for fun to demonstrate the " + \
+                       "capabilities of the Python programming language. If you wish to generate a new Bitcoin " + \
+                       "address for actual use, please visit sites like www.bitaddress.org instead.```", embed=e)
 
 
 def setup(client:commands.Bot):
