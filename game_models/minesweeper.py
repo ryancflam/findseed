@@ -102,13 +102,16 @@ class Minesweeper:
     def getDispboard(self):
         return self.__dispboard
 
-    def incrementAttempts(self):
-        self.__attempts += 1
-
-    def uncoverDots(self, xx, yy):
+    def uncoverDots(self, xx, yy, player=True):
+        if player:
+            self.__attempts += 1
         if self.__dispboard[yy][xx] == "F":
+            if player:
+                self.__attempts -= 1
             return
         if self.__dispboard[yy][xx] != ".":
+            if player:
+                self.__attempts -= 1
             return
         if self.__grid[yy][xx] > 0:
             self.__dispboard[yy][xx] = str(self.__grid[yy][xx])
@@ -117,36 +120,37 @@ class Minesweeper:
             self.__dispboard[yy][xx] = " "
             if xx > 0:
                 if self.__grid[yy][xx-1] >= 0:
-                    self.uncoverDots(xx-1, yy)
+                    self.uncoverDots(xx-1, yy, player=False)
                 if yy > 0:
                     if self.__grid[yy-1][xx-1] >= 0:
-                        self.uncoverDots(xx-1, yy-1)
+                        self.uncoverDots(xx-1, yy-1, player=False)
             if yy > 0:
                 if self.__grid[yy-1][xx] >= 0:
-                    self.uncoverDots(xx, yy-1)
+                    self.uncoverDots(xx, yy-1, player=False)
                     if xx < self.__col-1:
                         if self.__grid[yy-1][xx+1] >= 0:
-                            self.uncoverDots(xx+1, yy-1)
+                            self.uncoverDots(xx+1, yy-1, player=False)
             if xx < self.__col-1:
                 if self.__grid[yy][xx+1] >= 0:
-                    self.uncoverDots(xx+1, yy)
+                    self.uncoverDots(xx+1, yy, player=False)
                 if yy < self.__row-1:
                     if self.__grid[yy+1][xx+1] >= 0:
-                        self.uncoverDots(xx+1, yy+1)
+                        self.uncoverDots(xx+1, yy+1, player=False)
             if yy < self.__row-1:
                 if self.__grid[yy+1][xx] >= 0:
-                    self.uncoverDots(xx, yy+1)
+                    self.uncoverDots(xx, yy+1, player=False)
                 if xx > 0:
                     if self.__grid[yy+1][xx-1] >= 0:
-                       self.uncoverDots(xx-1, yy+1)
+                       self.uncoverDots(xx-1, yy+1, player=False)
             return
         if self.__grid[yy][xx] == -1:
-            if self.__attempts == 0:
+            if self.__attempts == 1:
                 while self.__grid[yy][xx] == -1:
                     self.__grid = []
                     self.__dispboard = []
                     self.__createBoard()
                 self.uncoverDots(xx, yy)
+                self.__attempts -= 1
                 return
             self.__dispboard[yy][xx] = "●"
             xloc = 0

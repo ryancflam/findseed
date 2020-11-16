@@ -653,27 +653,21 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     game.getDispboard()[yy][xx] = "."
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "This location has already been revealed before."))
-                    return
             else:
                 game.getDispboard()[yy][xx] = "F"
         elif decision.casefold() == "u" or decision.casefold() == "unflag":
             if game.getDispboard()[yy][xx] != "F":
                 await ctx.send(embed=funcs.errorEmbed(None, "This location is not flagged."))
-                return
             else:
                 game.getDispboard()[yy][xx] = "."
         elif decision.casefold() == "r" or decision.casefold() == "reveal":
             if game.getDispboard()[yy][xx] != ".":
                 if game.getDispboard()[yy][xx] == "F":
                     await ctx.send("`Watch out, you have previously flagged this location before!`")
-                    return
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "This location has already been revealed before."))
-                    return
             else:
                 game.uncoverDots(xx, yy)
-                game.incrementAttempts()
-        return
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="minesweeper", description="Play Minesweeper.", aliases=["ms", "mines"])
