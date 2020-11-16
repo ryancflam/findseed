@@ -20,7 +20,7 @@ from game_models.hangman import Hangman
 
 
 class ChatGames(commands.Cog, name="Chat Games"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.gameChannels = []
 
@@ -842,5 +842,5 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels.remove(ctx.channel.id)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(ChatGames(client))

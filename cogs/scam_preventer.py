@@ -7,7 +7,7 @@ from other_utils import funcs
 
 
 class Scam_Preventer(commands.Cog, name="Scam Preventer"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.scamurl = "discord.com/ra"
 
@@ -77,5 +77,5 @@ class Scam_Preventer(commands.Cog, name="Scam Preventer"):
                 pass
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Scam_Preventer(client))

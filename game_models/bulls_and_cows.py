@@ -24,7 +24,7 @@ class BullsAndCows:
         _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
         return m, s
 
-    def guess(self, value:str):
+    def guess(self, value: str):
         value = value.replace(" ", "")
         if value.casefold() == "quit" or value.casefold() == "exit" or value.casefold() == "stop":
             self.__stopped = True

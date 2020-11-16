@@ -11,7 +11,7 @@ from other_utils import funcs
 
 
 class Minecraft(commands.Cog, name="Minecraft"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -71,7 +71,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="skin", description="Gets the skin of a Minecraft user.", aliases=["mcskin"],
                       usage="[username]")
-    async def skin(self, ctx, username:str=""):
+    async def skin(self, ctx, username: str=""):
         if username == "":
             username = ctx.message.author.name
         try:
@@ -96,7 +96,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.command(name="pearlbarter", description="Finds the probability of getting 2 or more ender pearl trades" + \
                                                       " in a given number of trades in Minecraft 1.16.1.",
                       aliases=["piglin", "barter", "bartering", "pearl", "pearls", "trades", "trade"],usage="<total trades>")
-    async def pearlbarter(self, ctx, *, trades:str=""):
+    async def pearlbarter(self, ctx, *, trades: str=""):
         try:
             n = int(trades)
             if not 2 <= n <= 999:
@@ -148,5 +148,5 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Minecraft(client))

@@ -23,22 +23,6 @@ class Hangman:
         self.__lives = 10
         self.__guesses = set()
         self.__start = time()
-        
-    def getWord(self):
-        return self.__word
-    
-    def getDashes(self):
-        return self.__dashes
-    
-    def getLives(self):
-        return self.__lives
-    
-    def getTime(self):
-        _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
-        return m, s
-
-    def hangmanPic(self):
-        return self.__hangmanpics[self.__lives]
 
     @staticmethod
     def __randomWord():
@@ -56,6 +40,22 @@ class Hangman:
             else:
                 result += d[i]
         return result
+
+    def getWord(self):
+        return self.__word
+    
+    def getDashes(self):
+        return self.__dashes
+    
+    def getLives(self):
+        return self.__lives
+    
+    def getTime(self):
+        _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
+        return m, s
+
+    def hangmanPic(self):
+        return self.__hangmanpics[self.__lives]
 
     def makeGuess(self, guess):
         if guess.lower() in self.__guesses:

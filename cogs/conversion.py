@@ -7,13 +7,13 @@ from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
 class Conversion(commands.Cog, name="Conversion"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",
                       aliases=["ttbf", "t2bf"])
-    async def texttobrainfuck(self, ctx, *, text:str=""):
+    async def texttobrainfuck(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -51,7 +51,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="brainfucktotext", description="Converts Brainfuck to plain text.",
                       aliases=["bftt", "bf2t"])
-    async def brainfucktotext(self, ctx, *, text:str=""):
+    async def brainfucktotext(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -70,7 +70,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttomorse", description="Converts plain text to Morse code.",
                       aliases=["ttmc", "t2mc", "texttomorsecode", "ttm", "t2m"])
-    async def texttomorse(self, ctx, *, text:str=""):
+    async def texttomorse(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -93,7 +93,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="morsetotext", description="Converts Morse code to plain text.",
                       aliases=["mctt", "mc2t", "morsecodetotext", "mtt", "m2t"])
-    async def morsetotext(self, ctx, *, text:str=""):
+    async def morsetotext(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -129,7 +129,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttohex", description="Converts plain text to hexadecimal.",
                       aliases=["tth", "t2h", "texttohexadecimal"])
-    async def texttohex(self, ctx, *, text:str=""):
+    async def texttohex(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -145,7 +145,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hextotext", description="Converts hexadecimal to plain text.",
                       aliases=["htt", "h2t", "hexadecimaltotext"])
-    async def hextotext(self, ctx, *, text:str=""):
+    async def hextotext(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -161,7 +161,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttobinary", description="Converts plain text to binary.",
                       aliases=["ttb", "t2b"])
-    async def texttobinary(self, ctx, *, text:str=""):
+    async def texttobinary(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -177,7 +177,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="binarytotext", description="Converts binary to plain text.",
                       aliases=["btt", "b2t"])
-    async def binarytotext(self, ctx, *, text:str=""):
+    async def binarytotext(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -194,7 +194,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="decimaltobinary", description="Converts decimal to binary.",
                       aliases=["dtb", "d2b"])
-    async def decimaltobinary(self, ctx, *, text:str=""):
+    async def decimaltobinary(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -211,7 +211,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="binarytodecimal", description="Converts binary to decimal.",
                       aliases=["btd", "b2d"])
-    async def binarytodecimal(self, ctx, *, text:str=""):
+    async def binarytodecimal(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -228,7 +228,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="binarytohex", description="Converts binary to hexadecimal.",
                       aliases=["bth", "b2h", "binarytohexadecimal"])
-    async def binarytohex(self, ctx, *, text:str=""):
+    async def binarytohex(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -246,7 +246,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hextobinary", description="Converts hexadecimal to binary.",
                       aliases=["htb", "h2b", "hexadecimaltobinary"])
-    async def hextobinary(self, ctx, *, text:str=""):
+    async def hextobinary(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -263,7 +263,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hextodecimal", description="Converts hexadecimal to decimal.",
                       aliases=["htd", "h2d"])
-    async def hextodecimal(self, ctx, *, text:str=""):
+    async def hextodecimal(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -280,7 +280,7 @@ class Conversion(commands.Cog, name="Conversion"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="decimaltohex", description="Converts decimal to hexadecimal.",
                       aliases=["dth", "d2h"])
-    async def decimaltohex(self, ctx, *, text:str=""):
+    async def decimaltohex(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -295,5 +295,5 @@ class Conversion(commands.Cog, name="Conversion"):
         await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Conversion(client))

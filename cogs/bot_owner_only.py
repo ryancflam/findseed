@@ -12,7 +12,7 @@ from other_utils import funcs
 
 
 class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.botDisguise = False
         self.destChannel = None
@@ -168,7 +168,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
 
     @commands.command(name="pip", description="Executes a Pip command.", aliases=["pip3"], usage="<input>")
     @commands.is_owner()
-    async def pip(self, ctx, *, cmd:str=""):
+    async def pip(self, ctx, *, cmd: str=""):
         if cmd == "":
             await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
             return
@@ -177,7 +177,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
 
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
     @commands.is_owner()
-    async def say(self, ctx, *, output:str=""):
+    async def say(self, ctx, *, output: str=""):
         if output == "":
             e = funcs.errorEmbed(None, "Cannot send empty message.")
             await ctx.send(embed=e)
@@ -198,7 +198,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate", "calc"], usage="<code>")
     @commands.is_owner()
-    async def eval(self, ctx, *, code:str=""):
+    async def eval(self, ctx, *, code: str=""):
         if code == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -344,5 +344,5 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         )
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(BotOwnerOnly(client))

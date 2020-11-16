@@ -32,7 +32,7 @@ class IncrementalByteCellArray:
             self.__extend(item - cellAmount + 1)
         return self.__byteCells[item]
 
-    def __setitem__(self, key:int, value:int):
+    def __setitem__(self, key: int, value: int):
         cellAmount = len(self.__byteCells)
         if key > cellAmount - 1:
             self.__extend(key - cellAmount + 1)
@@ -44,7 +44,7 @@ class IncrementalByteCellArray:
     def __repr__(self):
         return self.__byteCells.__repr__()
 
-    def __extend(self, size:int):
+    def __extend(self, size: int):
         self.__byteCells += [0] * size
 
     def dataPointerSet(self, decrement=False):

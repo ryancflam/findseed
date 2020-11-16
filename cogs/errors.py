@@ -4,7 +4,7 @@ from other_utils import funcs
 
 
 class Errors(commands.Cog, name="Errors"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.Cog.listener()
@@ -29,5 +29,5 @@ class Errors(commands.Cog, name="Errors"):
             )
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Errors(client))

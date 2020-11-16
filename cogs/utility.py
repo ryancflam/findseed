@@ -12,13 +12,13 @@ from other_utils import funcs
 
 
 class Utility(commands.Cog, name="Utility"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="covid", description="Gathers COVID-19 data.",
                       aliases=["coronavirus", "corona", "covid19", "cv", "c19", "cv19"], usage="[location]")
-    async def covid(self, ctx, *, searchtype:str=""):
+    async def covid(self, ctx, *, searchtype: str=""):
         headers = {
             "x-rapidapi-host": "corona-virus-world-and-india-data.p.rapidapi.com",
             "x-rapidapi-key": info.rapidApiKey
@@ -101,7 +101,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="flight", description="Gets information about a flight",
                       aliases=["flightinfo", "flightradar"], usage="<flight number>")
-    async def flight(self, ctx, *, flightstr:str=""):
+    async def flight(self, ctx, *, flightstr: str=""):
         if flightstr == "":
             await ctx.send("Error: Empty input.")
             return
@@ -193,7 +193,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="weather", description="Finds the current weather of a location.",
                       aliases=["w"], usage="<location>")
-    async def weather(self, ctx, *, location:str=""):
+    async def weather(self, ctx, *, location: str=""):
         zero = -273.15
         url = f"http://api.openweathermap.org/data/2.5/weather?q={location.casefold().replace(' ', '%20')}" + \
               f"&APPID={info.owmKey}"
@@ -228,7 +228,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="translate", description="Translates text to a different language.",
                       aliases=["t", "translator", "trans", "tr"], usage="<language code to translate to> <input>")
-    async def translate(self, ctx, dest=None, *, text:str=""):
+    async def translate(self, ctx, dest=None, *, text: str=""):
         if not dest:
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -275,7 +275,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="wiki", description="Returns a Wikipedia article.",
                       aliases=["wikipedia"], usage="<article>")
-    async def wiki(self, ctx, *, page:str=""):
+    async def wiki(self, ctx, *, page: str=""):
         if page == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -322,7 +322,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
                       aliases=["lyric"], usage="<song keywords>")
-    async def lyrics(self, ctx, *, keywords:str=""):
+    async def lyrics(self, ctx, *, keywords: str=""):
         if keywords == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
             await ctx.send(embed=e)
@@ -387,7 +387,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr"],
                       usage="<input>")
-    async def qrgen(self, ctx, *, text:str=""):
+    async def qrgen(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
@@ -548,5 +548,5 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Utility(client))

@@ -9,7 +9,7 @@ ASSETS_PATH = f"{funcs.getPath()}/assets/animal_crossing"
 
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.art = load(open(f"{ASSETS_PATH}/art.json", "r", encoding="utf8"))
         self.bugs = load(open(f"{ASSETS_PATH}/bugs.json", "r", encoding="utf8"))
@@ -21,7 +21,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
                     "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
 
     @staticmethod
-    def findData(data, type:str):
+    def findData(data, type: str):
         try:
             return data[type.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
         except KeyError:
@@ -202,5 +202,5 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
         await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(AnimalCrossing(client))

@@ -8,7 +8,7 @@ from other_utils import funcs
 
 
 class Cleverbot(commands.Cog, name="Cleverbot"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.Cog.listener()
@@ -51,5 +51,5 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
             await message.channel.send(f"{message.author.mention} {text}")
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Cleverbot(client))

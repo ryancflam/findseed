@@ -7,7 +7,7 @@ from other_utils import funcs
 
 
 class EasterEggs(commands.Cog, name="Easter Eggs"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -188,5 +188,5 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
             await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(EasterEggs(client))

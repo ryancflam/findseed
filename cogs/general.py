@@ -10,7 +10,7 @@ from other_utils import funcs
 
 
 class General(commands.Cog, name="General"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.starttime = time()
 
@@ -103,9 +103,9 @@ class General(commands.Cog, name="General"):
                         name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
                     )
             else:
-                e = funcs.errorEmbed(None,"Unknown command.")
+                e = funcs.errorEmbed(None, "Unknown command.")
         await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(General(client))

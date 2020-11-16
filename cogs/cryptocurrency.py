@@ -7,13 +7,13 @@ from other_utils.bitcoin_address import BitcoinAddress
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coinmarketcap", "coin"], usage="[coin ticker]")
-    async def cryptoprice(self, ctx, coin:str="btc"):
+    async def cryptoprice(self, ctx, coin: str="btc"):
         coin = coin.upper()
         url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol={coin}&convert=USD"
         headers = {
@@ -120,7 +120,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             title="New Bitcoin Address",
             description=f"https://www.blockchain.com/btc/address/{pk}",
             colour=Colour.orange()
-        ).set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={pk}")
+        )
         e.add_field(name="Public Address",value=f"```{pk}```")
         e.add_field(name="Private Key",value=f"```{swif}```")
         e.add_field(name="Private Key in Hex",value=f"```{shex}```")
@@ -131,5 +131,5 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                        "address for actual use, please visit sites like www.bitaddress.org instead.```", embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(Cryptocurrency(client))

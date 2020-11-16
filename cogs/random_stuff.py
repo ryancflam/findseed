@@ -10,7 +10,7 @@ from other_utils import funcs
 
 
 class RandomStuff(commands.Cog, name="Random Stuff"):
-    def __init__(self, client:commands.Bot):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.activeSpinners = []
         self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
@@ -155,7 +155,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="trumpthinks", description="What Donald Trump thinks about something or someone.",
                       aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt"], usage="<input>")
-    async def trumpthinks(self, ctx, *, something:str=""):
+    async def trumpthinks(self, ctx, *, something: str=""):
         if something == "":
             e = funcs.errorEmbed(None,"Cannot process empty input.")
         elif len(something) > 100:
@@ -174,7 +174,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neothinks", description="What Neo thinks about something or someone.",
                       aliases=["nt", "plsneo", "neosays", "neo", "neot"], usage="<input>")
-    async def neothinks(self, ctx, *, something:str=""):
+    async def neothinks(self, ctx, *, something: str=""):
         if something == "":
             e = funcs.errorEmbed(None,"Cannot process empty input.")
         elif len(something) > 100:
@@ -218,7 +218,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="audiblethinks", description="What Audible thinks about something or someone.",
                       aliases=["at", "plsaudible", "audiblesays", "audible", "audiblet"], usage="<input>")
-    async def audiblethinks(self, ctx, *, something:str=""):
+    async def audiblethinks(self, ctx, *, something: str=""):
         if something == "":
             e = funcs.errorEmbed(None,"Cannot process empty input.")
         elif len(something) > 100:
@@ -293,7 +293,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
                       usage="[@mention]")
-    async def roast(self, ctx, member:Member=""):
+    async def roast(self, ctx, member: Member=""):
         if member == "":
             member = ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
@@ -337,7 +337,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="lovecalc", description="Calculates the love percentage between two users.",
                       aliases=["love", "lovecalculator"], usage="<@mention> [@mention]")
-    async def lovecalc(self, ctx, first:Member=None, second:Member=None):
+    async def lovecalc(self, ctx, first: Member=None, second: Member=None):
         if first is None:
             await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
             return
@@ -376,7 +376,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="avatar", description="Shows the avatar of a user.",
                       aliases=["pfp"], usage="[@mention]")
-    async def avatar(self, ctx, *, user:Member=None):
+    async def avatar(self, ctx, *, user: Member=None):
         user = user or ctx.author
         ext = "gif" if user.is_avatar_animated() else "png"
         url = user.avatar_url_as(format=ext if ext != "gif" else None)
@@ -490,5 +490,5 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         await ctx.send(embed=e)
 
 
-def setup(client:commands.Bot):
+def setup(client: commands.Bot):
     client.add_cog(RandomStuff(client))

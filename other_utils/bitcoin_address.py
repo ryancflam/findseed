@@ -4,6 +4,7 @@ from typing import Union
 from hashlib import sha256, new
 
 HEX_DIGITS = "0123456789abcdef"
+ALPHABET = b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 SHA = 2 ** 256
 PRIME = SHA - 2 ** 32 - 977
 GX = 55066263022277343669578718895168534326250603453777594175500187360389116729240
@@ -28,11 +29,7 @@ class BitcoinAddress:
     @staticmethod
     def __encode(val, base, minlen):
         base, minlen = int(base), int(minlen)
-        codestr = (
-            HEX_DIGITS
-            if base == 16
-            else "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-        )
+        codestr = HEX_DIGITS if base == 16 else ALPHABET.decode("utf-8")
         bytesres = bytes()
         while val > 0:
             curcode = codestr[val % base]
@@ -68,7 +65,7 @@ class BitcoinAddress:
         return result
 
     @staticmethod
-    def __b58encode(v:Union[str, bytes], alpha=b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"):
+    def __base58Encode(v: Union[str, bytes], alphabet: bytes=ALPHABET):
         if isinstance(v, str):
             v = v.encode("ascii")
         npad = len(v)
@@ -81,17 +78,15 @@ class BitcoinAddress:
         string = b""
         while acc:
             acc, idx = divmod(acc, 58)
-            string = alpha[idx:idx + 1] + string
-        return alpha[0:1] * npad + string
+            string = alphabet[idx:idx + 1] + string
+        return alphabet[0:1] * npad + string
 
     def __encodePriv(self):
         ex = "80" + self.__privHex
         sha = sha256(
             unhexlify(sha256(unhexlify(ex)).hexdigest())
         ).hexdigest()
-        return str(
-            self.__b58encode(unhexlify(ex + sha[:8]))
-        ).replace("b'", "").replace("'", "")
+        return self.__base58Encode(unhexlify(ex + sha[:8])).decode("utf-8")
 
     def __jacoMultiply(self, gp, n):
         if n == 1:
@@ -135,9 +130,8 @@ class BitcoinAddress:
             "ripemd160",
             sha256(
                 unhexlify(
-                    "04"
-                    + self.__encode(toencode[0], 16, 64)
-                    + self.__encode(toencode[1], 16, 64)
+                    "04" + self.__encode(toencode[0], 16, 64) +
+                    self.__encode(toencode[1], 16, 64)
                 )
             ).digest(),
         ).digest()
