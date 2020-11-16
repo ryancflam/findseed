@@ -3,127 +3,137 @@
 
 class IOStream:
     def __init__(self, data=None):
-        self._buffer = data if data else ""
+        self.__buffer = data if data else ""
 
     def __len__(self):
-        return len(self._buffer)
+        return len(self.__buffer)
 
     def read(self, length=None):
         if not length:
-            data = self._buffer
-            self._buffer = ""
+            data = self.__buffer
+            self.__buffer = ""
         else:
-            data = self._buffer[:length]
-            self._buffer = self._buffer[length:]
+            data = self.__buffer[:length]
+            self.__buffer = self.__buffer[length:]
         return data
 
     def write(self, data):
-        self._buffer += data
+        self.__buffer += data
 
 
 class IncrementalByteCellArray:
     def __init__(self):
-        self.byte_cells = [0]
-        self.data_pointer = 0
+        self.__byteCells = [0]
+        self.__dataPointer = 0
 
     def __getitem__(self, item):
-        cell_amount = len(self.byte_cells)
-        if item > cell_amount - 1:
-            self.extend(item - cell_amount + 1)
-        return self.byte_cells[item]
+        cellAmount = len(self.__byteCells)
+        if item > cellAmount - 1:
+            self.__extend(item - cellAmount + 1)
+        return self.__byteCells[item]
 
     def __setitem__(self, key:int, value:int):
-        cell_amount = len(self.byte_cells)
-        if key > cell_amount - 1:
-            self.extend(key - cell_amount + 1)
-        self.byte_cells[key] = value
+        cellAmount = len(self.__byteCells)
+        if key > cellAmount - 1:
+            self.__extend(key - cellAmount + 1)
+        self.__byteCells[key] = value
 
     def __len__(self):
-        return len(self.byte_cells)
+        return len(self.__byteCells)
 
     def __repr__(self):
-        return self.byte_cells.__repr__()
+        return self.__byteCells.__repr__()
 
-    def extend(self, size:int):
-        self.byte_cells += [0] * size
+    def __extend(self, size:int):
+        self.__byteCells += [0] * size
+
+    def dataPointerSet(self, decrement=False):
+        if decrement:
+            self.__dataPointer -= 1
+        else:
+            self.__dataPointer += 1
 
     def increment(self):
-        new_val = (self.get() + 1) % 256
-        self.set(new_val)
+        newVal = (self.get() + 1) % 256
+        self.set(newVal)
 
     def decrement(self):
-        new_val = self.get() - 1
-        if new_val < 0:
-            new_val = 255
-        self.set(new_val)
+        newVal = self.get() - 1
+        if newVal < 0:
+            newVal = 255
+        self.set(newVal)
 
     def set(self, value:int):
-        self.__setitem__(self.data_pointer, value)
+        self.__setitem__(self.__dataPointer, value)
 
     def get(self):
-        return self.__getitem__(self.data_pointer)
+        return self.__getitem__(self.__dataPointer)
 
 
 class BrainfuckInterpreter:
     def __init__(self, commands:str):
-        self._commands = commands.replace(" ", "")
+        self.__commands = commands.replace(" ", "")
+        self.__instructionPointer = 0
+        self.__cells = IncrementalByteCellArray()
+        self.__openingBracketIndexes = []
         self.input = IOStream()
         self.output = IOStream()
-        self.instruction_pointer = 0
-        self.cells = IncrementalByteCellArray()
-        self._opening_bracket_indexes = []
 
-    def _look_forward(self):
-        remaining_commands = self._commands[self.instruction_pointer:]
-        loop_counter = 0
-        index = self.instruction_pointer
-        for command in remaining_commands:
+    def __lookForward(self):
+        remaining = self.__commands[self.__instructionPointer:]
+        count = 0
+        index = self.__instructionPointer
+        for command in remaining:
             if command == "[":
-                loop_counter += 1
+                count += 1
             elif command == "]":
-                loop_counter -= 1
-            if loop_counter == 0:
+                count -= 1
+            if count == 0:
                 return index
             index += 1
 
-    def _interpret(self):
-        instruction = self._commands[self.instruction_pointer]
+    def __interpret(self):
+        instruction = self.__commands[self.__instructionPointer]
         if instruction == ">":
-            self.cells.data_pointer += 1
+            self.__cells.dataPointerSet()
         elif instruction == "<":
-            self.cells.data_pointer -= 1
+            self.__cells.dataPointerSet(decrement=True)
         elif instruction == "+":
-            self.cells.increment()
+            self.__cells.increment()
         elif instruction == "-":
-            self.cells.decrement()
+            self.__cells.decrement()
         elif instruction == ".":
-            self.output.write(chr(self.cells.get()))
+            self.output.write(chr(self.__cells.get()))
         elif instruction == ",":
-            self.cells.set(self.input.read(1))
+            self.__cells.set(self.input.read(1))
         elif instruction == "[":
-            if self.cells.get() == 0:
+            if self.__cells.get() == 0:
                 try:
-                    loop_end = self._look_forward()
+                    loopEnd = self.__lookForward()
                 except ValueError:
-                    raise ValueError(f"No closing bracket for loop found on index: {self.instruction_pointer}")
-                self.instruction_pointer = loop_end
+                    raise ValueError(
+                        f"No closing bracket for loop found on index: {self.__instructionPointer}"
+                    )
+                self.__instructionPointer = loopEnd
             else:
-                self._opening_bracket_indexes.append(self.instruction_pointer)
+                self.__openingBracketIndexes.append(self.__instructionPointer)
         elif instruction == "]":
-            if self.cells.get() != 0:
+            if self.__cells.get() != 0:
                 try:
-                    opening_bracket_index = self._opening_bracket_indexes.pop(-1)
+                    openingBracketIndex = self.__openingBracketIndexes.pop(-1)
                 except IndexError:
-                    raise ValueError(f"No opening bracket for loop on index: {self.instruction_pointer}")
-                self.instruction_pointer = opening_bracket_index - 1
+                    raise ValueError(
+                        f"No opening bracket for loop on index: {self.__instructionPointer}"
+                    )
+                self.__instructionPointer = openingBracketIndex - 1
             else:
-                self._opening_bracket_indexes.pop(-1)
+                self.__openingBracketIndexes.pop(-1)
         else:
             raise ValueError("Invalid characters detected.")
 
     def step(self):
-        self._interpret()
-        self.instruction_pointer += 1
+        self.__interpret()
+        self.__instructionPointer += 1
 
     def available(self):
-        return not self.instruction_pointer >= len(self._commands)
+        return not self.__instructionPointer >= len(self.__commands)

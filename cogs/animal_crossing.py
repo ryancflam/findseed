@@ -5,7 +5,6 @@ from discord.ext import commands
 
 from other_utils import funcs
 
-
 ASSETS_PATH = f"{funcs.getPath()}/assets/animal_crossing"
 
 
@@ -26,7 +25,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
         try:
             return data[type.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
         except KeyError:
-            raise Exception
+            raise Exception("Not found, please check your spelling.")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
@@ -46,8 +45,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price", value=f"`{sellPrice}`")
             e.set_image(url=img)
             e.set_thumbnail(url=self.logo)
-        except Exception:
-            e = funcs.errorEmbed(None, "Not found, please check your spelling.")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -78,8 +77,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price (Flick)", value=f"`{flickprice}`")
             e.set_image(url=img)
             e.set_thumbnail(url=self.logo)
-        except Exception:
-            e = funcs.errorEmbed(None, "Not found, please check your spelling.")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -112,8 +111,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price (C.J.)", value=f"`{cjprice}`")
             e.set_image(url=img)
             e.set_thumbnail(url=self.logo)
-        except Exception:
-            e = funcs.errorEmbed(None, "Not found, please check your spelling.")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -132,8 +131,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Part Of", value=f"`{partof}`")
             e.set_image(url=img)
             e.set_thumbnail(url=self.logo)
-        except Exception:
-            e = funcs.errorEmbed(None, "Not found, please check your spelling.")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -162,8 +161,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price", value=f"`{price}`")
             e.set_image(url=img)
             e.set_thumbnail(url=self.logo)
-        except Exception:
-            e = funcs.errorEmbed(None, "Not found, please check your spelling.")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -189,7 +188,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             saying = villagerdata["saying"]
             hobby = villagerdata["hobby"]
             image = villagerdata["image_uri"]
-            e=Embed(title=f"{villagername}", description=f'"{saying}"')
+            e = Embed(title=f"{villagername}", description=f'"{saying}"')
             e.set_image(url=image)
             e.set_thumbnail(url=self.logo)
             e.add_field(name="Personality", value=f"`{personality}`")
@@ -198,8 +197,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Gender", value=f"`{gender}`")
             e.add_field(name="Hobby", value=f"`{hobby}`")
             e.add_field(name="Initial Phrase", value='`"{}"`'.format(phrase))
-        except Exception:
-            e = funcs.errorEmbed(None, "Not found, please check your spelling.")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, f"An error occurred - {ex}")
         await ctx.send(embed=e)
 
 

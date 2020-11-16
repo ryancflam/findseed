@@ -2,29 +2,7 @@ from time import time
 from random import randint, shuffle
 
 from other_utils import funcs
-
-
-class PlayerCycle:
-    def __init__(self, cycle):
-        self.__cycle = cycle
-        self.__index = 0
-
-    def getIndex(self):
-        try:
-            _ = self.__cycle[self.__index]
-        except IndexError:
-            self.__index = 0
-        return self.__index
-
-    def nextItem(self):
-        self.__index += 1
-        if self.__index >= len(self.__cycle):
-            self.__index = 0
-
-    def previousItem(self):
-        self.__index -= 1
-        if self.__index < 0:
-            self.__index = len(self.__cycle) - 1
+from other_utils.item_cycle import ItemCycle
 
 
 class UnoPlayer:
@@ -241,7 +219,7 @@ class Uno:
 
     def startGame(self):
         self.__startTime = time()
-        self.__playerCycle = PlayerCycle(self.__playerList)
+        self.__playerCycle = ItemCycle(self.__playerList)
         self.__currentIndex = self.__playerCycle.getIndex()
         self.__firstDeal()
         self.__createDiscard()

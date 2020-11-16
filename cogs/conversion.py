@@ -1,8 +1,8 @@
 from discord import Embed
 from discord.ext import commands
 
+from assets import morse_data
 from other_utils import funcs
-from other_utils import morse_data
 from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 

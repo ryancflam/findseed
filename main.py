@@ -9,7 +9,6 @@ from discord.ext import commands
 import info
 from other_utils import funcs
 
-
 client = commands.Bot(
     command_prefix=info.prefix, intents=Intents.all(), case_insensitive=True
 )
@@ -28,7 +27,7 @@ async def on_message(message):
     ctx = await client.get_context(message)
     if ctx.valid:
         with open(
-                f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
+            f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
         ) as f:
             data = load(f)
         serverList = list(data["servers"])

@@ -6,8 +6,8 @@ from json import load, loads, dump
 from discord import Embed, File
 from discord.ext import commands
 
+from assets import eye_data
 from other_utils import funcs
-from other_utils import eye_data
 
 
 class Minecraft(commands.Cog, name="Minecraft"):
