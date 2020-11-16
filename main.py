@@ -90,7 +90,7 @@ async def on_message(message):
                 if member:
                     allowed = False
                     break
-        if message.author.id not in userList and allowed and \
+        if allowed and message.author.id not in userList and \
                 (not message.guild or message.guild.id not in serverList):
             if client.is_ready():
                 await client.process_commands(message)

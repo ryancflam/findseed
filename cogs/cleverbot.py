@@ -18,7 +18,15 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
         f.close()
         serverList = list(data["servers"])
         userList = list(data["users"])
-        if message.author.id in userList or \
+        allowed = True
+        for serverID in serverList:
+            server = self.client.get_guild(serverID)
+            if server:
+                member = server.get_member(message.author.id)
+                if member:
+                    allowed = False
+                    break
+        if not allowed or message.author.id in userList or \
                 message.guild and message.guild.id in serverList:
             return
         if self.client.user in message.mentions and not message.content.startswith(info.prefix):
