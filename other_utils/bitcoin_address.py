@@ -74,7 +74,7 @@ class BitcoinAddress:
         p, acc = 1, 0
         for c in reversed(v):
             acc += p * c
-            p = p << 8
+            p <<= 8
         string = b""
         while acc:
             acc, idx = divmod(acc, 58)
@@ -99,7 +99,7 @@ class BitcoinAddress:
         ny = (m * (s - nx) - 8 * ysq ** 2) % PRIME
         nz = (2 * p[1] * p[2]) % PRIME
         p = nx, ny, nz
-        if n % 2 == 0:
+        if not n % 2:
             return p
         u1 = (p[0] * gp[2] ** 2) % PRIME
         u2 = (gp[0] * p[2] ** 2) % PRIME
@@ -116,7 +116,8 @@ class BitcoinAddress:
 
     def __privToAddr(self):
         jm = self.__jacoMultiply(
-            (GX, GY, 1), self.__decode(self.__privHex, 16)
+            (GX, GY, 1),
+            self.__decode(self.__privHex, 16)
         )
         lm, hm = 1, 0
         low, high = jm[2] % PRIME, PRIME
