@@ -869,17 +869,24 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 else:
                     shuffle(possibleanswers)
                 answerindex = int(possibleanswers.index(correct)) + 1
-                answerchoices = f"```== Trivia ==\n\nCategory - {category.title()}\n" + \
-                                f"Difficulty - {difficulty.title()}\n\n{question}\n\n"
+                e = Embed(
+                    title=f"Trivia Question {str(rightcount + 1)} ({difficulty.title()})",
+                    description="```{}```".format(question.replace('&lt;', '<').replace(
+                    '&gt;', '>').replace('&amp;', '&').replace('<br>', '').replace(
+                    '&quot;', '"').replace('&#039;', "'").replace('&eacute;', 'é'))
+                )
+                answerchoices = ""
                 choiceno = 1
                 for i in possibleanswers:
                     answerchoices += f"{choiceno}) {i}\n"
                     choiceno += 1
-                answerchoices += f"\nPlease enter a value between 1-{len(possibleanswers)} " + \
-                                 "corresponding to an answer above. You have 30 seconds.```"
-                await ctx.send(answerchoices.replace("&lt;", "<").replace(
-                    "&gt;", ">").replace("&amp;", "&").replace("<br>", "").replace(
-                    "&quot;", '"').replace("&#039;", "'").replace("&eacute;", "é"))
+                e.add_field(name="Choices", value="```{}```".format(answerchoices[:-1].replace('&lt;', '<').replace(
+                    '&gt;', '>').replace('&amp;', '&').replace('<br>', '').replace(
+                    '&quot;', '"').replace('&#039;', "'").replace('&eacute;', 'é')))
+                e.add_field(name="Category", value=f"`{category.title()}`")
+                e.set_footer(text=f"Please enter a value between 1-{len(possibleanswers)} " + \
+                                  "corresponding to an answer above. You have 30 seconds.")
+                await ctx.send(embed=e)
                 while True:
                     try:
                         useranswer = await self.client.wait_for(
@@ -930,6 +937,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             except Exception:
                 await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
                 self.gameChannels.remove(ctx.channel.id)
+                return
 
 
 def setup(client: commands.Bot):
