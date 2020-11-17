@@ -2,8 +2,8 @@ from time import time
 from json import load
 from datetime import datetime
 from asyncio import TimeoutError
-from random import randint, choice
 from string import ascii_lowercase
+from random import randint, choice, shuffle
 from akinator import CantGoBackAnyFurther
 from akinator.async_aki import Akinator
 
@@ -430,7 +430,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     else:
                         await ctx.send("`You have found the number!`")
             except ValueError:
-                if message.content.casefold() == "quit" or message.content.casefold() == "exit" or message.content.casefold() == "stop":
+                if message.content.casefold() == "quit" or message.content.casefold() == "exit" \
+                        or message.content.casefold() == "stop":
                     break
                 elif message.content.casefold() == "time":
                     _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
@@ -840,6 +841,95 @@ class ChatGames(commands.Cog, name="Chat Games"):
         m, s = game.getTime()
         await ctx.send(f"`Elapsed time: {m}m {s}s`")
         self.gameChannels.remove(ctx.channel.id)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="trivia", description="Play Trivia.", aliases=["quiz"])
+    async def trivia(self, ctx):
+        if await self.checkGameInChannel(ctx):
+            return
+        await ctx.send(
+            "**Welcome to Trivia. Try to answer as many questions in a row as possible. Input `quit` to quit the game.**"
+        )
+        self.gameChannels.append(ctx.channel.id)
+        url = "https://opentdb.com/api.php?amount=1"
+        rightcount = -1
+        while True:
+            rightcount += 1
+            try:
+                res = await funcs.getRequest(url)
+                data = res.json()
+                category = data["results"][0]["category"]
+                difficulty = data["results"][0]["difficulty"]
+                question = data["results"][0]["question"]
+                correct = data["results"][0]["correct_answer"]
+                possibleanswers = data["results"][0]["incorrect_answers"]
+                possibleanswers.append(correct)
+                if data["results"][0]["type"] == "boolean":
+                    possibleanswers = ["True", "False"]
+                else:
+                    shuffle(possibleanswers)
+                answerindex = int(possibleanswers.index(correct)) + 1
+                answerchoices = f"```== Trivia ==\n\nCategory - {category.title()}\n" + \
+                                f"Difficulty - {difficulty.title()}\n\n{question}\n\n"
+                choiceno = 1
+                for i in possibleanswers:
+                    answerchoices += f"{choiceno}) {i}\n"
+                    choiceno += 1
+                answerchoices += f"\nPlease enter a value between 1-{len(possibleanswers)} " + \
+                                 "corresponding to an answer above. You have 30 seconds.```"
+                await ctx.send(answerchoices.replace("&lt;", "<").replace(
+                    "&gt;", ">").replace("&amp;", "&").replace("<br>", "").replace(
+                    "&quot;", '"').replace("&#039;", "'").replace("&eacute;", "é"))
+                while True:
+                    try:
+                        useranswer = await self.client.wait_for(
+                            "message", timeout=30,
+                            check=lambda m: m.author == ctx.author and m.channel == ctx.channel
+                        )
+                    except TimeoutError:
+                        await ctx.send(f"`Inactivity; the correct answer was: {answerindex}) {correct}`")
+                        await ctx.send(
+                            f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
+                        )
+                        self.gameChannels.remove(ctx.channel.id)
+                        return
+                    try:
+                        intuserans = int(useranswer.content)
+                        if intuserans < 1 or intuserans > len(possibleanswers):
+                            await ctx.send(
+                                embed=funcs.errorEmbed(None, f"Answer number must be 1-{len(possibleanswers)} inclusive.")
+                            )
+                            continue
+                        else:
+                            if intuserans == answerindex:
+                                await ctx.send("`Correct! Moving on to next question...`")
+                            else:
+                                await ctx.send(f"`Incorrect! The correct answer was: {answerindex}) {correct}`")
+                                await ctx.send(
+                                    f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
+                                )
+                                self.gameChannels.remove(ctx.channel.id)
+                                return
+                            break
+                    except ValueError:
+                        if useranswer.content.casefold() == correct.casefold() \
+                                or useranswer.content.casefold().startswith("t") and correct == "True" \
+                                or useranswer.content.casefold().startswith("f") and correct == "False":
+                            await ctx.send("`Correct! Moving on to next question...`")
+                            break
+                        else:
+                            await ctx.send(
+                                f"`{'' if useranswer.content.casefold().startswith('quit') else 'Incorrect! '}" + \
+                                f"The correct answer was: {answerindex}) {correct}`"
+                            )
+                            await ctx.send(
+                                f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
+                            )
+                            self.gameChannels.remove(ctx.channel.id)
+                            return
+            except Exception:
+                await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
+                self.gameChannels.remove(ctx.channel.id)
 
 
 def setup(client: commands.Bot):

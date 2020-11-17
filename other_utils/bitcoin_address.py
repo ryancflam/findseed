@@ -129,8 +129,8 @@ class BitcoinAddress:
             "ripemd160",
             sha256(
                 unhexlify(
-                    "04" + self.__encode(toencode[0], 16, 64) +
-                    self.__encode(toencode[1], 16, 64)
+                    "04" + self.__encode(toencode[0], 16, 64)
+                    + self.__encode(toencode[1], 16, 64)
                 )
             ).digest(),
         ).digest()
