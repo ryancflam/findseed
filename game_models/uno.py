@@ -236,14 +236,12 @@ class Uno:
         self.__nextPlayer()
         discard = self.__discardPile[-1]
         drawnCard = drawnCards[0]
-        wildCard = False
+        playable, wildCard = False, False
         if "Wild" in drawnCard or drawnCard.split(" ")[0] == discard.split(" ")[0] \
                 or drawnCard.split(" ")[1] == discard.split(" ")[1]:
             playable = True
             if "Wild" in drawnCard:
                 wildCard = True
-        else:
-            playable = False
         return sorted(drawnCards), affectedPlayer, playable, wildCard
 
     def saidUno(self):

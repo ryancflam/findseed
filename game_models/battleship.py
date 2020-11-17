@@ -38,8 +38,7 @@ class Battleship:
 
     def __placeShips(self):
         for i in range(len(self.__shipcode)):
-            done = False
-            while not done:
+            while True:
                 rand1 = randint(0, self.__boardSize-1)
                 rand2 = randint(0, self.__boardSize-1)
                 direction = randint(0, 2)
@@ -64,7 +63,7 @@ class Battleship:
                                 if self.__board[r][c] == self.__shipcode[i]:
                                     self.__board[r][c] = "."
                 if piece == self.__shipsize[i] and not problem:
-                    done = True
+                    break
 
     def displayBoard(self, showships=False):
         output = "Current board:\n\n  "
