@@ -76,10 +76,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bitcoin", description="Gets current information about the Bitcoin network.",
-                      aliases=["btc", "bitcoinnetwork", "bn"])
-    async def bitcoin(self, ctx):
-        await ctx.send("Getting Bitcoin information. Please wait...")
+    @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
+                      aliases=["btc", "bitcoinnetwork", "bn", "bitcoin"])
+    async def btcnetwork(self, ctx):
+        await ctx.send("Getting Bitcoin network information. Please wait...")
         try:
             data = await funcs.getRequest("https://blockchain.info/stats?format=json")
             blockchain = data.json()
