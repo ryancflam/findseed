@@ -12,10 +12,11 @@ from other_utils import funcs
 
 
 class FindseedBot(commands.Bot):
-    def __init__(self, loop):
-        self.loop = loop
+    def __init__(self, loop, prefix, path):
+        self.__loop = loop
+        self.__path = path
         super().__init__(
-            command_prefix=info.prefix,
+            command_prefix=prefix,
             intents=Intents.all(),
             case_insensitive=True
         )
@@ -24,7 +25,8 @@ class FindseedBot(commands.Bot):
     async def on_ready(self):
         print(f"Logged in as {self.user}")
         await self.change_presence(
-            activity=Activity(name="for seeds...", type=3), status="idle"
+            activity=Activity(name="for seeds...", type=3),
+            status="idle"
         )
 
     async def on_guild_join(self, server):
@@ -43,7 +45,7 @@ class FindseedBot(commands.Bot):
         ctx = await self.get_context(message)
         if ctx.valid:
             with open(
-                f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
+                f"{self.__path}/blacklist.json", "r", encoding="utf-8"
             ) as f:
                 data = load(f)
             serverList = list(data["servers"])
@@ -67,17 +69,20 @@ class FindseedBot(commands.Bot):
             f.close()
 
     def startup(self):
-        for cog in listdir(f"{funcs.getPath()}/cogs"):
+        for cog in listdir(f"{self.__path}/cogs"):
             if cog.endswith(".py"):
                 self.load_extension(f"cogs.{cog[:-3]}")
         super().run(info.token, bot=True, reconnect=True)
 
     def kill(self):
         try:
-            self.loop.stop()
-            tasks = asyncio.gather(*asyncio.Task.all_tasks(), loop=self.loop)
+            self.__loop.stop()
+            tasks = asyncio.gather(
+                *asyncio.Task.all_tasks(),
+                loop=self.__loop
+            )
             tasks.cancel()
-            self.loop.run_forever()
+            self.__loop.run_forever()
             tasks.exception()
             return None
         except Exception as ex:
@@ -85,7 +90,7 @@ class FindseedBot(commands.Bot):
 
 
 loop = asyncio.get_event_loop()
-client = FindseedBot(loop)
+client = FindseedBot(loop=loop, prefix=info.prefix, path=funcs.getPath())
 
 if __name__ == "__main__":
     try:
