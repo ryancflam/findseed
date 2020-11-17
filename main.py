@@ -12,7 +12,7 @@ from other_utils import funcs
 
 
 class FindseedBot(commands.Bot):
-    def __init__(self, loop: asyncio.AbstractEventLoop, prefix, path):
+    def __init__(self, loop: asyncio.AbstractEventLoop, prefix, path, token):
         super().__init__(
             command_prefix=prefix,
             intents=Intents.all(),
@@ -20,6 +20,7 @@ class FindseedBot(commands.Bot):
         )
         self.__loop = loop
         self.__path = path
+        self.__token = token
         self.remove_command("help")
 
     async def on_ready(self):
@@ -72,7 +73,7 @@ class FindseedBot(commands.Bot):
         for cog in listdir(f"{self.__path}/cogs"):
             if cog.endswith(".py"):
                 self.load_extension(f"cogs.{cog[:-3]}")
-        super().run(info.token, bot=True, reconnect=True)
+        super().run(self.__token, bot=True, reconnect=True)
 
     def kill(self):
         try:
@@ -90,7 +91,9 @@ class FindseedBot(commands.Bot):
 
 
 loop = asyncio.get_event_loop()
-client = FindseedBot(loop=loop, prefix=info.prefix, path=funcs.getPath())
+client = FindseedBot(
+    loop=loop, prefix=info.prefix, path=funcs.getPath(), token=info.token
+)
 
 if __name__ == "__main__":
     try:

@@ -853,6 +853,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels.append(ctx.channel.id)
         url = "https://opentdb.com/api.php?amount=1"
         rightcount = -1
+        starttime = time()
         while True:
             rightcount += 1
             try:
@@ -899,6 +900,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                             f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
                         )
                         self.gameChannels.remove(ctx.channel.id)
+                        _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                        await ctx.send(f"`Elapsed time: {m}m {s}s`")
                         return
                     try:
                         intuserans = int(useranswer.content)
@@ -916,6 +919,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                                     f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
                                 )
                                 self.gameChannels.remove(ctx.channel.id)
+                                _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                                await ctx.send(f"`Elapsed time: {m}m {s}s`")
                                 return
                             break
                     except ValueError:
@@ -933,6 +938,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                                 f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
                             )
                             self.gameChannels.remove(ctx.channel.id)
+                            _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                            await ctx.send(f"`Elapsed time: {m}m {s}s`")
                             return
             except Exception:
                 await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
