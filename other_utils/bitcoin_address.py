@@ -1,6 +1,6 @@
+from typing import Union
 from random import randrange
 from binascii import unhexlify
-from typing import Union
 from hashlib import sha256, new
 
 HEX_DIGITS = "0123456789abcdef"

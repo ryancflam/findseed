@@ -1,5 +1,4 @@
 from os import system
-from sys import exit
 from ast import parse
 from json import load, dump
 from asyncio import TimeoutError
@@ -158,7 +157,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         else:
             await ctx.send("Git-pulling. Commencing restart...")
         system(f"{gitpull}sudo reboot")
-        exit()
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
     @commands.is_owner()
