@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from discord import Embed, Colour
 from discord.ext import commands
 
 import info
 from other_utils import funcs
 from other_utils.bitcoin_address import BitcoinAddress
+
+BITCOIN_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
@@ -91,7 +95,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 halvingheight += 210000
                 blockreward /= 2
             bl = halvingheight - height
-            e.set_thumbnail(url="https://s2.coinmarketcap.com/static/img/coins/128x128/1.png")
+            e.set_thumbnail(url=BITCOIN_LOGO)
             e.add_field(name="Market Price", value=f"`{blockchain['market_price_usd']} USD`")
             e.add_field(name="Minutes Between Blocks", value=f"`{blockchain['minutes_between_blocks']}`")
             e.add_field(name="Mining Difficulty", value=f"`{blockchain['difficulty']}`")
@@ -110,10 +114,201 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e = funcs.errorEmbed(None,"Possible server error, please try again later.")
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="btctx", description="Gets information about a Bitcoin transaction.",
+                      aliases=["btx", "btctransaction"], usage="<transaction hash>")
+    async def btctx(self, ctx, *, hashstr: str=""):
+        if hashstr == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            await ctx.send("Getting Bitcoin transaction information. Please wait...")
+            hashstr = hashstr.casefold().replace("`", "").replace(" ", "")
+            try:
+                res = await funcs.getRequest(f"https://blockchain.info/rawtx/{hashstr}")
+                txinfo = res.json()
+                res = await funcs.getRequest(f"https://api.blockcypher.com/v1/btc/main/txs/{hashstr}")
+                txinfo2 = res.json()
+                e = Embed(
+                    title="Bitcoin Transaction",
+                    description=f"https://www.blockchain.com/btc/tx/{hashstr}",
+                    colour=Colour.orange()
+                )
+                e.set_thumbnail(url=BITCOIN_LOGO)
+                e.add_field(name="Date (UTC)", value=f"`{str(datetime.fromtimestamp(txinfo['time']))}`")
+                e.add_field(name="Hash", value=f"`{txinfo['hash']}`")
+                try:
+                    e.add_field(name="Block Height", value=f"`{txinfo['block_height']}`")
+                except:
+                    e.add_field(name="Block Height", value="`Unconfirmed`")
+                e.add_field(name="Size",value=f"`{txinfo['size']} bytes`")
+                e.add_field(name="Weight",value=f"`{txinfo['weight']} WU`")
+                e.add_field(
+                    name="Total", value=f"`{txinfo2['total']} sat.`" if txinfo2["total"] < 10000
+                    else f"`{round(int(txinfo2['total']) * 0.00000001, 8)} BTC`"
+                )
+                e.add_field(
+                    name="Fees", value=f"`{txinfo2['fees']} sat.`" if txinfo2["fees"] < 10000
+                    else f"`{round(int(txinfo2['fees']) * 0.00000001, 8)} BTC`"
+                )
+                e.add_field(name="Confirmations", value=f"`{txinfo2['confirmations']}`")
+                try:
+                    e.add_field(name="Relayed By", value=f"`{txinfo2['relayed_by']}`")
+                except:
+                    e.add_field(name="Relayed By", value="`N/A`")
+                value = ""
+                for i in range(len(txinfo["inputs"])):
+                    if i == 20:
+                        break
+                    if txinfo["inputs"][i]["prev_out"]["value"] < 10000:
+                        value += txinfo2["inputs"][i]["addresses"][0] + \
+                                 f" ({txinfo['inputs'][i]['prev_out']['value']} sat.)\n\n"
+                    else:
+                        value += txinfo2["inputs"][i]["addresses"][0] + \
+                                 f" ({round(int(txinfo['inputs'][i]['prev_out']['value']) * 0.00000001, 8)} BTC)\n\n"
+                newvalue = value[:500]
+                if newvalue != value:
+                    newvalue += "..."
+                e.add_field(name=f"Inputs ({txinfo['vin_sz']})", value=f"```{newvalue}```")
+                value = ""
+                for i in range(len(txinfo["out"])):
+                    if i == 20:
+                        break
+                    if txinfo["out"][i]["value"] < 10000:
+                        value += txinfo2["outputs"][i]["addresses"][0] + \
+                               f" ({txinfo['out'][i]['value']} sat.)\n\n"
+                    else:
+                        value += txinfo2["outputs"][i]["addresses"][0] + \
+                                 f" ({round(int(txinfo['out'][i]['value']) * 0.00000001, 8)} BTC)\n\n"
+                newvalue = value[:500]
+                if newvalue != value:
+                    newvalue += "..."
+                e.add_field(name=f"Outputs ({txinfo['vout_sz']})", value=f"```{newvalue}```")
+                e.set_footer(text="1 satoshi = 0.00000001 BTC")
+            except Exception:
+                e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="btcaddr", description="Gets information about a Bitcoin address.",
+                      aliases=["baddr", "btcaddress", "address", "addr"], usage="<address>")
+    async def btcaddr(self, ctx, *, hashstr: str=""):
+        inphash = hashstr.replace("`", "").replace(" ", "")
+        if inphash == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                await ctx.send("Getting Bitcoin address information. Please wait...")
+                data = await funcs.getRequest(f"https://blockchain.info/rawaddr/{inphash}",)
+                txinfo = data.json()
+                data = await funcs.getRequest(f"https://api.blockcypher.com/v1/btc/main/addrs/{inphash}",)
+                txinfo2 = data.json()
+                e = Embed(
+                    title="Bitcoin Address",
+                    description=f"https://www.blockchain.com/btc/address/{inphash}",
+                    colour=Colour.orange()
+                )
+                e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={inphash}")
+                e.add_field(name="Address", value=f"`{inphash}`")
+                e.add_field(name="Hash160", value=f"`{txinfo['hash160']}`")
+                e.add_field(
+                    name="Final Balance", value=f"`{round(txinfo2['balance'] * 0.00000001, 8)} BTC`"
+                    if txinfo2["balance"] > 9999 else f"`{txinfo2['balance']} sat.`"
+                )
+                e.add_field(
+                    name="Unconfirmed Balance", value=f"`{round(txinfo2['unconfirmed_balance'] * 0.00000001, 8)} BTC`"
+                    if (txinfo2["unconfirmed_balance"] > 9999 or txinfo2["unconfirmed_balance"] < -9999)
+                    else f"`{txinfo2['unconfirmed_balance']} sat.`"
+                )
+                e.add_field(
+                    name="Total Sent", value=f"`{round(txinfo2['total_sent'] * 0.00000001, 8)} BTC`"
+                    if txinfo2["total_sent"] > 9999 else f"`{txinfo2['total_sent']} sat.`"
+                )
+                e.add_field(
+                    name="Total Received", value=f"`{round(txinfo2['total_received'] * 0.00000001, 8)} BTC`"
+                    if txinfo2["total_received"] > 9999 else f"`{txinfo2['total_received']} sat.`"
+                )
+                e.add_field(name="Transactions", value=f"`{txinfo['n_tx']}`")
+                try:
+                    output = "" if round(txinfo["txs"][0]["result"] * 0.00000001, 8) < 0 else "+"
+                    tran = (str(txinfo["txs"][0]["result"]) + " sat.") if -9999 < txinfo["txs"][0]["result"] < 10000 \
+                        else (str(round(txinfo["txs"][0]["result"] * 0.00000001, 8)) + " BTC")
+                    e.add_field(
+                        name=f"Last Transaction ({str(datetime.fromtimestamp(txinfo['txs'][0]['time']))})",
+                        value=f"`{output}{tran}`"
+                    )
+                    e.add_field(name="Last Transaction Hash", value=f"`{txinfo['txs'][0]['hash']}`")
+                except:
+                    pass
+                e.set_footer(text="1 satoshi = 0.00000001 BTC")
+            except Exception:
+                e = funcs.errorEmbed(
+                    None, "Unknown address or server error?\n\nNote: Bitcoin addresses are case sensitive. " + \
+                          "Addresses that start with `bc1` are not supported."
+                )
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="btcblock", description="Gets information about a Bitcoin block.",
+                      aliases=["bblock", "bb", "btcheight"], usage="<block hash/height>")
+    async def btcblock(self, ctx, *, hashstr: str=""):
+        await ctx.send("Getting Bitcoin block information. Please wait...")
+        if hashstr == "":
+            hashget = await funcs.getRequest("https://blockchain.info/latestblock")
+            hashjson = hashget.json()
+            hashstr = hashjson["hash"]
+        hashstr = hashstr.casefold().replace("`", "").replace(" ", "")
+        try:
+            try:
+                hashstr = int(hashstr)
+                hashget = await funcs.getRequest(f"https://blockchain.info/block-height/{hashstr}?format=json")
+                blockinfo = hashget.json()
+                blockinfo = blockinfo["blocks"][0]
+                nextblock = blockinfo["next_block"]
+                hashstr = blockinfo["hash"]
+                hashget = await funcs.getRequest(f"https://blockchain.info/rawblock/{hashstr}")
+                blockinfo = hashget.json()
+                weight = blockinfo["weight"]
+            except ValueError:
+                if hashstr.casefold().startswith("0x"):
+                    hashstr = hashstr[2:]
+                hashget = await funcs.getRequest(f"https://blockchain.info/rawblock/{hashstr}")
+                blockinfo = hashget.json()
+                weight = blockinfo["weight"]
+                hashget = await funcs.getRequest(f"https://blockchain.info/block-height/{blockinfo['height']}?format=json")
+                blockinfo = hashget.json()
+                blockinfo = blockinfo["blocks"][0]
+                nextblock = blockinfo["next_block"]
+            height = blockinfo["height"]
+            e = Embed(
+                title=f"Bitcoin Block {height}",
+                description=f"https://www.blockchain.com/btc/block/{hashstr}",
+                colour=Colour.orange()
+            )
+            e.set_thumbnail(url=BITCOIN_LOGO)
+            e.add_field(name="Date (UTC)", value=f"`{str(datetime.fromtimestamp(blockinfo['time']))}`")
+            e.add_field(name="Hash", value=f"`{blockinfo['hash']}`")
+            e.add_field(name="Merkle Root", value=f"`{blockinfo['mrkl_root']}`")
+            e.add_field(name="Bits", value=f"`{blockinfo['bits']}`")
+            e.add_field(name="Transactions", value=f"`{blockinfo['n_tx']}`")
+            e.add_field(name="Size", value=f"`{blockinfo['size']} bytes`")
+            e.add_field(name="Weight", value=f"`{weight} WU`")
+            e.add_field(
+                name="Block Reward",
+                value=f"`{(int(list(blockinfo['tx'])[0]['out'][0]['value']) - int(blockinfo['fee'])) * 0.00000001} BTC`"
+            )
+            e.add_field(name="Fee Reward", value=f"`{round(int(blockinfo['fee']) * 0.00000001, 8)} BTC`")
+            if height != 0:
+                e.add_field(name=f"Previous Block ({height - 1})", value=f"`{blockinfo['prev_block']}`")
+            if len(nextblock) != 0:
+                e.add_field(name=f"Next Block ({height + 1})", value=f"`{nextblock[0]}`")
+        except Exception:
+            e = funcs.errorEmbed(None, "Unknown block or server error?")
+        await ctx.send(embed=e)
+
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="btcaddress", aliases=["baddrg", "bgenaddr", "address", "btcgenaddr", "btcaddrgen"],
+    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr"],
                       description="Generates a Bitcoin address. This command should only be used purely for fun.")
-    async def btcaddress(self, ctx):
+    async def btcaddrgen(self, ctx):
         address = BitcoinAddress()
         pk, swif, shex = address.getAddr()
         e = Embed(
