@@ -1,6 +1,6 @@
-from base64 import b64decode
 from time import time
 from scipy import stats
+from base64 import b64decode
 from json import load, loads, dump
 
 from discord import Embed, File
@@ -89,7 +89,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             )
             e.set_image(url=skin)
         except Exception:
-            e = funcs.errorEmbed(None,"Invalid skin or server error.")
+            e = funcs.errorEmbed(None, "Invalid skin or server error.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -105,7 +105,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None,"Invalid input."))
             return
-        x = sum(stats.binom.pmf([i for i in range(2, n+1)], n, 20/423))
+        x = sum(stats.binom.pmf([i for i in range(2, n + 1)], n, 20 / 423))
         await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
                        f"8-16 pearls) in {n} gold is `{x * 100}%`. *(1 in {1 / x})*")
 
@@ -144,7 +144,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                           f"{ms if ms!=0 else ''}{'ms ' if ms!=0 else ''}(by {runner})`")
                 count += 1
         except Exception:
-            e = funcs.errorEmbed(None,"Possible server error.")
+            e = funcs.errorEmbed(None, "Possible server error.")
         await ctx.send(embed=e)
 
 

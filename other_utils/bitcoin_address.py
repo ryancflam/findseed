@@ -20,8 +20,7 @@ class BitcoinAddress:
     @staticmethod
     def __genPrivHex():
         return "".join(
-            "{:02x}".format(i)
-            for i in sha256(
+            "{:02x}".format(i) for i in sha256(
                 bytes(str(randrange(SHA)), "utf-8")
             ).digest()
         )
@@ -49,10 +48,9 @@ class BitcoinAddress:
         base = int(base)
         result = 0
         if base == 16:
-            string = string.lower()
+            string = string.casefold()
         while len(string) > 0:
-            result *= base
-            result += (
+            result = result * base + (
                 string[0]
                 if base == 256
                 else HEX_DIGITS.find(

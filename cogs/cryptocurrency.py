@@ -75,7 +75,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e = funcs.errorEmbed(None,"Possible server error.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
                       aliases=["btc", "bitcoinnetwork", "bn", "bitcoin"])
     async def btcnetwork(self, ctx):

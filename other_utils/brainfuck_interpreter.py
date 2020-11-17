@@ -71,7 +71,7 @@ class IncrementalByteCellArray:
 
 
 class BrainfuckInterpreter:
-    def __init__(self, commands:str):
+    def __init__(self, commands: str):
         self.__commands = commands.replace(" ", "")
         self.__instructionPointer = 0
         self.__cells = IncrementalByteCellArray()
