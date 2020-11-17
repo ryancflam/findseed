@@ -152,7 +152,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                                            and m.content.casefold() == "yes",
                 timeout=10
             )
-            gitpull = "cd findseed && git pull && "
+            gitpull = "cd /root/findseed && git pull && "
         except TimeoutError:
             await ctx.send("Not git-pulling. Commencing restart...")
         else:
