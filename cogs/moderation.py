@@ -36,7 +36,7 @@ class Moderation(commands.Cog, name="Moderation"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="kick", description="Kicks a member from a server.",
+    @commands.command(name="kick", description="Kicks a user from a server.",
                       usage="<@mention> [reason]")
     @commands.bot_has_permissions(kick_members=True)
     @commands.has_permissions(kick_members=True)
@@ -54,7 +54,7 @@ class Moderation(commands.Cog, name="Moderation"):
             await ctx.send(embed=funcs.errorEmbed(None, "Cannot kick that user."))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="ban", description="Bans a member from a server.",
+    @commands.command(name="ban", description="Bans a user from a server.",
                       usage="<@mention> [reason]")
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
@@ -72,7 +72,7 @@ class Moderation(commands.Cog, name="Moderation"):
             await ctx.send(embed=funcs.errorEmbed(None, "Cannot ban that user."))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="unban", description="Unbans a member on a server.",
+    @commands.command(name="unban", description="Unbans a user on a server.",
                       usage="<username#discriminator>")
     @commands.bot_has_permissions(ban_members=True, manage_guild=True)
     @commands.has_permissions(ban_members=True, manage_guild=True)
@@ -87,6 +87,21 @@ class Moderation(commands.Cog, name="Moderation"):
                     await ctx.send(f"Successfully unbanned user **{user}**.")
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="banlist", description="Returns a list of banned users on a server.",
+                      aliases=["bans"])
+    @commands.bot_has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
+    async def banlist(self, ctx):
+        bannedusers = await ctx.guild.bans()
+        string = "\n".join(
+            f"- {ban.user.name}#{ban.user.discriminator}" + \
+            f" (Reason: {ban.reason})" for ban in bannedusers
+        )
+        if string == "":
+            string = "None"
+        await ctx.send(funcs.formatting(string))
 
 
 def setup(client: commands.Bot):

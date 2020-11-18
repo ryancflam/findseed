@@ -182,6 +182,7 @@ class Conversion(commands.Cog, name="Conversion"):
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
+                text = text.replace(" ", "")
                 e = Embed(
                     title="Binary to Text",
                     description=funcs.formatting("".join(chr(int(text[i*8:i*8+8], 2)) \
@@ -289,6 +290,77 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = Embed(
                     title="Decimal to Hexadecimal",
                     description=funcs.formatting(hex(number).split("x")[-1])
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="ctf", description="Converts Celsius to Fahrenheit.",
+                      aliases=["c2f", "ctof", "fahrenheit"])
+    async def ctf(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                e = Embed(
+                    title="Celsius to Fahrenheit",
+                    description=funcs.formatting(str(round(funcs.celsiusToFahrenheit(number), 3)) + "°F")
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="ftc", description="Converts Fahrenheit to Celsius.",
+                      aliases=["f2c", "ftoc", "celsius"])
+    async def ftc(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                value = round((number - 32) * 5 / 9, 3)
+                e = Embed(
+                    title="Fahrenheit to Celsius",
+                    description=funcs.formatting(str(value) + "°C")
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="lbstokg", description="Converts pounds to kilograms.",
+                      aliases=["kg", "kilogram", "kgs", "kilograms", "kilo", "kilos", "lbs2kg"])
+    async def lbstokg(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                value = round(number * 0.45359237, 3)
+                e = Embed(
+                    title="Pounds to Kilograms",
+                    description=funcs.formatting(str(value) + " kg")
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="kgtolbs", description="Converts kilograms to pounds.",
+                      aliases=["lbs", "pound", "pounds", "kg2lbs"])
+    async def kgtolbs(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                value = round(number * 2.2046226218, 3)
+                e = Embed(
+                    title="Kilograms to Pounds",
+                    description=funcs.formatting(str(value) + " kg")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")

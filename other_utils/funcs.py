@@ -67,7 +67,7 @@ def insertReturns(body):
 
 
 def celsiusToFahrenheit(value):
-    return (value * 9/5) + 32
+    return value * 9 / 5 + 32
 
 
 def degreesToDirection(value):
