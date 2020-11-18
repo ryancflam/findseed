@@ -157,9 +157,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt"], usage="<input>")
     async def trumpthinks(self, ctx, *, something: str=""):
         if something == "":
-            e = funcs.errorEmbed(None,"Cannot process empty input.")
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
         elif len(something) > 100:
-            e = funcs.errorEmbed(None,"Please enter 100 characters or less.")
+            e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
             res = await funcs.getRequest("https://api.whatdoestrumpthink.com/api/v1/quotes")
             quotes = choice(list(res.json()["messages"]["personalized"]))
@@ -176,9 +176,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["nt", "plsneo", "neosays", "neo", "neot"], usage="<input>")
     async def neothinks(self, ctx, *, something: str=""):
         if something == "":
-            e = funcs.errorEmbed(None,"Cannot process empty input.")
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
         elif len(something) > 100:
-            e = funcs.errorEmbed(None,"Please enter 100 characters or less.")
+            e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
             if "neo" in something.casefold():
                 quotes = choice([
@@ -220,9 +220,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["at", "plsaudible", "audiblesays", "audible", "audiblet"], usage="<input>")
     async def audiblethinks(self, ctx, *, something: str=""):
         if something == "":
-            e = funcs.errorEmbed(None,"Cannot process empty input.")
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
         elif len(something) > 100:
-            e = funcs.errorEmbed(None,"Please enter 100 characters or less.")
+            e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
             if "audible" in something.casefold():
                 quotes = choice([
@@ -304,7 +304,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["spin", "spinner", "youspinmerightround"])
     async def fidgetspinner(self, ctx):
         if ctx.author.id in self.activeSpinners:
-            await ctx.send(embed=funcs.errorEmbed(None,"Your fidget spinner is still spinning, please wait!"))
+            await ctx.send(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
             return
         self.activeSpinners.append(ctx.message.author.id)
         try:
@@ -315,7 +315,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://files.gamebanana.com/img/ico/sprays/593404c44a588.gif",
                 "https://gifimage.net/wp-content/uploads/2017/11/fidget-spinner-gif-transparent-6.gif"
             ])
-            file = File(await funcs.getImage(url),"spinner.gif")
+            file = File(await funcs.getImage(url), "spinner.gif")
             await ctx.send(
                 f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name} has spun a fidget spinner. " + \
                 "Let's see how long it lasts...** <:fidgetspinner:675314386784485376>", file=file
@@ -464,8 +464,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         if term == "":
             e = funcs.errorEmbed(None, "Empty input.")
         else:
-            term = term.replace(" ", "%20")
-            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define?term={term}")
+            params = {"term": term.replace(" ", "%20")}
+            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params=params)
             data = res.json()
             terms = data["list"]
             if len(terms) == 0:

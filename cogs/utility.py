@@ -107,10 +107,10 @@ class Utility(commands.Cog, name="Utility"):
             return
         ph = "Unknown"
         flightstr = flightstr.upper().replace(" ", "")
-        url = "https://api.flightradar24.com/common/v1/flight/list.json?" + \
-              f"&fetchBy=flight&page=1&limit=25&query={flightstr}"
+        url = "https://api.flightradar24.com/common/v1/flight/list.json?"
+        params = {"fetchBy": "flight", "page": "1", "limit": "25", "query": flightstr}
         try:
-            res = await funcs.getRequest(url, headers={"User-agent":"*"})
+            res = await funcs.getRequest(url, headers={"User-agent": "*"}, params=params)
             allflights = res.json()
             fdd = allflights["result"]["response"]["data"]
             dago, eta = "", ""
@@ -168,7 +168,9 @@ class Utility(commands.Cog, name="Utility"):
                 image=imgl[y]
                 if image["registration"] != reg:
                     continue
-                thumbnail = list(image["images"]["thumbnails"])[0]["src"][:-4].replace("_tb", "").replace("com/200/", "com/full/")
+                thumbnail = list(
+                    image["images"]["thumbnails"]
+                )[0]["src"][:-4].replace("_tb", "").replace("com/200/", "com/full/")
             e = Embed(title=f"Flight {flightstr}", description=flighturl)
             e.set_image(url=thumbnail)
             e.add_field(name="Date", value=f"`{flightdate}`")
@@ -176,7 +178,8 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(name="Status", value=f"`{status}`")
             e.add_field(name="Aircraft", value=f"`{aircraft}`")
             e.add_field(name="Registration", value=f"`{reg} ({data['aircraft']['country']['name']})`")
-            e.add_field(name="Airline", value=f"`{airline} ({data['airline']['code']['iata']}/{data['airline']['code']['icao']})`")
+            e.add_field(name="Airline",
+                        value=f"`{airline} ({data['airline']['code']['iata']}/{data['airline']['code']['icao']})`")
             e.add_field(name="Origin", value=f"`{originname} ({originiata}/{originicao})`")
             e.add_field(name="Destination", value=f"`{destname} ({destiata}/{desticao})`")
             e.add_field(name=depart, value=f"`{realdepart}`")
@@ -216,7 +219,8 @@ class Utility(commands.Cog, name="Utility"):
                                                  "{}°C - {}°C`".format(round(low, 1), round(high, 1)))
             e.add_field(name="Humidity", value="`{}%`".format(data["main"]["humidity"]))
             e.add_field(name="Wind Speed", value="`{} m/s`".format(data["wind"]["speed"]))
-            e.add_field(name="Wind Direction", value="`{}° ({})`".format(int(winddegrees), funcs.degreesToDirection(winddegrees)))
+            e.add_field(name="Wind Direction",
+                        value="`{}° ({})`".format(int(winddegrees), funcs.degreesToDirection(winddegrees)))
             e.add_field(name="Local Time", value=f"`{timenow}`")
             e.add_field(name="Last Updated (Local time)", value=f"`{lastupdate}`")
             e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.")
@@ -258,9 +262,9 @@ class Utility(commands.Cog, name="Utility"):
                     "Invalid usage!", f"Use `{self.client.command_prefix}help currency` to see the correct usage.")
             )
             return
-        url = f"http://data.fixer.io/api/latest?access_key={info.fixerKey}"
+        url = "http://data.fixer.io/api/latest"
         try:
-            res = await funcs.getRequest(url)
+            res = await funcs.getRequest(url, params={"access_key": info.fixerKey})
             data = res.json()
             amount = float(output[0])
             initialamount = amount
@@ -279,7 +283,8 @@ class Utility(commands.Cog, name="Utility"):
         if page == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
-            wikiurl = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles="
+            wikiurl = "https://en.wikipedia.org/w/api.php?format=json&action=query" + \
+                      "&prop=extracts&exintro&explaintext&redirects=1&titles="
             try:
                 res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_')}")
                 data = res.json()

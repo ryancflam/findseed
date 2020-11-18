@@ -851,13 +851,13 @@ class ChatGames(commands.Cog, name="Chat Games"):
             "**Welcome to Trivia. Try to answer as many questions in a row as possible. Input `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
-        url = "https://opentdb.com/api.php?amount=1"
+        url = "https://opentdb.com/api.php"
         rightcount = -1
         starttime = time()
         while True:
             rightcount += 1
             try:
-                res = await funcs.getRequest(url)
+                res = await funcs.getRequest(url, params={"amount": "1"})
                 data = res.json()
                 category = data["results"][0]["category"]
                 difficulty = data["results"][0]["difficulty"]

@@ -95,15 +95,15 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="pearlbarter", description="Finds the probability of getting 2 or more ender pearl trades" + \
                                                       " in a given number of trades in Minecraft 1.16.1.",
-                      aliases=["piglin", "barter", "bartering", "pearl", "pearls", "trades", "trade"],usage="<total trades>")
+                      aliases=["piglin", "barter", "bartering", "pearl", "pearls", "trades", "trade"], usage="<total trades>")
     async def pearlbarter(self, ctx, *, trades: str=""):
         try:
             n = int(trades)
             if not 2 <= n <= 999:
-                await ctx.send(embed=funcs.errorEmbed(None,"Value must be between 2 and 999."))
+                await ctx.send(embed=funcs.errorEmbed(None, "Value must be between 2 and 999."))
                 return
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None,"Invalid input."))
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
             return
         x = sum(stats.binom.pmf([i for i in range(2, n + 1)], n, 20 / 423))
         await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
@@ -120,21 +120,23 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 description="https://www.speedrun.com/mc"
             )
             urls = [
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=gq7zo9p1",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=21go6e6q",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=gq7zo9p1",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=21go6e6q",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=jqzywv2l",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=klr6djol",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=jqzywv2l",
-                "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=klr6djol"
+                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=gq7zo9p1",
+                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=21go6e6q",
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=gq7zo9p1",
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=21go6e6q",
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731",
+                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=jqzywv2l",
+                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=klr6djol",
+                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=jqzywv2l",
+                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=klr6djol"
             ]
             categories = ["SSG Pre-1.9", "SSG 1.9+", "RSG Pre-1.9", "RSG 1.9-1.15", "RSG 1.16+",
                           "SS Pre-1.9", "SS 1.9+", "RS Pre-1.9", "RS 1.9+"]
             count = 0
             for category in urls:
-                res = await funcs.getRequest(category)
+                res = await funcs.getRequest(
+                    "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/" + category
+                )
                 wrdata = res.json()["data"]["runs"][0]["run"]
                 igt = wrdata["times"]["ingame_t"]
                 res = await funcs.getRequest(wrdata["players"][0]["uri"])
