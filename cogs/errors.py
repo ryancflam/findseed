@@ -27,6 +27,17 @@ class Errors(commands.Cog, name="Errors"):
                 embed=funcs.errorEmbed("Invalid arguments!", "Correct usage: " + \
                                        f"`{self.client.command_prefix}{ctx.command.name} {ctx.command.usage}`")
             )
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send(
+                embed=funcs.errorEmbed(
+                    "Insufficient privileges!", "You are missing the following permission(s): " + \
+                                                ", ".join(f"`{perm}`" for perm in error.missing_perms)
+                )
+            )
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send(
+                embed=funcs.errorEmbed(None, "Bot does not have permission to perform such action.")
+            )
 
 
 def setup(client: commands.Bot):
