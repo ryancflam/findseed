@@ -1,5 +1,6 @@
 from re import sub
 from json import load
+from random import choice
 
 from discord.ext import commands
 
@@ -30,7 +31,8 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
                 message.guild and message.guild.id in serverList:
             return
         if self.client.user in message.mentions and not message.content.startswith(info.prefix):
-            if message.author.bot:
+            allowedbots = [479937255868465156, 492970622587109380, 597028739616079893]
+            if message.author.bot and message.author.id not in allowedbots:
                 return
             await message.channel.trigger_typing()
             msg = sub("<@!?" + str(self.client.user.id) + ">", "", message.content).strip()
@@ -43,7 +45,7 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
             res = await funcs.getRequest("https://www.pandorabots.com/pandora/talk-xml", params=params)
             data = res.json()
             if data["status"] == 4:
-                text = "I do not understand."
+                text = choice(["I do not understand.", "Please say that again.", "What was that?", "Ok."])
             else:
                 text = data["that"].replace("<br>", "")
                 text = text.replace("&quot;", '"').replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
