@@ -302,7 +302,7 @@ class Utility(commands.Cog, name="Utility"):
                         page = wikipage["pages"][list(wikipage["pages"])[0]]["extract"].split(
                             splitthing, 1
                         )[1].split("\n", 1)[1].split(",", 1)[0]
-                        res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_')}")
+                        res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_')}")
                         data = res.json()
                         wikipage = data["query"]
                         if wikipage["pages"][list(wikipage["pages"])[0]] == "-1":
@@ -315,7 +315,8 @@ class Utility(commands.Cog, name="Utility"):
                     summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000] + "..."
                 e = Embed(
                     title=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
-                    description=f"https://en.wikipedia.org/wiki/{wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')}"
+                    description="https://en.wikipedia.org/wiki/" + \
+                                f"{wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')}"
                 )
                 e.add_field(name="Extract", value=f"```{summary}```")
                 logo = "https://cdn.discordapp.com/attachments/659771291858894849/677853982718165001/1122px-Wikipedia-logo-v2.png"
