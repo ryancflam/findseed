@@ -85,6 +85,7 @@ class Moderation(commands.Cog, name="Moderation"):
                 if (user.name, user.discriminator) == (username, discriminator):
                     await ctx.guild.unban(user)
                     await ctx.send(f"Successfully unbanned user **{user}**.")
+                    return
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
 

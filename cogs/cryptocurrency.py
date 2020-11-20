@@ -113,7 +113,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc'] * 0.00000001, 8)} BTC`"
             )
         except Exception:
-            e = funcs.errorEmbed(None,"Possible server error, please try again later.")
+            e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)

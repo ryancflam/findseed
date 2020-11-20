@@ -21,14 +21,11 @@ def randomEyes():
 
 
 def errorEmbed(error, message):
-    if error is None:
-        error = "Error"
-    e = Embed(
-        title=f":no_entry: {error}",
+    return Embed(
+        title=f":no_entry: {error or 'Error'}",
         colour=Colour.red(),
         description=message
     )
-    return e
 
 
 def formatting(text):
@@ -73,36 +70,35 @@ def celsiusToFahrenheit(value):
 def degreesToDirection(value):
     if not 11.24 <= value <= 348.75:
         return "N"
-    elif 11.25 <= value <= 33.74:
+    if 11.25 <= value <= 33.74:
         return "NNE"
-    elif 33.75 <= value <= 56.24:
+    if 33.75 <= value <= 56.24:
         return "NE"
-    elif 56.25 <= value <= 78.74:
+    if 56.25 <= value <= 78.74:
         return "ENE"
-    elif 78.75 <= value <= 101.24:
+    if 78.75 <= value <= 101.24:
         return "E"
-    elif 101.25 <= value <= 123.74:
+    if 101.25 <= value <= 123.74:
         return "ESE"
-    elif 123.75 <= value <= 146.24:
+    if 123.75 <= value <= 146.24:
         return "SE"
-    elif 146.25 <= value <= 168.74:
+    if 146.25 <= value <= 168.74:
         return "SSE"
-    elif 168.75 <= value <= 191.24:
+    if 168.75 <= value <= 191.24:
         return "S"
-    elif 191.25 <= value <= 213.74:
+    if 191.25 <= value <= 213.74:
         return "SSW"
-    elif 213.75 <= value <= 236.24:
+    if 213.75 <= value <= 236.24:
         return "SW"
-    elif 236.25 <= value <= 258.74:
+    if 236.25 <= value <= 258.74:
         return "WSW"
-    elif 258.75 <= value <= 281.24:
+    if 258.75 <= value <= 281.24:
         return "W"
-    elif 281.24 <= value <= 303.74:
+    if 281.24 <= value <= 303.74:
         return "WNW"
-    elif 303.75 <= value <= 326.24:
+    if 303.75 <= value <= 326.24:
         return "NW"
-    else:
-        return "NNW"
+    return "NNW"
 
 
 async def reactionRemove(reaction, user):
