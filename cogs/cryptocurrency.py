@@ -8,6 +8,7 @@ from other_utils import funcs
 from other_utils.bitcoin_address import BitcoinAddress
 
 BITCOIN_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
+BLOCKCYPHER_PARAMS = {"token": info.blockCypherKey}
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
@@ -85,7 +86,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         try:
             data = await funcs.getRequest("https://blockchain.info/stats", params={"format": "json"})
             blockchain = data.json()
-            data = await funcs.getRequest("https://api.blockcypher.com/v1/btc/main")
+            data = await funcs.getRequest("https://api.blockcypher.com/v1/btc/main", params=BLOCKCYPHER_PARAMS)
             blockchain2 = data.json()
             data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
             blockchain3 = data.json()
@@ -128,7 +129,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             try:
                 res = await funcs.getRequest(f"https://blockchain.info/rawtx/{hashstr}")
                 txinfo = res.json()
-                res = await funcs.getRequest(f"https://api.blockcypher.com/v1/btc/main/txs/{hashstr}")
+                res = await funcs.getRequest(
+                    f"https://api.blockcypher.com/v1/btc/main/txs/{hashstr}", params=BLOCKCYPHER_PARAMS
+                )
                 txinfo2 = res.json()
                 e = Embed(
                     title="Bitcoin Transaction",
@@ -161,6 +164,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 for i in range(len(txinfo["inputs"])):
                     if i == 20:
                         break
+                    if txinfo2["inputs"][i]["output_index"] == -1:
+                        value = "Newly generated coins"
+                        break
                     if txinfo["inputs"][i]["prev_out"]["value"] < 10000:
                         value += txinfo2["inputs"][i]["addresses"][0] + \
                                  f" ({txinfo['inputs'][i]['prev_out']['value']} sat.)\n\n"
@@ -173,7 +179,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 e.add_field(name=f"Inputs ({txinfo['vin_sz']})", value=f"```{newvalue}```")
                 value = ""
                 for i in range(len(txinfo["out"])):
-                    if i == 20:
+                    if i == 20 or not txinfo2["outputs"][i]["addresses"]:
                         break
                     if txinfo["out"][i]["value"] < 10000:
                         value += txinfo2["outputs"][i]["addresses"][0] + \
@@ -200,9 +206,11 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         else:
             try:
                 await ctx.send("Getting Bitcoin address information. Please wait...")
-                data = await funcs.getRequest(f"https://blockchain.info/rawaddr/{inphash}",)
+                data = await funcs.getRequest(f"https://blockchain.info/rawaddr/{inphash}")
                 txinfo = data.json()
-                data = await funcs.getRequest(f"https://api.blockcypher.com/v1/btc/main/addrs/{inphash}",)
+                data = await funcs.getRequest(
+                    f"https://api.blockcypher.com/v1/btc/main/addrs/{inphash}", params=BLOCKCYPHER_PARAMS
+                )
                 txinfo2 = data.json()
                 e = Embed(
                     title="Bitcoin Address",
