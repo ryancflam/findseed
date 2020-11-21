@@ -1,4 +1,5 @@
 from time import time
+from json import dumps
 from datetime import datetime
 from urllib.parse import quote
 from asyncio import TimeoutError, sleep
@@ -501,12 +502,12 @@ class Utility(commands.Cog, name="Utility"):
         except TimeoutError:
             await ctx.send("Cancelling compilation...")
             return
-        data = str({"files": [{"name": filename, "content": code}]})
+        data = {"files": [{"name": filename, "content": code}]}
         headers = {
             "Authorization": f"Token {info.glotIoKey}",
             "Content-type": "application/json"
         }
-        res = await funcs.postRequest(url=url, data=data, headers=headers)
+        res = await funcs.postRequest(url=url, data=dumps(data), headers=headers)
         try:
             data = res.json()
             stderr = data["stderr"]
