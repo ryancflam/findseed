@@ -193,6 +193,42 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         newList = serverList[:1998]
         await ctx.send(f"`{newList}`")
 
+    @commands.command(name="reloadcog", description="Reloads a cog.", usage=["<cog name>"])
+    @commands.is_owner()
+    async def reloadcog(self, ctx, *, cog: str=""):
+        if cog == "":
+            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return
+        try:
+            self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            await ctx.send(":ok_hand:")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="loadcog", description="Loads a cog.", usage=["<cog name>"])
+    @commands.is_owner()
+    async def loadcog(self, ctx, *, cog: str=""):
+        if cog == "":
+            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return
+        try:
+            self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            await ctx.send(":ok_hand:")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="unloadcog", description="Unloads a cog.", usage=["<cog name>"])
+    @commands.is_owner()
+    async def unloadcog(self, ctx, *, cog: str=""):
+        if cog == "":
+            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return
+        try:
+            self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            await ctx.send(":ok_hand:")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate", "calc"], usage="<code>")
     @commands.is_owner()
