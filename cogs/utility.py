@@ -104,94 +104,94 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["flightinfo", "flightradar"], usage="<flight number>")
     async def flight(self, ctx, *, flightstr: str=""):
         if flightstr == "":
-            await ctx.send("Error: Empty input.")
-            return
-        ph = "Unknown"
-        flightstr = flightstr.upper().replace(" ", "")
-        url = "https://api.flightradar24.com/common/v1/flight/list.json?"
-        params = {"fetchBy": "flight", "page": "1", "limit": "25", "query": flightstr}
-        try:
-            res = await funcs.getRequest(url, headers={"User-agent": "*"}, params=params)
-            allflights = res.json()
-            fdd = allflights["result"]["response"]["data"]
-            dago, eta = "", ""
-            reg, data, arrive, realarrive, depart, realdepart = ph, ph, ph, ph, ph, ph
-            ft, duration, originname, originicao, originiata, destname, desticao, destiata = ph, ph, ph, ph, ph, ph, ph, ph
-            flighturl = f"https://www.flightradar24.com/data/flights/{flightstr.lower()}"
-            status, callsign, aircraft, flightdate, airline = ph, ph, ph, ph, ph
-            for i in range(len(fdd)):
-                data = fdd[i]
-                callsign = data["identification"]["callsign"]
-                if callsign is None:
-                    callsign = "None"
-                status = str(data["status"]["text"])
-                aircraft = f"{str(data['aircraft']['model']['text'])} ({str(data['aircraft']['model']['code'])})"
-                reg = data["aircraft"]["registration"]
-                airline = data["airline"]["name"]
-                originname = data["airport"]["origin"]["name"]
-                originiata = data["airport"]["origin"]["code"]["iata"]
-                originicao = data["airport"]["origin"]["code"]["icao"]
-                destname = data["airport"]["destination"]["name"]
-                if not originname or not destname:
-                    continue
-                destiata = data["airport"]["destination"]["code"]["iata"]
-                desticao = data["airport"]["destination"]["code"]["icao"]
-                realdepart = data["time"]["real"]["departure"]
-                depart = "Local Departure Time"
-                realarrive = data["time"]["real"]["arrival"]
-                arrive = "Local Arrival Time"
-                if realarrive is None:
-                    realarrive = data["time"]["estimated"]["arrival"]
-                    if realarrive is None:
+            e = funcs.errorEmbed(None, "Empty input.")
+        else:
+            ph = "Unknown"
+            flightstr = flightstr.upper().replace(" ", "")
+            url = "https://api.flightradar24.com/common/v1/flight/list.json?"
+            params = {"fetchBy": "flight", "page": "1", "limit": "25", "query": flightstr}
+            try:
+                res = await funcs.getRequest(url, headers={"User-agent": "*"}, params=params)
+                allflights = res.json()
+                fdd = allflights["result"]["response"]["data"]
+                dago, eta = "", ""
+                reg, data, arrive, realarrive, depart, realdepart = ph, ph, ph, ph, ph, ph
+                ft, duration, originname, originicao, originiata, destname, desticao, destiata = ph, ph, ph, ph, ph, ph, ph, ph
+                flighturl = f"https://www.flightradar24.com/data/flights/{flightstr.lower()}"
+                status, callsign, aircraft, flightdate, airline = ph, ph, ph, ph, ph
+                for i in range(len(fdd)):
+                    data = fdd[i]
+                    callsign = data["identification"]["callsign"]
+                    if callsign is None:
+                        callsign = "None"
+                    status = str(data["status"]["text"])
+                    aircraft = f"{str(data['aircraft']['model']['text'])} ({str(data['aircraft']['model']['code'])})"
+                    reg = data["aircraft"]["registration"]
+                    airline = data["airline"]["name"]
+                    originname = data["airport"]["origin"]["name"]
+                    originiata = data["airport"]["origin"]["code"]["iata"]
+                    originicao = data["airport"]["origin"]["code"]["icao"]
+                    destname = data["airport"]["destination"]["name"]
+                    if not originname or not destname:
                         continue
-                    arrive = "Estimated Local Arrival Time"
-                    duration = str(datetime.fromtimestamp(realarrive) - datetime.utcnow())[:5]
-                    if duration[1:2] == ":":
-                        duration = "0" + (duration[:4])
-                    eta = "Estimated Flight Time Remaining"
-                else:
-                    duration = str(datetime.fromtimestamp(realarrive) - datetime.fromtimestamp(realdepart))[:5]
-                    if duration[1:2] == ":":
-                        duration = "0" + (duration[:4])
-                    eta = "Total Flight Duration"
-                if eta.startswith("\nEstimated"):
-                    ft = str(datetime.utcnow() - datetime.fromtimestamp(realdepart))[:5]
-                    if ft[1:2] == ":":
-                        ft = "0" + (ft[:4])
-                    dago = "Current Flight Time"
-                realdepart = str(datetime.fromtimestamp(realdepart + data["airport"]["origin"]["timezone"]["offset"]))
-                realarrive = str(datetime.fromtimestamp(realarrive + data["airport"]["destination"]["timezone"]["offset"]))
-                flightdate = realdepart[:10]
-                break
-            imgl = res.json()["result"]["response"]["aircraftImages"]
-            thumbnail = "https://images.flightradar24.com/opengraph/fr24_logo_twitter.png"
-            for y in range(len(imgl)):
-                image=imgl[y]
-                if image["registration"] != reg:
-                    continue
-                thumbnail = list(
-                    image["images"]["thumbnails"]
-                )[0]["src"][:-4].replace("_tb", "").replace("com/200/", "com/full/")
-            e = Embed(title=f"Flight {flightstr}", description=flighturl)
-            e.set_image(url=thumbnail)
-            e.add_field(name="Date", value=f"`{flightdate}`")
-            e.add_field(name="Callsign", value=f"`{callsign}`")
-            e.add_field(name="Status", value=f"`{status}`")
-            e.add_field(name="Aircraft", value=f"`{aircraft}`")
-            e.add_field(name="Registration", value=f"`{reg} ({data['aircraft']['country']['name']})`")
-            e.add_field(name="Airline",
-                        value=f"`{airline} ({data['airline']['code']['iata']}/{data['airline']['code']['icao']})`")
-            e.add_field(name="Origin", value=f"`{originname} ({originiata}/{originicao})`")
-            e.add_field(name="Destination", value=f"`{destname} ({destiata}/{desticao})`")
-            e.add_field(name=depart, value=f"`{realdepart}`")
-            if dago != "":
-                e.add_field(name=dago, value=f"`{ft}`")
-            e.add_field(name=arrive, value=f"`{realarrive}`")
-            if eta != "":
-                e.add_field(name=eta, value=f"`{duration}`")
-            e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.")
-        except Exception:
-            e = funcs.errorEmbed(None, "Unknown flight or server error.")
+                    destiata = data["airport"]["destination"]["code"]["iata"]
+                    desticao = data["airport"]["destination"]["code"]["icao"]
+                    realdepart = data["time"]["real"]["departure"]
+                    depart = "Local Departure Time"
+                    realarrive = data["time"]["real"]["arrival"]
+                    arrive = "Local Arrival Time"
+                    if realarrive is None:
+                        realarrive = data["time"]["estimated"]["arrival"]
+                        if realarrive is None:
+                            continue
+                        arrive = "Estimated Local Arrival Time"
+                        duration = str(datetime.fromtimestamp(realarrive) - datetime.utcnow())[:5]
+                        if duration[1:2] == ":":
+                            duration = "0" + (duration[:4])
+                        eta = "Estimated Flight Time Remaining"
+                    else:
+                        duration = str(datetime.fromtimestamp(realarrive) - datetime.fromtimestamp(realdepart))[:5]
+                        if duration[1:2] == ":":
+                            duration = "0" + (duration[:4])
+                        eta = "Total Flight Duration"
+                    if eta.startswith("\nEstimated"):
+                        ft = str(datetime.utcnow() - datetime.fromtimestamp(realdepart))[:5]
+                        if ft[1:2] == ":":
+                            ft = "0" + (ft[:4])
+                        dago = "Current Flight Time"
+                    realdepart = str(datetime.fromtimestamp(realdepart + data["airport"]["origin"]["timezone"]["offset"]))
+                    realarrive = str(datetime.fromtimestamp(realarrive + data["airport"]["destination"]["timezone"]["offset"]))
+                    flightdate = realdepart[:10]
+                    break
+                imgl = res.json()["result"]["response"]["aircraftImages"]
+                thumbnail = "https://images.flightradar24.com/opengraph/fr24_logo_twitter.png"
+                for y in range(len(imgl)):
+                    image=imgl[y]
+                    if image["registration"] != reg:
+                        continue
+                    thumbnail = list(
+                        image["images"]["thumbnails"]
+                    )[0]["src"][:-4].replace("_tb", "").replace("com/200/", "com/full/")
+                e = Embed(title=f"Flight {flightstr}", description=flighturl)
+                e.set_image(url=thumbnail)
+                e.add_field(name="Date", value=f"`{flightdate}`")
+                e.add_field(name="Callsign", value=f"`{callsign}`")
+                e.add_field(name="Status", value=f"`{status}`")
+                e.add_field(name="Aircraft", value=f"`{aircraft}`")
+                e.add_field(name="Registration", value=f"`{reg} ({data['aircraft']['country']['name']})`")
+                e.add_field(name="Airline",
+                            value=f"`{airline} ({data['airline']['code']['iata']}/{data['airline']['code']['icao']})`")
+                e.add_field(name="Origin", value=f"`{originname} ({originiata}/{originicao})`")
+                e.add_field(name="Destination", value=f"`{destname} ({destiata}/{desticao})`")
+                e.add_field(name=depart, value=f"`{realdepart}`")
+                if dago != "":
+                    e.add_field(name=dago, value=f"`{ft}`")
+                e.add_field(name=arrive, value=f"`{realarrive}`")
+                if eta != "":
+                    e.add_field(name=eta, value=f"`{duration}`")
+                e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.")
+            except Exception:
+                e = funcs.errorEmbed(None, "Unknown flight or server error.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -258,11 +258,10 @@ class Utility(commands.Cog, name="Utility"):
         try:
             output = [amount, fromC.upper(), toC.upper()]
         except:
-            await ctx.send(
+            return await ctx.send(
                 embed=funcs.errorEmbed(
                     "Invalid usage!", f"Use `{self.client.command_prefix}help currency` to see the correct usage.")
             )
-            return
         url = "http://data.fixer.io/api/latest"
         try:
             res = await funcs.getRequest(url, params={"access_key": info.fixerKey})
@@ -295,8 +294,7 @@ class Utility(commands.Cog, name="Utility"):
                     data = res.json()
                     wikipage = data["query"]
                     if list(wikipage["pages"])[0] == "-1":
-                        await ctx.send(embed=funcs.errorEmbed(None, "Invalid article."))
-                        return
+                        return await ctx.send(embed=funcs.errorEmbed(None, "Invalid article."))
                 if wikipage["pages"][list(wikipage["pages"])[0]]["extract"].casefold().startswith(f"{page} may refer to:\n\n"):
                     try:
                         splitthing = f"may refer to:\n\n"
@@ -307,8 +305,7 @@ class Utility(commands.Cog, name="Utility"):
                         data = res.json()
                         wikipage = data["query"]
                         if wikipage["pages"][list(wikipage["pages"])[0]] == "-1":
-                            await ctx.send(embed=funcs.errorEmbed(None, "Invalid article."))
-                            return
+                            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid article."))
                     except IndexError:
                         pass
                 summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"]
@@ -451,11 +448,9 @@ class Utility(commands.Cog, name="Utility"):
                 if language not in languages and language != "quit":
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid language."))
             except TimeoutError:
-                await ctx.send("Cancelling compilation...")
-                return
+                return await ctx.send("Cancelling compilation...")
         if language == "quit":
-            await ctx.send("Cancelling compilation...")
-            return
+            return await ctx.send("Cancelling compilation...")
         versionurl = f"https://run.glot.io/languages/{language}"
         res = await funcs.getRequest(versionurl)
         data = res.json()
@@ -475,11 +470,9 @@ class Utility(commands.Cog, name="Utility"):
                     if version not in versions and version != "quit":
                         await ctx.send(embed=funcs.errorEmbed(None, "Invalid version."))
                 except TimeoutError:
-                    await ctx.send("Cancelling compilation...")
-                    return
+                    return await ctx.send("Cancelling compilation...")
             if version == "quit":
-                await ctx.send("Cancelling compilation...")
-                return
+                return await ctx.send("Cancelling compilation...")
             url = f"{versionurl}/{version}"
         await ctx.send("**You have 15 minutes to type out your code. Input `quit` to quit.**")
         try:
@@ -488,11 +481,9 @@ class Utility(commands.Cog, name="Utility"):
             )
             code = option.content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
             if code == "quit":
-                await ctx.send("Cancelling compilation...")
-                return
+                return await ctx.send("Cancelling compilation...")
         except TimeoutError:
-            await ctx.send("Cancelling compilation...")
-            return
+            return await ctx.send("Cancelling compilation...")
         await ctx.send("**Please enter your desired file name including the extension.** (e.g. `main.py`)")
         try:
             option = await self.client.wait_for(
@@ -500,8 +491,7 @@ class Utility(commands.Cog, name="Utility"):
             )
             filename = option.content
         except TimeoutError:
-            await ctx.send("Cancelling compilation...")
-            return
+            return await ctx.send("Cancelling compilation...")
         data = {"files": [{"name": filename, "content": code}]}
         headers = {
             "Authorization": f"Token {info.glotIoKey}",
@@ -553,6 +543,44 @@ class Utility(commands.Cog, name="Utility"):
                 except Exception:
                     e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="poll", description="Makes a poll.", usage="<question>", aliases=["questionnaire"])
+    @commands.guild_only()
+    async def poll(self, ctx, *, question):
+        if len(question) > 256:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Question must be 256 characters ot less."))
+        messages = [ctx.message]
+        answers = []
+        for i in range(20):
+            messages.append(await ctx.send("Enter poll option or `done` to publish poll."))
+            try:
+                entry = await self.client.wait_for(
+                    "message",
+                    check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
+                    timeout=60
+                )
+            except TimeoutError:
+                break
+            messages.append(entry)
+            if entry.content == "done":
+                break
+            answers.append((chr(0x1f1e6 + i), entry.content))
+        try:
+            await ctx.channel.delete_messages(messages)
+        except:
+            pass
+        if len(answers) <= 1:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Not enough choices."))
+        answer = "\n".join(f"{keycap}: {content}" for keycap, content in answers)
+        e = Embed(title=question, description=f"Asked by: {ctx.author.mention}")
+        e.add_field(name="Choices", value=answer)
+        try:
+            poll = await ctx.send(embed=e)
+            for emoji, _ in answers:
+                await poll.add_reaction(emoji)
+        except Exception:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Too many choices?"))
 
 
 def setup(client: commands.Bot):

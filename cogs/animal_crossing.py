@@ -177,8 +177,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
                     found = True
                     break
             if not found:
-                await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
-                return
+                return await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
             villagername = villagerdata["name"]["name-USen"].title()
             personality = villagerdata["personality"]
             birth = villagerdata["birthday-string"]
