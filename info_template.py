@@ -1,4 +1,5 @@
-token = ""
+production = False
+botToken = ""
 prefix = "!"
 creationDate = ""
 cmcKey = ""
