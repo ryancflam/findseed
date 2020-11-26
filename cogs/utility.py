@@ -550,10 +550,12 @@ class Utility(commands.Cog, name="Utility"):
     async def poll(self, ctx, *, question):
         if len(question) > 256:
             return await ctx.send(embed=funcs.errorEmbed(None, "Question must be 256 characters ot less."))
-        messages = [ctx.message]
-        answers = []
-        for i in range(20):
-            messages.append(await ctx.send("Enter poll option or `done` to publish poll."))
+        messages, answers = [ctx.message], []
+        count = 0
+        while count < 20:
+            messages.append(
+                await ctx.send("Enter poll choice, `;undo` to delete previous choice, or `;done` to publish poll.")
+            )
             try:
                 entry = await self.client.wait_for(
                     "message",
@@ -563,9 +565,19 @@ class Utility(commands.Cog, name="Utility"):
             except TimeoutError:
                 break
             messages.append(entry)
-            if entry.content == "done":
+            if entry.content == ";done":
                 break
-            answers.append((chr(0x1f1e6 + i), entry.content))
+            if entry.content == ";undo":
+                if answers != []:
+                    answers.pop()
+                    count -= 1
+                else:
+                    messages.append(
+                        await ctx.send(embed=funcs.errorEmbed(None, "No choices."))
+                    )
+            else:
+                answers.append((chr(0x1f1e6 + count), entry.content))
+                count += 1
         try:
             await ctx.channel.delete_messages(messages)
         except:
