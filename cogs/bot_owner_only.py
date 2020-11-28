@@ -72,15 +72,13 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             )
             content = msg.content
             if content.casefold().startswith("c") or content.startswith(info.prefix):
-                await ctx.send("Cancelling.")
-                return
+                return await ctx.send("Cancelling.")
             channelID = int(content)
             self.destChannel = self.client.get_channel(channelID)
             if not self.destChannel:
                 self.destChannel = self.client.get_user(channelID)
                 if not self.destChannel:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
-                    return
+                    return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
             self.botDisguise = True
             self.originChannel = ctx.channel
             self.client.loop.create_task(self.awaitBDStop(ctx))
@@ -100,11 +98,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                     except Exception as ex:
                         await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
         except TimeoutError:
-            await ctx.send("Cancelling.")
-            return
+            return await ctx.send("Cancelling.")
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
 
     @commands.command(name="code", description="Returns statistics about the bot source code.",
                       aliases=["sloc", "loc"])
@@ -127,8 +123,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
             e.add_field(name="Blank Lines", value=f"`{blanks}`")
             e.add_field(name="Comment Lines", value=f"`{comments}`")
             e.add_field(name="Lines of Code", value=f"`{linesOfCode}`")
-            await ctx.send(embed=e)
-            return
+            return await ctx.send(embed=e)
 
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
@@ -141,8 +136,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                 timeout=10
             )
         except TimeoutError:
-            await ctx.send("Cancelling restart.")
-            return
+            return await ctx.send("Cancelling restart.")
         gitpull = ""
         await ctx.send("Pull from GitHub repository?")
         try:
@@ -168,8 +162,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def pip(self, ctx, *, cmd: str=""):
         if cmd == "":
-            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         system(f"pip3 {cmd}")
         await ctx.send(":ok_hand:")
 
@@ -178,8 +171,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     async def say(self, ctx, *, output: str=""):
         if output == "":
             e = funcs.errorEmbed(None, "Cannot send empty message.")
-            await ctx.send(embed=e)
-            return
+            return await ctx.send(embed=e)
         await ctx.send(output.replace("@everyone", "everyone").replace("@here", "here"))
 
     @commands.command(name="servers", description="Returns a list of servers the bot is in.",
@@ -192,6 +184,39 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         serverList = serverList[:-1]
         newList = serverList[:1998]
         await ctx.send(f"`{newList}`")
+
+    @commands.command(name="reloadcog", description="Reloads a cog.", usage=["<cog name>"])
+    @commands.is_owner()
+    async def reloadcog(self, ctx, *, cog: str=""):
+        if cog == "":
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+        try:
+            self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            await ctx.send(":ok_hand:")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="loadcog", description="Loads a cog.", usage=["<cog name>"])
+    @commands.is_owner()
+    async def loadcog(self, ctx, *, cog: str=""):
+        if cog == "":
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+        try:
+            self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            await ctx.send(":ok_hand:")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="unloadcog", description="Unloads a cog.", usage=["<cog name>"])
+    @commands.is_owner()
+    async def unloadcog(self, ctx, *, cog: str=""):
+        if cog == "":
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+        try:
+            self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            await ctx.send(":ok_hand:")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate", "calc"], usage="<code>")
@@ -228,8 +253,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def blacklistserver(self, ctx, *, serverID=None):
         if not serverID:
-            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
             with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
@@ -253,15 +277,13 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def blacklistuser(self, ctx, *, userID=None):
         if not userID:
-            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
             if userID == ctx.author.id:
-                await ctx.send(embed=funcs.errorEmbed(
+                return await ctx.send(embed=funcs.errorEmbed(
                     None, "Are you trying to blacklist yourself, you dumb retard??!@?@?#!?"
                 ))
-                return
             with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
                 data = load(f)
             f.close()
@@ -283,8 +305,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def unblacklistserver(self, ctx, *, serverID=None):
         if not serverID:
-            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
             with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
@@ -308,8 +329,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
     @commands.is_owner()
     async def unblacklistuser(self, ctx, *, userID=None):
         if not userID:
-            await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
             with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:

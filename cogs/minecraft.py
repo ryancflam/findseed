@@ -100,11 +100,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
         try:
             n = int(trades)
             if not 2 <= n <= 999:
-                await ctx.send(embed=funcs.errorEmbed(None, "Value must be between 2 and 999."))
-                return
+                return await ctx.send(embed=funcs.errorEmbed(None, "Value must be between 2 and 999."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
         x = sum(stats.binom.pmf([i for i in range(2, n + 1)], n, 20 / 423))
         await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
                        f"8-16 pearls) in {n} gold is `{x * 100}%`. *(1 in {1 / x})*")

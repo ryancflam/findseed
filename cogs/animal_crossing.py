@@ -6,6 +6,8 @@ from discord.ext import commands
 from other_utils import funcs
 
 ASSETS_PATH = f"{funcs.getPath()}/assets/animal_crossing"
+AC_LOGO = "https://media.discordapp.net/attachments/771698457391136798/" + \
+          "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
 
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing"):
@@ -17,8 +19,6 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
         self.fossils = load(open(f"{ASSETS_PATH}/fossils.json", "r", encoding="utf8"))
         self.sea = load(open(f"{ASSETS_PATH}/sea_creatures.json", "r", encoding="utf8"))
         self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
-        self.logo = "https://media.discordapp.net/attachments/771698457391136798/" + \
-                    "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
 
     @staticmethod
     def findData(data, type: str):
@@ -44,7 +44,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Buy Price", value=f"`{buyPrice}`")
             e.add_field(name="Sell Price", value=f"`{sellPrice}`")
             e.set_image(url=img)
-            e.set_thumbnail(url=self.logo)
+            e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
@@ -76,7 +76,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price", value=f"`{price}`")
             e.add_field(name="Sell Price (Flick)", value=f"`{flickprice}`")
             e.set_image(url=img)
-            e.set_thumbnail(url=self.logo)
+            e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
@@ -110,7 +110,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price", value=f"`{price}`")
             e.add_field(name="Sell Price (C.J.)", value=f"`{cjprice}`")
             e.set_image(url=img)
-            e.set_thumbnail(url=self.logo)
+            e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
@@ -130,7 +130,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sell Price", value=f"`{price}`")
             e.add_field(name="Part Of", value=f"`{partof}`")
             e.set_image(url=img)
-            e.set_thumbnail(url=self.logo)
+            e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
@@ -160,7 +160,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value=f"`{price}`")
             e.set_image(url=img)
-            e.set_thumbnail(url=self.logo)
+            e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
@@ -177,8 +177,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
                     found = True
                     break
             if not found:
-                await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
-                return
+                return await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
             villagername = villagerdata["name"]["name-USen"].title()
             personality = villagerdata["personality"]
             birth = villagerdata["birthday-string"]
@@ -190,7 +189,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             image = villagerdata["image_uri"]
             e = Embed(title=f"{villagername}", description=f'"{saying}"')
             e.set_image(url=image)
-            e.set_thumbnail(url=self.logo)
+            e.set_thumbnail(url=AC_LOGO)
             e.add_field(name="Personality", value=f"`{personality}`")
             e.add_field(name="Birthday", value=f"`{birth}`")
             e.add_field(name="Species", value=f"`{species}`")

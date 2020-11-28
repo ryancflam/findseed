@@ -31,7 +31,13 @@ class Cleverbot(commands.Cog, name="Cleverbot"):
                 message.guild and message.guild.id in serverList:
             return
         if self.client.user in message.mentions and not message.content.startswith(info.prefix):
-            allowedbots = [479937255868465156, 492970622587109380, 597028739616079893]
+            allowedbots = [
+                479937255868465156,
+                492970622587109380,
+                597028739616079893,
+                771696725173469204,
+                771403225840222238
+            ]
             if message.author.bot and message.author.id not in allowedbots:
                 return
             await message.channel.trigger_typing()

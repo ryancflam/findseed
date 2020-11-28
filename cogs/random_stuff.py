@@ -33,11 +33,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
             )
         except TimeoutError:
-            await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
-            return
+            return await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
         if choice.content.casefold() != "test":
-            await ctx.send(f"`{ctx.author.name} has left the personality test.`")
-            return
+            return await ctx.send(f"`{ctx.author.name} has left the personality test.`")
         res = list(self.personalityTest["questions"])
         e, i, s, n, t, f, j, p = 0, 0, 0, 0, 0, 0, 0, 0
         ei = ["1.", "5.", "9.", "13", "17", "21", "25", "29", "33", "37", "41",
@@ -74,8 +72,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                         "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=900
                     )
                 except TimeoutError:
-                    await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
-                    return
+                    return await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
                 userInput = answer.content
                 if userInput.casefold() != "a" and userInput.casefold() != "b" \
                         and userInput.casefold() != "c" and userInput.casefold() != "quit" \
@@ -83,8 +80,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
             if userInput.casefold() == "quit" or userInput.casefold() == "exit" \
                     or userInput.casefold() == "leave":
-                await ctx.send(f"`{ctx.author.name} has left the personality test.`")
-                return
+                return await ctx.send(f"`{ctx.author.name} has left the personality test.`")
             if userInput.casefold() == "a" and choice == 1 \
                     or userInput.casefold() == "b" and choice == 0:
                 if any(res[x]["title"].startswith(y) for y in ei):
@@ -304,8 +300,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["spin", "spinner", "youspinmerightround"])
     async def fidgetspinner(self, ctx):
         if ctx.author.id in self.activeSpinners:
-            await ctx.send(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
         self.activeSpinners.append(ctx.message.author.id)
         try:
             url = choice([
@@ -339,8 +334,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       aliases=["love", "lovecalculator"], usage="<@mention> [@mention]")
     async def lovecalc(self, ctx, first: Member=None, second: Member=None):
         if first is None:
-            await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-            return
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         if second is None:
             second = ctx.author
         try:

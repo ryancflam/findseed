@@ -10,6 +10,8 @@ from discord.ext import commands
 import info
 from other_utils import funcs
 
+PREFIX = "b" * (not info.production) + info.prefix
+
 
 class FindseedBot(commands.Bot):
     def __init__(self, loop: asyncio.AbstractEventLoop, prefix, path, token):
@@ -92,7 +94,7 @@ class FindseedBot(commands.Bot):
 
 loop = asyncio.get_event_loop()
 client = FindseedBot(
-    loop=loop, prefix=info.prefix, path=funcs.getPath(), token=info.token
+    loop=loop, prefix=PREFIX, path=funcs.getPath(), token=info.botToken
 )
 
 if __name__ == "__main__":

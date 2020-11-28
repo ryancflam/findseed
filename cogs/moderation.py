@@ -11,7 +11,7 @@ class Moderation(commands.Cog, name="Moderation"):
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="clear", description="Clears channel messages.", usage="<amount>",
                       aliases=["prune", "purge"])
-    @commands.bot_has_permissions(read_messages=True, read_message_history=True, manage_messages=True)
+    @commands.bot_has_permissions(read_message_history=True, manage_messages=True)
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, amount=""):
         if amount == "":
@@ -84,8 +84,7 @@ class Moderation(commands.Cog, name="Moderation"):
                 user = ban.user
                 if (user.name, user.discriminator) == (username, discriminator):
                     await ctx.guild.unban(user)
-                    await ctx.send(f"Successfully unbanned user **{user}**.")
-                    return
+                    return await ctx.send(f"Successfully unbanned user **{user}**.")
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
 
