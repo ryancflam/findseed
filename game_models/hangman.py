@@ -1,5 +1,5 @@
-from random import choice
 from time import time
+from random import choice
 
 from other_utils import funcs
 
