@@ -5,21 +5,23 @@ from discord.ext import commands
 
 from other_utils import funcs
 
+SCAM_URL = "discord.com/ra"
+IMGUR_URL = "imgur.com"
+
 
 class ScamPreventer(commands.Cog, name="Scam Preventer"):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.scamurl = "discord.com/ra"
 
     async def deleteEmbedOrAttachment(self, message, qrlink):
         qr = await funcs.decodeQR(qrlink)
-        if self.scamurl in qr:
+        if SCAM_URL in qr:
             await message.delete()
             return True
         else:
             res = await funcs.getRequest(qr)
             qr = res.url
-            if self.scamurl in qr:
+            if SCAM_URL in qr:
                 await message.delete()
                 return True
         return False
@@ -37,10 +39,10 @@ class ScamPreventer(commands.Cog, name="Scam Preventer"):
                 res = await funcs.getRequest(link)
                 tryscam = res.url
                 try:
-                    tryimgur = "/imgur.com"
+                    tryimgur = f"/{IMGUR_URL}"
                     if tryimgur in link:
                         try:
-                            link = link.replace(tryimgur, "/i.imgur.com")
+                            link = link.replace(tryimgur, f"/i.{IMGUR_URL}")
                             link += ".jpg"
                         except:
                             pass
@@ -48,13 +50,13 @@ class ScamPreventer(commands.Cog, name="Scam Preventer"):
                     tryscam = res.url
                 except:
                     pass
-                if self.scamurl in tryscam.casefold().replace(" ", ""):
+                if SCAM_URL in tryscam.casefold().replace(" ", ""):
                     await message.delete()
                     return
             except:
                 pass
         msg = message.content.casefold().replace(" ", "")
-        if self.scamurl in msg:
+        if SCAM_URL in msg:
             try:
                 await message.delete()
                 return
@@ -71,8 +73,7 @@ class ScamPreventer(commands.Cog, name="Scam Preventer"):
         if message.embeds:
             try:
                 qrlink = message.embeds[0].thumbnail.url
-                if await self.deleteEmbedOrAttachment(message, qrlink):
-                    return
+                await self.deleteEmbedOrAttachment(message, qrlink)
             except:
                 pass
 
