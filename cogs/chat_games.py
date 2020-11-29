@@ -28,10 +28,16 @@ class ChatGames(commands.Cog, name="Chat Games"):
         if ctx.channel.id in self.gameChannels:
             await ctx.send(
                 embed=funcs.errorEmbed(
-                    None, "A game is already in progress in this channel, please be patient or use another channel!")
+                    None,
+                    "A game is already in progress in this channel, please be patient or use another channel!"
+                )
             )
             return True
         return False
+
+    @staticmethod
+    async def sendTime(ctx, m, s):
+        await ctx.send(f"`Elapsed time: {m}m {s}s`")
 
     @commands.command(name="cleargamechannels", description="Resets the game channel list.",
                       aliases=["resetgamechannels", "rgc", "cgc"])
@@ -341,7 +347,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             msg += f"4th - {fourth.name}\n"
         if first:
             await ctx.send(f"```== Uno ==\n\n{msg}\nThanks for playing!```")
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -432,13 +438,13 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     break
                 elif message.content.casefold() == "time":
                     _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                    await ctx.send(f"`Elapsed time: {m}m {s}s`")
+                    await self.sendTime(ctx, m, s)
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
         await ctx.send(f"```The number was {number}.\n\nTotal attempts: {attempts}\n\n" + \
                                f"Thanks for playing, {ctx.author.name}!```")
         _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -465,7 +471,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 bulls, cows = game.guess(guess)
                 if guess.casefold() == "time":
                     m, s = game.getTime()
-                    await ctx.send(f"`Elapsed time: {m}m {s}s`")
+                    await self.sendTime(ctx, m, s)
                 elif guess.casefold() == "help":
                     await ctx.send(
                         "```== Bulls and Cows ==\n\nBulls and Cows is a code-breaking logic-based game, " + \
@@ -499,7 +505,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         await ctx.send(f"```The number was {game.getNumber()}.\n\nTotal attempts: {game.getAttempts()}\n\n" + \
                                f"Thanks for playing, {ctx.author.name}!```")
         m, s = game.getTime()
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -592,7 +598,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             return "quit"
         elif str(yy).casefold() == "time":
             m, s = game.getTime()
-            await ctx.send(f"`Elapsed time: {m}m {s}s`")
+            await self.sendTime(ctx, m, s)
             return None
         else:
             return yy
@@ -628,7 +634,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             return game.revealDots()
         if decision.casefold() == "time":
             m, s = game.getTime()
-            return await ctx.send(f"`Elapsed time: {m}m {s}s`")
+            return await self.sendTime(ctx, m, s)
         yy = await self.rowOrCol(ctx, game, True, True)
         if yy == "quit" or yy is None:
             return
@@ -679,7 +685,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         m, s = game.getTime()
         await ctx.send(f"```You have {'won' if won else 'lost'} Minesweeper!\n\nTotal attempts: {game.getAttempts()}" + \
                                f"\n\nThanks for playing, {ctx.author.name}!```")
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -718,7 +724,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         m, s = game.getTime()
         await ctx.send(f"```You have {'won' if game.getWonBool() else 'lost'} Battleship!\n\n" + \
                                f"Total attempts: {game.getAttempts()}\n\nThanks for playing, {ctx.author.name}!```")
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -756,7 +762,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             else:
                 await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
                 continue
-            await ctx.send(f"`{self.client.user.name} bot chose: {aic}`")
+            await ctx.send(f"`{self.client.user.name} chose: {aic}`")
             if answer == aic:
                 await ctx.send(f"`It's a tie! {ctx.author.name} gets to play again.`")
                 continue
@@ -802,7 +808,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     await ctx.send(f"`{ctx.author.name} has {game.getLives()} live{'s' if lives!=1 else ''} left.`")
                 elif content.casefold().startswith("time"):
                     m, s = game.getTime()
-                    await ctx.send(f"`Elapsed time: {m}m {s}s`")
+                    await self.sendTime(ctx, m, s)
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "You may only enter one letter at a time."))
             elif content.lower() not in ascii_lowercase:
@@ -827,7 +833,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 f"{'' if lives!=10 else 'all '}{lives} li{'ves' if lives!=1 else 'fe'} left!`"
             )
         m, s = game.getTime()
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -889,7 +895,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                         )
                         self.gameChannels.remove(ctx.channel.id)
                         _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                        return await ctx.send(f"`Elapsed time: {m}m {s}s`")
+                        return await self.sendTime(ctx, m, s)
                     try:
                         intuserans = int(useranswer.content)
                         if intuserans < 1 or intuserans > len(possibleanswers):
@@ -907,7 +913,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                                 )
                                 self.gameChannels.remove(ctx.channel.id)
                                 _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                                return await ctx.send(f"`Elapsed time: {m}m {s}s`")
+                                return await self.sendTime(ctx, m, s)
                             break
                     except ValueError:
                         if useranswer.content.casefold() == correct.casefold() \
@@ -925,7 +931,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                             )
                             self.gameChannels.remove(ctx.channel.id)
                             _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                            return await ctx.send(f"`Elapsed time: {m}m {s}s`")
+                            return await self.sendTime(ctx, m, s)
             except Exception:
                 self.gameChannels.remove(ctx.channel.id)
                 return await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
