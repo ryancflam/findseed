@@ -20,6 +20,10 @@ def randomEyes():
     return eyes
 
 
+def sign(value):
+    return -1 if value < 0 else 0 if value == 0 else 1
+
+
 def errorEmbed(error, message):
     return Embed(
         title=f":no_entry: {error or 'Error'}",

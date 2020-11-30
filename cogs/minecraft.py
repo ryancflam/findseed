@@ -1,3 +1,4 @@
+import math
 from time import time
 from scipy import stats
 from base64 import b64decode
@@ -146,6 +147,100 @@ class Minecraft(commands.Cog, name="Minecraft"):
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error.")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
+                                                      "should be used when you want to build another por" + \
+                                                      "tal in the Nether before throwing any eyes of end" + \
+                                                      "er. To use this command, in the game, press F3+C," + \
+                                                      " pause, come over to Discord, paste your clipboar" + \
+                                                      "d as an argument for the command, and then build " + \
+                                                      "your portal at the suggested coordinates in the N" + \
+                                                      "ether. May not be 100% accurate.",
+                      aliases=["bt", "blind"], usage="<F3+C data>")
+    async def blindtravel(self, ctx, *, f3c):
+        try:
+            args = f3c.split(" ")
+            x = float(args[6])
+            z = float(args[8])
+            dist = math.sqrt(x * x + z * z)
+            o = 190 if dist < 190 else dist if dist < 270 else 270 if dist < 480 else 610 if dist < 610 else \
+                dist if dist < 670 else 670
+            t = math.atan(z / x)
+            xp = round(funcs.sign(x) * abs(o * math.cos(t)))
+            zp = round(funcs.sign(z) * abs(o * math.sin(t)))
+            await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+        except Exception:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="educatedtravel", description="A Minecraft: Java Edition speedrunning tool th" + \
+                                                         "at should be used when you want to build anoth" + \
+                                                         "er portal in the Nether after throwing an eye " + \
+                                                         "of ender. To use this command, in the game, th" + \
+                                                         "row an eye, stand still, put your mouse direct" + \
+                                                         "ly over the eye, press F3+C, pause, come over " + \
+                                                         "to Discord, paste your clipboard as an argumen" + \
+                                                         "t for the command, and then build your portal " + \
+                                                         "at the suggested coordinates in the Nether. Ma" + \
+                                                         "y not be 100% accurate.",
+                      aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
+    async def educatedtravel(self, ctx, *, f3c):
+        try:
+            args = f3c.split(" ")
+            x = float(args[6])
+            z = float(args[8])
+            f = float(args[9]) % 360
+            f = (360 + f if f < 0 else f) - 180
+            m1 = -1 * math.tan((90 - f) * (math.pi / 180))
+            a = 1 + m1 * m1
+            b1 = -1 * m1 * (x / 8) + (z / 8)
+            b = 2 * m1 * b1
+            co = b1 * b1 - 216 ** 2
+            xp = (-1 * b + funcs.sign(f) * math.sqrt(b * b - 4 * a * co)) / (2 * a)
+            zp = round(m1 * xp + b1)
+            xp = round(xp)
+            await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+        except Exception:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="eyethrow", description="A Minecraft: Java Edition speedrunning tool that use" + \
+                                                   's the "8, 8" rule to try and guess the location of t' + \
+                                                   "he stronghold from an eye of ender throw. This comma" + \
+                                                   "nd should be used when you think you are close to th" + \
+                                                   "e stronghold. To use this command, in the game, thro" + \
+                                                   "w an eye, stand still, put your mouse directly over " + \
+                                                   "the eye, press F3+C, pause, come over to Discord, pa" + \
+                                                   "ste your clipboard as an argument for the command, a" + \
+                                                   "nd take the suggested coordinates into account. May " + \
+                                                   "not be 100% accurate.",
+                      aliases=["stronghold", "88", "44", "onethrow"], usage="<F3+C data>")
+    async def eyethrow(self, ctx, *, f3c):
+        try:
+            args = f3c.split(" ")
+            x = float(args[6])
+            z = float(args[8])
+            f = float(args[9]) % 360
+            f = (360 + f if f < 0 else f) - 180
+            r = (90 - f) * (math.pi / 180)
+            b = 8 - abs(abs(x) % 16) + 16
+            l = []
+            s = 0
+            while s < 11904:
+                d = b * funcs.sign(f)
+                x += d
+                z += d * -math.tan(r)
+                v = abs(abs(abs(z) % 16) - 8) + 0.5
+                s = math.sqrt(x * x + z * z)
+                if s > 1408:
+                    l.append({"k": x, "v": v, "j": v * v * math.sqrt(1 + len(l)), "r": z})
+                b = 16
+            l.sort(key=lambda i: i["j"])
+            xp, zp = round(l[0]["k"]), round(l[0]["r"])
+            await ctx.send(f"The stronghold could be at: **{xp}, {zp}**")
+        except Exception:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
 
 
 def setup(client: commands.Bot):

@@ -157,8 +157,10 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         elif len(something) > 100:
             e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
-            res = await funcs.getRequest("https://api.whatdoestrumpthink.com/api/v1/quotes")
-            quotes = choice(list(res.json()["messages"]["personalized"]))
+            with open(f"{funcs.getPath()}/assets/trump_quotes.json", "r", encoding="utf-8") as f:
+                data = load(f)
+            f.close()
+            quotes = choice(data["messages"]["list"])
             e = Embed(
                 title=f"What does Trump think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
