@@ -165,8 +165,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             x = float(args[6])
             z = float(args[8])
             dist = math.sqrt(x * x + z * z)
-            o = 190 if dist < 190 else dist if dist < 270 else 270 if dist < 480 else 610 if dist < 610 else \
-                dist if dist < 670 else 670
+            o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
+                if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
             t = math.atan(z / x)
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
@@ -184,7 +184,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                          "to Discord, paste your clipboard as an argumen" + \
                                                          "t for the command, and then build your portal " + \
                                                          "at the suggested coordinates in the Nether. Th" + \
-                                                         "is command is for versions 1.9+ and may not be 100% accurate.",
+                                                         "is command is for versions 1.9+ and may not be" + \
+                                                         " 100% accurate.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
         try:
@@ -193,12 +194,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
             z = float(args[8])
             f = float(args[9]) % 360
             f = (360 + f if f < 0 else f) - 180
-            m1 = -1 * math.tan((90 - f) * (math.pi / 180))
-            a = 1 + m1 * m1
-            b1 = -1 * m1 * (x / 8) + (z / 8)
+            o = 640 if math.sqrt(x * x + z * z) > 3584 else 216
+            m1 = -math.tan((90 - f) * (math.pi / 180))
+            a = 1 + (m1 ** 2)
+            b1 = -m1 * (x / 8) + (z / 8)
             b = 2 * m1 * b1
-            co = b1 * b1 - 216 ** 2
-            xp = (-1 * b + funcs.sign(f) * math.sqrt(b * b - 4 * a * co)) / (2 * a)
+            xp = ((-b) + (funcs.sign(f) * math.sqrt(b ** 2 - 4 * a * (b1 ** 2 - o ** 2)))) / (2 * a)
             zp = round(m1 * xp + b1)
             xp = round(xp)
             await ctx.send(f"Build your portal at: **{xp}, {zp}**")
