@@ -165,6 +165,48 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="marioannoyed", description="Server owner be like.")
+    async def marioannoyed(self, ctx):
+        url = "https://media.discordapp.net/attachments/780837667632971786/783004827322941480/image0.png"
+        file = File(await funcs.getImage(url), "marioannoyed.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="xmurry", description="...")
+    async def xmurry(self, ctx):
+        url = "https://media.discordapp.net/attachments/780837667632971786/783005790742249472/2018-04-19_5.png"
+        file = File(await funcs.getImage(url), "xmurry.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="oo", description="OO.")
+    async def oo(self, ctx):
+        url = "https://media.discordapp.net/attachments/780837667632971786/783006065028759552/2018-04-24.png"
+        file = File(await funcs.getImage(url), "oo.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="marionietzsche", description="Moustache.")
+    async def marionietzsche(self, ctx):
+        url = "https://media.discordapp.net/attachments/780837667632971786/783006357509898260/2018-01-03_13.png"
+        file = File(await funcs.getImage(url), "marionietzsche.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="mariowatchingmlp", description="He does not seem to like it...")
+    async def mariowatchingmlp(self, ctx):
+        url = "https://media.discordapp.net/attachments/780837667632971786/783006422844702720/2018-01-03_14.png"
+        file = File(await funcs.getImage(url), "mariowatchingmlp.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="owchild", description="Man, that must hurt...")
+    async def owchild(self, ctx):
+        url = "https://media.discordapp.net/attachments/780837667632971786/783006687623643226/2019-06-22.png"
+        file = File(await funcs.getImage(url), "owchild.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="conversion", description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕")
     async def conversion(self, ctx):
         for i in range(2):
