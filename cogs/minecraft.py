@@ -206,6 +206,35 @@ class Minecraft(commands.Cog, name="Minecraft"):
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="safeblind", description="A Minecraft: Java Edition speedrunning tool that, s" + \
+                                                    "imilar to !blindtravel, should be used when you wan" + \
+                                                    "t to build another portal in the Nether before thro" + \
+                                                    "wing any eyes of ender. This on average will get yo" + \
+                                                    "u closer to the stronghold compared to !blindtravel" + \
+                                                    ", but time may be lost. To use this command, in the" + \
+                                                    " game, press F3+C, pause, come over to Discord, pas" + \
+                                                    "te your clipboard as an argument for the command, a" + \
+                                                    "nd then build your portal at the suggested coordina" + \
+                                                    "tes in the Nether. This command is for versions 1.9" + \
+                                                    "+ and may not be 100% accurate.",
+                      aliases=["sb", "safetravel", "safe"], usage="<F3+C data>")
+    async def safeblind(self, ctx, *, f3c):
+        try:
+            args = f3c.split(" ")
+            x = float(args[6])
+            z = float(args[8])
+            dist = math.sqrt(x * x + z * z)
+            o = 222 if dist < 222 else dist if dist < 250 else 250 if dist < 480 else 615 if dist < 615 \
+                else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
+                else 1032
+            t = math.atan(z / x)
+            xp = round(funcs.sign(x) * abs(o * math.cos(t)))
+            zp = round(funcs.sign(z) * abs(o * math.sin(t)))
+            await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+        except Exception:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="eyethrow", description="A Minecraft: Java Edition speedrunning tool that use" + \
                                                    's the "8, 8" rule to try and guess the location of t' + \
                                                    "he stronghold from an eye of ender throw. This comma" + \
