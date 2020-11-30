@@ -156,7 +156,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                       " pause, come over to Discord, paste your clipboar" + \
                                                       "d as an argument for the command, and then build " + \
                                                       "your portal at the suggested coordinates in the N" + \
-                                                      "ether. May not be 100% accurate.",
+                                                      "ether. This command is for versions 1.9+ and may " + \
+                                                      "not be 100% accurate.",
                       aliases=["bt", "blind"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
         try:
@@ -182,8 +183,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                          "ly over the eye, press F3+C, pause, come over " + \
                                                          "to Discord, paste your clipboard as an argumen" + \
                                                          "t for the command, and then build your portal " + \
-                                                         "at the suggested coordinates in the Nether. Ma" + \
-                                                         "y not be 100% accurate.",
+                                                         "at the suggested coordinates in the Nether. Th" + \
+                                                         "is command is for versions 1.9+ and may not be 100% accurate.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
         try:
@@ -213,8 +214,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                    "w an eye, stand still, put your mouse directly over " + \
                                                    "the eye, press F3+C, pause, come over to Discord, pa" + \
                                                    "ste your clipboard as an argument for the command, a" + \
-                                                   "nd take the suggested coordinates into account. May " + \
-                                                   "not be 100% accurate.",
+                                                   "nd take the suggested coordinates into account. This" + \
+                                                   " command is for versions 1.9+ and may not be 100% accurate.",
                       aliases=["stronghold", "88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
     async def eyethrow(self, ctx, *, f3c):
         try:

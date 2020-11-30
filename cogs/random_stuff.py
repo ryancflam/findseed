@@ -150,7 +150,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="trumpthinks", description="What Donald Trump thinks about something or someone.",
-                      aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt"], usage="<input>")
+                      aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt", "tq"], usage="<input>")
     async def trumpthinks(self, ctx, *, something: str=""):
         if something == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
