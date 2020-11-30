@@ -91,10 +91,8 @@ class General(commands.Cog, name="General"):
                 name = command.name
                 description = command.description
                 usage = command.usage
-                cog = command.cog_name
                 aliases = sorted(command.aliases)
-                e = Embed(title="Command", description=f"**{prefix}{name}** ({cog})")
-                e.add_field(name="Description", value=f"```{description}```")
+                e = Embed(title=f"{prefix}{name}", description=description)
                 e.set_footer(text="Command usage: <> = Required; [] = Optional")
                 if usage:
                     e.add_field(name="Usage", value=f"```{prefix}{name} {usage}```")
