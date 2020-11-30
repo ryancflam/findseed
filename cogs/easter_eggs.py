@@ -153,8 +153,13 @@ class EasterEggs(commands.Cog, name="Easter Eggs"):
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name=">(", description="Just >(.")
-    async def idontknowwhatthisis(self, ctx):
+    @commands.command(name="you", description="You.")
+    async def you(self, ctx):
+        await ctx.send("https://tenor.com/view/dog-eating-food-cheese-dog-eating-gif-12285621")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name=">(", description="Just >(.", aliases=[">c"])
+    async def angry(self, ctx):
         url = "https://media.discordapp.net/attachments/771404776410972161/776320128953745428/angry.png"
         file = File(await funcs.getImage(url), ">(.png")
         await ctx.send(file=file)
