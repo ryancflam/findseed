@@ -164,7 +164,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             args = f3c.split(" ")
             x = float(args[6])
             z = float(args[8])
-            dist = math.sqrt(x * x + z * z)
+            dist = funcs.coordsSqrt(x, z)
             o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
                 if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
             t = math.atan(z / x)
@@ -194,7 +194,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             z = float(args[8])
             f = float(args[9]) % 360
             f = (360 + f if f < 0 else f) - 180
-            o = 640 if math.sqrt(x * x + z * z) > 3584 else 216
+            o = 640 if funcs.coordsSqrt(x, z) > 3584 else 216
             m1 = -math.tan((90 - f) * (math.pi / 180))
             a = 1 + (m1 ** 2)
             b1 = -m1 * (x / 8) + (z / 8)
@@ -203,6 +203,34 @@ class Minecraft(commands.Cog, name="Minecraft"):
             zp = round(m1 * xp + b1)
             xp = round(xp)
             await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+        except Exception:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="doubletravel", description="A Minecraft: Java Edition speedrunning tool that" + \
+                                                       ", whilst you are in the Nether, gets a spot for " + \
+                                                       "you to make your first portal inside the second " + \
+                                                       "ring of strongholds. To use this command, in the" + \
+                                                       " game, press F3+C, pause, come over to Discord, " + \
+                                                       "paste your clipboard as an argument for the comm" + \
+                                                       "and, and then build your portal at the suggested" + \
+                                                       " coordinates in the Nether. !educatedtravel shou" + \
+                                                       "ld then be used after exiting the Nether which s" + \
+                                                       "hould do a good job of getting you to the right " + \
+                                                       "spot in the Nether to build your second portal. " + \
+                                                       "This command is for versions 1.9+ and may not be" + \
+                                                       " 100% accurate.",
+                      aliases=["dt", "double"], usage="<F3+C data>")
+    async def doubletravel(self, ctx, *, f3c):
+        try:
+            args = f3c.split(" ")
+            x = float(args[6])
+            z = float(args[8])
+            o = 520
+            t = math.atan(z / x)
+            xp = round(funcs.sign(x) * abs(o * math.cos(t)))
+            zp = round(funcs.sign(z) * abs(o * math.sin(t)))
+            await ctx.send(f"Build your first portal at: **{xp}, {zp}**\n\nUse `!educatedtravel` afterwards.")
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
 
@@ -224,7 +252,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             args = f3c.split(" ")
             x = float(args[6])
             z = float(args[8])
-            dist = math.sqrt(x * x + z * z)
+            dist = funcs.coordsSqrt(x, z)
             o = 222 if dist < 222 else dist if dist < 250 else 250 if dist < 480 else 615 if dist < 615 \
                 else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
                 else 1032
@@ -264,7 +292,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 x += d
                 z += d * -math.tan(r)
                 v = abs(abs(abs(z) % 16) - 8) + 0.5
-                s = math.sqrt(x * x + z * z)
+                s = funcs.coordsSqrt(x, z)
                 if s > 1408:
                     l.append({"k": x, "v": v, "j": v * v * math.sqrt(1 + len(l)), "r": z})
                 b = 16

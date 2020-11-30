@@ -1,5 +1,6 @@
 import ast
 from os import path
+from math import sqrt
 from httpx import AsyncClient
 from io import BytesIO
 from random import randint
@@ -22,6 +23,10 @@ def randomEyes():
 
 def sign(value):
     return -1 if value < 0 else 0 if value == 0 else 1
+
+
+def coordsSqrt(x, z):
+    return sqrt(x * x + z * z)
 
 
 def errorEmbed(error, message):
