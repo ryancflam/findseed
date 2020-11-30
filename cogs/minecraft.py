@@ -17,7 +17,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command.",
-                      aliases=["fs", "eye", "eyes", "seed", "f", "s"])
+                      aliases=["fs", "seed", "f", "s"])
     async def findseed(self, ctx):
         eyes = funcs.randomEyes()
         with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
@@ -215,7 +215,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                    "ste your clipboard as an argument for the command, a" + \
                                                    "nd take the suggested coordinates into account. May " + \
                                                    "not be 100% accurate.",
-                      aliases=["stronghold", "88", "44", "onethrow"], usage="<F3+C data>")
+                      aliases=["stronghold", "88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
     async def eyethrow(self, ctx, *, f3c):
         try:
             args = f3c.split(" ")
