@@ -217,7 +217,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                     "nd then build your portal at the suggested coordina" + \
                                                     "tes in the Nether. This command is for versions 1.9" + \
                                                     "+ and may not be 100% accurate.",
-                      aliases=["sb", "safetravel", "safe"], usage="<F3+C data>")
+                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
     async def safeblind(self, ctx, *, f3c):
         try:
             args = f3c.split(" ")
@@ -238,13 +238,14 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.command(name="eyethrow", description="A Minecraft: Java Edition speedrunning tool that use" + \
                                                    's the "8, 8" rule to try and guess the location of t' + \
                                                    "he stronghold from an eye of ender throw. This comma" + \
-                                                   "nd should be used when you think you are close to th" + \
-                                                   "e stronghold. To use this command, in the game, thro" + \
-                                                   "w an eye, stand still, put your mouse directly over " + \
-                                                   "the eye, press F3+C, pause, come over to Discord, pa" + \
-                                                   "ste your clipboard as an argument for the command, a" + \
-                                                   "nd take the suggested coordinates into account. This" + \
-                                                   " command is for versions 1.9+ and may not be 100% accurate.",
+                                                   "nd is experimental and should only be used when you " + \
+                                                   "think you are close to the stronghold. To use this c" + \
+                                                   "ommand, in the game, throw an eye, stand still, put " + \
+                                                   "your mouse directly over the eye, press F3+C, pause," + \
+                                                   " come over to Discord, paste your clipboard as an ar" + \
+                                                   "gument for the command, and take the suggested coord" + \
+                                                   "inates into account. This command is for versions 1." + \
+                                                   "9+ and may not be 100% accurate.",
                       aliases=["stronghold", "88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
     async def eyethrow(self, ctx, *, f3c):
         try:

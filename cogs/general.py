@@ -89,10 +89,9 @@ class General(commands.Cog, name="General"):
             if self.client.get_command(cmd[0].replace(prefix, "")):
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
                 name = command.name
-                description = command.description
                 usage = command.usage
                 aliases = sorted(command.aliases)
-                e = Embed(title=f"{prefix}{name}", description=description)
+                e = Embed(title=f"{prefix}{name}", description=command.description)
                 e.set_footer(text="Command usage: <> = Required; [] = Optional")
                 if usage:
                     e.add_field(name="Usage", value=f"```{prefix}{name} {usage}```")
