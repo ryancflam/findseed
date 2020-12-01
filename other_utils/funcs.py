@@ -45,6 +45,61 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
     return formatted
 
 
+def monthNumberToName(number):
+    if int(number) == 1:
+        return "January"
+    if int(number) == 2:
+        return "February"
+    if int(number) == 3:
+        return "March"
+    if int(number) == 4:
+        return "April"
+    if int(number) == 5:
+        return "May"
+    if int(number) == 6:
+        return "June"
+    if int(number) == 7:
+        return "July"
+    if int(number) == 8:
+        return "August"
+    if int(number) == 9:
+        return "September"
+    if int(number) == 10:
+        return "October"
+    if int(number) == 11:
+        return "November"
+    if int(number) == 12:
+        return "December"
+
+
+def monthNameToNumber(name: str):
+    if name.casefold().startswith("ja"):
+        return "1"
+    if name.casefold().startswith("f"):
+        return "2"
+    if name.casefold().startswith("mar"):
+        return "3"
+    if name.casefold().startswith("ap"):
+        return "4"
+    if name.casefold().startswith("may"):
+        return "5"
+    if name.casefold().startswith("jun"):
+        return "6"
+    if name.casefold().startswith("jul"):
+        return "7"
+    if name.casefold().startswith("au"):
+        return "8"
+    if name.casefold().startswith("s"):
+        return "9"
+    if name.casefold().startswith("o"):
+        return "10"
+    if name.casefold().startswith("n"):
+        return "11"
+    if name.casefold().startswith("d"):
+        return "12"
+    return "13"
+
+
 def celsiusToFahrenheit(value):
     return value * 9 / 5 + 32
 

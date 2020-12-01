@@ -1,4 +1,5 @@
 from json import load
+from datetime import datetime
 
 from discord import Embed
 from discord.ext import commands
@@ -21,11 +22,78 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
         self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
 
     @staticmethod
-    def findData(data, datatype: str):
+    def findData(data, name: str):
         try:
-            return data[datatype.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
+            return data[name.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
         except KeyError:
             raise Exception("Not found, please check your spelling.")
+
+    @staticmethod
+    def isNew(monthsstr, month, mode):
+        args = monthsstr.split(" & ")
+        for i in range(len(args)):
+            args[i] = args[i].split("-")
+            if args[i][mode] == month:
+                return True
+        return False
+
+    def creaturesListEmbed(self, month, mode: int=0):
+        nbugs, nfish, nsea, sbugs, sfish, ssea = [], [], [], [], [], []
+        e = Embed(
+            title=f"Creatures {'Arriving in' if mode == 0 else 'Leaving After'} {funcs.monthNumberToName(month)}"
+        ).set_thumbnail(url=AC_LOGO)
+        for i in self.bugs:
+            if self.isNew(self.bugs[i]["availability"]["month-northern"], month, mode):
+                nbugs.append(i.replace("_", " ").title())
+            if self.isNew(self.bugs[i]["availability"]["month-southern"], month, mode):
+                sbugs.append(i.replace("_", " ").title())
+        for i in self.fish:
+            if self.isNew(self.fish[i]["availability"]["month-northern"], month, mode):
+                nfish.append(i.replace("_", " ").title())
+            if self.isNew(self.fish[i]["availability"]["month-southern"], month, mode):
+                sfish.append(i.replace("_", " ").title())
+        for i in self.sea:
+            if self.isNew(self.sea[i]["availability"]["month-northern"], month, mode):
+                nsea.append(i.replace("_", " ").title())
+            if self.isNew(self.sea[i]["availability"]["month-southern"], month, mode):
+                ssea.append(i.replace("_", " ").title())
+        if nbugs:
+            e.add_field(name="Bugs (Northern)", value=", ".join(f"`{bug}`" for bug in nbugs))
+        if nfish:
+            e.add_field(name="Fish (Northern)", value=", ".join(f"`{fish}`" for fish in nfish))
+        if nsea:
+            e.add_field(name="Sea Creatures (Northern)", value=", ".join(f"`{sea}`" for sea in nsea))
+        if sbugs:
+            e.add_field(name="Bugs (Southern)", value=", ".join(f"`{bug}`" for bug in sbugs))
+        if sfish:
+            e.add_field(name="Fish (Southern)", value=", ".join(f"`{fish}`" for fish in sfish))
+        if ssea:
+            e.add_field(name="Sea Creatures (Southern)", value=", ".join(f"`{sea}`" for sea in ssea))
+        if not nbugs and not nfish and not nsea and not sbugs and not sfish and not ssea:
+            e = funcs.errorEmbed(None, "Invalid month.")
+        return e
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="acnew", description="Returns a list of creatures arriving in a " + \
+                                                "particular month in Animal Crossing: New Horizons.",
+                      aliases=["acn", "acarriving", "acarrive"], usage="[month]")
+    async def acnew(self, ctx, month=str(datetime.now().month)):
+        try:
+            _ = int(month)
+        except ValueError:
+            month = funcs.monthNameToNumber(month)
+        await ctx.send(embed=self.creaturesListEmbed(month))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="acleaving", description="Returns a list of creatures leaving after a " + \
+                                                    "particular month in Animal Crossing: New Horizons.",
+                      aliases=["acl", "acleave"], usage="[month]")
+    async def acleaving(self, ctx, month=str(datetime.now().month)):
+        try:
+            _ = int(month)
+        except ValueError:
+            month = funcs.monthNameToNumber(month)
+        await ctx.send(embed=self.creaturesListEmbed(month, mode=-1))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
