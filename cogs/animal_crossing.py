@@ -21,9 +21,9 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
         self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
 
     @staticmethod
-    def findData(data, type: str):
+    def findData(data, datatype: str):
         try:
-            return data[type.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
+            return data[datatype.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
         except KeyError:
             raise Exception("Not found, please check your spelling.")
 

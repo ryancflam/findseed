@@ -1,4 +1,4 @@
-eyeData = {
+EYE_DATA = {
     "0": {
         "percent": "28.24",
         "onein": "3.54"

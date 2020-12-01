@@ -1,9 +1,6 @@
-import ast
 from os import path
-from math import sqrt
 from httpx import AsyncClient
 from io import BytesIO
-from random import randint
 
 from discord import Embed, Colour
 
@@ -12,21 +9,8 @@ def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
 
 
-def randomEyes():
-    eyes = 0
-    for _ in range(12):
-        luckyNumber = randint(1, 10)
-        if luckyNumber == 1:
-            eyes += 1
-    return eyes
-
-
 def sign(value):
     return -1 if value < 0 else 0 if value == 0 else 1
-
-
-def coordsSqrt(x, z):
-    return sqrt(x * x + z * z)
 
 
 def errorEmbed(error, message):
@@ -61,53 +45,8 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
     return formatted
 
 
-def insertReturns(body):
-    if isinstance(body[-1], ast.Expr):
-        body[-1] = ast.Return(body[-1].value)
-        ast.fix_missing_locations(body[-1])
-    if isinstance(body[-1], ast.If):
-        insertReturns(body[-1].body)
-        insertReturns(body[-1].orelse)
-    if isinstance(body[-1], ast.With):
-        insertReturns(body[-1].body)
-
-
 def celsiusToFahrenheit(value):
     return value * 9 / 5 + 32
-
-
-def degreesToDirection(value):
-    if not 11.24 <= value <= 348.75:
-        return "N"
-    if 11.25 <= value <= 33.74:
-        return "NNE"
-    if 33.75 <= value <= 56.24:
-        return "NE"
-    if 56.25 <= value <= 78.74:
-        return "ENE"
-    if 78.75 <= value <= 101.24:
-        return "E"
-    if 101.25 <= value <= 123.74:
-        return "ESE"
-    if 123.75 <= value <= 146.24:
-        return "SE"
-    if 146.25 <= value <= 168.74:
-        return "SSE"
-    if 168.75 <= value <= 191.24:
-        return "S"
-    if 191.25 <= value <= 213.74:
-        return "SSW"
-    if 213.75 <= value <= 236.24:
-        return "SW"
-    if 236.25 <= value <= 258.74:
-        return "WSW"
-    if 258.75 <= value <= 281.24:
-        return "W"
-    if 281.24 <= value <= 303.74:
-        return "WNW"
-    if 303.75 <= value <= 326.24:
-        return "NW"
-    return "NNW"
 
 
 async def reactionRemove(reaction, user):

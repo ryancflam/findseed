@@ -1,6 +1,7 @@
 import math
 from time import time
 from scipy import stats
+from random import randint
 from base64 import b64decode
 from json import load, loads, dump
 
@@ -15,16 +16,29 @@ class Minecraft(commands.Cog, name="Minecraft"):
     def __init__(self, client: commands.Bot):
         self.client = client
 
+    @staticmethod
+    def randomEyes():
+        eyes = 0
+        for _ in range(12):
+            luckyNumber = randint(1, 10)
+            if luckyNumber == 1:
+                eyes += 1
+        return eyes
+
+    @staticmethod
+    def coordsSqrt(x, z):
+        return math.sqrt(x * x + z * z)
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command.",
                       aliases=["fs", "seed", "f", "s"])
     async def findseed(self, ctx):
-        eyes = funcs.randomEyes()
+        eyes = self.randomEyes()
         with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
             data = load(f)
         f.close()
-        odds = eye_data.eyeData[str(eyes)]["percent"]
-        onein = eye_data.eyeData[str(eyes)]["onein"]
+        odds = eye_data.EYE_DATA[str(eyes)]["percent"]
+        onein = eye_data.EYE_DATA[str(eyes)]["onein"]
         if eyes >= data["highest"]["number"]:
             if eyes > data["highest"]["number"]:
                 data["highest"]["found"] = 1
@@ -65,8 +79,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def eyeodds(self, ctx):
         msg = ""
         for i in range(13):
-            odds = eye_data.eyeData[str(i)]["percent"]
-            msg += f"{i} eye - `{odds}% (1 in {eye_data.eyeData[str(i)]['onein']})`\n"
+            odds = eye_data.EYE_DATA[str(i)]["percent"]
+            msg += f"{i} eye - `{odds}% (1 in {eye_data.EYE_DATA[str(i)]['onein']})`\n"
         await ctx.send(msg)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -164,7 +178,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             args = f3c.split(" ")
             x = float(args[6])
             z = float(args[8])
-            dist = funcs.coordsSqrt(x, z)
+            dist = self.coordsSqrt(x, z)
             o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
                 if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
             t = math.atan(z / x)
@@ -194,7 +208,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             z = float(args[8])
             f = float(args[9]) % 360
             f = (360 + f if f < 0 else f) - 180
-            o = 640 if funcs.coordsSqrt(x, z) > 3584 else 216
+            o = 640 if self.coordsSqrt(x, z) > 3584 else 216
             m1 = -math.tan((90 - f) * (math.pi / 180))
             a = 1 + (m1 ** 2)
             b1 = -m1 * (x / 8) + (z / 8)
@@ -252,7 +266,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             args = f3c.split(" ")
             x = float(args[6])
             z = float(args[8])
-            dist = funcs.coordsSqrt(x, z)
+            dist = self.coordsSqrt(x, z)
             o = 222 if dist < 222 else dist if dist < 250 else 250 if dist < 480 else 615 if dist < 615 \
                 else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
                 else 1032
@@ -292,7 +306,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 x += d
                 z += d * -math.tan(r)
                 v = abs(abs(abs(z) % 16) - 8) + 0.5
-                s = funcs.coordsSqrt(x, z)
+                s = self.coordsSqrt(x, z)
                 if s > 1408:
                     l.append({"k": x, "v": v, "j": v * v * math.sqrt(1 + len(l)), "r": z})
                 b = 16

@@ -78,7 +78,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 output = ""
                 for char in text:
                     try:
-                        output += morse_data.morse[char.upper()] + " "
+                        output += morse_data.MORSE[char.upper()] + " "
                     except:
                         continue
                 output = output[:-1]
@@ -116,7 +116,7 @@ class Conversion(commands.Cog, name="Conversion"):
                         if spaces == 2:
                             output += " "
                         else:
-                            output += list(morse_data.morse.keys())[list(morse_data.morse.values()).index(ctext)]
+                            output += list(morse_data.MORSE.keys())[list(morse_data.MORSE.values()).index(ctext)]
                             ctext = ""
                 e = Embed(
                     title="Text to Morse Code",

@@ -1,5 +1,5 @@
+import ast
 from os import system
-from ast import parse
 from json import load, dump
 from asyncio import TimeoutError
 
@@ -17,6 +17,16 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
         self.destChannel = None
         self.originChannel = None
         self.bdReminder = 0
+
+    def insertReturns(self, body):
+        if isinstance(body[-1], ast.Expr):
+            body[-1] = ast.Return(body[-1].value)
+            ast.fix_missing_locations(body[-1])
+        if isinstance(body[-1], ast.If):
+            self.insertReturns(body[-1].body)
+            self.insertReturns(body[-1].orelse)
+        if isinstance(body[-1], ast.With):
+            self.insertReturns(body[-1].body)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -230,9 +240,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only"):
                 code = code.strip("` ")
                 code = "\n".join(f"    {i}" for i in code.splitlines())
                 body = f"async def {fnName}():\n{code}"
-                parsed = parse(body)
+                parsed = ast.parse(body)
                 body = parsed.body[0].body
-                funcs.insertReturns(body)
+                self.insertReturns(body)
                 env = {
                     "bot": ctx.bot,
                     "discord": discord,
