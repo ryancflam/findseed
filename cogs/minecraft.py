@@ -29,6 +29,14 @@ class Minecraft(commands.Cog, name="Minecraft"):
     def coordsSqrt(x, z):
         return math.sqrt(x * x + z * z)
 
+    @staticmethod
+    def f3cProcessing(clipboard):
+        try:
+            args = clipboard.split(" ")
+            return float(args[6]), float(args[8]), float(args[9])
+        except Exception:
+            raise Exception("Invalid input. Please do not modify your F3+C clipboard.")
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command.",
                       aliases=["fs", "seed", "f", "s"])
@@ -175,9 +183,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["bt", "blind"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
         try:
-            args = f3c.split(" ")
-            x = float(args[6])
-            z = float(args[8])
+            x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsSqrt(x, z)
             o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
                 if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
@@ -185,8 +191,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
             await ctx.send(f"Build your portal at: **{xp}, {zp}**")
-        except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="educatedtravel", description="A Minecraft: Java Edition speedrunning tool th" + \
@@ -203,10 +209,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
         try:
-            args = f3c.split(" ")
-            x = float(args[6])
-            z = float(args[8])
-            f = float(args[9]) % 360
+            x, z, f = self.f3cProcessing(f3c)
+            f %= 360
             f = (360 + f if f < 0 else f) - 180
             o = 640 if self.coordsSqrt(x, z) > 3584 else 216
             m1 = -math.tan((90 - f) * (math.pi / 180))
@@ -217,8 +221,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             zp = round(m1 * xp + b1)
             xp = round(xp)
             await ctx.send(f"Build your portal at: **{xp}, {zp}**")
-        except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="doubletravel", description="A Minecraft: Java Edition speedrunning tool that" + \
@@ -237,16 +241,14 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["dt", "double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
         try:
-            args = f3c.split(" ")
-            x = float(args[6])
-            z = float(args[8])
+            x, z, _ = self.f3cProcessing(f3c)
             o = 520
             t = math.atan(z / x)
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
             await ctx.send(f"Build your first portal at: **{xp}, {zp}**\n\nUse `!educatedtravel` afterwards.")
-        except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="safeblind", description="A Minecraft: Java Edition speedrunning tool that, s" + \
@@ -263,9 +265,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
     async def safeblind(self, ctx, *, f3c):
         try:
-            args = f3c.split(" ")
-            x = float(args[6])
-            z = float(args[8])
+            x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsSqrt(x, z)
             o = 222 if dist < 222 else dist if dist < 250 else 250 if dist < 480 else 615 if dist < 615 \
                 else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
@@ -274,8 +274,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
             await ctx.send(f"Build your portal at: **{xp}, {zp}**")
-        except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="eyethrow", description="A Minecraft: Java Edition speedrunning tool that use" + \
@@ -292,10 +292,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["stronghold", "88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
     async def eyethrow(self, ctx, *, f3c):
         try:
-            args = f3c.split(" ")
-            x = float(args[6])
-            z = float(args[8])
-            f = float(args[9]) % 360
+            x, z, f = self.f3cProcessing(f3c)
+            f %= 360
             f = (360 + f if f < 0 else f) - 180
             r = (90 - f) * (math.pi / 180)
             b = 8 - abs(abs(x) % 16) + 16
@@ -313,8 +311,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             l.sort(key=lambda i: i["j"])
             xp, zp = round(l[0]["k"]), round(l[0]["r"])
             await ctx.send(f"The stronghold could be at: **{xp}, {zp}**")
-        except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please do not modify your F3+C clipboard."))
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
 
 def setup(client: commands.Bot):

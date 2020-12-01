@@ -63,7 +63,6 @@ class Utility(commands.Cog, name="Utility"):
             data = res.json()
             total = data["countries_stat"]
             found = False
-            i = None
             if searchtype == "":
                 total = data["world_total"]
             else:
@@ -82,11 +81,10 @@ class Utility(commands.Cog, name="Utility"):
                 for i in total:
                     if i["country_name"].casefold().replace(".", "") == searchtype.casefold().replace(".", ""):
                         found = True
+                        total = i
                         break
                 if not found:
                     total = data["world_total"]
-                else:
-                    total = i
             e = Embed(
                 title=f"COVID-19 Statistics ({total['country_name'] if found else 'Global'})",
                 description="Statistics taken at: `" + data["statistic_taken_at"] + " UTC`"
@@ -479,6 +477,7 @@ class Utility(commands.Cog, name="Utility"):
                 )
                 language = option.content.casefold().replace(" ", "").replace("#", "sharp").replace(
                     "♯", "sharp").replace("++", "pp")
+                language = "javascript" if language == "js" else language
                 if language not in languages and language != "quit":
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid language."))
             except TimeoutError:
@@ -588,7 +587,7 @@ class Utility(commands.Cog, name="Utility"):
         count = 0
         while count < 20:
             messages.append(
-                await ctx.send("Enter poll choice, `;undo` to delete previous choice, or `;done` to publish poll.")
+                await ctx.send("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
             )
             try:
                 entry = await self.client.wait_for(
@@ -599,9 +598,9 @@ class Utility(commands.Cog, name="Utility"):
             except TimeoutError:
                 break
             messages.append(entry)
-            if entry.content == ";done":
+            if entry.content.casefold() == "!done":
                 break
-            if entry.content == ";undo":
+            if entry.content.casefold() == "!undo":
                 if answers != []:
                     answers.pop()
                     count -= 1
