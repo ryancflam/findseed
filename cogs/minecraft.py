@@ -3,6 +3,7 @@ from time import time
 from scipy import stats
 from random import randint
 from base64 import b64decode
+from asyncio import TimeoutError
 from json import load, loads, dump
 
 from discord import Embed, File
@@ -26,16 +27,22 @@ class Minecraft(commands.Cog, name="Minecraft"):
         return eyes
 
     @staticmethod
-    def coordsSqrt(x, z):
+    def coordsDist(x, z):
         return math.sqrt(x * x + z * z)
 
     @staticmethod
     def f3cProcessing(clipboard):
         try:
             args = clipboard.split(" ")
-            return float(args[6]), float(args[8]), float(args[9])
+            return float(args[6]), float(args[8]), float(args[9]) % 360
         except Exception:
             raise Exception("Invalid input. Please do not modify your F3+C clipboard.")
+
+    @staticmethod
+    def angleProcessing(angle):
+        if angle >= 0:
+            return (angle + 90) % 360
+        return (angle - 270) % 360
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command.",
@@ -184,7 +191,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def blindtravel(self, ctx, *, f3c):
         try:
             x, z, _ = self.f3cProcessing(f3c)
-            dist = self.coordsSqrt(x, z)
+            dist = self.coordsDist(x, z)
             o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
                 if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
             t = math.atan(z / x)
@@ -210,9 +217,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def educatedtravel(self, ctx, *, f3c):
         try:
             x, z, f = self.f3cProcessing(f3c)
-            f %= 360
             f = (360 + f if f < 0 else f) - 180
-            o = 640 if self.coordsSqrt(x, z) > 3584 else 216
+            o = 640 if self.coordsDist(x, z) > 3584 else 216
             m1 = -math.tan((90 - f) * (math.pi / 180))
             a = 1 + (m1 ** 2)
             b1 = -m1 * (x / 8) + (z / 8)
@@ -232,7 +238,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        " game, press F3+C, pause, come over to Discord, " + \
                                                        "paste your clipboard as an argument for the comm" + \
                                                        "and, and then build your portal at the suggested" + \
-                                                       " coordinates in the Nether. !educatedtravel shou" + \
+                                                       " coordinates in the Nether. `educatedtravel` shou" + \
                                                        "ld then be used after exiting the Nether which s" + \
                                                        "hould do a good job of getting you to the right " + \
                                                        "spot in the Nether to build your second portal. " + \
@@ -246,16 +252,18 @@ class Minecraft(commands.Cog, name="Minecraft"):
             t = math.atan(z / x)
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
-            await ctx.send(f"Build your first portal at: **{xp}, {zp}**\n\nUse `!educatedtravel` afterwards.")
+            await ctx.send(
+                f"Build your first portal at: **{xp}, {zp}**\n\nUse `{self.client.command_prefix}educatedtravel` afterwards."
+            )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="safeblind", description="A Minecraft: Java Edition speedrunning tool that, s" + \
-                                                    "imilar to !blindtravel, should be used when you wan" + \
+                                                    "imilar to `blindtravel`, should be used when you wan" + \
                                                     "t to build another portal in the Nether before thro" + \
                                                     "wing any eyes of ender. This on average will get yo" + \
-                                                    "u closer to the stronghold compared to !blindtravel" + \
+                                                    "u closer to the stronghold compared to `blindtravel`" + \
                                                     ", but time may be lost. To use this command, in the" + \
                                                     " game, press F3+C, pause, come over to Discord, pas" + \
                                                     "te your clipboard as an argument for the command, a" + \
@@ -266,7 +274,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def safeblind(self, ctx, *, f3c):
         try:
             x, z, _ = self.f3cProcessing(f3c)
-            dist = self.coordsSqrt(x, z)
+            dist = self.coordsDist(x, z)
             o = 222 if dist < 222 else dist if dist < 250 else 250 if dist < 480 else 615 if dist < 615 \
                 else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
                 else 1032
@@ -287,13 +295,13 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                    "your mouse directly over the eye, press F3+C, pause," + \
                                                    " come over to Discord, paste your clipboard as an ar" + \
                                                    "gument for the command, and take the suggested coord" + \
-                                                   "inates into account. This command is for versions 1." + \
-                                                   "9+ and may not be 100% accurate.",
-                      aliases=["stronghold", "88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
+                                                   "inates into account. It is recommended to use `trian" + \
+                                                   "gulation` instead. This command is for versions 1.9+" + \
+                                                   " and may not be 100% accurate.",
+                      aliases=["88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
     async def eyethrow(self, ctx, *, f3c):
         try:
             x, z, f = self.f3cProcessing(f3c)
-            f %= 360
             f = (360 + f if f < 0 else f) - 180
             r = (90 - f) * (math.pi / 180)
             b = 8 - abs(abs(x) % 16) + 16
@@ -304,7 +312,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 x += d
                 z += d * -math.tan(r)
                 v = abs(abs(abs(z) % 16) - 8) + 0.5
-                s = self.coordsSqrt(x, z)
+                s = self.coordsDist(x, z)
                 if s > 1408:
                     l.append({"k": x, "v": v, "j": v * v * math.sqrt(1 + len(l)), "r": z})
                 b = 16
@@ -313,6 +321,54 @@ class Minecraft(commands.Cog, name="Minecraft"):
             await ctx.send(f"The stronghold could be at: **{xp}, {zp}**")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="triangulation", description="A Minecraft: Java Edition speedrunning tool tha" + \
+                                                        "t uses two sets of F3+C coordinates to try and " + \
+                                                        "triangulate the stronghold. To use this command" + \
+                                                        ", in the game, throw an eye, stand still, put y" + \
+                                                        "our mouse directly over the eye, press F3+C, pa" + \
+                                                        "use, come over to Discord, paste your clipboard" + \
+                                                        " as an argument for the command, come back to t" + \
+                                                        "he game, get closer to the stronghold whilst sl" + \
+                                                        "ightly deviating from your angle, repeat the pr" + \
+                                                        "ocess again, submit your second F3+C clipboard " + \
+                                                        "as a regular message, and take the suggested co" + \
+                                                        "ordinates into account. This command is for all" + \
+                                                        " versions and may not be 100% accurate.",
+                      aliases=["triangulate", "stronghold", "triangle"], usage="<F3+C data>")
+    async def triangulation(self, ctx, *, f3c):
+        try:
+            x0, z0, f0 = self.f3cProcessing(f3c)
+        except Exception as ex:
+            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        x1, z1, f1 = None, None, None
+        await ctx.send(
+            f"Once you are ready, paste your second F3+C paste here. " + \
+            "You have 20 minutes. Type `!cancel` to cancel."
+        )
+        try:
+            while True:
+                msg = await self.client.wait_for(
+                    "message", timeout=1200, check=lambda m: ctx.author == m.author
+                )
+                try:
+                    x1, z1, f1 = self.f3cProcessing(msg.content)
+                except:
+                    if msg.content.casefold() == "!cancel":
+                        return await ctx.send("Cancelling.")
+                    continue
+                if x1 == x0 and z1 == z0 and f1 == f0:
+                    continue
+                break
+            a0 = math.tan(self.angleProcessing(f0) * math.pi / 180)
+            a1 = math.tan(self.angleProcessing(f1) * math.pi / 180)
+            b = z0 - x0 * a0
+            xp = ((z1 - x1 * a1) - b) / (a0 - a1)
+            zp = xp * a0 + b
+            await ctx.send(f"The stronghold could be at: **{round(xp)}, {round(zp)}**")
+        except TimeoutError:
+            return
 
 
 def setup(client: commands.Bot):
