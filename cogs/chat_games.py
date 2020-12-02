@@ -310,7 +310,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                                 await ctx.send("`It looks like the Wild +4 card has been played legally " + \
                                                f"after all. Because of that, {affectedPlayer.name} will now " + \
                                                "have to draw a total of six cards! Better luck next time.`")
-                        if len(drawn) != 0:
+                        if drawn:
                             _ = await self.unoDraw(affectedPlayer, drawn)
                             break
                         break

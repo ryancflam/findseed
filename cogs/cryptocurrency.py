@@ -315,7 +315,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Fee Reward", value=f"`{round(int(blockinfo['fee']) * 0.00000001, 8)} BTC`")
             if height != 0:
                 e.add_field(name=f"Previous Block ({height - 1})", value=f"`{blockinfo['prev_block']}`")
-            if len(nextblock) != 0:
+            if nextblock:
                 e.add_field(name=f"Next Block ({height + 1})", value=f"`{nextblock[0]}`")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown block or server error?")

@@ -71,17 +71,16 @@ class General(commands.Cog, name="General"):
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):
-                if len(self.client.get_cog(cog).get_commands()) != 0:
-                    value = ", ".join(
-                            f"`{prefix}{str(command)}`" for command in filter(
-                                lambda x: not x.hidden, sorted(
-                                    self.client.get_cog(cog).get_commands(),
-                                    key=lambda y: y.name
-                            )
+                value = ", ".join(
+                        f"`{prefix}{str(command)}`" for command in filter(
+                            lambda x: not x.hidden, sorted(
+                                self.client.get_cog(cog).get_commands(),
+                                key=lambda y: y.name
                         )
                     )
-                    if value:
-                        e.add_field(name=cog, value=value, inline=False)
+                )
+                if value:
+                    e.add_field(name=cog, value=value, inline=False)
         else:
             if self.client.get_command(cmd[0].replace(prefix, "")):
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
@@ -92,7 +91,7 @@ class General(commands.Cog, name="General"):
                 e.set_footer(text="Command usage: <> = Required; [] = Optional")
                 if usage:
                     e.add_field(name="Usage", value=f"```{prefix}{name} {usage}```")
-                if len(aliases) != 0:
+                if aliases:
                     e.add_field(
                         name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
                     )
