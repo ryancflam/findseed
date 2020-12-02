@@ -67,7 +67,7 @@ class General(commands.Cog, name="General"):
         prefix = self.client.command_prefix
         if not cmd:
             ignoredCogs = ["Bot Owner Only", "Easter Eggs", "Animal Crossing"]
-            ignoredCmds = ["cleargamechannels"]
+            ignoredCmds = ["cleargamechannels", "translate"]
             e = Embed(
                 title=f"{self.client.user.name} Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
