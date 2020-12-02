@@ -29,7 +29,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             raise Exception("Not found, please check your spelling.")
 
     @staticmethod
-    def isNew(monthsstr, month, mode):
+    def isArrivingOrLeaving(monthsstr, month, mode):
         args = monthsstr.split(" & ")
         for i in range(len(args)):
             args[i] = args[i].split("-")
@@ -37,22 +37,22 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 return True
         return False
 
-    def addCreature(self, data: dict, month, mode):
+    def addCritter(self, data: dict, month, mode):
         north, south = [], []
         for i in data:
-            if self.isNew(data[i]["availability"]["month-northern"], month, mode):
+            if self.isArrivingOrLeaving(data[i]["availability"]["month-northern"], month, mode):
                 north.append(i.replace("_", " ").title())
-            if self.isNew(data[i]["availability"]["month-southern"], month, mode):
+            if self.isArrivingOrLeaving(data[i]["availability"]["month-southern"], month, mode):
                 south.append(i.replace("_", " ").title())
         return sorted(north), sorted(south)
 
-    def creaturesListEmbed(self, month, mode: int=0):
+    def crittersListEmbed(self, month, mode: int=0):
         e = Embed(
-            title=f"Creatures {'Arriving in' if mode == 0 else 'Leaving After'} {funcs.monthNumberToName(month)}"
+            title=f"Critters {'Arriving in' if mode == 0 else 'Leaving After'} {funcs.monthNumberToName(month)}"
         ).set_thumbnail(url=AC_LOGO)
-        nbugs, sbugs = self.addCreature(self.bugs, month, mode)
-        nfish, sfish = self.addCreature(self.fish, month, mode)
-        nsea, ssea = self.addCreature(self.sea, month, mode)
+        nbugs, sbugs = self.addCritter(self.bugs, month, mode)
+        nfish, sfish = self.addCritter(self.fish, month, mode)
+        nsea, ssea = self.addCritter(self.sea, month, mode)
         if nbugs:
             e.add_field(name="Bugs (Northern)", value=", ".join(f"`{bug}`" for bug in nbugs))
         if nfish:
@@ -69,12 +69,12 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = funcs.errorEmbed(None, "Invalid month.")
         e.set_footer(
             text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " + \
-                 f"{self.client.command_prefix}acsea for specific creature information."
+                 f"{self.client.command_prefix}acsea for specific critter information."
         )
         return e
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acnew", description="Returns a list of creatures arriving in a " + \
+    @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
                                                 "particular month in Animal Crossing: New Horizons.",
                       aliases=["acn", "acarriving", "acarrive"], usage="[month]")
     async def acnew(self, ctx, month=str(datetime.now().month)):
@@ -82,10 +82,10 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             _ = int(month)
         except ValueError:
             month = funcs.monthNameToNumber(month)
-        await ctx.send(embed=self.creaturesListEmbed(month))
+        await ctx.send(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acleaving", description="Returns a list of creatures leaving after a " + \
+    @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
                                                     "particular month in Animal Crossing: New Horizons.",
                       aliases=["acl", "acleave"], usage="[month]")
     async def acleaving(self, ctx, month=str(datetime.now().month)):
@@ -93,7 +93,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             _ = int(month)
         except ValueError:
             month = funcs.monthNameToNumber(month)
-        await ctx.send(embed=self.creaturesListEmbed(month, mode=-1))
+        await ctx.send(embed=self.crittersListEmbed(month, mode=-1))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",

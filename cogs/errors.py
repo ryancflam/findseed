@@ -3,7 +3,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class Errors(commands.Cog, name="Errors"):
+class Errors(commands.Cog, name="Errors", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 

@@ -8,7 +8,7 @@ import info
 from other_utils import funcs
 
 
-class Cleverbot(commands.Cog, name="Cleverbot"):
+class Cleverbot(commands.Cog, name="Cleverbot", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 

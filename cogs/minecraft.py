@@ -287,20 +287,20 @@ class Minecraft(commands.Cog, name="Minecraft"):
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="eyethrow", description="A Minecraft: Java Edition speedrunning tool that use" + \
-                                                   's the "8, 8" rule to try and guess the location of t' + \
-                                                   "he stronghold from an eye of ender throw. This comma" + \
-                                                   "nd is experimental and should only be used when you " + \
-                                                   "think you are close to the stronghold. To use this c" + \
-                                                   "ommand, in the game, throw an eye, stand still, put " + \
-                                                   "your mouse directly over the eye, press F3+C, pause," + \
-                                                   " come over to Discord, paste your clipboard as an ar" + \
-                                                   "gument for the command, and take the suggested coord" + \
-                                                   "inates into account. It is recommended to use `trian" + \
-                                                   "gulation` instead. This command is for versions 1.9+" + \
-                                                   " and may not be 100% accurate.",
-                      aliases=["88", "44", "onethrow", "throw", "eye", "eyes"], usage="<F3+C data>")
-    async def eyethrow(self, ctx, *, f3c):
+    @commands.command(usage="<F3+C data>", description="A Minecraft: Java Edition speedrunning tool that use" + \
+                                                       's the "8, 8" rule to try and guess the location of t' + \
+                                                       "he stronghold from an eye of ender throw. This comma" + \
+                                                       "nd is experimental and should only be used when you " + \
+                                                       "think you are close to the stronghold. To use this c" + \
+                                                       "ommand, in the game, throw an eye, stand still, put " + \
+                                                       "your mouse directly over the eye, press F3+C, pause," + \
+                                                       " come over to Discord, paste your clipboard as an ar" + \
+                                                       "gument for the command, and take the suggested coord" + \
+                                                       "inates into account. It is recommended to use `trian" + \
+                                                       "gulation` instead. This command is for versions 1.9+" + \
+                                                       " and may not be 100% accurate.",
+                      aliases=["eyethrow", "44", "onethrow", "throw", "eye", "eyes"], name="88")
+    async def eighteight(self, ctx, *, f3c):
         try:
             x, z, f = self.f3cProcessing(f3c)
             f = (360 + f if f < 0 else f) - 180
