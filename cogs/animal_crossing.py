@@ -22,7 +22,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
         self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
 
     @staticmethod
-    def findData(data, name: str):
+    def findData(data: dict, name: str):
         try:
             return data[name.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
         except KeyError:
@@ -37,14 +37,14 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
                 return True
         return False
 
-    def addCreature(self, data, month, mode):
+    def addCreature(self, data: dict, month, mode):
         north, south = [], []
         for i in data:
             if self.isNew(data[i]["availability"]["month-northern"], month, mode):
                 north.append(i.replace("_", " ").title())
             if self.isNew(data[i]["availability"]["month-southern"], month, mode):
                 south.append(i.replace("_", " ").title())
-        return north, south
+        return sorted(north), sorted(south)
 
     def creaturesListEmbed(self, month, mode: int=0):
         e = Embed(
@@ -67,6 +67,10 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
             e.add_field(name="Sea Creatures (Southern)", value=", ".join(f"`{sea}`" for sea in ssea))
         if not nbugs and not nfish and not nsea and not sbugs and not sfish and not ssea:
             e = funcs.errorEmbed(None, "Invalid month.")
+        e.set_footer(
+            text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " + \
+                 f"{self.client.command_prefix}acsea for specific creature information."
+        )
         return e
 
     @commands.cooldown(1, 3, commands.BucketType.user)
