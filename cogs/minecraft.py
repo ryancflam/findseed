@@ -197,7 +197,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             t = math.atan(z / x)
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
-            await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+            await ctx.send(f"{ctx.author.mention} Build your portal at: **{xp}, {zp}**")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -226,7 +226,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             xp = ((-b) + (funcs.sign(f) * math.sqrt(b ** 2 - 4 * a * (b1 ** 2 - o ** 2)))) / (2 * a)
             zp = round(m1 * xp + b1)
             xp = round(xp)
-            await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+            await ctx.send(f"{ctx.author.mention} Build your portal at: **{xp}, {zp}**")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -253,7 +253,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
             await ctx.send(
-                f"Build your first portal at: **{xp}, {zp}**\n\nUse `{self.client.command_prefix}educatedtravel` afterwards."
+                f"{ctx.author.mention} Build your first portal at: **{xp}, {zp}**\n\n" + \
+                f"Use `{self.client.command_prefix}educatedtravel` afterwards."
             )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
@@ -281,7 +282,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             t = math.atan(z / x)
             xp = round(funcs.sign(x) * abs(o * math.cos(t)))
             zp = round(funcs.sign(z) * abs(o * math.sin(t)))
-            await ctx.send(f"Build your portal at: **{xp}, {zp}**")
+            await ctx.send(f"{ctx.author.mention} Build your portal at: **{xp}, {zp}**")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -318,7 +319,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 b = 16
             l.sort(key=lambda i: i["j"])
             xp, zp = round(l[0]["k"]), round(l[0]["r"])
-            await ctx.send(f"The stronghold could be at: **{xp}, {zp}**")
+            await ctx.send(f"{ctx.author.mention} The stronghold could be at: **{xp}, {zp}**")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -366,9 +367,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
             b = z0 - x0 * a0
             xp = ((z1 - x1 * a1) - b) / (a0 - a1)
             zp = xp * a0 + b
-            await ctx.send(f"The stronghold could be at: **{round(xp)}, {round(zp)}**")
+            await ctx.send(f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}**")
         except TimeoutError:
-            return
+            await ctx.send("Cancelling.")
 
 
 def setup(client: commands.Bot):

@@ -37,26 +37,22 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing"):
                 return True
         return False
 
+    def addCreature(self, data, month, mode):
+        north, south = [], []
+        for i in data:
+            if self.isNew(data[i]["availability"]["month-northern"], month, mode):
+                north.append(i.replace("_", " ").title())
+            if self.isNew(data[i]["availability"]["month-southern"], month, mode):
+                south.append(i.replace("_", " ").title())
+        return north, south
+
     def creaturesListEmbed(self, month, mode: int=0):
-        nbugs, nfish, nsea, sbugs, sfish, ssea = [], [], [], [], [], []
         e = Embed(
             title=f"Creatures {'Arriving in' if mode == 0 else 'Leaving After'} {funcs.monthNumberToName(month)}"
         ).set_thumbnail(url=AC_LOGO)
-        for i in self.bugs:
-            if self.isNew(self.bugs[i]["availability"]["month-northern"], month, mode):
-                nbugs.append(i.replace("_", " ").title())
-            if self.isNew(self.bugs[i]["availability"]["month-southern"], month, mode):
-                sbugs.append(i.replace("_", " ").title())
-        for i in self.fish:
-            if self.isNew(self.fish[i]["availability"]["month-northern"], month, mode):
-                nfish.append(i.replace("_", " ").title())
-            if self.isNew(self.fish[i]["availability"]["month-southern"], month, mode):
-                sfish.append(i.replace("_", " ").title())
-        for i in self.sea:
-            if self.isNew(self.sea[i]["availability"]["month-northern"], month, mode):
-                nsea.append(i.replace("_", " ").title())
-            if self.isNew(self.sea[i]["availability"]["month-southern"], month, mode):
-                ssea.append(i.replace("_", " ").title())
+        nbugs, sbugs = self.addCreature(self.bugs, month, mode)
+        nfish, sfish = self.addCreature(self.fish, month, mode)
+        nsea, ssea = self.addCreature(self.sea, month, mode)
         if nbugs:
             e.add_field(name="Bugs (Northern)", value=", ".join(f"`{bug}`" for bug in nbugs))
         if nfish:
