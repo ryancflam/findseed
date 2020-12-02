@@ -263,7 +263,7 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="translate", description="Translates text to a different language.",
+    @commands.command(name="translate", description="Translates text to a different language.", hidden=True,
                       aliases=["t", "translator", "trans", "tr"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text: str=""):
         if not dest:

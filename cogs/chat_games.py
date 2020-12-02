@@ -40,7 +40,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         await ctx.send(f"`Elapsed time: {m}m {s}s`")
 
     @commands.command(name="cleargamechannels", description="Resets the game channel list.",
-                      aliases=["resetgamechannels", "rgc", "cgc"])
+                      aliases=["resetgamechannels", "rgc", "cgc"], hidden=True)
     @commands.is_owner()
     async def cleargamechannels(self, ctx):
         self.gameChannels = []

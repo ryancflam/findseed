@@ -11,7 +11,7 @@ AC_LOGO = "https://media.discordapp.net/attachments/771698457391136798/" + \
           "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
 
 
-class AnimalCrossing(commands.Cog, name="Animal Crossing"):
+class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.art = load(open(f"{ASSETS_PATH}/art.json", "r", encoding="utf8"))

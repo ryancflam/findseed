@@ -66,25 +66,22 @@ class General(commands.Cog, name="General"):
     async def help(self, ctx, *cmd):
         prefix = self.client.command_prefix
         if not cmd:
-            ignoredCogs = ["Bot Owner Only", "Easter Eggs", "Animal Crossing"]
-            ignoredCmds = ["cleargamechannels", "translate"]
             e = Embed(
                 title=f"{self.client.user.name} Commands List",
                 description=f"Use `{prefix}help <command>` for help with a specific command."
             )
             for cog in sorted(self.client.cogs):
-                if cog not in ignoredCogs and len(self.client.get_cog(cog).get_commands()) != 0:
-                    e.add_field(
-                        name=cog,
-                        value=", ".join(
+                if len(self.client.get_cog(cog).get_commands()) != 0:
+                    value = ", ".join(
                             f"`{prefix}{str(command)}`" for command in filter(
-                                lambda x: str(x) not in ignoredCmds, sorted(
-                                    self.client.get_cog(cog).get_commands(), key=lambda y: y.name
-                                )
+                                lambda x: not x.hidden, sorted(
+                                    self.client.get_cog(cog).get_commands(),
+                                    key=lambda y: y.name
                             )
-                        ),
-                        inline=False
+                        )
                     )
+                    if value:
+                        e.add_field(name=cog, value=value, inline=False)
         else:
             if self.client.get_command(cmd[0].replace(prefix, "")):
                 command = self.client.get_command(cmd[0].replace(prefix, ""))

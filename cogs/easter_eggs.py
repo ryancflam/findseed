@@ -6,7 +6,7 @@ from discord import Embed, File, Colour
 from other_utils import funcs
 
 
-class EasterEggs(commands.Cog, name="Easter Eggs"):
+class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 
