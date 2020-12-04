@@ -18,8 +18,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         self.phoneCallChannels = []
         self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="telephone", description="Talk to other users from other chatrooms!",
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
+                                                    "This is a brand new feature and might not work 100% of the time.",
                       aliases=["phone", "userphone", "call"])
     async def telephone(self, ctx):
         if ctx.channel in self.phoneWaitingChannels:
