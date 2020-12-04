@@ -512,7 +512,12 @@ class Utility(commands.Cog, name="Utility"):
             option = await self.client.wait_for(
                 "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
             )
-            code = option.content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
+            content = option.content
+            if option.attachments:
+                attachment = option.attachments[0]
+                decoded = await attachment.read()
+                content = decoded.decode("utf-8")
+            code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
             if code == "quit":
                 return await ctx.send("Cancelling compilation...")
         except TimeoutError:

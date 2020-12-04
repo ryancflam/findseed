@@ -2,6 +2,7 @@ info.py
 test.py
 test2.py
 test3.py
+cogs/testcog.py
 data.json
 blacklist.json
 .idea/

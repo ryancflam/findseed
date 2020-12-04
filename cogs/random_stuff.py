@@ -20,7 +20,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
-                                                    "This is a brand new feature and might not work 100% of the time.",
+                                                    "This is an experimental feature and might not work 100% of the time.",
                       aliases=["phone", "userphone", "call"])
     async def telephone(self, ctx):
         if ctx.channel in self.phoneWaitingChannels:
