@@ -1,7 +1,7 @@
 from time import time
 from random import randint
 
-from other_utils import funcs
+from other_utils.funcs import timeDifferenceStr
 
 
 class Minesweeper:
@@ -87,7 +87,7 @@ class Minesweeper:
         return output
 
     def getTime(self):
-        _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
         return m, s
 
     def getUncovered(self):

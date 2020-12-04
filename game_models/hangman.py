@@ -1,7 +1,7 @@
 from time import time
 from random import choice
 
-from other_utils import funcs
+from other_utils.funcs import getPath, timeDifferenceStr
 
 
 class Hangman:
@@ -26,7 +26,7 @@ class Hangman:
 
     @staticmethod
     def __randomWord():
-        with open(f"{funcs.getPath()}/assets/hangman_words.txt", "r") as f:
+        with open(f"{getPath()}/assets/hangman_words.txt", "r") as f:
             lines = f.readlines()
         f.close()
         return choice(lines)[:-1]
@@ -51,7 +51,7 @@ class Hangman:
         return self.__lives
     
     def getTime(self):
-        _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
         return m, s
 
     def hangmanPic(self):

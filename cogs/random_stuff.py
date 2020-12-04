@@ -1,6 +1,7 @@
 import hashlib
 from json import load
-from asyncio import sleep
+from time import time
+from asyncio import sleep, TimeoutError
 from random import choice, randint, shuffle
 
 from discord import Embed, Member, File
@@ -13,7 +14,69 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.activeSpinners = []
+        self.phoneWaitingChannels = []
+        self.phoneCallChannels = []
         self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="telephone", description="Talk to other users from other chatrooms!",
+                      aliases=["phone", "userphone", "call"])
+    async def telephone(self, ctx):
+        if ctx.channel in self.phoneWaitingChannels:
+            return await ctx.send(":telephone: Cancelling phone call.")
+        if ctx.channel in self.phoneCallChannels:
+            return await ctx.send(
+                embed=funcs.errorEmbed(None, "A phone call is already in progress in this channel.")
+            )
+        self.phoneWaitingChannels.append(ctx.channel)
+        await ctx.send(":telephone_receiver: Waiting for another party to pick up the phone...")
+        if len(self.phoneWaitingChannels) == 1:
+            sleepTime = 0
+            while len(self.phoneWaitingChannels) == 1 and sleepTime < 120:
+                if len(self.phoneWaitingChannels) == 1 and sleepTime >= 120:
+                    self.phoneWaitingChannels.remove(ctx.channel)
+                    return await ctx.send(":telephone: Seems like no one is answering; cancelling phone call.")
+                await sleep(0.25)
+                sleepTime += 1
+        if len(self.phoneWaitingChannels) == 2:
+            if self.phoneWaitingChannels.index(ctx.channel) == 0:
+                otherParty = self.phoneWaitingChannels[1]
+            else:
+                otherParty = self.phoneWaitingChannels[0]
+            await sleep(1)
+            self.phoneWaitingChannels.remove(ctx.channel)
+            self.phoneCallChannels.append(ctx.channel)
+            resetTime = 0
+            startCall = time()
+            hangup = False
+            await ctx.send(
+                ":telephone_receiver: Someone has picked up the phone, say hello! " + \
+                "Note that not all messages will be sent. Type `!hangup` to hang up."
+            )
+            while resetTime < 30 and not hangup and otherParty in self.phoneCallChannels:
+                try:
+                    msg = await self.client.wait_for(
+                        "message", timeout=1, check=lambda m: m.channel == ctx.channel and m.author != self.client.user
+                    )
+                    if msg.content.casefold() == "!hangup":
+                        relay = ":telephone: The other party has hung up the phone."
+                        await ctx.send(":telephone: You have hung up the phone.")
+                        hangup = True
+                    else:
+                        relay = f"**{msg.author}** » {msg.content}" + \
+                                f"{msg.attachments[0].url if msg.attachments else ''}"
+                    await otherParty.send(relay[:2000])
+                    resetTime = 0
+                except TimeoutError:
+                    resetTime += 1
+                    if resetTime == 30:
+                        await ctx.send(":telephone: You have been idling for too long. Hanging up the phone...")
+                        await otherParty.send(":telephone: The other party has hung up the phone.")
+            _, m, s, _ = funcs.timeDifferenceStr(time(), startCall, noStr=True)
+            self.phoneCallChannels.remove(ctx.channel)
+            return await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        self.phoneWaitingChannels.remove(ctx.channel)
+        await ctx.send(":telephone: Seems like no one is answering; cancelling phone call.")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",

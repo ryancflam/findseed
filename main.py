@@ -10,7 +10,12 @@ client = Bot(
     loop=loop(),
     prefix="b" * (not info.production) + info.prefix,
     path=getPath(),
-    token=info.botToken
+    token=info.botToken,
+    activity={
+        "name": info.activityName,
+        "type": info.activityType,
+        "status": info.status
+    }
 )
 
 if __name__ == "__main__":

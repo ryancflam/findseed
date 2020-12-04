@@ -6,7 +6,6 @@ from asyncio import TimeoutError
 import discord
 from discord.ext import commands
 
-import info
 from other_utils import funcs
 
 
@@ -35,7 +34,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         if message.channel == self.destChannel \
                 or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel):
             self.bdReminder = 0
-            await self.originChannel.send(f"{message.author} » {message.content}" + \
+            await self.originChannel.send(f"**{message.author}** » {message.content}" + \
                                           f"{message.attachments[0].url if message.attachments else ''}")
 
     def disableBotDisguise(self):
@@ -57,8 +56,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 )
                 self.bdReminder = 0
                 content = msg.content
-                if content.casefold().startswith("!q") or content.casefold().startswith(f"{info.prefix}bd") \
-                        or content.casefold().startswith(f"{info.prefix}botdisguise"):
+                prefix = self.client.command_prefix
+                if content.casefold().startswith("!q") or content.casefold().startswith(f"{prefix}bd") \
+                        or content.casefold().startswith(f"{prefix}botdisguise"):
                     await ctx.send("Exiting bot disguise mode.")
                     self.disableBotDisguise()
             except TimeoutError:
@@ -81,7 +81,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=30
             )
             content = msg.content
-            if content.casefold().startswith("c") or content.startswith(info.prefix):
+            if content.casefold().startswith("c") or content.startswith(self.client.command_prefix):
                 return await ctx.send("Cancelling.")
             channelID = int(content)
             self.destChannel = self.client.get_channel(channelID)
@@ -101,7 +101,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                     )
                 except TimeoutError:
                     continue
-                if not msg.content.casefold().startswith("!q") and not msg.content.startswith(info.prefix):
+                if not msg.content.casefold().startswith("!q") \
+                        and not msg.content.startswith(self.client.command_prefix):
                     try:
                         await self.destChannel.send(f"{msg.content}" + \
                                                     f"{msg.attachments[0].url if msg.attachments else ''}")
@@ -116,6 +117,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                       aliases=["sloc", "loc"])
     @commands.is_owner()
     async def code(self, ctx):
+        await ctx.send("Getting repository code statistics. Please wait...")
         url = "https://api.codetabs.com/v1/loc/?github=ryancflam/findseed"
         res = await funcs.getRequest(url)
         data = res.json()
@@ -127,7 +129,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             blanks = data[i]["blanks"]
             comments = data[i]["comments"]
             linesOfCode = data[i]["linesOfCode"]
-            e = discord.Embed(title=f"{self.client.user.name} Code Statistics", description=url)
+            e = discord.Embed(title="!findseed Code Statistics", description=url)
             e.add_field(name="Files of Code", value=f"`{files}`")
             e.add_field(name="Total Lines", value=f"`{totalLines}`")
             e.add_field(name="Blank Lines", value=f"`{blanks}`")

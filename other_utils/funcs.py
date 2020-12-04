@@ -1,12 +1,31 @@
 from os import path
-from httpx import AsyncClient
 from io import BytesIO
+from json import load
+from httpx import AsyncClient
 
 from discord import Embed, Colour
 
 
 def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
+
+
+def userNotBlacklisted(client, message):
+    with open(f"{getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+        data = load(f)
+    f.close()
+    serverList = list(data["servers"])
+    userList = list(data["users"])
+    allowed = True
+    for serverID in serverList:
+        server = client.get_guild(serverID)
+        if server:
+            member = server.get_member(message.author.id)
+            if member:
+                allowed = False
+                break
+    return allowed and message.author.id not in userList and \
+        (not message.guild or message.guild.id not in serverList)
 
 
 def sign(value):
@@ -40,9 +59,8 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
         milli = (seconds - int(seconds)) * 1000
         return int(hours), int(minutes), int(seconds), int(round(milli, 0))
     days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
-    formatted = f"{days} day{'' if days==1 else 's'}, {hours} hour{'' if hours==1 else 's'}, {minutes}" + \
-                f" minute{'' if minutes==1 else 's'}, and {seconds} second{'' if seconds==1 else 's'}"
-    return formatted
+    return f"{days} day{'' if days==1 else 's'}, {hours} hour{'' if hours==1 else 's'}, {minutes}" + \
+           f" minute{'' if minutes==1 else 's'}, and {seconds} second{'' if seconds==1 else 's'}"
 
 
 def monthNumberToName(number):
@@ -136,6 +154,8 @@ async def postRequest(url, data=None, headers=None, timeout=None):
 
 
 async def decodeQR(link):
-    url = f"http://api.qrserver.com/v1/read-qr-code/?fileurl={link}"
-    res = await getRequest(url)
+    res = await getRequest(
+        "http://api.qrserver.com/v1/read-qr-code",
+        params={"fileurl": link}
+    )
     return res.json()[0]["symbol"][0]["data"]

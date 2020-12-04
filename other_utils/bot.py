@@ -1,28 +1,53 @@
+import asyncio
 from os import listdir
-from json import load
-from asyncio import Task, gather
 
 from discord import Activity, Intents
 from discord.ext import commands
 
+from other_utils.funcs import userNotBlacklisted
+
 
 class Bot(commands.Bot):
-    def __init__(self, loop, prefix, path, token):
+    def __init__(self, loop: asyncio.AbstractEventLoop, prefix: str, **args):
         super().__init__(
             command_prefix=prefix,
             intents=Intents.all(),
             case_insensitive=True
         )
         self.__loop = loop
-        self.__path = path
-        self.__token = token
+        self.__path = args.get("path")
+        self.__token = args.get("token")
+        self.__activity = args.get("activity")
         self.remove_command("help")
+
+    def startup(self):
+        for cog in listdir(f"{self.__path}/cogs"):
+            if cog.endswith(".py"):
+                self.load_extension(f"cogs.{cog[:-3]}")
+        super().run(self.__token, bot=True, reconnect=True)
+
+    def kill(self):
+        try:
+            self.__loop.stop()
+            tasks = asyncio.gather(
+                *asyncio.Task.all_tasks(),
+                loop=self.__loop
+            )
+            tasks.cancel()
+            self.__loop.run_forever()
+            tasks.exception()
+            return None
+        except Exception as ex:
+            return ex
 
     async def on_ready(self):
         print(f"Logged in as {self.user}")
         await self.change_presence(
-            activity=Activity(name="for seeds...", type=3),
-            status="idle"
+            activity=Activity(
+                name=self.__activity["name"],
+                type=self.__activity["type"]
+            ),
+            status=self.__activity["status"]
         )
 
     async def on_guild_join(self, server):
@@ -39,44 +64,10 @@ class Bot(commands.Bot):
 
     async def on_message(self, message):
         ctx = await self.get_context(message)
-        if ctx.valid:
-            with open(
-                f"{self.__path}/blacklist.json", "r", encoding="utf-8"
-            ) as f:
-                data = load(f)
-            serverList = list(data["servers"])
-            userList = list(data["users"])
-            allowed = True
-            for serverID in serverList:
-                server = self.get_guild(serverID)
-                if server:
-                    member = server.get_member(message.author.id)
-                    if member:
-                        allowed = False
-                        break
-            if allowed and message.author.id not in userList and \
-                    (not message.guild or message.guild.id not in serverList):
-                if self.is_ready():
-                    await self.process_commands(message)
-                else:
-                    await message.channel.send(
-                        f"{self.user.name} is not ready yet, please wait!"
-                    )
-            f.close()
-
-    def startup(self):
-        for cog in listdir(f"{self.__path}/cogs"):
-            if cog.endswith(".py"):
-                self.load_extension(f"cogs.{cog[:-3]}")
-        super().run(self.__token, bot=True, reconnect=True)
-
-    def kill(self):
-        try:
-            self.__loop.stop()
-            tasks = gather(*Task.all_tasks(), loop=self.__loop)
-            tasks.cancel()
-            self.__loop.run_forever()
-            tasks.exception()
-            return None
-        except Exception as ex:
-            return ex
+        if ctx.valid and userNotBlacklisted(self, message):
+            if self.is_ready():
+                await self.process_commands(message)
+            else:
+                await message.channel.send(
+                    f"{self.user.name} is not ready yet, please wait!"
+                )

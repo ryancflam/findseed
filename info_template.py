@@ -1,6 +1,9 @@
 production = False
 botToken = ""
 prefix = "!"
+activityName = ""
+activityType = 0
+status = "online"
 creationDate = ""
 cmcKey = ""
 owmKey = ""

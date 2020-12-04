@@ -241,7 +241,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             found, villagerdata = False, None
             for villagerID in list(self.villagers):
                 villagerdata = self.villagers[villagerID]
-                if villagerdata["name"]["name-USen"].casefold().replace(" ", "_") == villager.casefold().replace(" ", "_"):
+                if villagerdata["name"]["name-USen"].casefold().replace(" ", "_") \
+                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'"):
                     found = True
                     break
             if not found:

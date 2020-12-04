@@ -1,7 +1,7 @@
 from time import time
 from random import sample
 
-from other_utils import funcs
+from other_utils.funcs import timeDifferenceStr
 
 
 class BullsAndCows:
@@ -21,7 +21,7 @@ class BullsAndCows:
         return self.__stopped
 
     def getTime(self):
-        _, m, s, _ = funcs.timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
         return m, s
 
     def guess(self, value: str):

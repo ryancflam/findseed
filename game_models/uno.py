@@ -1,7 +1,7 @@
 from time import time
 from random import randint, shuffle
 
-from other_utils import funcs
+from other_utils.funcs import timeDifferenceStr
 from other_utils.item_cycle import ItemCycle
 
 
@@ -352,5 +352,5 @@ class Uno:
         return self.__callout
 
     def getTime(self):
-        _, m, s, _ = funcs.timeDifferenceStr(time(), self.__startTime, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s

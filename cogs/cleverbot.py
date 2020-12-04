@@ -1,5 +1,4 @@
 from re import sub
-from json import load
 from random import choice
 
 from discord.ext import commands
@@ -14,23 +13,8 @@ class Cleverbot(commands.Cog, name="Cleverbot", command_attrs=dict(hidden=True))
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        with open(f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8") as f:
-            data = load(f)
-        f.close()
-        serverList = list(data["servers"])
-        userList = list(data["users"])
-        allowed = True
-        for serverID in serverList:
-            server = self.client.get_guild(serverID)
-            if server:
-                member = server.get_member(message.author.id)
-                if member:
-                    allowed = False
-                    break
-        if not allowed or message.author.id in userList or \
-                message.guild and message.guild.id in serverList:
-            return
-        if self.client.user in message.mentions and not message.content.startswith(info.prefix):
+        if funcs.userNotBlacklisted(self.client, message) and self.client.user in message.mentions \
+                and not message.content.startswith(info.prefix):
             allowedbots = [
                 479937255868465156,
                 492970622587109380,
