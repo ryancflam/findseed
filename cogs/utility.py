@@ -508,18 +508,22 @@ class Utility(commands.Cog, name="Utility"):
                 return await ctx.send("Cancelling compilation...")
             url = f"{versionurl}/{version}"
         await ctx.send("**You have 15 minutes to type out your code. Input `quit` to quit.**")
+        code = None
         try:
             option = await self.client.wait_for(
                 "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
             )
             content = option.content
-            if option.attachments:
-                attachment = option.attachments[0]
-                decoded = await attachment.read()
-                content = decoded.decode("utf-8")
-            code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
-            if code == "quit":
-                return await ctx.send("Cancelling compilation...")
+            try:
+                if option.attachments:
+                    attachment = option.attachments[0]
+                    decoded = await attachment.read()
+                    content = decoded.decode("utf-8")
+                code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
+                if code == "quit":
+                    return await ctx.send("Cancelling compilation...")
+            except:
+                pass
         except TimeoutError:
             return await ctx.send("Cancelling compilation...")
         await ctx.send("**Please enter your desired file name including the extension.** (e.g. `main.py`)")

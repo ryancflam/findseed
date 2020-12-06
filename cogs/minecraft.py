@@ -169,7 +169,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 igt = wrdata["times"]["ingame_t"]
                 res = await funcs.getRequest(wrdata["players"][0]["uri"])
                 runner = res.json()["data"]["names"]["international"]
-                h, m, s, ms = funcs.timeDifferenceStr(igt, 0, True)
+                h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
                 e.add_field(name=categories[count], value=f"`{h if h!=0 else ''}{'h ' if h!=0 else ''}{m}m {s}s " + \
                                                           f"{ms if ms!=0 else ''}{'ms ' if ms!=0 else ''}(by {runner})`")
                 count += 1
