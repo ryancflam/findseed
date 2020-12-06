@@ -6,7 +6,7 @@ from base64 import b64decode
 from asyncio import TimeoutError
 from json import load, loads, dump
 
-from discord import Embed, File
+from discord import Embed, File, Colour
 from discord.ext import commands
 
 from assets import eye_data
@@ -123,9 +123,45 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="server", description="Gets the current status of a Minecraft server.", aliases=["mcserver"],
+                      usage="[server address]")
+    async def server(self, ctx, *, ipaddress: str=""):
+        ipaddress = ipaddress.casefold().replace(" ", "") or "mc.pastelcraft.me"
+        try:
+            res = await funcs.getRequest(
+                f"https://api.mcsrvstat.us/2/{ipaddress}",
+                headers={"accept": "application/json"}
+            )
+            data = res.json()
+            status = data["online"]
+            e = Embed(title="Minecraft Server Status", colour=Colour.green() if status else Colour.red())
+            e.add_field(name="Server Address", value=f"`{ipaddress}`")
+            e.add_field(name="Online", value=f"`{status}`")
+            if status:
+                players = data["players"]["online"]
+                e.add_field(name="Player Count", value=f"`{players}`")
+                if players:
+                    try:
+                        playerLimit = 25
+                        playerList = data["players"]["list"][:playerLimit]
+                        listStr = ", ".join(f"`{player}`" for player in playerList)
+                        if len(playerList) != players:
+                            listStr += f" *and {players - playerLimit} more...*"
+                        e.add_field(name="Players", value=listStr)
+                    except:
+                        pass
+                e.add_field(name="Version", value=f'`{data["version"]}`')
+                e.add_field(name="Port", value=f'`{data["port"]}`')
+                e.set_thumbnail(url=f"https://eu.mc-api.net/v3/server/favicon/{ipaddress}")
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid server address or server error?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="pearlbarter", description="Finds the probability of getting 2 or more ender pearl trades" + \
                                                       " in a given number of trades in Minecraft 1.16.1.",
-                      aliases=["piglin", "barter", "bartering", "pearl", "pearls", "trades", "trade"], usage="<total trades>")
+                      aliases=["piglin", "barter", "bartering", "pearl", "pearls", "trades", "trade"],
+                      usage="<total trades>")
     async def pearlbarter(self, ctx, *, trades: str=""):
         try:
             n = int(trades)
