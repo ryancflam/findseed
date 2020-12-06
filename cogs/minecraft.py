@@ -153,16 +153,16 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 e.add_field(name="Version", value=f'`{data["version"]}`')
                 e.add_field(name="Port", value=f'`{data["port"]}`')
                 e.set_thumbnail(url=f"https://eu.mc-api.net/v3/server/favicon/{ipaddress}")
-            try:
-                e.add_field(name="Software", value=f'`{data["software"]}`')
-            except:
-                pass
-            motd = data["motd"]["clean"]
-            try:
-                secondLine = f"\n{motd[1].strip().replace('&amp;', '&')}"
-            except:
-                secondLine = ""
-            e.set_footer(text=motd[0].strip().replace('&amp;', '&') + secondLine)
+                try:
+                    e.add_field(name="Software", value=f'`{data["software"]}`')
+                except:
+                    pass
+                motd = data["motd"]["clean"]
+                try:
+                    secondLine = f"\n{motd[1].strip().replace('&amp;', '&')}"
+                except:
+                    secondLine = ""
+                e.set_footer(text=motd[0].strip().replace('&amp;', '&') + secondLine)
         except Exception:
             e = funcs.errorEmbed(None, "Invalid server address or server error?")
         await ctx.send(embed=e)
