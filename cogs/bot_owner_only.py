@@ -373,6 +373,21 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             f"\nUsers: {'None' if userList == [] else ', '.join(str(user) for user in userList)}```"
         )
 
+    @commands.command(name="leaveserver", description="Makes the bot leave a given server.",
+                      aliases=["leaveguild", "serverleave", "guildleave"], usage="<server ID>")
+    @commands.is_owner()
+    async def leaveserver(self, ctx, *, serverID=None):
+        if not serverID:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+        try:
+            server = self.client.get_guild(int(serverID))
+            if server:
+                await server.leave()
+            else:
+                await ctx.send(embed=funcs.errorEmbed(None, "Unknown server."))
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
 
 def setup(client: commands.Bot):
     client.add_cog(BotOwnerOnly(client))
