@@ -278,9 +278,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
                     dump(data, f, sort_keys=True, indent=4)
                 f.close()
-                await ctx.send("Added.")
-            else:
-                await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
+                return await ctx.send("Added.")
+            await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
@@ -306,9 +305,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
                     dump(data, f, sort_keys=True, indent=4)
                 f.close()
-                await ctx.send("Added.")
-            else:
-                await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
+                return await ctx.send("Added.")
+            await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
@@ -330,9 +328,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
                     dump(data, f, sort_keys=True, indent=4)
                 f.close()
-                await ctx.send("Removed.")
-            else:
-                await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
+                return await ctx.send("Removed.")
+            await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
@@ -354,9 +351,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 with open(f"{funcs.getPath()}/blacklist.json", "w") as f:
                     dump(data, f, sort_keys=True, indent=4)
                 f.close()
-                await ctx.send("Removed.")
-            else:
-                await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
+                return await ctx.send("Removed.")
+            await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
@@ -369,8 +365,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         serverList = list(data["servers"])
         userList = list(data["users"])
         await ctx.send(
-            f"```Servers: {'None' if serverList == [] else ', '.join(str(server) for server in serverList)}" + \
-            f"\nUsers: {'None' if userList == [] else ', '.join(str(user) for user in userList)}```"
+            f"```Servers: {'None' if not serverList else ', '.join(str(server) for server in serverList)}" + \
+            f"\nUsers: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
 
     @commands.command(name="leaveserver", description="Makes the bot leave a given server.",
@@ -382,9 +378,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         try:
             server = self.client.get_guild(int(serverID))
             if server:
-                await server.leave()
-            else:
-                await ctx.send(embed=funcs.errorEmbed(None, "Unknown server."))
+                return await server.leave()
+            await ctx.send(embed=funcs.errorEmbed(None, "Unknown server."))
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 

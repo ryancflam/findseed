@@ -57,6 +57,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         f.close()
         odds = eye_data.EYE_DATA[str(eyes)]["percent"]
         onein = eye_data.EYE_DATA[str(eyes)]["onein"]
+        update = False
         if eyes >= data["highest"]["number"]:
             if eyes > data["highest"]["number"]:
                 data["highest"]["found"] = 1
@@ -65,8 +66,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
             data["highest"]["number"] = eyes
             data["highest"]["time"] = int(time())
             update = True
-        else:
-            update = False
         highest = data["highest"]["number"]
         highestTime = data["highest"]["time"]
         highestTotal = data["highest"]["found"]
@@ -76,10 +75,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
             dump(data, f, sort_keys=True, indent=4)
         f.close()
         file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
+        foundTime = "just now"
         if not update:
             foundTime = f"{funcs.timeDifferenceStr(time(), highestTime)}"
-        else:
-            foundTime = "just now"
         e = Embed(
             title="!findseed",
             description=f"{ctx.message.author.mention} --> Your seed is a **{eyes} eye**."

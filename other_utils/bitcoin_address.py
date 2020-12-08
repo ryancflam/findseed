@@ -137,7 +137,7 @@ class BitcoinAddress:
         inpfmtd = bytes([0]) + inp
         lzbytes = 0
         for i in inpfmtd:
-            if i != 0:
+            if i:
                 break
             lzbytes += 1
         checksum = sha256(sha256(inpfmtd).digest()).digest()[:4]
