@@ -27,10 +27,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
         return eyes
 
     @staticmethod
-    def coordsDist(x, z):
-        return math.sqrt(x * x + z * z)
-
-    @staticmethod
     def f3cProcessing(clipboard):
         try:
             args = clipboard.split(" ")
@@ -43,6 +39,13 @@ class Minecraft(commands.Cog, name="Minecraft"):
         if angle >= 0:
             return (angle + 90) % 360
         return (angle - 270) % 360
+
+    @staticmethod
+    def coordsDist(x, z):
+        return math.sqrt(x * x + z * z)
+
+    def coordsDifference(self, coords1: tuple, coords2: tuple):
+        return self.coordsDist(coords1[0] - coords2[0], coords1[1] - coords2[1])
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command.",
@@ -241,9 +244,13 @@ class Minecraft(commands.Cog, name="Minecraft"):
             o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
                 if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
             t = math.atan(z / x)
-            xp = round(funcs.sign(x) * abs(o * math.cos(t)))
-            zp = round(funcs.sign(z) * abs(o * math.sin(t)))
-            await ctx.send(f"{ctx.author.mention} Build your portal at: **{xp}, {zp}**")
+            xp = funcs.sign(x) * abs(o * math.cos(t))
+            zp = funcs.sign(z) * abs(o * math.sin(t))
+            blocks = round(self.coordsDifference((x, z), (xp, zp)))
+            await ctx.send(
+                f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** " + \
+                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+            )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -270,9 +277,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             b1 = -m1 * (x / 8) + (z / 8)
             b = 2 * m1 * b1
             xp = ((-b) + (funcs.sign(f) * math.sqrt(b ** 2 - 4 * a * (b1 ** 2 - o ** 2)))) / (2 * a)
-            zp = round(m1 * xp + b1)
-            xp = round(xp)
-            await ctx.send(f"{ctx.author.mention} Build your portal at: **{xp}, {zp}**")
+            zp = m1 * xp + b1
+            await ctx.send(f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** ")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -296,10 +302,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
             x, z, _ = self.f3cProcessing(f3c)
             o = 520
             t = math.atan(z / x)
-            xp = round(funcs.sign(x) * abs(o * math.cos(t)))
-            zp = round(funcs.sign(z) * abs(o * math.sin(t)))
+            xp = funcs.sign(x) * abs(o * math.cos(t))
+            zp = funcs.sign(z) * abs(o * math.sin(t))
+            blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.send(
-                f"{ctx.author.mention} Build your first portal at: **{xp}, {zp}**\n\n" + \
+                f"{ctx.author.mention} Build your first portal at: **{round(xp)}, {round(zp)}** " + \
+                f"({blocks} block{'' if blocks == 1 else 's'} away)\n\n" + \
                 f"Use `{self.client.command_prefix}educatedtravel` afterwards."
             )
         except Exception as ex:
@@ -326,9 +334,13 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
                 else 1032
             t = math.atan(z / x)
-            xp = round(funcs.sign(x) * abs(o * math.cos(t)))
-            zp = round(funcs.sign(z) * abs(o * math.sin(t)))
-            await ctx.send(f"{ctx.author.mention} Build your portal at: **{xp}, {zp}**")
+            xp = funcs.sign(x) * abs(o * math.cos(t))
+            zp = funcs.sign(z) * abs(o * math.sin(t))
+            blocks = round(self.coordsDifference((x, z), (xp, zp)))
+            await ctx.send(
+                f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** " + \
+                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+            )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -349,6 +361,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def eighteight(self, ctx, *, f3c):
         try:
             x, z, f = self.f3cProcessing(f3c)
+            x0, z0 = x, z
             f = (360 + f if f < 0 else f) - 180
             r = (90 - f) * (math.pi / 180)
             b = 8 - abs(abs(x) % 16) + 16
@@ -364,8 +377,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
                     l.append({"k": x, "v": v, "j": v * v * math.sqrt(1 + len(l)), "r": z})
                 b = 16
             l.sort(key=lambda i: i["j"])
-            xp, zp = round(l[0]["k"]), round(l[0]["r"])
-            await ctx.send(f"{ctx.author.mention} The stronghold could be at: **{xp}, {zp}**")
+            xp, zp = l[0]["k"], l[0]["r"]
+            blocks = round(self.coordsDifference((x0, z0), (xp, zp)))
+            await ctx.send(
+                f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
+                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+            )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -382,7 +399,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                         "ocess again, submit your second F3+C clipboard " + \
                                                         "as a regular message, and take the suggested co" + \
                                                         "ordinates into account. This command is for all" + \
-                                                        " versions and may not be 100% accurate.",
+                                                        " versions from 1.0 and may not be 100% accurate.",
                       aliases=["triangulate", "stronghold", "triangle"], usage="<F3+C data>")
     async def triangulation(self, ctx, *, f3c):
         try:
@@ -413,7 +430,11 @@ class Minecraft(commands.Cog, name="Minecraft"):
             b = z0 - x0 * a0
             xp = ((z1 - x1 * a1) - b) / (a0 - a1)
             zp = xp * a0 + b
-            await ctx.send(f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}**")
+            blocks = round(self.coordsDifference((x1, z1), (xp, zp)))
+            await ctx.send(
+                f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
+                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+            )
         except TimeoutError:
             await ctx.send("Cancelling.")
 
