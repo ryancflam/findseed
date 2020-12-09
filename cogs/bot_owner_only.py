@@ -29,10 +29,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not self.botDisguise or message.author == self.client.user:
-            return
-        if message.channel == self.destChannel \
-                or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel):
+        if (message.channel == self.destChannel
+                or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel)) \
+                and self.botDisguise and message.author != self.client.user:
             self.bdReminder = 0
             await self.originChannel.send(f"**{message.author}** » {message.content}" + \
                                           f"{message.attachments[0].url if message.attachments else ''}")

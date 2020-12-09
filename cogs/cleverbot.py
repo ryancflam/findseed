@@ -3,8 +3,15 @@ from random import choice
 
 from discord.ext import commands
 
-import info
 from other_utils import funcs
+
+ALLOWED_BOTS = [
+    479937255868465156,
+    492970622587109380,
+    597028739616079893,
+    771696725173469204,
+    771403225840222238
+]
 
 
 class Cleverbot(commands.Cog, name="Cleverbot", command_attrs=dict(hidden=True)):
@@ -14,16 +21,8 @@ class Cleverbot(commands.Cog, name="Cleverbot", command_attrs=dict(hidden=True))
     @commands.Cog.listener()
     async def on_message(self, message):
         if funcs.userNotBlacklisted(self.client, message) and self.client.user in message.mentions \
-                and not message.content.startswith(info.prefix):
-            allowedbots = [
-                479937255868465156,
-                492970622587109380,
-                597028739616079893,
-                771696725173469204,
-                771403225840222238
-            ]
-            if message.author.bot and message.author.id not in allowedbots:
-                return
+                and not (await self.client.get_context(message)).valid \
+                and (not message.author.bot or message.author.id in ALLOWED_BOTS):
             await message.channel.trigger_typing()
             msg = sub("<@!?" + str(self.client.user.id) + ">", "", message.content).strip()
             params = {
@@ -37,9 +36,9 @@ class Cleverbot(commands.Cog, name="Cleverbot", command_attrs=dict(hidden=True))
             if data["status"] == 4:
                 text = choice(["I do not understand.", "Please say that again.", "What was that?", "Ok."])
             else:
-                text = data["that"].replace("<br>", "")
-                text = text.replace("&quot;", '"').replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
-                text = text.replace("A.L.I.C.E", self.client.user.name).replace("ALICE", self.client.user.name)
+                text = data["that"].replace("A.L.I.C.E", self.client.user.name).replace("ALICE",
+                    self.client.user.name).replace("<br>", "").replace("&quot;", '"').replace("&lt;",
+                    "<").replace("&gt;", ">").replace("&amp;", "&")
             await message.channel.send(f"{message.author.mention} {text}")
 
 

@@ -63,8 +63,8 @@ class Bot(commands.Bot):
         )
 
     async def on_message(self, message):
-        ctx = await self.get_context(message)
-        if ctx.valid and userNotBlacklisted(self, message):
+        if (await self.get_context(message)).valid \
+                and userNotBlacklisted(self, message):
             if self.is_ready():
                 await self.process_commands(message)
             else:
