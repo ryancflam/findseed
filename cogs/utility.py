@@ -463,7 +463,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="compile", description="Compiles code.", aliases=["comp"])
     async def compile(self, ctx):
-        res = await funcs.getRequest("https://run.glot.io/languages")
+        res = await funcs.getRequest("https://run.glot.io/languages", verify=False)
         data = res.json()
         languages = [i["name"] for i in data]
         output = ", ".join(f'`{j}`' for j in languages)
@@ -485,10 +485,10 @@ class Utility(commands.Cog, name="Utility"):
         if language == "quit":
             return await ctx.send("Cancelling compilation...")
         versionurl = f"https://run.glot.io/languages/{language}"
-        res = await funcs.getRequest(versionurl)
+        res = await funcs.getRequest(versionurl, verify=False)
         data = res.json()
         url = data[0]["url"]
-        if len(data) != 1:
+        if len(data) > 1:
             versions = [i["version"] for i in data]
             output = ", ".join(f"`{j}`" for j in versions)
             version = ""
@@ -539,7 +539,7 @@ class Utility(commands.Cog, name="Utility"):
             "Authorization": f"Token {info.glotIoKey}",
             "Content-type": "application/json"
         }
-        res = await funcs.postRequest(url=url, data=dumps(data), headers=headers)
+        res = await funcs.postRequest(url=url, data=dumps(data), headers=headers, verify=False)
         try:
             data = res.json()
             stderr = data["stderr"]
