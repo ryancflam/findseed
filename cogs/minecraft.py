@@ -1,6 +1,5 @@
 import math
 from time import time
-from scipy import stats
 from random import randint
 from base64 import b64decode
 from asyncio import TimeoutError
@@ -11,6 +10,8 @@ from discord.ext import commands
 
 from assets import eye_data
 from other_utils import funcs
+
+BARTER_LIMIT = 896
 
 
 class Minecraft(commands.Cog, name="Minecraft"):
@@ -49,7 +50,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command.",
-                      aliases=["fs", "seed", "f", "s"])
+                      aliases=["fs", "seed", "f", "s", "findseeds", "seeds"])
     async def findseed(self, ctx):
         eyes = self.randomEyes()
         with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
@@ -169,20 +170,21 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="pearlbarter", description="Finds the probability of getting 2 or more ender pearl trades" + \
-                                                      " in a given number of trades in Minecraft 1.16.1.",
-                      aliases=["piglin", "barter", "bartering", "pearl", "pearls", "trades", "trade"],
-                      usage="<total trades>")
+    @commands.command(name="bartering", description="Finds the probability of getting 2 or more ender pearl trades" + \
+                                                    " in a given number of trades in Minecraft 1.16.1.",
+                      aliases=["piglin", "barter", "pearlbarter", "pearl", "pearls", "trades", "trade", "bart"],
+                      usage="<total gold ingots>")
     async def pearlbarter(self, ctx, *, trades: str=""):
         try:
             n = int(trades)
-            if not 2 <= n <= 999:
-                return await ctx.send(embed=funcs.errorEmbed(None, "Value must be between 2 and 999."))
+            if not 2 <= n <= BARTER_LIMIT:
+                return await ctx.send(embed=funcs.errorEmbed(None, f"Value must be between 2 and {BARTER_LIMIT}."))
         except ValueError:
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
-        x = sum(stats.binom.pmf([i for i in range(2, n + 1)], n, 20 / 423))
+        x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
+            * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
         await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
-                       f"8-16 pearls) in {n} gold is `{x * 100}%`. *(1 in {1 / x})*")
+                       f"8-16 pearls) in {n} gold is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
