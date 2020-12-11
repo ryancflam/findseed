@@ -170,8 +170,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bartering", description="Finds the probability of getting 2 or more ender pearl trades" + \
-                                                    " in a given number of trades in Minecraft 1.16.1.",
+    @commands.command(name="bartering", description="Finds the probability of getting 12 or more ender pearls" + \
+                                                    " in a given number of piglin trades in Minecraft 1.16.1.",
                       aliases=["piglin", "barter", "pearlbarter", "pearl", "pearls", "trades", "trade", "bart"],
                       usage="<total gold ingots>")
     async def pearlbarter(self, ctx, *, trades: str=""):
@@ -183,8 +183,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
         x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
-        await ctx.send(f"**[1.16.1]** The probability of getting 2 or more ender pearl trades (at least " + \
-                       f"8-16 pearls) in {n} gold is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
+        await ctx.send(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
+                       f" in {n} gold is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
