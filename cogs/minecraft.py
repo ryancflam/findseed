@@ -1,3 +1,6 @@
+# Credit - https://github.com/Sharpieman20/Sharpies-Speedrunning-Tools
+# (!blindtravel, !educatedtravel, !doubletravel, !safeblind, !eighteight)
+
 import math
 from time import time
 from random import randint
@@ -101,75 +104,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(msg)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="skin", description="Gets the skin of a Minecraft user.", aliases=["mcskin"],
-                      usage="[username]")
-    async def skin(self, ctx, username: str=""):
-        if username == "":
-            username = ctx.message.author.name
-        try:
-            data = await funcs.getRequest(f"https://api.mojang.com/users/profiles/minecraft/{username}")
-            username = data.json()["name"]
-            res = await funcs.getRequest(
-                f"https://sessionserver.mojang.com/session/minecraft/profile/{str(data.json()['id'])}"
-            )
-            data = b64decode(res.json()["properties"][0]["value"])
-            data = loads(data)
-            skin = data["textures"]["SKIN"]["url"]
-            e = Embed(
-                title="Minecraft User",
-                description=f"**{username}**"
-            )
-            e.set_image(url=skin)
-        except Exception:
-            e = funcs.errorEmbed(None, "Invalid skin or server error.")
-        await ctx.send(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="server", description="Gets the current status of a Minecraft server.", aliases=["mcserver"],
-                      usage="[server address]")
-    async def server(self, ctx, *, ipaddress: str=""):
-        ipaddress = ipaddress.casefold().replace(" ", "") or "mc.pastelcraft.me"
-        try:
-            res = await funcs.getRequest(
-                f"https://api.mcsrvstat.us/2/{ipaddress}",
-                headers={"accept": "application/json"}
-            )
-            data = res.json()
-            status = data["online"]
-            e = Embed(title="Minecraft Server Status", colour=Colour.green() if status else Colour.red())
-            e.add_field(name="Server Address", value=f"`{ipaddress}`")
-            e.add_field(name="Online", value=f"`{status}`")
-            if status:
-                players = data["players"]["online"]
-                e.add_field(name="Player Count", value=f"`{players}/{data['players']['max']}`")
-                if players:
-                    try:
-                        playerLimit = 25
-                        playerList = data["players"]["list"][:playerLimit]
-                        listStr = ", ".join(f"`{player}`" for player in playerList)
-                        if len(playerList) != players:
-                            listStr += f" *and {players - playerLimit} more...*"
-                        e.add_field(name="Players", value=listStr)
-                    except:
-                        pass
-                e.add_field(name="Version", value=f'`{data["version"]}`')
-                e.add_field(name="Port", value=f'`{data["port"]}`')
-                e.set_thumbnail(url=f"https://eu.mc-api.net/v3/server/favicon/{ipaddress}")
-                try:
-                    e.add_field(name="Software", value=f'`{data["software"]}`')
-                except:
-                    pass
-                motd = data["motd"]["clean"]
-                try:
-                    secondLine = f"\n{motd[1].strip().replace('&amp;', '&')}"
-                except:
-                    secondLine = ""
-                e.set_footer(text=motd[0].strip().replace('&amp;', '&') + secondLine)
-        except Exception:
-            e = funcs.errorEmbed(None, "Invalid server address or server error?")
-        await ctx.send(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bartering", description="Finds the probability of getting 12 or more ender pearls" + \
                                                     " in a given number of piglin trades in Minecraft 1.16.1.",
                       aliases=["piglin", "barter", "pearlbarter", "pearl", "pearls", "trades", "trade", "bart"],
@@ -185,46 +119,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
         await ctx.send(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
                        f" in {n} gold is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
-
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
-                                             "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord"])
-    async def wr(self, ctx):
-        await ctx.send("Getting speedrun.com data. Please wait...")
-        try:
-            e = Embed(
-                title="Minecraft Speedrun World Records",
-                description="https://www.speedrun.com/mc"
-            )
-            urls = [
-                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=gq7zo9p1",
-                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=21go6e6q",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=gq7zo9p1",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=21go6e6q",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731",
-                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=jqzywv2l",
-                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=klr6djol",
-                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=jqzywv2l",
-                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=klr6djol"
-            ]
-            categories = ["SSG Pre-1.9", "SSG 1.9+", "RSG Pre-1.9", "RSG 1.9-1.15", "RSG 1.16+",
-                          "SS Pre-1.9", "SS 1.9+", "RS Pre-1.9", "RS 1.9+"]
-            count = 0
-            for category in urls:
-                res = await funcs.getRequest(
-                    "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/" + category
-                )
-                wrdata = res.json()["data"]["runs"][0]["run"]
-                igt = wrdata["times"]["ingame_t"]
-                res = await funcs.getRequest(wrdata["players"][0]["uri"])
-                runner = res.json()["data"]["names"]["international"]
-                h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
-                e.add_field(name=categories[count], value=f"`{h if h!=0 else ''}{'h ' if h!=0 else ''}{m}m {s}s " + \
-                                                          f"{ms if ms!=0 else ''}{'ms ' if ms!=0 else ''}(by {runner})`")
-                count += 1
-        except Exception:
-            e = funcs.errorEmbed(None, "Possible server error.")
-        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
@@ -437,6 +331,115 @@ class Minecraft(commands.Cog, name="Minecraft"):
             )
         except TimeoutError:
             await ctx.send("Cancelling.")
+
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
+                                             "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord"])
+    async def wr(self, ctx):
+        await ctx.send("Getting speedrun.com data. Please wait...")
+        try:
+            e = Embed(
+                title="Minecraft Speedrun World Records",
+                description="https://www.speedrun.com/mc"
+            )
+            urls = [
+                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=gq7zo9p1",
+                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=21go6e6q",
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=gq7zo9p1",
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=21go6e6q",
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731",
+                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=jqzywv2l",
+                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=klr6djol",
+                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=jqzywv2l",
+                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=klr6djol"
+            ]
+            categories = ["SSG Pre-1.9", "SSG 1.9+", "RSG Pre-1.9", "RSG 1.9-1.15", "RSG 1.16+",
+                          "SS Pre-1.9", "SS 1.9+", "RS Pre-1.9", "RS 1.9+"]
+            count = 0
+            for category in urls:
+                res = await funcs.getRequest(
+                    "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/" + category
+                )
+                wrdata = res.json()["data"]["runs"][0]["run"]
+                igt = wrdata["times"]["ingame_t"]
+                res = await funcs.getRequest(wrdata["players"][0]["uri"])
+                runner = res.json()["data"]["names"]["international"]
+                h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
+                e.add_field(name=categories[count], value=f"`{h if h!=0 else ''}{'h ' if h!=0 else ''}{m}m {s}s " + \
+                                                          f"{ms if ms!=0 else ''}{'ms ' if ms!=0 else ''}(by {runner})`")
+                count += 1
+        except Exception:
+            e = funcs.errorEmbed(None, "Possible server error.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="skin", description="Gets the skin of a Minecraft user.", aliases=["mcskin"],
+                      usage="[username]")
+    async def skin(self, ctx, username: str=""):
+        if username == "":
+            username = ctx.message.author.name
+        try:
+            data = await funcs.getRequest(f"https://api.mojang.com/users/profiles/minecraft/{username}")
+            username = data.json()["name"]
+            res = await funcs.getRequest(
+                f"https://sessionserver.mojang.com/session/minecraft/profile/{str(data.json()['id'])}"
+            )
+            data = b64decode(res.json()["properties"][0]["value"])
+            data = loads(data)
+            skin = data["textures"]["SKIN"]["url"]
+            e = Embed(
+                title="Minecraft User",
+                description=f"**{username}**"
+            )
+            e.set_image(url=skin)
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid skin or server error.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="server", description="Gets the current status of a Minecraft server.", aliases=["mcserver"],
+                      usage="[server address]")
+    async def server(self, ctx, *, ipaddress: str=""):
+        ipaddress = ipaddress.casefold().replace(" ", "") or "mc.pastelcraft.me"
+        try:
+            res = await funcs.getRequest(
+                f"https://api.mcsrvstat.us/2/{ipaddress}",
+                headers={"accept": "application/json"}
+            )
+            data = res.json()
+            status = data["online"]
+            e = Embed(title="Minecraft Server Status", colour=Colour.green() if status else Colour.red())
+            e.add_field(name="Server Address", value=f"`{ipaddress}`")
+            e.add_field(name="Online", value=f"`{status}`")
+            if status:
+                players = data["players"]["online"]
+                e.add_field(name="Player Count", value=f"`{players}/{data['players']['max']}`")
+                if players:
+                    try:
+                        playerLimit = 25
+                        playerList = data["players"]["list"][:playerLimit]
+                        listStr = ", ".join(f"`{player}`" for player in playerList)
+                        if len(playerList) != players:
+                            listStr += f" *and {players - playerLimit} more...*"
+                        e.add_field(name="Players", value=listStr)
+                    except:
+                        pass
+                e.add_field(name="Version", value=f'`{data["version"]}`')
+                e.add_field(name="Port", value=f'`{data["port"]}`')
+                e.set_thumbnail(url=f"https://eu.mc-api.net/v3/server/favicon/{ipaddress}")
+                try:
+                    e.add_field(name="Software", value=f'`{data["software"]}`')
+                except:
+                    pass
+                motd = data["motd"]["clean"]
+                try:
+                    secondLine = f"\n{motd[1].strip().replace('&amp;', '&')}"
+                except:
+                    secondLine = ""
+                e.set_footer(text=motd[0].strip().replace('&amp;', '&') + secondLine)
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid server address or server error?")
+        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):

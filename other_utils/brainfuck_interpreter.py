@@ -1,5 +1,4 @@
-# Original code: https://github.com/DismissedGuy/brainfuck-interpreter
-# Modified to suit bot needs
+# Credit - https://github.com/DismissedGuy/brainfuck-interpreter
 
 class IOStream:
     def __init__(self, data=None):
