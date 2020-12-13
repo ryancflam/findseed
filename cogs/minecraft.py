@@ -1,5 +1,5 @@
 # Credit - https://github.com/Sharpieman20/Sharpies-Speedrunning-Tools
-# (88, blindtravel, doubletravel, educatedtravel, safeblind)
+# For 88, blindtravel, doubletravel, educatedtravel, safeblind
 
 import math
 from time import time
