@@ -1,5 +1,5 @@
 # Credit - https://github.com/Sharpieman20/Sharpies-Speedrunning-Tools
-# (!blindtravel, !educatedtravel, !doubletravel, !safeblind, !eighteight)
+# (88, blindtravel, doubletravel, educatedtravel, safeblind)
 
 import math
 from time import time
@@ -83,7 +83,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         if not update:
             foundTime = f"{funcs.timeDifferenceStr(time(), highestTime)}"
         e = Embed(
-            title="!findseed",
+            title=f"{self.client.command_prefix}findseed",
             description=f"{ctx.message.author.mention} --> Your seed is a **{eyes} eye**."
         )
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
