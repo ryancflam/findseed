@@ -88,8 +88,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
         )
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
         e.add_field(name="Most Eyes Found", value=f"`{highest} (last found {foundTime}{' ago' if not update else ''}" + \
-                                                  f", found {highestTotal} time{'' if highestTotal==1 else 's'})`")
-        e.set_footer(text=f"The command has been called {calls} time{'' if calls==1 else 's'}. !eyeodds")
+                                                  f", found {highestTotal} time{'' if highestTotal == 1 else 's'})`")
+        e.set_footer(text=f"The command has been called {calls} time{'' if calls == 1 else 's'}. !eyeodds")
         e.set_image(url="attachment://portal.png")
         await ctx.send(embed=e, file=file)
 
@@ -118,7 +118,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
         await ctx.send(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
-                       f" in {n} gold is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
+                       f" with {n} gold ingots is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
@@ -128,7 +128,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                       " pause, come over to Discord, paste your clipboar" + \
                                                       "d as an argument for the command, and then build " + \
                                                       "your portal at the suggested coordinates in the N" + \
-                                                      "ether. This command is for versions 1.9+ and may " + \
+                                                      "ether. This command is for versions 1.13+ and may " + \
                                                       "not be 100% accurate.",
                       aliases=["bt", "blind"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
@@ -158,7 +158,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                          "to Discord, paste your clipboard as an argumen" + \
                                                          "t for the command, and then build your portal " + \
                                                          "at the suggested coordinates in the Nether. Th" + \
-                                                         "is command is for versions 1.9+ and may not be" + \
+                                                         "is command is for versions 1.13+ and may not be" + \
                                                          " 100% accurate.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
@@ -188,7 +188,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        "ld then be used after exiting the Nether which s" + \
                                                        "hould do a good job of getting you to the right " + \
                                                        "spot in the Nether to build your second portal. " + \
-                                                       "This command is for versions 1.9+ and may not be" + \
+                                                       "This command is for versions 1.13+ and may not be" + \
                                                        " 100% accurate.",
                       aliases=["dt", "double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
@@ -217,7 +217,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                     " game, press F3+C, pause, come over to Discord, pas" + \
                                                     "te your clipboard as an argument for the command, a" + \
                                                     "nd then build your portal at the suggested coordina" + \
-                                                    "tes in the Nether. This command is for versions 1.9" + \
+                                                    "tes in the Nether. This command is for versions 1.13" + \
                                                     "+ and may not be 100% accurate.",
                       aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
     async def safeblind(self, ctx, *, f3c):
@@ -249,7 +249,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        " come over to Discord, paste your clipboard as an ar" + \
                                                        "gument for the command, and take the suggested coord" + \
                                                        "inates into account. It is recommended to use `trian" + \
-                                                       "gulation` instead. This command is for versions 1.9+" + \
+                                                       "gulation` instead. This command is for versions 1.13+" + \
                                                        " and may not be 100% accurate.",
                       aliases=["eyethrow", "44", "onethrow", "throw", "eye", "eyes"], name="88")
     async def eighteight(self, ctx, *, f3c):
@@ -292,8 +292,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                         "ightly deviating from your angle, repeat the pr" + \
                                                         "ocess again, submit your second F3+C clipboard " + \
                                                         "as a regular message, and take the suggested co" + \
-                                                        "ordinates into account. This command is for all" + \
-                                                        " versions from 1.0 and may not be 100% accurate.",
+                                                        "ordinates into account. This command is for ver" + \
+                                                        "sions 1.13+ and may not be 100% accurate.",
                       aliases=["triangulate", "stronghold", "triangle"], usage="<F3+C data>")
     async def triangulation(self, ctx, *, f3c):
         try:
@@ -365,8 +365,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 res = await funcs.getRequest(wrdata["players"][0]["uri"])
                 runner = res.json()["data"]["names"]["international"]
                 h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
-                e.add_field(name=categories[count], value=f"`{h if h!=0 else ''}{'h ' if h!=0 else ''}{m}m {s}s " + \
-                                                          f"{ms if ms!=0 else ''}{'ms ' if ms!=0 else ''}(by {runner})`")
+                e.add_field(name=categories[count], value=f"`{h if h != 0 else ''}{'h ' if h != 0 else ''}{m}m {s}s " + \
+                                                          f"{ms if ms != 0 else ''}{'ms ' if ms != 0 else ''}(by {runner})`")
                 count += 1
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error.")
