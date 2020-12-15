@@ -1,5 +1,5 @@
 # Credit - https://github.com/Sharpieman20/Sharpies-Speedrunning-Tools
-# For 88, blindtravel, doubletravel, educatedtravel, safeblind
+# For blindtravel, doubletravel, educatedtravel, safeblind, triangulation
 
 import math
 from time import time
@@ -239,23 +239,27 @@ class Minecraft(commands.Cog, name="Minecraft"):
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(usage="<F3+C data>", description="A Minecraft: Java Edition speedrunning tool that use" + \
-                                                       's the "8, 8" rule to try and guess the location of t' + \
-                                                       "he stronghold from an eye of ender throw. This comma" + \
-                                                       "nd is experimental and should only be used when you " + \
-                                                       "think you are close to the stronghold. To use this c" + \
-                                                       "ommand, in the game, throw an eye, stand still, put " + \
-                                                       "your mouse directly over the eye, press F3+C, pause," + \
-                                                       " come over to Discord, paste your clipboard as an ar" + \
-                                                       "gument for the command, and take the suggested coord" + \
-                                                       "inates into account. It is recommended to use `trian" + \
-                                                       "gulation` instead. This command is for versions 1.13+" + \
-                                                       " and may not be 100% accurate.",
-                      aliases=["eyethrow", "44", "onethrow", "throw", "eye", "eyes"], name="88")
-    async def eighteight(self, ctx, *, f3c):
+    @commands.command(name="triangulation", description="A Minecraft: Java Edition speedrunning tool tha" + \
+                                                        "t attempts to locate the stronghold using both " + \
+                                                        'the "8, 8" rule and triangulation. To use this ' + \
+                                                        "command, in the game, throw and eye, stand stil" + \
+                                                        "l, put your mouse directly over the eye, press " + \
+                                                        "F3+C, pause, come over to Discord, paste your c" + \
+                                                        "lipboard as an argument for the command, and th" + \
+                                                        "e command should return a set of coordinates ca" + \
+                                                        'lculated using the "8, 8" rule. You may continu' + \
+                                                        "e using this command by parsing more F3+C clipb" + \
+                                                        "oards as regular messages as you get closer to " + \
+                                                        "the stronghold. Once the program knows you are " + \
+                                                        "fairly close to the stronghold, it will automat" + \
+                                                        "ically stop. This command is for versions 1.13+" + \
+                                                        " and may not be 100% accurate.",
+                      aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
+                      usage="<F3+C data>")
+    async def triangulation(self, ctx, *, f3c):
         try:
             x, z, f = self.f3cProcessing(f3c)
-            x0, z0 = x, z
+            x0, z0, f0 = x, z, f
             f = (360 + f if f < 0 else f) - 180
             r = (90 - f) * (math.pi / 180)
             b = 8 - abs(abs(x) % 16) + 16
@@ -275,62 +279,48 @@ class Minecraft(commands.Cog, name="Minecraft"):
             blocks = round(self.coordsDifference((x0, z0), (xp, zp)))
             await ctx.send(
                 f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
-                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+                f"({blocks} block{'' if blocks == 1 else 's'} away)\n\nMethod: 8, 8\n\nPaste your F3+C " + \
+                "clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
+                "Type `!cancel` to cancel."
             )
-        except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="triangulation", description="A Minecraft: Java Edition speedrunning tool tha" + \
-                                                        "t uses two sets of F3+C coordinates to try and " + \
-                                                        "triangulate the stronghold. To use this command" + \
-                                                        ", in the game, throw an eye, stand still, put y" + \
-                                                        "our mouse directly over the eye, press F3+C, pa" + \
-                                                        "use, come over to Discord, paste your clipboard" + \
-                                                        " as an argument for the command, come back to t" + \
-                                                        "he game, get closer to the stronghold whilst sl" + \
-                                                        "ightly deviating from your angle, repeat the pr" + \
-                                                        "ocess again, submit your second F3+C clipboard " + \
-                                                        "as a regular message, and take the suggested co" + \
-                                                        "ordinates into account. This command is for ver" + \
-                                                        "sions 1.13+ and may not be 100% accurate.",
-                      aliases=["triangulate", "stronghold", "triangle"], usage="<F3+C data>")
-    async def triangulation(self, ctx, *, f3c):
-        try:
-            x0, z0, f0 = self.f3cProcessing(f3c)
         except Exception as ex:
             return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
         x1, z1, f1 = None, None, None
-        await ctx.send(
-            f"Once you are ready, paste your second F3+C paste here. " + \
-            "You have 20 minutes. Type `!cancel` to cancel."
-        )
+        blocks = 100
         try:
-            while True:
-                msg = await self.client.wait_for(
-                    "message", timeout=1200, check=lambda m: ctx.author == m.author
-                )
+            while blocks > 40:
+                while True:
+                    msg = await self.client.wait_for(
+                        "message", timeout=1200, check=lambda m: ctx.author == m.author
+                    )
+                    try:
+                        x1, z1, f1 = self.f3cProcessing(msg.content)
+                    except:
+                        if msg.content.casefold() == "!cancel":
+                            return await ctx.send("Cancelling triangulation.")
+                        continue
+                    if x1 == x0 and z1 == z0 and f1 == f0:
+                        continue
+                    break
                 try:
-                    x1, z1, f1 = self.f3cProcessing(msg.content)
+                    a0 = math.tan(self.angleProcessing(f0) * math.pi / 180)
+                    a1 = math.tan(self.angleProcessing(f1) * math.pi / 180)
+                    b = z0 - x0 * a0
+                    xp = ((z1 - x1 * a1) - b) / (a0 - a1)
+                    zp = xp * a0 + b
+                    blocks = round(self.coordsDifference((x1, z1), (xp, zp)))
                 except:
-                    if msg.content.casefold() == "!cancel":
-                        return await ctx.send("Cancelling.")
                     continue
-                if x1 == x0 and z1 == z0 and f1 == f0:
-                    continue
-                break
-            a0 = math.tan(self.angleProcessing(f0) * math.pi / 180)
-            a1 = math.tan(self.angleProcessing(f1) * math.pi / 180)
-            b = z0 - x0 * a0
-            xp = ((z1 - x1 * a1) - b) / (a0 - a1)
-            zp = xp * a0 + b
-            blocks = round(self.coordsDifference((x1, z1), (xp, zp)))
-            await ctx.send(
-                f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
-                f"({blocks} block{'' if blocks == 1 else 's'} away)"
-            )
+                await ctx.send(
+                    f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
+                    f"({blocks} block{'' if blocks == 1 else 's'} away)\n\nMethod: Triangulation\n\nPaste your F3+C " + \
+                    "clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
+                    "Type `!cancel` to cancel."
+                )
+                x0, z0, f0 = x1, z1, f1
+            await ctx.send("You are close to the stronghold, stopping triangulation program.")
         except TimeoutError:
-            await ctx.send("Cancelling.")
+            await ctx.send("You have been inactive for over 20 minutes, stopping triangulation program.")
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
