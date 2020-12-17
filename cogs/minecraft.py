@@ -291,7 +291,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             while blocks > 40:
                 while True:
                     msg = await self.client.wait_for(
-                        "message", timeout=1200, check=lambda m: ctx.author == m.author
+                        "message", timeout=1200, check=lambda m: ctx.author == m.author and ctx.channel == m.channel
                     )
                     try:
                         x1, z1, f1 = self.f3cProcessing(msg.content)
