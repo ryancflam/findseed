@@ -322,6 +322,25 @@ class Minecraft(commands.Cog, name="Minecraft"):
         except TimeoutError:
             await ctx.send("You have been inactive for over 20 minutes, stopping triangulation program.")
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="coordsdist", description="Calculates the distance between two sets of coordinates.",
+                      aliases=["coords", "distance", "dist", "coord", "coordinates", "coordinate"],
+                      usage="<x1> <z1> <x2> <z2>")
+    async def coords(self, ctx, *, inp):
+        args = inp.split(" ")
+        try:
+            try:
+                x1, z1, _ = self.f3cProcessing(inp)
+            except:
+                x1, z1 = float(args[0]), float(args[1])
+            x2, z2 = float(args[-2]), float(args[-1])
+        except ValueError:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid arguments."))
+        dist = round(self.coordsDifference((x1, z1), (x2, z2)), 2)
+        await ctx.send(
+            f"The distance between **{round(x1)}, {round(z1)}** and **{round(x2)}, {round(z2)}** is: **{dist}**"
+        )
+
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
                                              "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord"])
