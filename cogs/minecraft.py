@@ -336,9 +336,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
             x2, z2 = float(args[-2]), float(args[-1])
         except ValueError:
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid arguments."))
-        dist = round(self.coordsDifference((x1, z1), (x2, z2)))
         await ctx.send(
-            f"The distance between **{int(x1)}, {int(z1)}** and **{int(x2)}, {int(z2)}** is: **~{dist}**"
+            f"The distance between **{int(x1)}, {int(z1)}** and **{int(x2)}, {int(z2)}** is: " + \
+            f"**~{round(self.coordsDifference((x1, z1), (x2, z2)))}**"
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)
