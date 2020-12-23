@@ -15,6 +15,7 @@ def generateJson():
         f = open(f"{getPath()}/blacklist.json", "w")
         dump({"servers": [], "users": []}, f, sort_keys=True, indent=4)
         f.close()
+        print("Generated blacklist.json")
     if not path.exists(f"{getPath()}/data.json"):
         f = open(f"{getPath()}/data.json", "w")
         dump({
@@ -26,9 +27,11 @@ def generateJson():
             }
         }, f, sort_keys=True, indent=4)
         f.close()
+        print("Generated data.json")
 
 
-def generateClient():
+def botInstance():
+    generateJson()
     return Bot(
         loop=loop(),
         prefix="b" * (not info.production) + info.prefix,
@@ -43,8 +46,7 @@ def generateClient():
 
 
 if __name__ == "__main__":
-    generateJson()
-    client = generateClient()
+    client = botInstance()
     try:
         task = loop().create_task(client.startup())
         loop().run_until_complete(task)
