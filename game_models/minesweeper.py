@@ -119,29 +119,29 @@ class Minesweeper:
         if self.__grid[yy][xx] == 0:
             self.__dispboard[yy][xx] = " "
             if xx > 0:
-                if self.__grid[yy][xx-1] >= 0:
-                    self.uncoverDots(xx-1, yy, player=False)
+                if self.__grid[yy][xx - 1] >= 0:
+                    self.uncoverDots(xx - 1, yy, player=False)
                 if yy > 0:
-                    if self.__grid[yy-1][xx-1] >= 0:
-                        self.uncoverDots(xx-1, yy-1, player=False)
+                    if self.__grid[yy - 1][xx - 1] >= 0:
+                        self.uncoverDots(xx - 1, yy - 1, player=False)
             if yy > 0:
-                if self.__grid[yy-1][xx] >= 0:
-                    self.uncoverDots(xx, yy-1, player=False)
-                    if xx < self.__col-1:
-                        if self.__grid[yy-1][xx+1] >= 0:
-                            self.uncoverDots(xx+1, yy-1, player=False)
-            if xx < self.__col-1:
-                if self.__grid[yy][xx+1] >= 0:
-                    self.uncoverDots(xx+1, yy, player=False)
-                if yy < self.__row-1:
-                    if self.__grid[yy+1][xx+1] >= 0:
-                        self.uncoverDots(xx+1, yy+1, player=False)
-            if yy < self.__row-1:
-                if self.__grid[yy+1][xx] >= 0:
-                    self.uncoverDots(xx, yy+1, player=False)
+                if self.__grid[yy - 1][xx] >= 0:
+                    self.uncoverDots(xx, yy - 1, player=False)
+                    if xx < self.__col - 1:
+                        if self.__grid[yy - 1][xx + 1] >= 0:
+                            self.uncoverDots(xx + 1, yy - 1, player=False)
+            if xx < self.__col - 1:
+                if self.__grid[yy][xx + 1] >= 0:
+                    self.uncoverDots(xx + 1, yy, player=False)
+                if yy < self.__row - 1:
+                    if self.__grid[yy + 1][xx + 1] >= 0:
+                        self.uncoverDots(xx + 1, yy + 1, player=False)
+            if yy < self.__row - 1:
+                if self.__grid[yy + 1][xx] >= 0:
+                    self.uncoverDots(xx, yy + 1, player=False)
                 if xx > 0:
-                    if self.__grid[yy+1][xx-1] >= 0:
-                       self.uncoverDots(xx-1, yy+1, player=False)
+                    if self.__grid[yy + 1][xx - 1] >= 0:
+                       self.uncoverDots(xx - 1, yy + 1, player=False)
             return
         if self.__grid[yy][xx] == -1:
             if self.__attempts == 1:

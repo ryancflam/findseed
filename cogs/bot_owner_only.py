@@ -1,3 +1,6 @@
+# Credit - https://gist.github.com/nitros12/2c3c265813121492655bc95aa54da6b9
+# For eval
+
 import ast
 from os import system
 from json import load, dump
@@ -250,7 +253,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                     "commands": commands,
                     "ctx": ctx,
                     "__import__": __import__,
-                    "funcs":funcs
+                    "funcs": funcs
                 }
                 exec(compile(parsed, filename="<ast>", mode="exec"), env)
                 res = (await eval(f"{fnName}()", env))

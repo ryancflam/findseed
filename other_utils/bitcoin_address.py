@@ -1,3 +1,6 @@
+# Credit - https://github.com/primal100/pybitcointools
+# Credit - https://github.com/keis/base58
+
 from typing import Union
 from random import randrange
 from binascii import unhexlify
