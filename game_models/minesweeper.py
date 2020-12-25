@@ -28,37 +28,37 @@ class Minesweeper:
                 self.__dispboard[r].append(".")
         minePlacements = 0
         while minePlacements != self.__mines:
-            mpCol = randint(0, self.__col-1)
-            mpRow = randint(0, self.__row-1)
+            mpCol = randint(0, self.__col - 1)
+            mpRow = randint(0, self.__row - 1)
             if self.__grid[mpRow][mpCol] != -1:
                 self.__grid[mpRow][mpCol] = -1
                 minePlacements += 1
         for r in range(self.__row):
             for c in range(self.__col):
                 minecount = 0
-                if c>0:
-                    if self.__grid[r][c-1] == -1:
+                if c > 0:
+                    if self.__grid[r][c - 1] == -1:
                         minecount += 1
                     if r > 0:
-                        if self.__grid[r-1][c-1] == -1:
+                        if self.__grid[r - 1][c - 1] == -1:
                             minecount += 1
                 if r > 0:
-                    if self.__grid[r-1][c] == -1:
+                    if self.__grid[r - 1][c] == -1:
                         minecount += 1
-                    if c < self.__col-1:
-                        if self.__grid[r-1][c+1] == -1:
+                    if c < self.__col - 1:
+                        if self.__grid[r - 1][c + 1] == -1:
                             minecount += 1
-                if c < self.__col-1:
-                    if self.__grid[r][c+1] == -1:
+                if c < self.__col - 1:
+                    if self.__grid[r][c + 1] == -1:
                         minecount += 1
-                    if r < self.__row-1:
-                        if self.__grid[r+1][c+1] == -1:
+                    if r < self.__row - 1:
+                        if self.__grid[r + 1][c + 1] == -1:
                             minecount += 1
-                if r < self.__row-1:
-                    if self.__grid[r+1][c] == -1:
+                if r < self.__row - 1:
+                    if self.__grid[r + 1][c] == -1:
                         minecount += 1
                     if c > 0:
-                        if self.__grid[r+1][c-1] == -1:
+                        if self.__grid[r + 1][c - 1] == -1:
                             minecount += 1
                 if self.__grid[r][c] != -1:
                     self.__grid[r][c] = minecount

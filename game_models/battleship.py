@@ -39,8 +39,8 @@ class Battleship:
     def __placeShips(self):
         for i in range(len(self.__shipcode)):
             while True:
-                rand1 = randint(0, self.__boardSize-1)
-                rand2 = randint(0, self.__boardSize-1)
+                rand1 = randint(0, self.__boardSize - 1)
+                rand2 = randint(0, self.__boardSize - 1)
                 direction = randint(0, 2)
                 piece = 0
                 problem = False
@@ -53,7 +53,7 @@ class Battleship:
                         rand1 += 1
                     else:
                         rand2 += 1
-                    if rand1 > self.__boardSize-1 or rand2 > self.__boardSize-1:
+                    if rand1 > self.__boardSize - 1 or rand2 > self.__boardSize - 1:
                         problem = True
                     else:
                         piece += 1
