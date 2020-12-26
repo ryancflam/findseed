@@ -185,8 +185,8 @@ class Conversion(commands.Cog, name="Conversion"):
                 text = text.replace(" ", "")
                 e = Embed(
                     title="Binary to Text",
-                    description=funcs.formatting("".join(chr(int(text[i*8:i*8+8], 2)) \
-                        for i in range(len(text)//8)))
+                    description=funcs.formatting("".join(chr(int(text[i * 8:i * 8 + 8], 2)) \
+                        for i in range(len(text) // 8)))
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")

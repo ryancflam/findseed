@@ -98,32 +98,32 @@ class Utility(commands.Cog, name="Utility"):
                 e.add_field(name="Total Cases", value=f"`{total['cases']}`")
                 e.add_field(name="Total Deaths", value=f"`{total['deaths']}" + \
                                                        "\n({}%)`".format(round(int(total['deaths'].replace(',',
-                                                           '').replace('N/A', '0'))/int(total['cases'].replace(',',
-                                                           '').replace('N/A', '0'))*100, 2)))
+                                                           '').replace('N/A', '0')) / int(total['cases'].replace(',',
+                                                           '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" + \
                                                           "\n({}%)`".format(round(int(total['total_recovered'].replace(',',
-                                                              '').replace('N/A', '0'))/int(total['cases'].replace(',',
-                                                              '').replace('N/A', '0'))*100, 2)))
+                                                              '').replace('N/A', '0')) / int(total['cases'].replace(',',
+                                                              '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Active Cases", value=f"`{total['active_cases']}" + \
                                                        "\n({}%)`".format(round(int(total['active_cases'].replace(',',
-                                                           '').replace('N/A', '0'))/int(total['cases'].replace(',',
-                                                           '').replace('N/A', '0'))*100, 2)))
+                                                           '').replace('N/A', '0')) / int(total['cases'].replace(',',
+                                                           '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Critical Cases", value=f"`{total['serious_critical']}`")
                 e.add_field(name="Total Tests", value=f"`{total['total_tests']}`")
             else:
                 e.add_field(name="Total Cases", value=f"`{total['total_cases']}`")
                 e.add_field(name="Total Deaths", value=f"`{total['total_deaths']}" + \
                                                        "\n({}%)`".format(round(int(total['total_deaths'].replace(',',
-                                                           '').replace('N/A', '0'))/int(total['total_cases'].replace(',',
-                                                           '').replace('N/A', '0'))*100, 2)))
+                                                           '').replace('N/A', '0')) / int(total['total_cases'].replace(',',
+                                                           '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" + \
                                                           "\n({}%)`".format(round(int(total['total_recovered'].replace(',',
-                                                              '').replace('N/A', '0'))/int(total['total_cases'].replace(',',
-                                                              '').replace('N/A', '0'))*100, 2)))
+                                                              '').replace('N/A', '0')) / int(total['total_cases'].replace(',',
+                                                              '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Active Cases", value=f"`{total['active_cases']}" + \
                                                        "\n({}%)`".format(round(int(total['active_cases'].replace(',',
-                                                           '').replace('N/A', '0'))/int(total['total_cases'].replace(',',
-                                                           '').replace('N/A', '0'))*100, 2)))
+                                                           '').replace('N/A', '0')) / int(total['total_cases'].replace(',',
+                                                           '').replace('N/A', '0')) * 100, 2)))
             e.add_field(name="New Cases Today", value=f"`{total['new_cases']}`")
             e.add_field(name="New Deaths Today", value=f"`{total['new_deaths']}`")
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
@@ -318,11 +318,11 @@ class Utility(commands.Cog, name="Utility"):
             wikiurl = "https://en.wikipedia.org/w/api.php?format=json&action=query" + \
                       "&prop=extracts&exintro&explaintext&redirects=1&titles="
             try:
-                res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_')}")
+                res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_')}")
                 data = res.json()
                 wikipage = data["query"]
                 if list(wikipage["pages"])[0] == "-1":
-                    res = await funcs.getRequest(f"{wikiurl}{page.replace(' ','_').title()}")
+                    res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_').title()}")
                     data = res.json()
                     wikipage = data["query"]
                     if list(wikipage["pages"])[0] == "-1":
@@ -376,7 +376,7 @@ class Utility(commands.Cog, name="Utility"):
                 author = data["author"].replace("*", "\*").replace("_", "\_")
                 e = Embed(description=lyric2, title=f"{author} - {title}")
                 e.set_thumbnail(url=thumbnail)
-                e.add_field(name="Genius Link",value=link)
+                e.add_field(name="Genius Link", value=link)
                 page = 1
                 allpages = (len(originallyric) - 1) // 2048 + 1
                 e.set_footer(text=f"Page {page} of {allpages}")

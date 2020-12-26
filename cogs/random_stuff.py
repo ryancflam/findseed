@@ -251,9 +251,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
                       usage="[@mention]")
-    async def roast(self, ctx, member: Member=""):
-        if member == "":
-            member = ctx.message.author
+    async def roast(self, ctx, member: Member=None):
+        member = member or ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
         await ctx.send(res.json()["insult"].replace("You are", f"{member.display_name} is"))
 
@@ -297,8 +296,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     async def lovecalc(self, ctx, first: Member=None, second: Member=None):
         if first is None:
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        if second is None:
-            second = ctx.author
+        second = second or ctx.author
         try:
             newlist = [first.id, second.id]
             sentence = ""

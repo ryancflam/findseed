@@ -53,10 +53,10 @@ class General(commands.Cog, name="General"):
         e.add_field(name="CPU Usage", value=f"`{psutil.cpu_percent()}%`")
         e.add_field(name="Memory Usage", value=f"`{dict(psutil.virtual_memory()._asdict())['percent']}%`")
         e.add_field(name="Memory Available",
-                    value=f"`{round(float(dict(psutil.virtual_memory()._asdict())['available'])/1024/1024, 2)} MB`")
+                    value=f"`{round(float(dict(psutil.virtual_memory()._asdict())['available']) / 1024 / 1024, 2)} MB`")
         e.add_field(name="Disk Usage", value=f"`{dict(psutil.disk_usage('/')._asdict())['percent']}%`")
         e.add_field(name="Disk Space Available",
-                    value=f"`{round(float(dict(psutil.disk_usage('/')._asdict())['free'])/1024/1024/1024, 2)} GB`")
+                    value=f"`{round(float(dict(psutil.disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)} GB`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.send(embed=e)
 

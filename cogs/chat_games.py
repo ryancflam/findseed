@@ -606,7 +606,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
     async def gameOptions(self, ctx, game):
         dotsLeft = 90 - game.getUncovered()
         await ctx.send(
-            f"`{ctx.author.name} has {90 - game.getUncovered()} dot{'' if dotsLeft==1 else 's'} left to uncover.`"
+            f"`{ctx.author.name} has {90 - game.getUncovered()} dot{'' if dotsLeft == 1 else 's'} left to uncover.`"
         )
         await ctx.send("`Would you like to reveal, flag, or unflag a location?`")
         try:
@@ -677,7 +677,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         game = Minesweeper()
         won = False
         while not game.getGameEnd():
-            await ctx.send(f"```Attempt {game.getAttempts()+1} for {ctx.author.name}. " + \
+            await ctx.send(f"```Attempt {game.getAttempts() + 1} for {ctx.author.name}. " + \
                                    f"Current board:\n\n{game.displayBoard()}```")
             await self.gameOptions(ctx, game)
             won = game.winLose()
@@ -699,10 +699,10 @@ class ChatGames(commands.Cog, name="Chat Games"):
         game = Battleship()
         while game.getShipcount() > 0:
             await ctx.send(
-                f"```Attempt {game.getAttempts()+1} for {ctx.author.name}. {game.displayBoard()}```"
+                f"```Attempt {game.getAttempts() + 1} for {ctx.author.name}. {game.displayBoard()}```"
             )
             await ctx.send(
-                f"`{ctx.author.name} has {game.getShipcount()} ship{'' if game.getShipcount()==1 else 's'} left to find.`"
+                f"`{ctx.author.name} has {game.getShipcount()} ship{'' if game.getShipcount() == 1 else 's'} left to find.`"
             )
             yy = await self.rowOrCol(ctx, game, True, False)
             if yy == "quit":
@@ -830,7 +830,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             lives = game.getLives()
             await ctx.send(
                 f"`{ctx.author.name} has won Hangman with " + \
-                f"{'' if lives!=10 else 'all '}{lives} li{'ves' if lives!=1 else 'fe'} left!`"
+                f"{'' if lives != 10 else 'all '}{lives} li{'ves' if lives != 1 else 'fe'} left!`"
             )
         m, s = game.getTime()
         await self.sendTime(ctx, m, s)
