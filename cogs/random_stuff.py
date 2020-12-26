@@ -213,6 +213,21 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         await ctx.send(res.json()["joke"])
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="dog", description="Sends a random dog image.")
+    async def dog(self, ctx):
+        res = await funcs.getRequest("https://dog.ceo/api/breeds/image/random")
+        res2 = File(await funcs.getImage(res.json()["message"]), "dog.jpg")
+        await ctx.send(file=res2)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="cat", description="Sends a random cat image.")
+    async def cat(self, ctx):
+        res = await funcs.getRequest("https://api.thecatapi.com/v1/images/search")
+        image = res.json()[0]["url"]
+        res2 = File(await funcs.getImage(image), image.split("thecatapi.com/images/")[1])
+        await ctx.send(file=res2)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="trumpthinks", description="What Donald Trump thinks about something or someone.",
                       aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt", "tq"], usage="<input>")
     async def trumpthinks(self, ctx, *, something: str=""):

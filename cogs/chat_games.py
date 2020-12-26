@@ -363,7 +363,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         while aki.progression <= 80:
             try:
                 await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage).set_footer(
-                    text=f"Progress: {round(aki.progression / 80 * 100, 2)}% | Called by: {ctx.author.name}"))
+                    text=f"Progress: {round(aki.progression / 80 * 100, 2)}% | Called by: {ctx.author}"))
                 resp = await self.client.wait_for(
                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
                     timeout=60
