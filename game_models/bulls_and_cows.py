@@ -6,7 +6,7 @@ from other_utils.funcs import timeDifferenceStr
 
 class BullsAndCows:
     def __init__(self):
-        self.__start = time()
+        self.__startTime = time()
         self.__attempts = 0
         self.__number = "".join(map(str, sample(range(1, 10), 4)))
         self.__stopped = False
@@ -21,7 +21,7 @@ class BullsAndCows:
         return self.__stopped
 
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s
 
     def guess(self, value: str):

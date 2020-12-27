@@ -7,25 +7,22 @@ from other_utils.funcs import timeDifferenceStr
 class Minesweeper:
     def __init__(self):
         self.__grid = []
-        self.__dispboard = []
         self.__row = 10
         self.__col = 10
         self.__mines = 10
-        self.__start = time()
+        self.__startTime = time()
         self.__uncovered = 0
         self.__won = False
         self.__gameEnd = False
         self.__attempts = 0
-        self.__createBoard()
+        self.__dispboard = [["." for _ in range(self.__row)] for _ in range(self.__col)]
+        self.__placeMines()
 
-    def __createBoard(self):
+    def __placeMines(self):
         for r in range(self.__row):
             self.__grid.append([])
             for c in range(self.__col):
                 self.__grid[r].append(0)
-            self.__dispboard.append([])
-            for c in range(self.__col):
-                self.__dispboard[r].append(".")
         minePlacements = 0
         while minePlacements != self.__mines:
             mpCol = randint(0, self.__col - 1)
@@ -87,7 +84,7 @@ class Minesweeper:
         return output
 
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s
 
     def getUncovered(self):
@@ -147,8 +144,8 @@ class Minesweeper:
             if self.__attempts == 1:
                 while self.__grid[yy][xx] == -1:
                     self.__grid = []
-                    self.__dispboard = []
-                    self.__createBoard()
+                    self.__dispboard = [["." for _ in range(self.__row)] for _ in range(self.__col)]
+                    self.__placeMines()
                 self.uncoverDots(xx, yy)
                 self.__attempts -= 1
                 return

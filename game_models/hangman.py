@@ -22,7 +22,7 @@ class Hangman:
         self.__dashes = str("-" * len(self.__word))
         self.__lives = 10
         self.__guesses = set()
-        self.__start = time()
+        self.__startTime = time()
 
     @staticmethod
     def __randomWord():
@@ -51,7 +51,7 @@ class Hangman:
         return self.__lives
     
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s
 
     def hangmanPic(self):

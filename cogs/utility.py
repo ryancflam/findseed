@@ -393,8 +393,10 @@ class Utility(commands.Cog, name="Utility"):
                                 ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
                             )
                         except TimeoutError:
-                            await msg.remove_reaction("⏮", self.client.user)
-                            await msg.remove_reaction("⏭", self.client.user)
+                            try:
+                                await msg.clear_reactions()
+                            except:
+                                pass
                             return
                         success = False
                         if str(reaction.emoji) == "⏭":

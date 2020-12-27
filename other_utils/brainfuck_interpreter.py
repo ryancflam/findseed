@@ -62,7 +62,7 @@ class IncrementalByteCellArray:
             newVal = 255
         self.set(newVal)
 
-    def set(self, value:int):
+    def set(self, value: int):
         self.__setitem__(self.__dataPointer, value)
 
     def get(self):

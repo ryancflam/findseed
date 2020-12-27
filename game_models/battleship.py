@@ -23,18 +23,10 @@ class Battleship:
         self.__ships = len(self.__shipcode)
         self.__totalx = sum(self.__shipsize)
         self.__attempts = 0
-        self.__start = time()
+        self.__startTime = time()
         self.__gameWon = False
-        self.__board = self.__createBoard()
+        self.__board = [["." for _ in range(self.__boardSize)] for _ in range(self.__boardSize)]
         self.__placeShips()
-
-    def __createBoard(self):
-        board = []
-        for r in range(self.__boardSize):
-            board.append([])
-            for c in range(self.__boardSize):
-                board[r].append(".")
-        return board
 
     def __placeShips(self):
         for i in range(len(self.__shipcode)):
@@ -90,7 +82,7 @@ class Battleship:
         return output
 
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__start, noStr=True)
+        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s
 
     def getShipcount(self):
