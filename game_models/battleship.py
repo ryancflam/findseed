@@ -61,7 +61,7 @@ class Battleship:
         output = "Current board:\n\n  "
         for i in range(self.__boardSize):
             output += " " + str(i)
-        output += "\n   -------------------\n"
+        output += "\n   " + "-" * (self.__boardSize * 2 - 1) + "\n"
         for i in range(self.__boardSize):
             output += f"{i}|"
             for j in range(self.__boardSize):

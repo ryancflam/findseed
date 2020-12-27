@@ -15,7 +15,7 @@ class Minesweeper:
         self.__won = False
         self.__gameEnd = False
         self.__attempts = 0
-        self.__dispboard = [["." for _ in range(self.__row)] for _ in range(self.__col)]
+        self.__dispboard = [["." for _ in range(self.__col)] for _ in range(self.__row)]
         self.__placeMines()
 
     def __placeMines(self):
@@ -75,7 +75,7 @@ class Minesweeper:
         output = "  "
         for i in range(self.__col):
             output += " " + str(i)
-        output += "\n   -------------------"
+        output += "\n   " + "-" * (self.__col * 2 - 1)
         for r in range(self.__row):
             s = str(r) + "|"
             for c in range(self.__col):
