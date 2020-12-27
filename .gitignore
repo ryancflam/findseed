@@ -1,7 +1,7 @@
-info.py
+config.py
 cogs/testcog.py
-data.json
-blacklist.json
+data/*
+!data/.gitkeep
 .idea/
 */__pycache__
 venv/

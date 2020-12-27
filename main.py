@@ -5,19 +5,19 @@ from json import dump
 from time import time
 from asyncio import get_event_loop as loop
 
-import info
+import config
 from bot import Bot
 from other_utils.funcs import getPath
 
 
 def generateJson():
-    if not path.exists(f"{getPath()}/blacklist.json"):
-        f = open(f"{getPath()}/blacklist.json", "w")
+    if not path.exists(f"{getPath()}/data/blacklist.json"):
+        f = open(f"{getPath()}/data/blacklist.json", "w")
         dump({"servers": [], "users": []}, f, sort_keys=True, indent=4)
         f.close()
         print("Generated blacklist.json")
-    if not path.exists(f"{getPath()}/data.json"):
-        f = open(f"{getPath()}/data.json", "w")
+    if not path.exists(f"{getPath()}/data/findseed.json"):
+        f = open(f"{getPath()}/data/findseed.json", "w")
         dump({
             "calls": 0,
             "highest": {
@@ -27,20 +27,20 @@ def generateJson():
             }
         }, f, sort_keys=True, indent=4)
         f.close()
-        print("Generated data.json")
+        print("Generated findseed.json")
 
 
 def botInstance():
     generateJson()
     return Bot(
         loop=loop(),
-        prefix="b" * (not info.production) + info.prefix,
+        prefix="b" * (not config.production) + config.prefix,
         path=getPath(),
-        token=info.botToken,
+        token=config.botToken,
         activity={
-            "name": info.activityName,
-            "type": info.activityType,
-            "status": info.status
+            "name": config.activityName,
+            "type": config.activityType,
+            "status": config.status
         }
     )
 

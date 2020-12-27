@@ -3,12 +3,12 @@ from datetime import datetime
 from discord import Embed, Colour
 from discord.ext import commands
 
-import info
+import config
 from other_utils import funcs
 from other_utils.bitcoin_address import BitcoinAddress
 
 BITCOIN_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
-BLOCKCYPHER_PARAMS = {"token": info.blockCypherKey}
+BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
@@ -24,7 +24,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         headers = {
             "Accept": "application/json",
             "Accept-Encoding": "deflate,gzip",
-            "X-CMC_PRO_API_KEY": info.cmcKey
+            "X-CMC_PRO_API_KEY": config.cmcKey
         }
         try:
             r = await funcs.getRequest(url, headers=headers, params={"symbol": coin, "convert": "USD"})

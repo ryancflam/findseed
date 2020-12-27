@@ -11,7 +11,7 @@ def getPath():
 
 
 def userNotBlacklisted(client, message):
-    with open(f"{getPath()}/blacklist.json", "r", encoding="utf-8") as f:
+    with open(f"{getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
         data = load(f)
     f.close()
     serverList = list(data["servers"])

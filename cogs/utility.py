@@ -8,7 +8,7 @@ from googletrans import Translator, constants
 from discord import Embed
 from discord.ext import commands
 
-import info
+import config
 from other_utils import funcs
 
 
@@ -56,7 +56,7 @@ class Utility(commands.Cog, name="Utility"):
     async def covid(self, ctx, *, searchtype: str=""):
         headers = {
             "x-rapidapi-host": "corona-virus-world-and-india-data.p.rapidapi.com",
-            "x-rapidapi-key": info.rapidApiKey
+            "x-rapidapi-key": config.rapidApiKey
         }
         try:
             res = await funcs.getRequest("https://corona-virus-world-and-india-data.p.rapidapi.com/api", headers=headers)
@@ -232,7 +232,7 @@ class Utility(commands.Cog, name="Utility"):
     async def weather(self, ctx, *, location: str=""):
         zero = -273.15
         url = f"http://api.openweathermap.org/data/2.5/weather?q={location.casefold().replace(' ', '%20')}" + \
-              f"&APPID={info.owmKey}"
+              f"&APPID={config.owmKey}"
         try:
             r = await funcs.getRequest(url)
             data = r.json()
@@ -296,7 +296,7 @@ class Utility(commands.Cog, name="Utility"):
             )
         url = "http://data.fixer.io/api/latest"
         try:
-            res = await funcs.getRequest(url, params={"access_key": info.fixerKey})
+            res = await funcs.getRequest(url, params={"access_key": config.fixerKey})
             data = res.json()
             amount = float(output[0])
             initialamount = amount
@@ -536,7 +536,7 @@ class Utility(commands.Cog, name="Utility"):
             return await ctx.send("Cancelling compilation...")
         data = {"files": [{"name": filename, "content": code}]}
         headers = {
-            "Authorization": f"Token {info.glotIoKey}",
+            "Authorization": f"Token {config.glotIoKey}",
             "Content-type": "application/json"
         }
         res = await funcs.postRequest(url=url, data=dumps(data), headers=headers, verify=False)

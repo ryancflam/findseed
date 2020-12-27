@@ -56,7 +56,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["fs", "seed", "f", "s", "findseeds", "seeds"])
     async def findseed(self, ctx):
         eyes = self.randomEyes()
-        with open(f"{funcs.getPath()}/data.json", "r", encoding="utf-8") as f:
+        with open(f"{funcs.getPath()}/data/findseed.json", "r", encoding="utf-8") as f:
             data = load(f)
         f.close()
         odds = eye_data.EYE_DATA[str(eyes)]["percent"]
@@ -75,7 +75,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         highestTotal = data["highest"]["found"]
         data["calls"] += 1
         calls = data["calls"]
-        with open(f"{funcs.getPath()}/data.json", "w") as f:
+        with open(f"{funcs.getPath()}/data/findseed.json", "w") as f:
             dump(data, f, sort_keys=True, indent=4)
         f.close()
         file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
