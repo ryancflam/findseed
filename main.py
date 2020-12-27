@@ -1,16 +1,27 @@
 #!/usr/bin/python3
 
 from os import path, makedirs
+from sys import exit
 from json import dump
 from time import time
 from asyncio import get_event_loop as loop
 
-import config
 from bot import Bot
 from other_utils.funcs import getPath
 
+try:
+    import config
+except ModuleNotFoundError:
+    f = open(f"{getPath()}/config.py", "w")
+    template = open(f"{getPath()}/config.py.template", "r")
+    f.write(template.read())
+    template.close()
+    f.close()
+    print("Generated file 'config.py', please modify before using.")
+    exit()
 
-def generateJson():
+
+def generateFiles():
     if not path.exists(f"{getPath()}/data"):
         makedirs(f"{getPath()}/data")
         print("Generated directory 'data'")
@@ -34,7 +45,7 @@ def generateJson():
 
 
 def botInstance():
-    generateJson()
+    generateFiles()
     return Bot(
         loop=loop(),
         prefix="b" * (not config.production) + config.prefix,
