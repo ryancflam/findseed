@@ -127,7 +127,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             except TimeoutError:
                 continue
             with open(
-                    f"{funcs.getPath()}/blacklist.json", "r", encoding="utf-8"
+                    f"{funcs.getPath()}/data/blacklist.json", "r", encoding="utf-8"
             ) as f:
                 data = load(f)
             f.close()

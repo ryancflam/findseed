@@ -1,74 +1,5 @@
 # Credit - https://github.com/DismissedGuy/brainfuck-interpreter
 
-class IOStream:
-    def __init__(self, data=None):
-        self.__buffer = data if data else ""
-
-    def __len__(self):
-        return len(self.__buffer)
-
-    def read(self, length=None):
-        if not length:
-            data = self.__buffer
-            self.__buffer = ""
-        else:
-            data = self.__buffer[:length]
-            self.__buffer = self.__buffer[length:]
-        return data
-
-    def write(self, data):
-        self.__buffer += data
-
-
-class IncrementalByteCellArray:
-    def __init__(self):
-        self.__byteCells = [0]
-        self.__dataPointer = 0
-
-    def __getitem__(self, item):
-        cellAmount = len(self.__byteCells)
-        if item > cellAmount - 1:
-            self.__extend(item - cellAmount + 1)
-        return self.__byteCells[item]
-
-    def __setitem__(self, key: int, value: int):
-        cellAmount = len(self.__byteCells)
-        if key > cellAmount - 1:
-            self.__extend(key - cellAmount + 1)
-        self.__byteCells[key] = value
-
-    def __len__(self):
-        return len(self.__byteCells)
-
-    def __repr__(self):
-        return self.__byteCells.__repr__()
-
-    def __extend(self, size: int):
-        self.__byteCells += [0] * size
-
-    def dataPointerSet(self, decrement=False):
-        if decrement:
-            self.__dataPointer -= 1
-        else:
-            self.__dataPointer += 1
-
-    def increment(self):
-        newVal = (self.get() + 1) % 256
-        self.set(newVal)
-
-    def decrement(self):
-        newVal = self.get() - 1
-        if newVal < 0:
-            newVal = 255
-        self.set(newVal)
-
-    def set(self, value: int):
-        self.__setitem__(self.__dataPointer, value)
-
-    def get(self):
-        return self.__getitem__(self.__dataPointer)
-
-
 class BrainfuckInterpreter:
     def __init__(self, commands: str):
         self.__commands = commands.replace(" ", "")
@@ -136,3 +67,72 @@ class BrainfuckInterpreter:
 
     def available(self):
         return not self.__instructionPointer >= len(self.__commands)
+
+
+class IOStream:
+    def __init__(self, data=None):
+        self.__buffer = data if data else ""
+
+    def __len__(self):
+        return len(self.__buffer)
+
+    def read(self, length=None):
+        if not length:
+            data = self.__buffer
+            self.__buffer = ""
+        else:
+            data = self.__buffer[:length]
+            self.__buffer = self.__buffer[length:]
+        return data
+
+    def write(self, data):
+        self.__buffer += data
+
+
+class IncrementalByteCellArray:
+    def __init__(self):
+        self.__byteCells = [0]
+        self.__dataPointer = 0
+
+    def __getitem__(self, item):
+        cellAmount = len(self.__byteCells)
+        if item > cellAmount - 1:
+            self.__extend(item - cellAmount + 1)
+        return self.__byteCells[item]
+
+    def __setitem__(self, key: int, value: int):
+        cellAmount = len(self.__byteCells)
+        if key > cellAmount - 1:
+            self.__extend(key - cellAmount + 1)
+        self.__byteCells[key] = value
+
+    def __len__(self):
+        return len(self.__byteCells)
+
+    def __repr__(self):
+        return self.__byteCells.__repr__()
+
+    def __extend(self, size: int):
+        self.__byteCells += [0] * size
+
+    def dataPointerSet(self, decrement=False):
+        if decrement:
+            self.__dataPointer -= 1
+        else:
+            self.__dataPointer += 1
+
+    def increment(self):
+        newVal = (self.get() + 1) % 256
+        self.set(newVal)
+
+    def decrement(self):
+        newVal = self.get() - 1
+        if newVal < 0:
+            newVal = 255
+        self.set(newVal)
+
+    def set(self, value: int):
+        self.__setitem__(self.__dataPointer, value)
+
+    def get(self):
+        return self.__getitem__(self.__dataPointer)

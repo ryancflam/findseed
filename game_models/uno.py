@@ -5,23 +5,6 @@ from other_utils.funcs import timeDifferenceStr
 from other_utils.item_cycle import ItemCycle
 
 
-class UnoPlayer:
-    def __init__(self):
-        self.__cards = []
-
-    def addCard(self, card):
-        self.__cards.append(card)
-
-    def removeCard(self, card):
-        try:
-            self.__cards.remove(card)
-        except ValueError:
-            raise Exception("You do not have that card!")
-
-    def retrieveList(self):
-        return self.__cards
-
-
 class Uno:
     def __init__(self):
         self.__startTime = None
@@ -354,3 +337,20 @@ class Uno:
     def getTime(self):
         _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s
+
+
+class UnoPlayer:
+    def __init__(self):
+        self.__cards = []
+
+    def addCard(self, card):
+        self.__cards.append(card)
+
+    def removeCard(self, card):
+        try:
+            self.__cards.remove(card)
+        except ValueError:
+            raise Exception("You do not have that card!")
+
+    def retrieveList(self):
+        return self.__cards

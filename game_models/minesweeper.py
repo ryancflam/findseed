@@ -7,6 +7,7 @@ from other_utils.funcs import timeDifferenceStr
 class Minesweeper:
     def __init__(self):
         self.__grid = []
+        self.__dispboard = []
         self.__row = 10
         self.__col = 10
         self.__mines = 10
@@ -15,14 +16,11 @@ class Minesweeper:
         self.__won = False
         self.__gameEnd = False
         self.__attempts = 0
-        self.__dispboard = [["." for _ in range(self.__col)] for _ in range(self.__row)]
         self.__placeMines()
 
     def __placeMines(self):
-        for r in range(self.__row):
-            self.__grid.append([])
-            for c in range(self.__col):
-                self.__grid[r].append(0)
+        self.__grid = [[0 for _ in range(self.__col)] for _ in range (self.__row)]
+        self.__dispboard = [["." for _ in range(self.__col)] for _ in range(self.__row)]
         minePlacements = 0
         while minePlacements != self.__mines:
             mpCol = randint(0, self.__col - 1)
@@ -143,8 +141,6 @@ class Minesweeper:
         if self.__grid[yy][xx] == -1:
             if self.__attempts == 1:
                 while self.__grid[yy][xx] == -1:
-                    self.__grid = []
-                    self.__dispboard = [["." for _ in range(self.__row)] for _ in range(self.__col)]
                     self.__placeMines()
                 self.uncoverDots(xx, yy)
                 self.__attempts -= 1
