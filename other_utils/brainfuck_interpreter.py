@@ -6,8 +6,8 @@ class BrainfuckInterpreter:
         self.__instructionPointer = 0
         self.__cells = IncrementalByteCellArray()
         self.__openingBracketIndexes = []
-        self.input = IOStream()
-        self.output = IOStream()
+        self.__input = IOStream()
+        self.__output = IOStream()
 
     def __lookForward(self):
         remaining = self.__commands[self.__instructionPointer:]
@@ -33,9 +33,9 @@ class BrainfuckInterpreter:
         elif instruction == "-":
             self.__cells.decrement()
         elif instruction == ".":
-            self.output.write(chr(self.__cells.get()))
+            self.__output.write(chr(self.__cells.get()))
         elif instruction == ",":
-            self.__cells.set(self.input.read(1))
+            self.__cells.set(self.__input.read(1))
         elif instruction == "[":
             if self.__cells.get() == 0:
                 try:
@@ -68,10 +68,13 @@ class BrainfuckInterpreter:
     def available(self):
         return not self.__instructionPointer >= len(self.__commands)
 
+    def getOutput(self):
+        return self.__output
+
 
 class IOStream:
     def __init__(self, data=None):
-        self.__buffer = data if data else ""
+        self.__buffer = data or ""
 
     def __len__(self):
         return len(self.__buffer)

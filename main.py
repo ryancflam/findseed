@@ -17,19 +17,19 @@ except ModuleNotFoundError:
     f.write(template.read())
     template.close()
     f.close()
-    print("Generated file 'config.py', please modify before using.")
+    print("Generated file 'config.py', please modify it before using.")
     exit()
 
 
 def generateFiles():
     if not path.exists(f"{getPath()}/data"):
         makedirs(f"{getPath()}/data")
-        print("Generated directory 'data'")
+        print("Generated directory 'data'.")
     if not path.exists(f"{getPath()}/data/blacklist.json"):
         f = open(f"{getPath()}/data/blacklist.json", "w")
         dump({"servers": [], "users": []}, f, sort_keys=True, indent=4)
         f.close()
-        print("Generated file 'blacklist.json'")
+        print("Generated file 'blacklist.json'.")
     if not path.exists(f"{getPath()}/data/findseed.json"):
         f = open(f"{getPath()}/data/findseed.json", "w")
         dump({
@@ -41,7 +41,7 @@ def generateFiles():
             }
         }, f, sort_keys=True, indent=4)
         f.close()
-        print("Generated file 'findseed.json'")
+        print("Generated file 'findseed.json'.")
 
 
 def botInstance():

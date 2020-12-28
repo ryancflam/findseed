@@ -61,7 +61,7 @@ class Conversion(commands.Cog, name="Conversion"):
                     interpreter.step()
                 e = Embed(
                     title="Brainfuck to Text",
-                    description=funcs.formatting(interpreter.output.read())
+                    description=funcs.formatting(interpreter.getOutput().read())
                 )
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
