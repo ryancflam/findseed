@@ -2,12 +2,11 @@
 
 from os import path, makedirs
 from sys import exit
-from json import dump
 from time import time
 from asyncio import get_event_loop as loop
 
 from bot import Bot
-from other_utils.funcs import getPath
+from other_utils.funcs import getPath, generateJson
 
 try:
     import config
@@ -25,23 +24,18 @@ def generateFiles():
     if not path.exists(f"{getPath()}/data"):
         makedirs(f"{getPath()}/data")
         print("Generated directory 'data'.")
-    if not path.exists(f"{getPath()}/data/blacklist.json"):
-        f = open(f"{getPath()}/data/blacklist.json", "w")
-        dump({"servers": [], "users": []}, f, sort_keys=True, indent=4)
-        f.close()
-        print("Generated file 'blacklist.json'.")
-    if not path.exists(f"{getPath()}/data/findseed.json"):
-        f = open(f"{getPath()}/data/findseed.json", "w")
-        dump({
+    generateJson("blacklist", {"servers": [], "users": []})
+    generateJson("dream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
+    generateJson(
+        "findseed", {
             "calls": 0,
             "highest": {
                 "found": 0,
                 "number": 0,
                 "time": int(time())
             }
-        }, f, sort_keys=True, indent=4)
-        f.close()
-        print("Generated file 'findseed.json'.")
+        }
+    )
 
 
 def botInstance():

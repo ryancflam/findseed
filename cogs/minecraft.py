@@ -25,9 +25,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     def randomEyes():
         eyes = 0
         for _ in range(12):
-            luckyNumber = randint(1, 10)
-            if luckyNumber == 1:
-                eyes += 1
+            eyes += 1 if not randint(0, 9) else 0
         return eyes
 
     @staticmethod
@@ -92,6 +90,41 @@ class Minecraft(commands.Cog, name="Minecraft"):
         e.set_footer(text=f"The command has been called {calls} time{'' if calls == 1 else 's'}. !eyeodds")
         e.set_image(url="attachment://portal.png")
         await ctx.send(embed=e, file=file)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="dreamluck", description="Can you get Dream's speedrunning 'luck'?",
+                      aliases=["dl", "dream", "dreamsimulator"])
+    async def dreamluck(self, ctx):
+        pearls, rods = 0, 0
+        with open(f"{funcs.getPath()}/data/dream.json", "r", encoding="utf-8") as f:
+            data = load(f)
+        f.close()
+        mostPearls = data["mostPearls"]
+        mostRods = data["mostRods"]
+        for _ in range(262):
+            pearls += 1 if randint(0, 422) < 20 else 0
+        for _ in range(305):
+            rods += 1 if randint(0, 1) else 0
+        data["mostPearls"] = pearls if pearls >= mostPearls else mostPearls
+        data["mostRods"] = rods if rods >= mostRods else mostRods
+        data["iteration"] += 1
+        iter = data['iteration']
+        with open(f"{funcs.getPath()}/data/dream.json", "w") as f:
+            dump(data, f, sort_keys=True, indent=4)
+        f.close()
+        e = Embed(
+            title="Dream Simulator",
+            description="Dream got 42 ender pearl trades in 262 plus 211 blaze rod drops in 305. " + \
+                        "Can you achieve his 'luck'?"
+        )
+        e.add_field(name="Your Pearl Trades", value=f"`{pearls}`")
+        e.add_field(name="Your Rod Drops", value=f"`{rods}`")
+        e.set_footer(
+            text=f"The command has been called {iter} time{'' if iter == 1 else 's'}. " + \
+                 f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
+        )
+        e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",

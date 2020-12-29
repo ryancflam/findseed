@@ -1,6 +1,6 @@
 from os import path
 from io import BytesIO
-from json import load
+from json import load, dump
 from httpx import AsyncClient
 
 from discord import Embed, Colour
@@ -120,6 +120,15 @@ def monthNameToNumber(name: str):
 
 def celsiusToFahrenheit(value):
     return value * 9 / 5 + 32
+
+
+def generateJson(name, data: dict):
+    file = f"{getPath()}/data/{name}.json"
+    if not path.exists(file):
+        f = open(file, "w")
+        dump(data, f, sort_keys=True, indent=4)
+        f.close()
+        print(f"Generated file '{name}.json'.")
 
 
 async def reactionRemove(reaction, user):
