@@ -117,8 +117,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             description="Dream got 42 ender pearl trades in 262 plus 211 blaze rod drops in 305. " + \
                         "Can you achieve his 'luck'?"
         )
-        e.add_field(name="Your Pearl Trades", value=f"`{pearls}`")
-        e.add_field(name="Your Rod Drops", value=f"`{rods}`")
+        e.add_field(name="Your Pearl Trades", value=f"`{pearls} ({round(pearls / 262, 5) * 100}%)`")
+        e.add_field(name="Your Rod Drops", value=f"`{rods} ({round(rods / 305, 5) * 100}%)`")
         e.set_footer(
             text=f"The command has been called {iter} time{'' if iter == 1 else 's'}. " + \
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
