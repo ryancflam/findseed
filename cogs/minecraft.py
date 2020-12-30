@@ -92,18 +92,19 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e, file=file)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="dreamluck", description="Can you get Dream's speedrunning 'luck'?",
-                      aliases=["dl", "dream", "dreamsimulator"])
+    @commands.command(name="dreamluck", description="Can you get Dream's Minecraft speedrunning 'luck'?",
+                      aliases=["dl", "dream", "dreamsimulator", "d", "dreamsim"])
     async def dreamluck(self, ctx):
         pearls, rods = 0, 0
+        dpearls, drods = 262, 305
         with open(f"{funcs.getPath()}/data/dream.json", "r", encoding="utf-8") as f:
             data = load(f)
         f.close()
         mostPearls = data["mostPearls"]
         mostRods = data["mostRods"]
-        for _ in range(262):
+        for _ in range(dpearls):
             pearls += 1 if randint(0, 422) < 20 else 0
-        for _ in range(305):
+        for _ in range(drods):
             rods += 1 if randint(0, 1) else 0
         data["mostPearls"] = pearls if pearls >= mostPearls else mostPearls
         data["mostRods"] = rods if rods >= mostRods else mostRods
@@ -114,11 +115,11 @@ class Minecraft(commands.Cog, name="Minecraft"):
         f.close()
         e = Embed(
             title="Dream Simulator",
-            description="Dream got 42 ender pearl trades in 262 plus 211 blaze rod drops in 305. " + \
+            description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " + \
                         "Can you achieve his 'luck'?"
         )
-        e.add_field(name="Your Pearl Trades", value=f"`{pearls} ({round(pearls / 262, 5) * 100}%)`")
-        e.add_field(name="Your Rod Drops", value=f"`{rods} ({round(rods / 305, 5) * 100}%)`")
+        e.add_field(name="Your Pearl Trades", value=f"`{pearls} ({round(pearls / dpearls * 100, 3)}%)`")
+        e.add_field(name="Your Rod Drops", value=f"`{rods} ({round(rods / drods * 100, 3)}%)`")
         e.set_footer(
             text=f"The command has been called {iter} time{'' if iter == 1 else 's'}. " + \
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
