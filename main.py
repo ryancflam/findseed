@@ -12,9 +12,10 @@ try:
     import config
 except ModuleNotFoundError:
     f = open(f"{getPath()}/config.py", "w")
-    template = open(f"{getPath()}/config.py.template", "r")
-    f.write(template.read())
-    template.close()
+    if path.exists(f"{getPath()}/config.py.template"):
+        template = open(f"{getPath()}/config.py.template", "r")
+        f.write(template.read())
+        template.close()
     f.close()
     print("Generated file 'config.py', please modify it before using.")
     exit()
@@ -25,7 +26,7 @@ def generateFiles():
         makedirs(f"{getPath()}/data")
         print("Generated directory 'data'.")
     generateJson("blacklist", {"servers": [], "users": []})
-    generateJson("dream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
+    generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
     generateJson(
         "findseed", {
             "calls": 0,

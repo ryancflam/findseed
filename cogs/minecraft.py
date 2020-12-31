@@ -91,13 +91,23 @@ class Minecraft(commands.Cog, name="Minecraft"):
         e.set_image(url="attachment://portal.png")
         await ctx.send(embed=e, file=file)
 
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",
+                      aliases=["odds", "eo", "odd", "o"])
+    async def eyeodds(self, ctx):
+        msg = ""
+        for i in range(13):
+            odds = eye_data.EYE_DATA[str(i)]["percent"]
+            msg += f"{i} eye - `{odds}% (1 in {eye_data.EYE_DATA[str(i)]['onein']})`\n"
+        await ctx.send(msg)
+
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="dreamluck", description="Can you get Dream's Minecraft speedrunning 'luck'?",
-                      aliases=["dl", "dream", "dreamsimulator", "d", "dreamsim"])
-    async def dreamluck(self, ctx):
+    @commands.command(name="finddream", description="Can you get Dream's Minecraft speedrunning 'luck'?",
+                      aliases=["dl", "dream", "dreamsimulator", "d", "dreamsim", "dreamluck", "fd"])
+    async def finddream(self, ctx):
         pearls, rods = 0, 0
         dpearls, drods = 262, 305
-        with open(f"{funcs.getPath()}/data/dream.json", "r", encoding="utf-8") as f:
+        with open(f"{funcs.getPath()}/data/finddream.json", "r", encoding="utf-8") as f:
             data = load(f)
         f.close()
         mostPearls = data["mostPearls"]
@@ -110,11 +120,11 @@ class Minecraft(commands.Cog, name="Minecraft"):
         data["mostRods"] = rods if rods >= mostRods else mostRods
         data["iteration"] += 1
         iter = data['iteration']
-        with open(f"{funcs.getPath()}/data/dream.json", "w") as f:
+        with open(f"{funcs.getPath()}/data/finddream.json", "w") as f:
             dump(data, f, sort_keys=True, indent=4)
         f.close()
         e = Embed(
-            title="Dream Simulator",
+            title=f"{self.client.command_prefix}finddream",
             description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " + \
                         "Can you achieve his 'luck'?"
         )
@@ -126,16 +136,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
         await ctx.send(embed=e)
-
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",
-                      aliases=["odds", "eo", "odd", "o"])
-    async def eyeodds(self, ctx):
-        msg = ""
-        for i in range(13):
-            odds = eye_data.EYE_DATA[str(i)]["percent"]
-            msg += f"{i} eye - `{odds}% (1 in {eye_data.EYE_DATA[str(i)]['onein']})`\n"
-        await ctx.send(msg)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bartering", description="Finds the probability of getting 12 or more ender pearls" + \
