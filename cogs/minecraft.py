@@ -163,9 +163,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                       "d as an argument for the command, and then build " + \
                                                       "your portal at the suggested coordinates in the N" + \
                                                       "ether. This command is for versions 1.13+ and may " + \
-                                                      "not be 100% accurate.",
+                                                      "not be 100% accurate. This command may not be used" + \
+                                                      " in a real speedrun.",
                       aliases=["bt", "blind"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
+        await ctx.send("**Note:** This command, along with other " + \
+                       "speedrunning calculators, may not be used in a real speedrun.")
         try:
             x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsDist(x, z)
@@ -193,9 +196,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                          "t for the command, and then build your portal " + \
                                                          "at the suggested coordinates in the Nether. Th" + \
                                                          "is command is for versions 1.13+ and may not be" + \
-                                                         " 100% accurate.",
+                                                         " 100% accurate. This command may not be used in" + \
+                                                         " a real speedrun.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
+        await ctx.send("**Note:** This command, along with other " + \
+                       "speedrunning calculators, may not be used in a real speedrun.")
         try:
             x, z, f = self.f3cProcessing(f3c)
             f = (360 + f if f < 0 else f) - 180
@@ -223,9 +229,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        "hould do a good job of getting you to the right " + \
                                                        "spot in the Nether to build your second portal. " + \
                                                        "This command is for versions 1.13+ and may not be" + \
-                                                       " 100% accurate.",
+                                                       " 100% accurate. This command may not be used in a " + \
+                                                       "real speedrun.",
                       aliases=["dt", "double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
+        await ctx.send("**Note:** This command, along with other " + \
+                       "speedrunning calculators, may not be used in a real speedrun.")
         try:
             x, z, _ = self.f3cProcessing(f3c)
             o = 520
@@ -252,9 +261,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                     "te your clipboard as an argument for the command, a" + \
                                                     "nd then build your portal at the suggested coordina" + \
                                                     "tes in the Nether. This command is for versions 1.13" + \
-                                                    "+ and may not be 100% accurate.",
+                                                    "+ and may not be 100% accurate. This command may not" + \
+                                                    " be used in a real speedrun.",
                       aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
     async def safeblind(self, ctx, *, f3c):
+        await ctx.send("**Note:** This command, along with other " + \
+                       "speedrunning calculators, may not be used in a real speedrun.")
         try:
             x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsDist(x, z)
@@ -287,10 +299,13 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                         "the stronghold. Once the program knows you are " + \
                                                         "fairly close to the stronghold, it will automat" + \
                                                         "ically stop. This command is for versions 1.13+" + \
-                                                        " and may not be 100% accurate.",
+                                                        " and may not be 100% accurate. This command may" + \
+                                                        " not be used in a real speedrun.",
                       aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
                       usage="<F3+C data>")
     async def triangulation(self, ctx, *, f3c):
+        await ctx.send("**Note:** This command, along with other " + \
+                       "speedrunning calculators, may not be used in a real speedrun.")
         try:
             x, z, f = self.f3cProcessing(f3c)
             x0, z0, f0 = x, z, f
