@@ -172,8 +172,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
         try:
             x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsDist(x, z)
-            o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 480 else 594 if dist < 594 else dist \
-                if dist < 686 else 686 if dist < 832 else 970 if dist < 970 else dist if dist < 1060 else 1060
+            o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 442 else 580 if dist < 580 else dist \
+                if dist < 692 else 686 if dist < 825 else 970 if dist < 970 else dist if dist < 1060 else 1060
             t = math.atan(z / x)
             xp = funcs.sign(x) * abs(o * math.cos(t))
             zp = funcs.sign(z) * abs(o * math.sin(t))
