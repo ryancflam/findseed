@@ -447,15 +447,10 @@ class Utility(commands.Cog, name="Utility"):
             await sleep(3)
         if ctx.message.attachments != [] or ctx.message.embeds != []:
             try:
-                if ctx.message.attachments:
-                    qrlink = ctx.message.attachments[0].url
-                else:
-                    qrlink = ctx.message.embeds[0].thumbnail.url
+                qrlink = ctx.message.attachments[0].url if ctx.message.attachments else ctx.message.embeds[0].thumbnail.url
                 qr = await funcs.decodeQR(qrlink)
-                if not qr:
-                    e = funcs.errorEmbed(None, "Cannot detect QR code. Maybe try making the image clearer?")
-                else:
-                    e = Embed(title="QR Code Message", description=funcs.formatting(qr))
+                e = Embed(title="QR Code Message", description=funcs.formatting(qr)) if qr \
+                    else funcs.errorEmbed(None, "Cannot detect QR code. Maybe try making the image clearer?")
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
         else:

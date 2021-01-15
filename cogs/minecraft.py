@@ -61,10 +61,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         onein = eye_data.EYE_DATA[str(eyes)]["onein"]
         update = False
         if eyes >= data["highest"]["number"]:
-            if eyes > data["highest"]["number"]:
-                data["highest"]["found"] = 1
-            else:
-                data["highest"]["found"] += 1
+            data["highest"]["found"] -= data["highest"]["found"] - 1 if eyes > data["highest"]["number"] else -1
             data["highest"]["number"] = eyes
             data["highest"]["time"] = int(time())
             update = True

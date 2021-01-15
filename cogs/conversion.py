@@ -30,15 +30,11 @@ class Conversion(commands.Cog, name="Conversion"):
                     rest = abs(deviation) - (root ** 2)
                     mult = root, rest
                     if 0 < deviation:
-                        if deviation < 6:
-                            output += "{}.".format("+" * deviation)
-                        else:
-                            output += ">{}[<{}>-]<{}.".format("+" * mult[0], "+" * mult[0], "+" * mult[1])
+                        output += "{}.".format("+" * deviation) if deviation < 6 \
+                            else ">{}[<{}>-]<{}.".format("+" * mult[0], "+" * mult[0], "+" * mult[1])
                     else:
-                        if deviation >- 6:
-                            output += "{}.".format("-" * abs(deviation))
-                        else:
-                            output += ">{}[<{}>-]<{}.".format("+" * mult[0], "-" * mult[0], "-" * mult[1])
+                        output += "{}.".format("-" * abs(deviation)) if deviation > -6 \
+                            else ">{}[<{}>-]<{}.".format("+" * mult[0], "-" * mult[0], "-" * mult[1])
                     old = ordd
                 e = Embed(
                     title="Text to Brainfuck",

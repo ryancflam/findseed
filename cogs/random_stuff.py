@@ -40,10 +40,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 await sleep(0.25)
                 sleepTime += 1
         if len(self.phoneWaitingChannels) == 2:
-            if self.phoneWaitingChannels.index(ctx.channel) == 0:
-                otherParty = self.phoneWaitingChannels[1]
-            else:
-                otherParty = self.phoneWaitingChannels[0]
+            otherParty = self.phoneWaitingChannels[1 if self.phoneWaitingChannels.index(ctx.channel) == 0 else 0]
             await sleep(1)
             self.phoneWaitingChannels.remove(ctx.channel)
             self.phoneCallChannels.append(ctx.channel)
@@ -119,12 +116,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             question = f"{title.split('. ')[1]}\n\n"
             shuffle(choices)
             for choice in choices:
-                if choiceCount == 1:
-                    sub = "a) "
-                    choiceCount = 2
-                else:
-                    sub = "b) "
-                    choiceCount = 1
+                sub = "a) " if choiceCount == 1 else "b) "
+                choiceCount = 2 if choiceCount == 1 else 1
                 question += sub + res[x]["selections"][choice] + "\n"
             await ctx.send(f"```Question {questionCount} of 88 for {ctx.author.name}:\n\n{question[:-1]}\n" + \
                            "c) none of the above/neutral.```")

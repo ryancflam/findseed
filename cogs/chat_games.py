@@ -731,12 +731,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels.append(ctx.channel.id)
         while True:
             aic = choice(["Rock", "Paper", "Scissors"])
-            if aic == "Rock":
-                aiclist = ["Scissors", "Rock", "Paper"]
-            elif aic == "Paper":
-                aiclist = ["Rock", "Paper", "Scissors"]
-            else:
-                aiclist = ["Paper", "Scissors", "Rock"]
+            aiclist = ["Scissors", "Rock", "Paper"] if aic == "Rock" \
+                else ["Rock", "Paper", "Scissors"] if aic == "Paper" \
+                else ["Paper", "Scissors", "Rock"]
             listindex = aiclist.index(aic)
             await ctx.send("`Rock, paper, or scissors?`")
             try:
@@ -748,12 +745,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 return await ctx.send(f"`{ctx.author.name} has feft Rock Paper Scissors for idling too long.`")
             if msg.content.casefold().startswith("r") or msg.content.casefold().startswith("p") \
                     or msg.content.casefold().startswith("s"):
-                if msg.content.casefold().startswith("r"):
-                    answer = "Rock"
-                elif msg.content.casefold().startswith("p"):
-                    answer = "Paper"
-                else:
-                    answer = "Scissors"
+                answer = "Rock" if msg.content.casefold().startswith("r") else "Paper" \
+                    if msg.content.casefold().startswith("p") else "Scissors"
             else:
                 await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
                 continue
@@ -763,10 +756,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 continue
             else:
                 getindex = aiclist.index(answer)
-                if getindex < listindex:
-                    await ctx.send(f"`{ctx.author.name} has lost Rock Paper Scissors!`")
-                else:
-                    await ctx.send(f"`{ctx.author.name} has won Rock Paper Scissors!`")
+                await ctx.send(f"`{ctx.author.name} has {'lost' if getindex < listindex else 'won'} Rock Paper Scissors!`")
                 self.gameChannels.remove(ctx.channel.id)
                 return
 

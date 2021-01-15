@@ -33,12 +33,10 @@ class Cleverbot(commands.Cog, name="Cleverbot", command_attrs=dict(hidden=True))
             }
             res = await funcs.getRequest("https://www.pandorabots.com/pandora/talk-xml", params=params)
             data = res.json()
-            if data["status"] == 4:
-                text = choice(["I do not understand.", "Please say that again.", "What was that?", "Ok."])
-            else:
-                text = data["that"].replace("A.L.I.C.E", self.client.user.name).replace("ALICE",
-                    self.client.user.name).replace("<br>", "").replace("&quot;", '"').replace("&lt;",
-                    "<").replace("&gt;", ">").replace("&amp;", "&")
+            text = choice(["I do not understand.", "Please say that again.", "What was that?", "Ok."]) \
+                if data["status"] == 4 else data["that"].replace("A.L.I.C.E", self.client.user.name).replace(
+                "ALICE", self.client.user.name).replace("<br>", "").replace("&quot;", '"').replace("&lt;",
+                "<").replace("&gt;", ">").replace("&amp;", "&")
             await message.channel.send(f"{message.author.mention} {text}")
 
 

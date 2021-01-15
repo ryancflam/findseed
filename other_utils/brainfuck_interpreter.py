@@ -119,10 +119,7 @@ class IncrementalByteCellArray:
         self.__byteCells += [0] * size
 
     def dataPointerSet(self, decrement=False):
-        if decrement:
-            self.__dataPointer -= 1
-        else:
-            self.__dataPointer += 1
+        self.__dataPointer -= 1 if decrement else -1
 
     def increment(self):
         newVal = (self.get() + 1) % 256

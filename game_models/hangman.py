@@ -35,10 +35,7 @@ class Hangman:
     def __dash(secret, d, r):
         result = ""
         for i in range(len(secret)):
-            if secret[i] == r:
-                result += r
-            else:
-                result += d[i]
+            result += r if secret[i] == r else d[i]
         return result
 
     def getWord(self):
