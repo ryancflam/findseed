@@ -455,7 +455,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.command(name="server", description="Gets the current status of a Minecraft server.", aliases=["mcserver"],
                       usage="[server address]")
     async def server(self, ctx, *, ipaddress: str=""):
-        ipaddress = ipaddress.casefold().replace(" ", "") or "mc.pastelcraft.me"
+        ipaddress = ipaddress.casefold().replace(" ", "") or "mc.hypixel.net"
         try:
             res = await funcs.getRequest(
                 f"https://api.mcsrvstat.us/2/{ipaddress}",
