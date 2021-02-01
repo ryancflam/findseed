@@ -285,7 +285,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="currency", description="Converts the price of one currency to another",
-                      aliases=["fiat"], usage="<amount> <from currency> <to currency>")
+                      aliases=["fiat", "cc"], usage="<amount> <from currency> <to currency>")
     async def currency(self, ctx, amount=None, fromC=None, toC=None):
         try:
             output = [amount, fromC.upper(), toC.upper()]

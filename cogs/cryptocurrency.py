@@ -339,7 +339,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send("```WARNING: It is recommended that you do NOT use any Bitcoin address generated via this " + \
                        "bot due to security reasons; this command was simply made for fun to demonstrate the " + \
                        "capabilities of the Python programming language. If you wish to generate a new Bitcoin " + \
-                       "address for actual use, please visit sites like www.bitaddress.org instead.```", embed=e)
+                       "address for actual use, please use proper wallets like Electrum instead.```", embed=e)
 
 
 def setup(client: commands.Bot):
