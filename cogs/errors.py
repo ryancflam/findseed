@@ -22,6 +22,10 @@ class Errors(commands.Cog, name="Errors", command_attrs=dict(hidden=True)):
             await ctx.send(
                 embed=funcs.errorEmbed(None, "This command can only be used in servers.")
             )
+        elif isinstance(error, commands.PrivateMessageOnly):
+            await ctx.send(
+                embed=funcs.errorEmbed(None, "This command can only be used in DM.")
+            )
         elif isinstance(error, commands.UserInputError):
             await ctx.send(
                 embed=funcs.errorEmbed("Invalid arguments!", "Correct usage: " + \

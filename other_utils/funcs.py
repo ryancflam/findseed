@@ -141,24 +141,18 @@ async def reactionRemove(reaction, user):
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
-        if res.status_code != 200:
-            return None
     return res
 
 
 async def getImage(url, headers=None, params=None, timeout=None, verify=True):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
-        if res.status_code != 200:
-            return None
     return BytesIO(res.content)
 
 
-async def postRequest(url, data=None, headers=None, timeout=None, verify=True):
+async def postRequest(url, data=None, headers=None, timeout=None, verify=True, json=None):
     async with AsyncClient(verify=verify) as session:
-        res = await session.post(url, data=data, headers=headers, timeout=timeout)
-        if res.status_code != 200:
-            return None
+        res = await session.post(url, data=data, headers=headers, timeout=timeout, json=json)
     return res
 
 
