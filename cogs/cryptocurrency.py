@@ -439,7 +439,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Anonymity Code", value=f"`{data['code']}`")
             e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={data['input_address']}")
             e.set_footer(text=f"Requested by: {ctx.author.name}")
-        await ctx.send(embed=e)
+        await ctx.send("```Note: The QR code is the input address. Your order will be valid for 72 hours.```", embed=e)
 
 
 def setup(client: commands.Bot):
