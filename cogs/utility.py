@@ -300,11 +300,36 @@ class Utility(commands.Cog, name="Utility"):
             data = res.json()
             amount = float(output[0])
             initialamount = amount
-            if output[1] != "EUR":
-                amount = amount / data["rates"][output[1]]
-            if output[2] != "EUR":
-                amount *= data["rates"][output[2]]
-            await ctx.send(f"The current price of **{initialamount} {output[1]}** in **{output[2]}**: `{amount}`")
+            fromCurrency = output[1]
+            toCurrency = output[2]
+            cmc = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+            headers = {
+                "Accept": "application/json",
+                "Accept-Encoding": "deflate,gzip",
+                "X-CMC_PRO_API_KEY": config.cmcKey
+            }
+            if fromCurrency != "EUR":
+                try:
+                    amount /= data["rates"][fromCurrency]
+                except:
+                    res = await funcs.getRequest(
+                        cmc, headers=headers, params={"symbol": fromCurrency.upper(), "convert": "EUR"}
+                    )
+                    cmcData = res.json()
+                    amount *= cmcData["data"][fromCurrency.upper()]["quote"]["EUR"]["price"]
+            if toCurrency != "EUR":
+                try:
+                    amount *= data["rates"][toCurrency]
+                except:
+                    res = await funcs.getRequest(
+                        cmc, headers=headers, params={"symbol": toCurrency.upper(), "convert": "EUR"}
+                    )
+                    cmcData = res.json()
+                    if fromCurrency.upper() == toCurrency.upper():
+                        amount = float(initialamount)
+                    else:
+                        amount /= cmcData["data"][toCurrency.upper()]["quote"]["EUR"]["price"]
+            await ctx.send(f"The current price of **{initialamount} {fromCurrency}** in **{toCurrency}**: `{amount}`")
         except:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))
 

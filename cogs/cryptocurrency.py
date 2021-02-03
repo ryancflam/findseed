@@ -28,9 +28,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             "X-CMC_PRO_API_KEY": config.cmcKey
         }
         try:
-            r = await funcs.getRequest(url, headers=headers, params={"symbol": coin, "convert": "USD"})
-            data = r.json()
-            if r.status_code == 200:
+            res = await funcs.getRequest(url, headers=headers, params={"symbol": coin, "convert": "USD"})
+            data = res.json()
+            if res.status_code == 200:
                 value = round(data["data"][coin]["quote"]["USD"]["price"], 8)
                 name = data["data"][coin]["name"]
                 marketCap = int(data["data"][coin]["quote"]["USD"]["market_cap"])
@@ -69,9 +69,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 e.add_field(name="Price Change (1h)", value=f"`{percent1h}%`")
                 e.add_field(name="Price Change (24h)", value=f"`{percent1d}%`")
                 e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
-            elif r.status_code == 429:
+            elif res.status_code == 429:
                 e = funcs.errorEmbed(None, "Too many requests.")
-            elif r.status_code == 400:
+            elif res.status_code == 400:
                 e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!", "Be sure to use the ticker. (e.g. `btc`)")
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
@@ -438,8 +438,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Order ID", value=f"`{data['id']}`")
             e.add_field(name="Anonymity Code", value=f"`{data['code']}`")
             e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={data['input_address']}")
-            e.set_footer(text=f"Requested by: {ctx.author.name}")
-        await ctx.send("```Note: The QR code is the input address. Your order will be valid for 72 hours.```", embed=e)
+            e.set_footer(text="Note: The QR code is that of the input address. Your order will be valid for 72 hours.")
+        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):
