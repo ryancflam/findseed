@@ -9,6 +9,7 @@ from other_utils import funcs
 from other_utils.bitcoin_address import BitcoinAddress
 
 BITCOIN_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
+ETHEREUM_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png"
 BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 
 
@@ -119,6 +120,50 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="ethtx", description="Gets information about an Ethereum transaction.",
+                      aliases=["etx", "ethtransaction"], usage="<transaction hash>")
+    async def ethtx(self, ctx, *, hashstr: str=""):
+        if hashstr == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            await ctx.send("Getting Ethereum transaction information. Please wait...")
+            hashstr = hashstr.casefold().replace("`", "").replace(" ", "")
+            if hashstr.casefold().startswith("0x"):
+                hashstr = hashstr[2:]
+            try:
+                res = await funcs.getRequest(
+                    f"https://api.blockcypher.com/v1/eth/main/txs/{hashstr}", params=BLOCKCYPHER_PARAMS
+                )
+                data = res.json()
+                e = Embed(
+                    title="Ethereum Transaction",
+                    description=f"https://live.blockcypher.com/eth/tx/{hashstr}",
+                    colour=Colour.light_grey()
+                )
+                blockHeight = data["block_height"]
+                total = data["total"] / 1000000000000000000
+                fees = data["fees"] / 1000000000000000000
+                try:
+                    relayed = data["relayed_by"]
+                except:
+                    relayed = "N/A"
+                e.set_thumbnail(url=ETHEREUM_LOGO)
+                e.add_field(name="Date (UTC)", value=f"`{funcs.timeStrToDatetime(data['received'])}`")
+                e.add_field(name="Hash", value=f"`{data['hash']}`")
+                e.add_field(name="Block Height", value=f"`{blockHeight if blockHeight != -1 else 'Unconfirmed'}`")
+                e.add_field(name="Size", value=f"`{data['size']} bytes`")
+                e.add_field(name="Total", value=f"`{total if total else 0} ETH`")
+                e.add_field(name="Fees", value=f"`{fees if fees else 0} ETH`")
+                e.add_field(name="Confirmations", value=f"`{data['confirmations']}`")
+                e.add_field(name="Version", value=f"`{data['ver']}`")
+                e.add_field(name="Relayed By", value=f"`{relayed}`")
+                e.add_field(name="Input Address", value=f"`{'0x' + data['inputs'][0]['addresses'][0]}`")
+                e.add_field(name="Output Address", value=f"`{'0x' + data['outputs'][0]['addresses'][0]}`")
+            except Exception:
+                e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btctx", description="Gets information about a Bitcoin transaction.",
                       aliases=["btx", "btctransaction"], usage="<transaction hash>")
     async def btctx(self, ctx, *, hashstr: str=""):
@@ -198,8 +243,53 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="ethaddr", description="Gets information about an Ethereum address.",
+                      aliases=["eaddr", "ethaddress", "ea"], usage="<address>")
+    async def ethaddr(self, ctx, *, hashstr: str=""):
+        inphash = hashstr.replace("`", "").replace(" ", "").casefold()
+        if inphash == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            if inphash.startswith("0x"):
+                inphash = inphash[2:]
+            try:
+                await ctx.send("Getting Ethereum address information. Please wait...")
+                res = await funcs.getRequest(
+                    f"https://api.blockcypher.com/v1/eth/main/addrs/{inphash}", params=BLOCKCYPHER_PARAMS
+                )
+                data = res.json()
+                finalBalance = data["final_balance"] / 1000000000000000000
+                unconfirmed = data["unconfirmed_balance"] / 1000000000000000000
+                totalSent = data["total_sent"] / 1000000000000000000
+                totalReceived =  data["total_received"] / 1000000000000000000
+                transactions = data["n_tx"]
+                e = Embed(
+                    title="Ethereum Address",
+                    description=f"https://live.blockcypher.com/eth/address/{inphash}",
+                    colour=Colour.light_grey()
+                )
+                e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={'0x' + inphash}")
+                e.add_field(name="Address", value=f"`{'0x' + data['address']}`")
+                e.add_field(name="Final Balance", value=f"`{finalBalance if finalBalance else 0} ETH`")
+                e.add_field(name="Unconfirmed Balance", value=f"`{unconfirmed if unconfirmed else 0} ETH`")
+                e.add_field(name="Total Sent", value=f"`{totalSent if totalSent else 0} ETH`")
+                e.add_field(name="Total Received", value=f"`{totalReceived if totalReceived else 0} ETH`")
+                e.add_field(name="Transactions", value=f"`{transactions}`")
+                if transactions:
+                    latestTx = data["txrefs"][0]
+                    value = latestTx["value"] / 1000000000000000000
+                    e.add_field(
+                        name=f"Last Transaction ({funcs.timeStrToDatetime(latestTx['confirmed'])})",
+                        value=f"`{'-' if latestTx['tx_output_n'] and value else ''}{value if value else 0} ETH`"
+                    )
+                    e.add_field(name="Last Transaction Hash", value=f"`{latestTx['tx_hash']}`")
+            except Exception:
+                e = funcs.errorEmbed(None, "Unknown address or server error?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcaddr", description="Gets information about a Bitcoin address.",
-                      aliases=["baddr", "btcaddress", "address", "addr"], usage="<address>")
+                      aliases=["baddr", "btcaddress", "address", "addr", "ba"], usage="<address>")
     async def btcaddr(self, ctx, *, hashstr: str=""):
         inphash = hashstr.replace("`", "").replace(" ", "")
         if inphash == "":
@@ -256,6 +346,57 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     None, "Unknown address or server error?\n\nNote: Bitcoin addresses are case sensitive. " + \
                           "Addresses that start with `bc1` are not supported."
                 )
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="ethblock", description="Gets information about an Ethereum block.",
+                      aliases=["eblock", "eb", "ethheight"], usage="<block hash/height>")
+    async def ethblock(self, ctx, *, hashstr: str=""):
+        await ctx.send("Getting Ethereum block information. Please wait...")
+        hashget = await funcs.getRequest("https://api.blockcypher.com/v1/eth/main", params=BLOCKCYPHER_PARAMS)
+        hashjson = hashget.json()
+        latestHeight = hashjson["height"]
+        hashstr = hashstr or latestHeight
+        hashstr = str(hashstr).casefold().replace("`", "").replace(" ", "")
+        if hashstr.casefold().startswith("0x"):
+            hashstr = hashstr[2:]
+        try:
+            res = await funcs.getRequest(
+                f"https://api.blockcypher.com/v1/eth/main/blocks/{hashstr}", params=BLOCKCYPHER_PARAMS
+            )
+            data = res.json()
+            date = funcs.timeStrToDatetime(data["time"])
+            height = data["height"]
+            h = data["hash"]
+            relayed = data["relayed_by"]
+            e = Embed(
+                title=f"Ethereum Block {height}",
+                description=f"https://live.blockcypher.com/eth/block/{h}",
+                colour=Colour.light_grey()
+            )
+            e.set_thumbnail(url=ETHEREUM_LOGO)
+            e.add_field(name="Date (UTC)", value=f"`{date}`")
+            e.add_field(name="Hash", value=f"`{h}`")
+            e.add_field(name="Merkle Root", value=f"`{data['mrkl_root']}`")
+            e.add_field(name="Transactions", value=f"`{data['n_tx']}`")
+            e.add_field(name="Total Transacted", value=f"`{data['total'] / 1000000000000000000} ETH`")
+            e.add_field(name="Fees", value=f"`{data['fees'] / 1000000000000000000} ETH`")
+            e.add_field(name="Size", value=f"`{data['size']} bytes`")
+            e.add_field(name="Depth", value=f"`{data['depth']}`")
+            e.add_field(name="Version", value=f"`{data['ver']}`")
+            if relayed:
+                e.add_field(name="Relayed By", value=f"`{relayed}`")
+            if height != 0:
+                e.add_field(name=f"Previous Block ({height - 1})", value=f"`{data['prev_block']}`")
+            if height != latestHeight:
+                nextHeight = height + 1
+                res = await funcs.getRequest(
+                    f"https://api.blockcypher.com/v1/eth/main/blocks/{nextHeight}", params=BLOCKCYPHER_PARAMS
+                )
+                nextHash = res.json()["hash"]
+                e.add_field(name=f"Next Block ({nextHeight})", value=f"`{nextHash}`")
+        except Exception:
+            e = funcs.errorEmbed(None, "Unknown block or server error?")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -349,7 +490,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     async def bitmix(self, ctx):
         url = "https://bitmix.biz/api/order/create"
         try:
-            await ctx.send("Would you like to mix Bitcoin, Litecoin, or Dash? Enter `!c` to cancel.")
+            await ctx.send("For maximum anonymity, please connect to the Tor network and use the service's .onion link: h"
+                + "ttp://bitmixbizymuphkc.onion\n\nWould you like to mix Bitcoin, Litecoin, or Dash? Enter `!c` to cancel."
+            )
             while True:
                 coin = await self.client.wait_for(
                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
@@ -358,7 +501,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 if coin.content.casefold() == "!c":
                     return await ctx.send("Cancelling BitMix.biz order.")
                 if coin.content.casefold()[0] not in ["b", "l", "d"]:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid coin."))
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid coin. Please try again."))
                     continue
                 break
             await ctx.send("Enter your wallet address. Enter `!c` to cancel.")
@@ -384,10 +527,12 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 try:
                     tax = float(fee.content.replace("%", ""))
                     if not taxmin <= tax <= taxmax:
-                        await ctx.send(embed=funcs.errorEmbed(None, f"Fee must be {taxmin} to {taxmax} inclusive."))
+                        await ctx.send(
+                            embed=funcs.errorEmbed(None, f"Fee must be {taxmin} to {taxmax} inclusive. Please try again.")
+                        )
                         continue
                 except ValueError:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please try again."))
                     continue
                 break
             await ctx.send("Enter your desired transaction delay in minutes between 0 to 4320. Enter `!c` to cancel.")
@@ -401,10 +546,12 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 try:
                     delay = int(minutes.content)
                     if not -1 < delay < 4321:
-                        await ctx.send(embed=funcs.errorEmbed(None, "Delay must be 0 to 4320 inclusive."))
+                        await ctx.send(
+                            embed=funcs.errorEmbed(None, "Delay must be 0 to 4320 inclusive. Please try again.")
+                        )
                         continue
                 except ValueError:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please try again."))
                     continue
                 break
             await ctx.send("Enter anonymity code, or enter `!n` if n/a. Enter `!c` to cancel.")
@@ -438,7 +585,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Order ID", value=f"`{data['id']}`")
             e.add_field(name="Anonymity Code", value=f"`{data['code']}`")
             e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={data['input_address']}")
-            e.set_footer(text="Note: The QR code is that of the input address. Your order will be valid for 72 hours.")
+            e.set_footer(
+                text="Note: The QR code is that of the input address. Your order will only be valid for 72 hours."
+            )
         await ctx.send(embed=e)
 
 

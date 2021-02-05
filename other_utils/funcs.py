@@ -2,6 +2,7 @@ from os import path
 from io import BytesIO
 from json import load, dump
 from httpx import AsyncClient
+from datetime import datetime
 
 from discord import Embed, Colour
 
@@ -129,6 +130,14 @@ def generateJson(name, data: dict):
         dump(data, f, sort_keys=True, indent=4)
         f.close()
         print(f"Generated file '{name}.json'.")
+
+
+def timeStrToDatetime(date: str):
+    dateFilter = date.split(".")
+    if len(dateFilter) > 1:
+        date = dateFilter[0] + "Z"
+    dateObj = datetime.strptime(date.replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+    return f"{dateObj.date()} {dateObj.time()}"
 
 
 async def reactionRemove(reaction, user):
