@@ -181,7 +181,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 txinfo2 = res.json()
                 e = Embed(
                     title="Bitcoin Transaction",
-                    description=f"https://www.blockchain.com/btc/tx/{hashstr}",
+                    description=f"https://live.blockcypher.com/btc/tx/{hashstr}",
                     colour=Colour.orange()
                 )
                 e.set_thumbnail(url=BITCOIN_LOGO)
@@ -280,7 +280,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     value = latestTx["value"] / 1000000000000000000
                     e.add_field(
                         name=f"Last Transaction ({funcs.timeStrToDatetime(latestTx['confirmed'])})",
-                        value=f"`{'-' if latestTx['tx_output_n'] and value else ''}{value if value else 0} ETH`"
+                        value=f"`{'-' if latestTx['tx_output_n'] == -1 and value else '+'}{value if value else 0} ETH`"
                     )
                     e.add_field(name="Last Transaction Hash", value=f"`{latestTx['tx_hash']}`")
             except Exception:
@@ -297,55 +297,49 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         else:
             try:
                 await ctx.send("Getting Bitcoin address information. Please wait...")
-                data = await funcs.getRequest(f"https://blockchain.info/rawaddr/{inphash}")
-                txinfo = data.json()
-                data = await funcs.getRequest(
+                res = await funcs.getRequest(
                     f"https://api.blockcypher.com/v1/btc/main/addrs/{inphash}", params=BLOCKCYPHER_PARAMS
                 )
-                txinfo2 = data.json()
+                data = res.json()
                 e = Embed(
                     title="Bitcoin Address",
-                    description=f"https://www.blockchain.com/btc/address/{inphash}",
+                    description=f"https://live.blockcypher.com/btc/address/{inphash}",
                     colour=Colour.orange()
                 )
                 e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={inphash}")
                 e.add_field(name="Address", value=f"`{inphash}`")
-                e.add_field(name="Hash160", value=f"`{txinfo['hash160']}`")
                 e.add_field(
-                    name="Final Balance", value=f"`{round(txinfo2['balance'] * 0.00000001, 8)} BTC`"
-                    if txinfo2["balance"] > 9999 else f"`{txinfo2['balance']} sat.`"
+                    name="Final Balance", value=f"`{round(data['balance'] * 0.00000001, 8)} BTC`"
+                    if data["balance"] > 9999 else f"`{data['balance']} sat.`"
                 )
                 e.add_field(
-                    name="Unconfirmed Balance", value=f"`{round(txinfo2['unconfirmed_balance'] * 0.00000001, 8)} BTC`"
-                    if (txinfo2["unconfirmed_balance"] > 9999 or txinfo2["unconfirmed_balance"] < -9999)
-                    else f"`{txinfo2['unconfirmed_balance']} sat.`"
+                    name="Unconfirmed Balance", value=f"`{round(data['unconfirmed_balance'] * 0.00000001, 8)} BTC`"
+                    if (data["unconfirmed_balance"] > 9999 or data["unconfirmed_balance"] < -9999)
+                    else f"`{data['unconfirmed_balance']} sat.`"
                 )
                 e.add_field(
-                    name="Total Sent", value=f"`{round(txinfo2['total_sent'] * 0.00000001, 8)} BTC`"
-                    if txinfo2["total_sent"] > 9999 else f"`{txinfo2['total_sent']} sat.`"
+                    name="Total Sent", value=f"`{round(data['total_sent'] * 0.00000001, 8)} BTC`"
+                    if data["total_sent"] > 9999 else f"`{data['total_sent']} sat.`"
                 )
                 e.add_field(
-                    name="Total Received", value=f"`{round(txinfo2['total_received'] * 0.00000001, 8)} BTC`"
-                    if txinfo2["total_received"] > 9999 else f"`{txinfo2['total_received']} sat.`"
+                    name="Total Received", value=f"`{round(data['total_received'] * 0.00000001, 8)} BTC`"
+                    if data["total_received"] > 9999 else f"`{data['total_received']} sat.`"
                 )
-                e.add_field(name="Transactions", value=f"`{txinfo['n_tx']}`")
+                e.add_field(name="Transactions", value=f"`{data['n_tx']}`")
                 try:
-                    output = "" if round(txinfo["txs"][0]["result"] * 0.00000001, 8) < 0 else "+"
-                    tran = (str(txinfo["txs"][0]["result"]) + " sat.") if -9999 < txinfo["txs"][0]["result"] < 10000 \
-                        else (str(round(txinfo["txs"][0]["result"] * 0.00000001, 8)) + " BTC")
+                    output = "-" if data["txrefs"][0]["tx_output_n"] == -1 else "+"
+                    tran = (str(data["txrefs"][0]["value"]) + " sat.") if -9999 < data["txrefs"][0]["value"] < 10000 \
+                        else (str(round(data["txrefs"][0]["value"] * 0.00000001, 8)) + " BTC")
                     e.add_field(
-                        name=f"Last Transaction ({str(datetime.fromtimestamp(txinfo['txs'][0]['time']))})",
+                        name=f"Last Transaction ({funcs.timeStrToDatetime(data['txrefs'][0]['confirmed'])})",
                         value=f"`{output}{tran}`"
                     )
-                    e.add_field(name="Last Transaction Hash", value=f"`{txinfo['txs'][0]['hash']}`")
+                    e.add_field(name="Last Transaction Hash", value=f"`{data['txrefs'][0]['tx_hash']}`")
                 except:
                     pass
                 e.set_footer(text="1 satoshi = 0.00000001 BTC")
             except Exception:
-                e = funcs.errorEmbed(
-                    None, "Unknown address or server error?\n\nNote: Bitcoin addresses are case sensitive. " + \
-                          "Addresses that start with `bc1` are not supported."
-                )
+                e = funcs.errorEmbed(None, "Unknown address or server error?")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -439,7 +433,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             height = blockinfo["height"]
             e = Embed(
                 title=f"Bitcoin Block {height}",
-                description=f"https://www.blockchain.com/btc/block/{hashstr}",
+                description=f"https://live.blockcypher.com/btc/block/{hashstr}",
                 colour=Colour.orange()
             )
             e.set_thumbnail(url=BITCOIN_LOGO)
@@ -454,7 +448,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 name="Block Reward",
                 value=f"`{(int(list(blockinfo['tx'])[0]['out'][0]['value']) - int(blockinfo['fee'])) * 0.00000001} BTC`"
             )
-            e.add_field(name="Fee Reward", value=f"`{round(int(blockinfo['fee']) * 0.00000001, 8)} BTC`")
+            e.add_field(name="Fees", value=f"`{round(int(blockinfo['fee']) * 0.00000001, 8)} BTC`")
             if height != 0:
                 e.add_field(name=f"Previous Block ({height - 1})", value=f"`{blockinfo['prev_block']}`")
             if nextblock:
@@ -471,7 +465,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         pk, swif, shex = address.getAddr()
         e = Embed(
             title="New Bitcoin Address",
-            description=f"https://www.blockchain.com/btc/address/{pk}",
+            description=f"https://live.blockcypher.com/btc/address/{pk}",
             colour=Colour.orange()
         )
         e.add_field(name="Public Address",value=f"```{pk}```")

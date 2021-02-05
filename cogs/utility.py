@@ -298,7 +298,7 @@ class Utility(commands.Cog, name="Utility"):
         try:
             res = await funcs.getRequest(url, params={"access_key": config.fixerKey})
             data = res.json()
-            amount = float(output[0])
+            amount = float(output[0].replace(",", ""))
             initialamount = amount
             fromCurrency = output[1]
             toCurrency = output[2]
