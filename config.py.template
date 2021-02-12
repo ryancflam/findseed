@@ -1,7 +1,7 @@
 production = False
 botToken = ""
 prefix = "!"
-activityName = ""
+activityName = "" # put "bitcoin" for auto Bitcoin prices
 activityType = 0
 status = "online"
 creationDate = ""

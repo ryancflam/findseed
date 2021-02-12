@@ -4,7 +4,7 @@ from os import listdir
 from discord import Activity, Intents
 from discord.ext import commands
 
-from other_utils.funcs import userNotBlacklisted
+from other_utils.funcs import userNotBlacklisted, getRequest
 
 
 class Bot(commands.Bot):
@@ -17,7 +17,9 @@ class Bot(commands.Bot):
         self.__loop = loop
         self.__path = args.get("path")
         self.__token = args.get("token")
-        self.__activity = args.get("activity")
+        self.__activityName = args.get("activity")["name"]
+        self.__activityType = args.get("activity")["type"]
+        self.__status = args.get("activity")["status"]
         self.remove_command("help")
 
     def startup(self):
@@ -40,15 +42,34 @@ class Bot(commands.Bot):
         except Exception as ex:
             return ex
 
-    async def on_ready(self):
-        print(f"Logged in as {self.user}")
+    async def bitcoin(self):
+        while True:
+            try:
+                res = await getRequest(
+                    "https://api.coingecko.com/api/v3/coins/markets",
+                    params={"vs_currency": "usd", "ids": "bitcoin"}
+                )
+                msg = f" @ ${res.json()[0]['current_price']}"
+            except:
+                msg = ""
+            await self.presence("Bitcoin" + msg)
+            await asyncio.sleep(10)
+
+    async def presence(self, name):
         await self.change_presence(
             activity=Activity(
-                name=self.__activity["name"],
-                type=self.__activity["type"]
+                name=name,
+                type=self.__activityType
             ),
-            status=self.__activity["status"]
+            status=self.__status
         )
+
+    async def on_ready(self):
+        print(f"Logged in as {self.user}")
+        if self.__activityName.casefold() == "bitcoin":
+            await self.loop.create_task(self.bitcoin())
+        else:
+            await self.presence(self.__activityName)
 
     async def on_guild_join(self, server):
         appinfo = await self.application_info()
