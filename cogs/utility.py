@@ -286,49 +286,37 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="currency", description="Converts the price of one currency to another",
                       aliases=["fiat", "cc"], usage="<amount> <from currency> <to currency>")
-    async def currency(self, ctx, amount=None, fromC=None, toC=None):
+    async def currency(self, ctx, amount, fromC, toC):
         try:
             output = [amount, fromC.upper(), toC.upper()]
-        except:
-            return await ctx.send(
-                embed=funcs.errorEmbed(
-                    "Invalid usage!", f"Use `{self.client.command_prefix}help currency` to see the correct usage.")
-            )
-        url = "http://data.fixer.io/api/latest"
-        try:
-            res = await funcs.getRequest(url, params={"access_key": config.fixerKey})
+            res = await funcs.getRequest("http://data.fixer.io/api/latest", params={"access_key": config.fixerKey})
             data = res.json()
             amount = float(output[0].replace(",", ""))
             initialamount = amount
             fromCurrency = output[1]
             toCurrency = output[2]
-            cmc = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-            headers = {
-                "Accept": "application/json",
-                "Accept-Encoding": "deflate,gzip",
-                "X-CMC_PRO_API_KEY": config.cmcKey
-            }
+            coingecko = "https://api.coingecko.com/api/v3/coins/markets"
             if fromCurrency != "EUR":
                 try:
                     amount /= data["rates"][fromCurrency]
                 except:
                     res = await funcs.getRequest(
-                        cmc, headers=headers, params={"symbol": fromCurrency.upper(), "convert": "EUR"}
+                        coingecko, params={"ids": funcs.TICKERS[fromCurrency.casefold()], "vs_currency": "EUR"}
                     )
-                    cmcData = res.json()
-                    amount *= cmcData["data"][fromCurrency.upper()]["quote"]["EUR"]["price"]
+                    cgData = res.json()
+                    amount *= cgData[0]["current_price"]
             if toCurrency != "EUR":
                 try:
                     amount *= data["rates"][toCurrency]
                 except:
                     res = await funcs.getRequest(
-                        cmc, headers=headers, params={"symbol": toCurrency.upper(), "convert": "EUR"}
+                        coingecko, params={"ids": funcs.TICKERS[toCurrency.casefold()], "vs_currency": "EUR"}
                     )
-                    cmcData = res.json()
+                    cgData = res.json()
                     if fromCurrency.upper() == toCurrency.upper():
                         amount = float(initialamount)
                     else:
-                        amount /= cmcData["data"][toCurrency.upper()]["quote"]["EUR"]["price"]
+                        amount /= cgData[0]["current_price"]
             await ctx.send(f"The current price of **{initialamount} {fromCurrency}** in **{toCurrency}**: `{amount}`")
         except:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))

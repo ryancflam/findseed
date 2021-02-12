@@ -3,6 +3,7 @@ from io import BytesIO
 from json import load, dump
 from httpx import AsyncClient
 from datetime import datetime
+from asyncio import get_event_loop
 
 from discord import Embed, Colour
 
@@ -171,3 +172,15 @@ async def decodeQR(link):
         params={"fileurl": link}
     )
     return res.json()[0]["symbol"][0]["data"]
+
+
+async def tickerToID():
+    tickers = {}
+    res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
+    data = res.json()
+    for i in data:
+        tickers[i["symbol"]] = i["id"]
+    return tickers
+
+
+TICKERS = get_event_loop().run_until_complete(tickerToID())

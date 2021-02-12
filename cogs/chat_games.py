@@ -149,9 +149,13 @@ class ChatGames(commands.Cog, name="Chat Games"):
             self.client.loop.create_task(self.unoAwaitInput(ctx, game, player))
             hand = game.getHand(player)
             msg = f"`{', '.join(card for card in hand)}` ({len(hand)} left)"
-            await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are player {str(count)}." + \
-                              f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}\n\n" + \
-                              "**Remember to say `uno` as soon as you play your second to last card!**")
+            try:
+                await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are player {str(count)}." + \
+                                  f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}\n\n" + \
+                                  "**Remember to say `uno` as soon as you play your second to last card!**")
+            except:
+                self.gameChannels.remove(ctx.channel.id)
+                return await ctx.send("**Someone has DMs disabled; stopping current game.**")
             count += 1
         logo = "https://media.discordapp.net/attachments/668552771120791563/775240814636171324/logo.png"
         await ctx.send(f"`Say the name of a card in your hand to play it. " + \

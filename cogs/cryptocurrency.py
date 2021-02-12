@@ -8,6 +8,7 @@ import config
 from other_utils import funcs
 from other_utils.bitcoin_address import BitcoinAddress
 
+COINGECKO_URL = "https://api.coingecko.com/api/v3/"
 BITCOIN_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
 ETHEREUM_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png"
 BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
@@ -19,65 +20,44 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
-                      aliases=["cp", "cmc", "coinmarketcap", "coin"], usage="[coin ticker]")
-    async def cryptoprice(self, ctx, coin: str="btc"):
-        coin = coin.upper()
-        url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-        headers = {
-            "Accept": "application/json",
-            "Accept-Encoding": "deflate,gzip",
-            "X-CMC_PRO_API_KEY": config.cmcKey
-        }
+                      aliases=["cp", "cmc", "coin", "coingecko", "cg"],
+                      usage="[cryptocurrency ticker] [to currency]")
+    async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
+        fiat = fiat.upper()
         try:
-            res = await funcs.getRequest(url, headers=headers, params={"symbol": coin, "convert": "USD"})
-            data = res.json()
+            res = await funcs.getRequest(
+                COINGECKO_URL + "coins/markets", params={
+                    "ids": funcs.TICKERS[coin.casefold()],
+                    "vs_currency": fiat,
+                    "price_change_percentage": "1h,24h,7d"
+                }
+            )
+            data = res.json()[0]
             if res.status_code == 200:
-                value = round(data["data"][coin]["quote"]["USD"]["price"], 8)
-                name = data["data"][coin]["name"]
-                marketCap = int(data["data"][coin]["quote"]["USD"]["market_cap"])
-                try:
-                    volume = int(data["data"][coin]["quote"]["USD"]["volume_24h"])
-                except:
-                    volume = 0
-                try:
-                    percent1h = round(data["data"][coin]["quote"]["USD"]["percent_change_1h"], 2)
-                except:
-                    percent1h = 0
-                try:
-                    percent1d = round(data["data"][coin]["quote"]["USD"]["percent_change_24h"], 2)
-                except:
-                    percent1d = 0
-                try:
-                    percent7d = round(data["data"][coin]["quote"]["USD"]["percent_change_7d"], 2)
-                except:
-                    percent7d = 0
-                rank = data["data"][coin]["cmc_rank"]
-                maxSupply = data["data"][coin]["max_supply"]
-                circulating = data["data"][coin]["circulating_supply"]
+                percent1h = round(data["price_change_percentage_1h_in_currency"], 2)
+                percent1d = round(data["price_change_percentage_24h_in_currency"], 2)
+                percent7d = round(data["price_change_percentage_7d_in_currency"], 2)
                 e = Embed(
-                    title=name,
-                    description=f"https://coinmarketcap.com/currencies/{data['data'][coin]['slug']}"
+                    description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-')}",
+                    colour=Colour.red() if percent1h < 0 else Colour.green() if percent1h > 0 else Colour.light_grey()
                 )
-                e.set_thumbnail(
-                    url=f"https://s2.coinmarketcap.com/static/img/coins/128x128/{data['data'][coin]['id']}.png"
-                )
-                e.add_field(name="Market Price", value=f"`{value} USD`")
-                e.add_field(name="Market Cap", value=f"`{marketCap} USD`")
-                e.add_field(name="Max Supply", value=f"`{maxSupply}`")
-                e.add_field(name="Circulating", value=f"`{circulating}`")
-                e.add_field(name="CoinMarketCap Rank", value=f"`{rank}`")
-                e.add_field(name="Volume (24h)", value=f"`{volume} USD`")
+                e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
+                e.add_field(name="Market Price", value=f"`{data['current_price']} {fiat}`")
+                e.add_field(name="All-Time High", value=f"`{data['ath']} {fiat}`")
+                e.add_field(name="Market Cap", value=f"`{data['market_cap']} {fiat}`")
+                e.add_field(name="Max Supply", value=f"`{data['total_supply']}`")
+                e.add_field(name="Circulating", value=f"`{data['circulating_supply']}`")
+                e.add_field(name="Market Cap Rank", value=f"`{data['market_cap_rank']}`")
                 e.add_field(name="Price Change (1h)", value=f"`{percent1h}%`")
                 e.add_field(name="Price Change (24h)", value=f"`{percent1d}%`")
                 e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
-            elif res.status_code == 429:
-                e = funcs.errorEmbed(None, "Too many requests.")
+                e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC")
             elif res.status_code == 400:
-                e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!", "Be sure to use the ticker. (e.g. `btc`)")
+                e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
-            e = funcs.errorEmbed("Invalid argument(s) and/or invalid coin!", "Be sure to use the ticker. (e.g. `btc`)")
+            e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -455,6 +435,36 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 e.add_field(name=f"Next Block ({height + 1})", value=f"`{nextblock[0]}`")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown block or server error?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="ethcontract", aliases=["ec", "econtract", "smartcontract"],
+                      description="Shows information about an Ethereum smart contract.", usage="<contract address>")
+    async def ethcontract(self, ctx, *, hashstr: str=""):
+        inphash = hashstr.replace("`", "").replace(" ", "").casefold()
+        if inphash == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            if not inphash.startswith("0x"):
+                inphash = "0x" + inphash
+            try:
+                res = await funcs.getRequest(COINGECKO_URL + f"coins/ethereum/contract/{inphash}")
+                data = res.json()
+                e = Embed(
+                    title=data["name"], description=f"https://etherscan.io/address/{inphash}"
+                )
+                e.set_thumbnail(url=data["image"]["large"])
+                e.add_field(name="Contract Address", value=f"`{data['contract_address']}`")
+                e.add_field(name="Symbol", value=f"`{data['symbol'].upper() or 'None'}`")
+                e.add_field(name="Genesis Date", value=f"`{data['genesis_date']}`")
+                e.add_field(name="Market Cap Rank", value=f"`{data['market_cap_rank'] or 'None'}`")
+                e.add_field(name="Approval Rate", value=f"`{data['sentiment_votes_up_percentage']}%`")
+                e.add_field(name="Hashing Algorithm", value=f"`{data['hashing_algorithm'] or 'None'}`")
+                e.add_field(name="Max Supply", value=f"`{data['market_data']['total_supply'] or 'None'}`")
+                e.add_field(name="Circulating", value=f"`{data['market_data']['circulating_supply'] or 'None'}`")
+                e.set_footer(text=data["ico_data"]["description"])
+            except Exception:
+                e = funcs.errorEmbed(None, "Unknown contract or server error?")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
