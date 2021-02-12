@@ -43,7 +43,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 percent7d = round(data["price_change_percentage_7d_in_currency"], 2)
                 e = Embed(
                     description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-')}",
-                    colour=Colour.red() if percent1h < 0 else Colour.green() if percent1h > 0 else Colour.light_grey()
+                    colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
                 e.add_field(name="Market Price", value=f"`{data['current_price']} {fiat}`")
@@ -67,7 +67,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
                         columns=["Open", "High", "Low", "Close"]
                     )
-                    plot(df, type="candle", savefig="plot.png", style="binance", ylabel=f"Price ({fiat})")
+                    plot(df, type="candle", savefig="plot.png",
+                         style="binance", ylabel=f"Price ({fiat})", title="24h Chart")
                     image = File("plot.png")
                     e.set_image(url="attachment://plot.png")
                     if path.exists("plot.png"):
