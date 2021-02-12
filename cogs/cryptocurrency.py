@@ -1,7 +1,10 @@
+from os import path, remove
 from asyncio import TimeoutError
 from datetime import datetime
+from mplfinance import plot
+from pandas import DataFrame, DatetimeIndex
 
-from discord import Embed, Colour
+from discord import Embed, Colour, File
 from discord.ext import commands
 
 import config
@@ -18,12 +21,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
                       usage="[cryptocurrency ticker] [to currency]")
     async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
         fiat = fiat.upper()
+        image = None
         try:
             res = await funcs.getRequest(
                 COINGECKO_URL + "coins/markets", params={
@@ -52,13 +56,31 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 e.add_field(name="Price Change (24h)", value=f"`{percent1d}%`")
                 e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
                 e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC")
+                try:
+                    res = await funcs.getRequest(
+                        COINGECKO_URL + f"coins/{funcs.TICKERS[coin.casefold()]}/ohlc",
+                        params={"vs_currency": fiat.casefold(), "days": "1"}
+                    )
+                    ohlcData = res.json()
+                    df = DataFrame(
+                        [date[1:] for date in ohlcData],
+                        index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
+                        columns=["Open", "High", "Low", "Close"]
+                    )
+                    plot(df, type="candle", savefig="plot.png", style="binance", ylabel=f"Price ({fiat.upper()})")
+                    image = File("plot.png")
+                    e.set_image(url="attachment://plot.png")
+                except:
+                    pass
             elif res.status_code == 400:
                 e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
             e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
-        await ctx.send(embed=e)
+        await ctx.send(embed=e, file=image)
+        if path.exists("plot.png"):
+            remove("plot.png")
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
