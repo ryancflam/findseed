@@ -67,9 +67,11 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
                         columns=["Open", "High", "Low", "Close"]
                     )
-                    plot(df, type="candle", savefig="plot.png", style="binance", ylabel=f"Price ({fiat.upper()})")
+                    plot(df, type="candle", savefig="plot.png", style="binance", ylabel=f"Price ({fiat})")
                     image = File("plot.png")
                     e.set_image(url="attachment://plot.png")
+                    if path.exists("plot.png"):
+                        remove("plot.png")
                 except:
                     pass
             elif res.status_code == 400:
@@ -79,8 +81,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         except Exception:
             e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
         await ctx.send(embed=e, file=image)
-        if path.exists("plot.png"):
-            remove("plot.png")
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
