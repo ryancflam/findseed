@@ -1,4 +1,5 @@
 from os import path, remove
+from time import time
 from asyncio import TimeoutError
 from datetime import datetime
 from mplfinance import plot
@@ -27,6 +28,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                       usage="[cryptocurrency ticker] [to currency]")
     async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
+        imgName = f"{time()}.png"
         fiat = fiat.upper()
         image = None
         try:
@@ -68,10 +70,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
                         columns=["Open", "High", "Low", "Close"]
                     )
-                    plot(df, type="candle", savefig="plot.png",
+                    plot(df, type="candle", savefig=imgName,
                          style="binance", ylabel=f"Price ({fiat})", title="24h Chart")
-                    image = File("plot.png")
-                    e.set_image(url="attachment://plot.png")
+                    image = File(imgName)
+                    e.set_image(url=f"attachment://{imgName}")
                 except:
                     pass
             elif res.status_code == 400:
@@ -85,8 +87,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 "Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)"
             )
         await ctx.send(embed=e, file=image)
-        if path.exists("plot.png"):
-            remove("plot.png")
+        if path.exists(imgName):
+            remove(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos"],
