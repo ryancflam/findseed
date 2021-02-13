@@ -317,7 +317,10 @@ class Utility(commands.Cog, name="Utility"):
                         amount = float(initialamount)
                     else:
                         amount /= cgData[0]["current_price"]
-            await ctx.send(f"The current price of **{initialamount} {fromCurrency}** in **{toCurrency}**: `{amount}`")
+            await ctx.send(
+                f"The current price of **{'{:,}'.format(initialamount)} {fromCurrency}** in **{toCurrency}**: " + \
+                "`{:,}`".format(amount)
+            )
         except:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))
 

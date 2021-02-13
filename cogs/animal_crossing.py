@@ -103,14 +103,14 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             artdata = self.findData(self.art, art)
             artname = artdata["name"]["name-USen"].title()
             hasFake = str(artdata["hasFake"])
-            buyPrice = str(artdata["buy-price"])
-            sellPrice = str(artdata["sell-price"])
+            buyPrice = artdata["buy-price"]
+            sellPrice = artdata["sell-price"]
             img = artdata["image_uri"]
             desc = artdata["museum-desc"]
             e = Embed(title=artname, description=desc)
             e.add_field(name="Has Fake", value=f"`{hasFake}`")
-            e.add_field(name="Buy Price", value=f"`{buyPrice}`")
-            e.add_field(name="Sell Price", value=f"`{sellPrice}`")
+            e.add_field(name="Buy Price", value="`{:,}`".format(buyPrice))
+            e.add_field(name="Sell Price", value="`{:,}`".format(sellPrice))
             e.set_image(url=img)
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
@@ -125,9 +125,9 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             bugdata = self.findData(self.bugs, bug)
             bugname = bugdata["name"]["name-USen"].title().replace("'S", "'s")
             northmonths = bugdata["availability"]["month-northern"] if bugdata["availability"]["month-northern"] != "" \
-                else "All Year"
+                          else "All Year"
             southmonths = bugdata["availability"]["month-southern"] if bugdata["availability"]["month-southern"] != "" \
-                else "All Year"
+                          else "All Year"
             time = bugdata["availability"]["time"] if bugdata["availability"]["time"] != "" else "All Day"
             price = bugdata["price"]
             flickprice = bugdata["price-flick"]
@@ -141,8 +141,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value=f"`{price}`")
-            e.add_field(name="Sell Price (Flick)", value=f"`{flickprice}`")
+            e.add_field(name="Sell Price", value="`{:,}`".format(price))
+            e.add_field(name="Sell Price (Flick)", value="`{:,}`".format(flickprice))
             e.set_image(url=img)
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
@@ -157,9 +157,9 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             fishdata = self.findData(self.fish, fish)
             fishname = fishdata["name"]["name-USen"].title().replace("'S", "'s")
             northmonths = fishdata["availability"]["month-northern"] if fishdata["availability"]["month-northern"] != "" \
-                else "All Year"
+                          else "All Year"
             southmonths = fishdata["availability"]["month-southern"] if fishdata["availability"]["month-southern"] != "" \
-                else "All Year"
+                          else "All Year"
             time = fishdata["availability"]["time"] if fishdata["availability"]["time"] != "" else "All Day"
             price = fishdata["price"]
             cjprice = fishdata["price-cj"]
@@ -175,8 +175,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value=f"`{price}`")
-            e.add_field(name="Sell Price (C.J.)", value=f"`{cjprice}`")
+            e.add_field(name="Sell Price", value="`{:,}`".format(price))
+            e.add_field(name="Sell Price (C.J.)", value="`{:,}`".format(cjprice))
             e.set_image(url=img)
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
@@ -195,7 +195,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             partof = fossildata["part-of"].title()
             img = fossildata["image_uri"]
             e = Embed(title=fossilname, description=phrase)
-            e.add_field(name="Sell Price", value=f"`{price}`")
+            e.add_field(name="Sell Price", value="`{:,}`".format(price))
             e.add_field(name="Part Of", value=f"`{partof}`")
             e.set_image(url=img)
             e.set_thumbnail(url=AC_LOGO)
@@ -212,9 +212,9 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             seaname = seadata["name"]["name-USen"].title().replace("'S", "'s")
             price = seadata["price"]
             northmonths = seadata["availability"]["month-northern"] if seadata["availability"]["month-northern"] != "" \
-                else "All Year"
+                          else "All Year"
             southmonths = seadata["availability"]["month-southern"] if seadata["availability"]["month-southern"] != "" \
-                else "All Year"
+                          else "All Year"
             time = seadata["availability"]["time"] if seadata["availability"]["time"] != "" else "All Day"
             speed = seadata["speed"]
             shadow = seadata["shadow"]
@@ -226,7 +226,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value=f"`{price}`")
+            e.add_field(name="Sell Price", value="`{:,}`".format(price))
             e.set_image(url=img)
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:

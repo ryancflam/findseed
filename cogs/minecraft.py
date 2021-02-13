@@ -82,9 +82,10 @@ class Minecraft(commands.Cog, name="Minecraft"):
             description=f"{ctx.message.author.mention} --> Your seed is a **{eyes} eye**."
         )
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
-        e.add_field(name="Most Eyes Found", value=f"`{highest} (last found {foundTime}{' ago' if not update else ''}" + \
-                                                  f", found {highestTotal} time{'' if highestTotal == 1 else 's'})`")
-        e.set_footer(text=f"The command has been called {calls} time{'' if calls == 1 else 's'}. !eyeodds")
+        e.add_field(name="Most Eyes Found",
+                    value=f"`{highest} (last found {foundTime}{' ago' if not update else ''}" + \
+                          f", found {'{:,}'.format(highestTotal)} time{'' if highestTotal == 1 else 's'})`")
+        e.set_footer(text=f"The command has been called {'{:,}'.format(calls)} time{'' if calls == 1 else 's'}. !eyeodds")
         e.set_image(url="attachment://portal.png")
         await ctx.send(embed=e, file=file)
 
@@ -128,7 +129,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         e.add_field(name="Your Pearl Trades", value=f"`{pearls} ({round(pearls / dpearls * 100, 3)}%)`")
         e.add_field(name="Your Rod Drops", value=f"`{rods} ({round(rods / drods * 100, 3)}%)`")
         e.set_footer(
-            text=f"The command has been called {iter} time{'' if iter == 1 else 's'}. " + \
+            text=f"The command has been called {'{:,}'.format(iter)} time{'' if iter == 1 else 's'}. " + \
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
@@ -177,7 +178,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.send(
                 f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** " + \
-                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)"
             )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
@@ -241,7 +242,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.send(
                 f"{ctx.author.mention} Build your first portal at: **{round(xp)}, {round(zp)}** " + \
-                f"({blocks} block{'' if blocks == 1 else 's'} away)\n\n" + \
+                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\n" + \
                 f"Use `{self.client.command_prefix}educatedtravel` afterwards."
             )
         except Exception as ex:
@@ -276,7 +277,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.send(
                 f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** " + \
-                f"({blocks} block{'' if blocks == 1 else 's'} away)"
+                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)"
             )
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
@@ -325,8 +326,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             blocks = round(self.coordsDifference((x0, z0), (xp, zp)))
             await ctx.send(
                 f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
-                f"({blocks} block{'' if blocks == 1 else 's'} away)\n\nMethod: 8, 8\n\nPaste your F3+C " + \
-                "clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
+                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\nMethod: 8, 8\n\nPaste your F3+" + \
+                "C clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
                 "Type `!cancel` to cancel."
             )
         except Exception as ex:
@@ -359,9 +360,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
                     continue
                 await ctx.send(
                     f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
-                    f"({blocks} block{'' if blocks == 1 else 's'} away)\n\nMethod: Triangulation\n\nPaste your F3+C " + \
-                    "clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
-                    "Type `!cancel` to cancel."
+                    f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\nMethod: Triangulation\n\n" + \
+                    "Paste your F3+C clipboard here once you are ready. The program will stop after 20 minutes of " + \
+                    "inactivity. Type `!cancel` to cancel."
                 )
                 x0, z0, f0 = x1, z1, f1
             await ctx.send("You are close to the stronghold, stopping triangulation program.")
@@ -384,7 +385,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid arguments."))
         await ctx.send(
             f"The distance between **{int(x1)}, {int(z1)}** and **{int(x2)}, {int(z2)}** is: " + \
-            f"**~{round(self.coordsDifference((x1, z1), (x2, z2)))}**"
+            "**~{:,}**".format(round(self.coordsDifference((x1, z1), (x2, z2))))
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -468,7 +469,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             e.add_field(name="Online", value=f"`{status}`")
             if status:
                 players = data["players"]["online"]
-                e.add_field(name="Player Count", value=f"`{players}/{data['players']['max']}`")
+                e.add_field(name="Player Count", value="`{:,}/{:,}`".format(players, data['players']['max']))
                 if players:
                     try:
                         playerLimit = 25

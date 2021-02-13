@@ -22,7 +22,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
                       usage="[cryptocurrency ticker] [to currency]")
@@ -44,17 +44,25 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 percent1h = round(data["price_change_percentage_1h_in_currency"], 2)
                 percent1d = round(data["price_change_percentage_24h_in_currency"], 2)
                 percent7d = round(data["price_change_percentage_7d_in_currency"], 2)
+                totalSupply = data['total_supply']
+                circulating = data['circulating_supply']
                 e = Embed(
                     description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-')}",
                     colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
-                e.add_field(name="Market Price", value=f"`{data['current_price']} {fiat}`")
-                e.add_field(name="All-Time High", value=f"`{data['ath']} {fiat}`")
-                e.add_field(name="Market Cap", value=f"`{data['market_cap']} {fiat}`")
-                e.add_field(name="Max Supply", value=f"`{data['total_supply']}`")
-                e.add_field(name="Circulating", value=f"`{data['circulating_supply']}`")
-                e.add_field(name="Market Cap Rank", value=f"`{data['market_cap_rank']}`")
+                e.add_field(name="Market Price", value="`{:,} {}`".format(data['current_price'], fiat))
+                e.add_field(name="All-Time High", value="`{:,} {}`".format(data['ath'], fiat))
+                e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
+                e.add_field(name="Max Supply",
+                            value="`None`" if not totalSupply else "`{:,}`".format(
+                                int(totalSupply) if int(totalSupply) == totalSupply else totalSupply
+                            ))
+                e.add_field(name="Circulating",
+                            value="`None`" if not circulating else "`{:,}`".format(
+                                int(circulating) if int(circulating) == circulating else circulating
+                            ))
+                e.add_field(name="Market Cap Rank", value="`{:,}`".format(data['market_cap_rank']))
                 e.add_field(name="Price Change (1h)", value=f"`{percent1h}%`")
                 e.add_field(name="Price Change (24h)", value=f"`{percent1d}%`")
                 e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
@@ -90,8 +98,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         if path.exists(imgName):
             remove(imgName)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos"],
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos", "top"],
                       description="Returns the top 25 cryptocurrencies by market capitalisation.")
     async def topcoins(self, ctx):
         image = None
@@ -104,7 +112,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 coinData = data[counter]
                 e.add_field(
                     name=f"{counter + 1}) {coinData['name']} ({coinData['symbol'].upper()})",
-                    value=f"`{coinData['market_data']['market_cap']['usd']} USD`"
+                    value="`{:,} USD`".format(coinData['market_data']['market_cap']['usd'])
                 )
                 if counter == 24:
                     break
@@ -127,7 +135,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             blockchain2 = data.json()
             data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
             blockchain3 = data.json()
-            e = Embed(title="Bitcoin Network", description="https://www.blockchain.com/stats", colour=Colour.orange())
+            e = Embed(description="https://www.blockchain.com/stats", colour=Colour.orange())
             height = blockchain2["height"]
             blockreward = 50
             halvingheight = 210000
@@ -135,18 +143,19 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 halvingheight += 210000
                 blockreward /= 2
             bl = halvingheight - height
-            e.set_thumbnail(url=BITCOIN_LOGO)
-            e.add_field(name="Market Price", value=f"`{blockchain['market_price_usd']} USD`")
+            e.set_author(name="Bitcoin Network", icon_url=BITCOIN_LOGO)
+            e.add_field(name="Market Price", value="`{:,} USD`".format(blockchain['market_price_usd']))
             e.add_field(name="Minutes Between Blocks", value=f"`{blockchain['minutes_between_blocks']}`")
-            e.add_field(name="Mining Difficulty", value=f"`{blockchain['difficulty']}`")
-            e.add_field(name="Hash Rate", value=f"`{int(int(blockchain['hash_rate']) / 1000)} TH/s`")
-            e.add_field(name="Trade Volume (24h)", value=f"`{blockchain['trade_volume_btc']} BTC`")
-            e.add_field(name="Total Transactions (24h)", value=f"`{blockchain['n_tx']}`")
-            e.add_field(name="Block Height", value=f"`{height}`")
-            e.add_field(name="Next Halving Height", value=f"`{halvingheight} ({bl} block{'' if bl == 1 else 's'} left)`")
+            e.add_field(name="Mining Difficulty", value="`{:,}`".format(blockchain['difficulty']))
+            e.add_field(name="Hash Rate", value="`{:,} TH/s`".format(int(int(blockchain['hash_rate']) / 1000)))
+            e.add_field(name="Trade Volume (24h)", value="`{:,} BTC`".format(blockchain['trade_volume_btc']))
+            e.add_field(name="Total Transactions (24h)", value="`{:,}`".format(blockchain['n_tx']))
+            e.add_field(name="Block Height", value="`{:,}`".format(height))
+            e.add_field(name="Next Halving Height",
+                        value="`{:,} ({:,} ".format(halvingheight, bl) + f"block{'' if bl == 1 else 's'} left)`")
             e.add_field(name="Block Reward", value=f"`{blockreward} BTC`")
-            e.add_field(name="Unconfirmed Transactions", value=f"`{blockchain2['unconfirmed_count']}`")
-            e.add_field(name="Full Nodes", value=f"`{blockchain3['total_nodes']}`")
+            e.add_field(name="Unconfirmed Transactions", value="`{:,}`".format(blockchain2['unconfirmed_count']))
+            e.add_field(name="Full Nodes", value="`{:,}`".format(blockchain3['total_nodes']))
             e.add_field(
                 name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc'] * 0.00000001, 8)} BTC`"
             )
@@ -170,11 +179,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     f"https://api.blockcypher.com/v1/eth/main/txs/{hashstr}", params=BLOCKCYPHER_PARAMS
                 )
                 data = res.json()
-                e = Embed(
-                    title="Ethereum Transaction",
-                    description=f"https://live.blockcypher.com/eth/tx/{hashstr}",
-                    colour=Colour.light_grey()
-                )
+                e = Embed(description=f"https://live.blockcypher.com/eth/tx/{hashstr}", colour=Colour.light_grey())
                 blockHeight = data["block_height"]
                 total = data["total"] / 1000000000000000000
                 fees = data["fees"] / 1000000000000000000
@@ -182,14 +187,15 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     relayed = data["relayed_by"]
                 except:
                     relayed = "N/A"
-                e.set_thumbnail(url=ETHEREUM_LOGO)
+                e.set_author(name="Ethereum Transaction", icon_url=ETHEREUM_LOGO)
                 e.add_field(name="Date (UTC)", value=f"`{funcs.timeStrToDatetime(data['received'])}`")
                 e.add_field(name="Hash", value=f"`{data['hash']}`")
-                e.add_field(name="Block Height", value=f"`{blockHeight if blockHeight != -1 else 'Unconfirmed'}`")
-                e.add_field(name="Size", value=f"`{data['size']} bytes`")
-                e.add_field(name="Total", value=f"`{total if total else 0} ETH`")
-                e.add_field(name="Fees", value=f"`{fees if fees else 0} ETH`")
-                e.add_field(name="Confirmations", value=f"`{data['confirmations']}`")
+                e.add_field(name="Block Height",
+                            value=f"`{'{:,}'.format(blockHeight) if blockHeight != -1 else 'Unconfirmed'}`")
+                e.add_field(name="Size", value="`{:,} bytes`".format(data['size']))
+                e.add_field(name="Total", value=f"`{'{:,}'.format(total) if total else 0} ETH`")
+                e.add_field(name="Fees", value=f"`{'{:,}'.format(fees) if fees else 0} ETH`")
+                e.add_field(name="Confirmations", value="`{:,}`".format(data['confirmations']))
                 e.add_field(name="Version", value=f"`{data['ver']}`")
                 e.add_field(name="Relayed By", value=f"`{relayed}`")
                 e.add_field(name="Input Address", value=f"`{'0x' + data['inputs'][0]['addresses'][0]}`")
@@ -214,29 +220,25 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     f"https://api.blockcypher.com/v1/btc/main/txs/{hashstr}", params=BLOCKCYPHER_PARAMS
                 )
                 txinfo2 = res.json()
-                e = Embed(
-                    title="Bitcoin Transaction",
-                    description=f"https://live.blockcypher.com/btc/tx/{hashstr}",
-                    colour=Colour.orange()
-                )
-                e.set_thumbnail(url=BITCOIN_LOGO)
+                e = Embed(description=f"https://live.blockcypher.com/btc/tx/{hashstr}", colour=Colour.orange())
+                e.set_author(name="Bitcoin Transaction", icon_url=BITCOIN_LOGO)
                 e.add_field(name="Date (UTC)", value=f"`{str(datetime.utcfromtimestamp(txinfo['time']))}`")
                 e.add_field(name="Hash", value=f"`{txinfo['hash']}`")
                 try:
-                    e.add_field(name="Block Height", value=f"`{txinfo['block_height']}`")
+                    e.add_field(name="Block Height", value="`{:,}`".format(txinfo['block_height']))
                 except:
                     e.add_field(name="Block Height", value="`Unconfirmed`")
                 e.add_field(name="Size",value=f"`{txinfo['size']} bytes`")
-                e.add_field(name="Weight",value=f"`{txinfo['weight']} WU`")
+                e.add_field(name="Weight",value="`{:,} WU`".format(txinfo['weight']))
                 e.add_field(
-                    name="Total", value=f"`{txinfo2['total']} sat.`" if txinfo2["total"] < 10000
-                    else f"`{round(int(txinfo2['total']) * 0.00000001, 8)} BTC`"
+                    name="Total", value="`{:,} sat.`".format(txinfo2['total']) if txinfo2["total"] < 10000
+                    else "`{:,} BTC`".format(round(int(txinfo2['total']) * 0.00000001, 8))
                 )
                 e.add_field(
-                    name="Fees", value=f"`{txinfo2['fees']} sat.`" if txinfo2["fees"] < 10000
-                    else f"`{round(int(txinfo2['fees']) * 0.00000001, 8)} BTC`"
+                    name="Fees", value="`{:,} sat.`".format(txinfo2['fees']) if txinfo2["fees"] < 10000
+                    else "`{:,} BTC`".format(round(int(txinfo2['fees']) * 0.00000001, 8))
                 )
-                e.add_field(name="Confirmations", value=f"`{txinfo2['confirmations']}`")
+                e.add_field(name="Confirmations", value="`{:,}`".format(txinfo2['confirmations']))
                 try:
                     e.add_field(name="Relayed By", value=f"`{txinfo2['relayed_by']}`")
                 except:
@@ -250,28 +252,30 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         break
                     if txinfo["inputs"][i]["prev_out"]["value"] < 10000:
                         value += txinfo2["inputs"][i]["addresses"][0] + \
-                                 f" ({txinfo['inputs'][i]['prev_out']['value']} sat.)\n\n"
+                                 " ({:,} sat.)\n\n".format(txinfo['inputs'][i]['prev_out']['value'])
                     else:
                         value += txinfo2["inputs"][i]["addresses"][0] + \
-                                 f" ({round(int(txinfo['inputs'][i]['prev_out']['value']) * 0.00000001, 8)} BTC)\n\n"
+                                 " ({:,} BTC)\n\n".format(
+                                     round(int(txinfo['inputs'][i]['prev_out']['value']) * 0.00000001, 8)
+                                 )
                 newvalue = value[:500]
                 if newvalue != value:
                     newvalue += "..."
-                e.add_field(name=f"Inputs ({txinfo['vin_sz']})", value=f"```{newvalue}```")
+                e.add_field(name="Inputs ({:,})".format(txinfo['vin_sz']), value=f"```{newvalue}```")
                 value = ""
                 for i in range(len(txinfo["out"])):
                     if i == 20 or not txinfo2["outputs"][i]["addresses"]:
                         break
                     if txinfo["out"][i]["value"] < 10000:
                         value += txinfo2["outputs"][i]["addresses"][0] + \
-                               f" ({txinfo['out'][i]['value']} sat.)\n\n"
+                                 " ({:,} sat.)\n\n".format(txinfo['out'][i]['value'])
                     else:
                         value += txinfo2["outputs"][i]["addresses"][0] + \
-                                 f" ({round(int(txinfo['out'][i]['value']) * 0.00000001, 8)} BTC)\n\n"
+                                 " ({:,} BTC)\n\n".format(round(int(txinfo['out'][i]['value']) * 0.00000001, 8))
                 newvalue = value[:500]
                 if newvalue != value:
                     newvalue += "..."
-                e.add_field(name=f"Outputs ({txinfo['vout_sz']})", value=f"```{newvalue}```")
+                e.add_field(name="Outputs ({:,})".format(txinfo['vout_sz']), value=f"```{newvalue}```")
                 e.set_footer(text="1 satoshi = 0.00000001 BTC")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
@@ -305,17 +309,18 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 )
                 e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={'0x' + inphash}")
                 e.add_field(name="Address", value=f"`{'0x' + data['address']}`")
-                e.add_field(name="Final Balance", value=f"`{finalBalance if finalBalance else 0} ETH`")
-                e.add_field(name="Unconfirmed Balance", value=f"`{unconfirmed if unconfirmed else 0} ETH`")
-                e.add_field(name="Total Sent", value=f"`{totalSent if totalSent else 0} ETH`")
-                e.add_field(name="Total Received", value=f"`{totalReceived if totalReceived else 0} ETH`")
-                e.add_field(name="Transactions", value=f"`{transactions}`")
+                e.add_field(name="Final Balance", value=f"`{'{:,}'.format(finalBalance) if finalBalance else 0} ETH`")
+                e.add_field(name="Unconfirmed Balance", value=f"`{'{:,}'.format(unconfirmed) if unconfirmed else 0} ETH`")
+                e.add_field(name="Total Sent", value=f"`{'{:,}'.format(totalSent) if totalSent else 0} ETH`")
+                e.add_field(name="Total Received", value=f"`{'{:,}'.format(totalReceived) if totalReceived else 0} ETH`")
+                e.add_field(name="Transactions", value="`{:,}`".format(transactions))
                 if transactions:
                     latestTx = data["txrefs"][0]
                     value = latestTx["value"] / 1000000000000000000
                     e.add_field(
                         name=f"Last Transaction ({funcs.timeStrToDatetime(latestTx['confirmed'])})",
-                        value=f"`{'-' if latestTx['tx_output_n'] == -1 and value else '+'}{value if value else 0} ETH`"
+                        value=f"`{'-' if latestTx['tx_output_n'] == -1 and value else '+'}" + \
+                              f"{'{:,}'.format(value) if value else 0} ETH`"
                     )
                     e.add_field(name="Last Transaction Hash", value=f"`{latestTx['tx_hash']}`")
             except Exception:
@@ -344,27 +349,28 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={inphash}")
                 e.add_field(name="Address", value=f"`{inphash}`")
                 e.add_field(
-                    name="Final Balance", value=f"`{round(data['balance'] * 0.00000001, 8)} BTC`"
-                    if data["balance"] > 9999 else f"`{data['balance']} sat.`"
+                    name="Final Balance", value="`{:,} BTC`".format(round(data['balance'] * 0.00000001, 8))
+                    if data["balance"] > 9999 else "`{:,} sat.`".format(data['balance'])
                 )
                 e.add_field(
-                    name="Unconfirmed Balance", value=f"`{round(data['unconfirmed_balance'] * 0.00000001, 8)} BTC`"
-                    if (data["unconfirmed_balance"] > 9999 or data["unconfirmed_balance"] < -9999)
-                    else f"`{data['unconfirmed_balance']} sat.`"
+                    name="Unconfirmed Balance", value="`{:,} BTC`".format(
+                        round(data['unconfirmed_balance'] * 0.00000001, 8)
+                    ) if (data["unconfirmed_balance"] > 9999 or data["unconfirmed_balance"] < -9999)
+                    else "`{:,} sat.`".format(data['unconfirmed_balance'])
                 )
                 e.add_field(
-                    name="Total Sent", value=f"`{round(data['total_sent'] * 0.00000001, 8)} BTC`"
-                    if data["total_sent"] > 9999 else f"`{data['total_sent']} sat.`"
+                    name="Total Sent", value="`{:,} BTC`".format(round(data['total_sent'] * 0.00000001, 8))
+                    if data["total_sent"] > 9999 else "`{:,} sat.`".format(data['total_sent'])
                 )
                 e.add_field(
-                    name="Total Received", value=f"`{round(data['total_received'] * 0.00000001, 8)} BTC`"
-                    if data["total_received"] > 9999 else f"`{data['total_received']} sat.`"
+                    name="Total Received", value="`{:,} BTC`".format(round(data['total_received'] * 0.00000001, 8))
+                    if data["total_received"] > 9999 else "`{:,} sat.`".format(data['total_received'])
                 )
-                e.add_field(name="Transactions", value=f"`{data['n_tx']}`")
+                e.add_field(name="Transactions", value="`{:,}`".format(data['n_tx']))
                 try:
                     output = "-" if data["txrefs"][0]["tx_output_n"] == -1 else "+"
-                    tran = (str(data["txrefs"][0]["value"]) + " sat.") if -9999 < data["txrefs"][0]["value"] < 10000 \
-                        else (str(round(data["txrefs"][0]["value"] * 0.00000001, 8)) + " BTC")
+                    tran = "{:,} sat.".format(data["txrefs"][0]["value"]) if -9999 < data["txrefs"][0]["value"] < 10000 \
+                           else "{:,} BTC".format(round(data["txrefs"][0]["value"] * 0.00000001, 8))
                     e.add_field(
                         name=f"Last Transaction ({funcs.timeStrToDatetime(data['txrefs'][0]['confirmed'])})",
                         value=f"`{output}{tran}`"
@@ -399,31 +405,30 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             h = data["hash"]
             relayed = data["relayed_by"]
             e = Embed(
-                title=f"Ethereum Block {height}",
                 description=f"https://live.blockcypher.com/eth/block/{h}",
                 colour=Colour.light_grey()
             )
-            e.set_thumbnail(url=ETHEREUM_LOGO)
+            e.set_author(name="Ethereum Block {:,}".format(height), icon_url=ETHEREUM_LOGO)
             e.add_field(name="Date (UTC)", value=f"`{date}`")
             e.add_field(name="Hash", value=f"`{h}`")
             e.add_field(name="Merkle Root", value=f"`{data['mrkl_root']}`")
-            e.add_field(name="Transactions", value=f"`{data['n_tx']}`")
-            e.add_field(name="Total Transacted", value=f"`{data['total'] / 1000000000000000000} ETH`")
-            e.add_field(name="Fees", value=f"`{data['fees'] / 1000000000000000000} ETH`")
-            e.add_field(name="Size", value=f"`{data['size']} bytes`")
-            e.add_field(name="Depth", value=f"`{data['depth']}`")
+            e.add_field(name="Transactions", value="`{:,}`".format(data['n_tx']))
+            e.add_field(name="Total Transacted", value="`{:,} ETH`".format(data['total'] / 1000000000000000000))
+            e.add_field(name="Fees", value="`{:,} ETH`".format(data['fees'] / 1000000000000000000))
+            e.add_field(name="Size", value="`{:,} bytes`".format(data['size']))
+            e.add_field(name="Depth", value="`{:,}`".format(data['depth']))
             e.add_field(name="Version", value=f"`{data['ver']}`")
             if relayed:
                 e.add_field(name="Relayed By", value=f"`{relayed}`")
             if height != 0:
-                e.add_field(name=f"Previous Block ({height - 1})", value=f"`{data['prev_block']}`")
+                e.add_field(name="Previous Block ({:,})".format(height - 1), value=f"`{data['prev_block']}`")
             if height != latestHeight:
                 nextHeight = height + 1
                 res = await funcs.getRequest(
                     f"https://api.blockcypher.com/v1/eth/main/blocks/{nextHeight}", params=BLOCKCYPHER_PARAMS
                 )
                 nextHash = res.json()["hash"]
-                e.add_field(name=f"Next Block ({nextHeight})", value=f"`{nextHash}`")
+                e.add_field(name="Next Block ({:,})".format(nextHeight), value=f"`{nextHash}`")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown block or server error?")
         await ctx.send(embed=e)
@@ -466,28 +471,24 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 blockinfo = blockinfo["blocks"][0]
                 nextblock = blockinfo["next_block"]
             height = blockinfo["height"]
-            e = Embed(
-                title=f"Bitcoin Block {height}",
-                description=f"https://live.blockcypher.com/btc/block/{hashstr}",
-                colour=Colour.orange()
-            )
-            e.set_thumbnail(url=BITCOIN_LOGO)
+            e = Embed(description=f"https://live.blockcypher.com/btc/block/{hashstr}", colour=Colour.orange())
+            e.set_author(name="Bitcoin Block {:,}".format(height), icon_url=BITCOIN_LOGO)
             e.add_field(name="Date (UTC)", value=f"`{str(datetime.utcfromtimestamp(blockinfo['time']))}`")
             e.add_field(name="Hash", value=f"`{blockinfo['hash']}`")
             e.add_field(name="Merkle Root", value=f"`{blockinfo['mrkl_root']}`")
-            e.add_field(name="Bits", value=f"`{blockinfo['bits']}`")
-            e.add_field(name="Transactions", value=f"`{blockinfo['n_tx']}`")
-            e.add_field(name="Size", value=f"`{blockinfo['size']} bytes`")
-            e.add_field(name="Weight", value=f"`{weight} WU`")
+            e.add_field(name="Bits", value="`{:,}`".format(blockinfo['bits']))
+            e.add_field(name="Transactions", value="`{:,}`".format(blockinfo['n_tx']))
+            e.add_field(name="Size", value="`{:,} bytes`".format(blockinfo['size']))
+            e.add_field(name="Weight", value="`{:,} WU`".format(weight))
             e.add_field(
                 name="Block Reward",
                 value=f"`{(int(list(blockinfo['tx'])[0]['out'][0]['value']) - int(blockinfo['fee'])) * 0.00000001} BTC`"
             )
-            e.add_field(name="Fees", value=f"`{round(int(blockinfo['fee']) * 0.00000001, 8)} BTC`")
+            e.add_field(name="Fees", value="`{:,} BTC`".format(round(int(blockinfo['fee']) * 0.00000001, 8)))
             if height != 0:
-                e.add_field(name=f"Previous Block ({height - 1})", value=f"`{blockinfo['prev_block']}`")
+                e.add_field(name="Previous Block ({:,})".format(height - 1), value=f"`{blockinfo['prev_block']}`")
             if nextblock:
-                e.add_field(name=f"Next Block ({height + 1})", value=f"`{nextblock[0]}`")
+                e.add_field(name="Next Block ({:,})".format(height + 1), value=f"`{nextblock[0]}`")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown block or server error?")
         await ctx.send(embed=e)
@@ -505,18 +506,18 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             try:
                 res = await funcs.getRequest(COINGECKO_URL + f"coins/ethereum/contract/{inphash}")
                 data = res.json()
-                e = Embed(
-                    title=data["name"], description=f"https://etherscan.io/address/{inphash}"
-                )
-                e.set_thumbnail(url=data["image"]["large"])
+                e = Embed(description=f"https://etherscan.io/address/{inphash}")
+                e.set_author(name=data["name"], icon_url=data["image"]["large"])
                 e.add_field(name="Contract Address", value=f"`{data['contract_address']}`")
                 e.add_field(name="Symbol", value=f"`{data['symbol'].upper() or 'None'}`")
                 e.add_field(name="Genesis Date", value=f"`{data['genesis_date']}`")
-                e.add_field(name="Market Cap Rank", value=f"`{data['market_cap_rank'] or 'None'}`")
+                e.add_field(name="Market Cap Rank", value=f"`{'{:,}'.format(data['market_cap_rank']) or 'None'}`")
                 e.add_field(name="Approval Rate", value=f"`{data['sentiment_votes_up_percentage']}%`")
                 e.add_field(name="Hashing Algorithm", value=f"`{data['hashing_algorithm'] or 'None'}`")
-                e.add_field(name="Max Supply", value=f"`{data['market_data']['total_supply'] or 'None'}`")
-                e.add_field(name="Circulating", value=f"`{data['market_data']['circulating_supply'] or 'None'}`")
+                e.add_field(name="Max Supply",
+                            value=f"`{'{:,}'.format(data['market_data']['total_supply']) or 'None'}`")
+                e.add_field(name="Circulating",
+                            value=f"`{'{:,}'.format(data['market_data']['circulating_supply']) or 'None'}`")
                 e.set_footer(text=data["ico_data"]["description"])
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown contract or server error?")

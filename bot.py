@@ -49,7 +49,7 @@ class Bot(commands.Bot):
                     "https://api.coingecko.com/api/v3/coins/markets",
                     params={"vs_currency": "usd", "ids": "bitcoin"}
                 )
-                msg = f" @ ${res.json()[0]['current_price']}"
+                msg = " @ ${:,}".format(res.json()[0]['current_price'])
             except:
                 msg = ""
             await self.presence("Bitcoin" + msg)

@@ -20,7 +20,7 @@ class General(commands.Cog, name="General"):
         ptime = int(round(time() * 1000))
         msg = await ctx.send(":ping_pong: Pong! `Pinging...`")
         ping = int(round(time() * 1000)) - ptime
-        newmsg = f":ping_pong: Pong! `{ping} ms`"
+        newmsg = ":ping_pong: Pong! `{:,} ms`".format(ping)
         if ping >= 1000:
             newmsg += "\n\nWell that was slow..."
         await msg.edit(content=newmsg)
@@ -47,16 +47,20 @@ class General(commands.Cog, name="General"):
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Library", value=f"`discord.py {__version__}`")
         e.add_field(name="Creation Date", value=f"`{config.creationDate}`")
-        e.add_field(name="Server Count", value=f"`{len(self.client.guilds)}`")
-        e.add_field(name="User Count", value=f"`{len(set([i for i in self.client.users if not i.bot]))}`")
-        e.add_field(name="!findseed Calls", value=f"`{data['calls']}`")
+        e.add_field(name="Server Count", value="`{:,}`".format(len(self.client.guilds)))
+        e.add_field(name="User Count", value="`{:,}`".format(len(set([i for i in self.client.users if not i.bot]))))
+        e.add_field(name="!findseed Calls", value="`{:,}`".format(data['calls']))
         e.add_field(name="CPU Usage", value=f"`{psutil.cpu_percent()}%`")
         e.add_field(name="Memory Usage", value=f"`{dict(psutil.virtual_memory()._asdict())['percent']}%`")
         e.add_field(name="Memory Available",
-                    value=f"`{round(float(dict(psutil.virtual_memory()._asdict())['available']) / 1024 / 1024, 2)} MB`")
+                    value="`{:,} MB`".format(
+                        round(float(dict(psutil.virtual_memory()._asdict())['available']) / 1024 / 1024, 2)
+                    ))
         e.add_field(name="Disk Usage", value=f"`{dict(psutil.disk_usage('/')._asdict())['percent']}%`")
         e.add_field(name="Disk Space Available",
-                    value=f"`{round(float(dict(psutil.disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)} GB`")
+                    value="`{:,} GB`".format(
+                        round(float(dict(psutil.disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)
+                    ))
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.send(embed=e)
 
