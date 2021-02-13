@@ -26,6 +26,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
                       usage="[cryptocurrency ticker] [to currency]")
     async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
+        await ctx.send("Getting cryptocurrency market information. Please wait...")
         fiat = fiat.upper()
         image = None
         try:
@@ -71,16 +72,45 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                          style="binance", ylabel=f"Price ({fiat})", title="24h Chart")
                     image = File("plot.png")
                     e.set_image(url="attachment://plot.png")
-                    if path.exists("plot.png"):
-                        remove("plot.png")
                 except:
                     pass
             elif res.status_code == 400:
-                e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
+                e = funcs.errorEmbed(
+                    "Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)"
+                )
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
-            e = funcs.errorEmbed("Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)")
+            e = funcs.errorEmbed(
+                "Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)"
+            )
+        await ctx.send(embed=e, file=image)
+        if path.exists("plot.png"):
+            remove("plot.png")
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos"],
+                      description="Returns the top 10 cryptocurrencies by market cap " + \
+                                  "and how much of the cryptocurrency market each one dominates.")
+    async def topcoins(self, ctx):
+        image = None
+        try:
+            res = await funcs.getRequest(COINGECKO_URL + "global")
+            data = res.json()["data"]
+            lastUpdated = data["updated_at"]
+            data = data["market_cap_percentage"]
+            e = Embed(title="Top 10 Cryptocurrencies + Market Dominance",
+                      description="https://www.coingecko.com/en/coins/all")
+            counter = 1
+            for coin in data.keys():
+                e.add_field(name=f"{counter}) {coin.upper()}", value=f"`{round(data[coin], 5)}%`")
+                counter += 1
+            e.add_field(name="Last Updated (UTC)", value=f"`{datetime.utcfromtimestamp(lastUpdated)}`")
+            e.set_footer(
+                text=f"Use {self.client.command_prefix}coinprice <coin ticker> [vs currency] for more information."
+            )
+        except Exception:
+            e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.send(embed=e, file=image)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -188,7 +218,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     colour=Colour.orange()
                 )
                 e.set_thumbnail(url=BITCOIN_LOGO)
-                e.add_field(name="Date (UTC)", value=f"`{str(datetime.fromtimestamp(txinfo['time']))}`")
+                e.add_field(name="Date (UTC)", value=f"`{str(datetime.utcfromtimestamp(txinfo['time']))}`")
                 e.add_field(name="Hash", value=f"`{txinfo['hash']}`")
                 try:
                     e.add_field(name="Block Height", value=f"`{txinfo['block_height']}`")
@@ -440,7 +470,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 colour=Colour.orange()
             )
             e.set_thumbnail(url=BITCOIN_LOGO)
-            e.add_field(name="Date (UTC)", value=f"`{str(datetime.fromtimestamp(blockinfo['time']))}`")
+            e.add_field(name="Date (UTC)", value=f"`{str(datetime.utcfromtimestamp(blockinfo['time']))}`")
             e.add_field(name="Hash", value=f"`{blockinfo['hash']}`")
             e.add_field(name="Merkle Root", value=f"`{blockinfo['mrkl_root']}`")
             e.add_field(name="Bits", value=f"`{blockinfo['bits']}`")

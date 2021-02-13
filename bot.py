@@ -53,7 +53,7 @@ class Bot(commands.Bot):
             except:
                 msg = ""
             await self.presence("Bitcoin" + msg)
-            await asyncio.sleep(10)
+            await asyncio.sleep(15)
 
     async def presence(self, name):
         await self.change_presence(
