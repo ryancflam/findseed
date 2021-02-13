@@ -92,22 +92,22 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos"],
-                      description="Returns the top 10 cryptocurrencies by market cap " + \
-                                  "and how much of the cryptocurrency market each one dominates.")
+                      description="Returns the top 25 cryptocurrencies by market capitalisation.")
     async def topcoins(self, ctx):
         image = None
         try:
-            res = await funcs.getRequest(COINGECKO_URL + "global")
-            data = res.json()["data"]
-            lastUpdated = data["updated_at"]
-            data = data["market_cap_percentage"]
-            e = Embed(title="Top 10 Cryptocurrencies + Market Dominance",
+            res = await funcs.getRequest(COINGECKO_URL + "coins")
+            data = res.json()
+            e = Embed(title="Top 25 Cryptocurrencies by Market Cap",
                       description="https://www.coingecko.com/en/coins/all")
-            counter = 1
-            for coin in data.keys():
-                e.add_field(name=f"{counter}) {coin.upper()}", value=f"`{round(data[coin], 5)}%`")
-                counter += 1
-            e.add_field(name="Last Updated (UTC)", value=f"`{datetime.utcfromtimestamp(lastUpdated)}`")
+            for counter in range(len(data)):
+                coinData = data[counter]
+                e.add_field(
+                    name=f"{counter + 1}) {coinData['name']} ({coinData['symbol'].upper()})",
+                    value=f"`{coinData['market_data']['market_cap']['usd']} USD`"
+                )
+                if counter == 24:
+                    break
             e.set_footer(
                 text=f"Use {self.client.command_prefix}coinprice <coin ticker> [vs currency] for more information."
             )
