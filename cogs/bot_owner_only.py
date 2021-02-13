@@ -132,11 +132,11 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             comments = data[i]["comments"]
             linesOfCode = data[i]["linesOfCode"]
             e = discord.Embed(title="!findseed Code Statistics", description=url)
-            e.add_field(name="Files of Code", value=f"`{files}`")
-            e.add_field(name="Total Lines", value=f"`{totalLines}`")
-            e.add_field(name="Blank Lines", value=f"`{blanks}`")
-            e.add_field(name="Comment Lines", value=f"`{comments}`")
-            e.add_field(name="Lines of Code", value=f"`{linesOfCode}`")
+            e.add_field(name="Files of Code", value="`{:,}`".format(files))
+            e.add_field(name="Total Lines", value="`{:,}`".format(totalLines))
+            e.add_field(name="Blank Lines", value="`{:,}`".format(blanks))
+            e.add_field(name="Comment Lines", value="`{:,}`".format(comments))
+            e.add_field(name="Lines of Code", value="`{:,}`".format(linesOfCode))
             return await ctx.send(embed=e)
 
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
@@ -170,14 +170,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
     @commands.is_owner()
     async def gitpull(self, ctx):
         system("cd findseed && git pull")
-        await ctx.send(":ok_hand:")
-
-    @commands.command(name="pip", description="Executes a Pip command.", aliases=["pip3"], usage="<input>")
-    @commands.is_owner()
-    async def pip(self, ctx, *, cmd: str=""):
-        if cmd == "":
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        system(f"pip3 {cmd}")
         await ctx.send(":ok_hand:")
 
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
