@@ -25,7 +25,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
-                      usage="[cryptocurrency ticker] [to currency]")
+                      usage="[cryptocurrency symbol] [to currency]")
     async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
@@ -52,7 +52,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
                 e.add_field(name="Market Price", value="`{:,} {}`".format(data['current_price'], fiat))
-                e.add_field(name="All-Time High", value="`{:,} {}`".format(data['ath'], fiat))
+                e.add_field(name=f"All-Time High ({funcs.timeStrToDatetime(data['ath_date'])})",
+                            value="`{:,} {}`".format(data['ath'], fiat))
                 e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
                 e.add_field(name="Max Supply",
                             value="`None`" if not totalSupply else "`{:,}`".format(
@@ -62,7 +63,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                             value="`None`" if not circulating else "`{:,}`".format(
                                 int(circulating) if int(circulating) == circulating else circulating
                             ))
-                e.add_field(name="Market Cap Rank", value="`{:,}`".format(data['market_cap_rank']))
+                e.add_field(
+                    name="Market Cap Rank",
+                    value=f"`{'None' if not data['market_cap_rank'] else '{:,}'.format(data['market_cap_rank'])}`"
+                )
                 e.add_field(name="Price Change (1h)", value=f"`{percent1h}%`")
                 e.add_field(name="Price Change (24h)", value=f"`{percent1d}%`")
                 e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
@@ -86,13 +90,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     pass
             elif res.status_code == 400:
                 e = funcs.errorEmbed(
-                    "Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)"
+                    "Invalid argument(s) and/or invalid currency!", "Be sure to use the symbol. (e.g. `btc`)"
                 )
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
             e = funcs.errorEmbed(
-                "Invalid argument(s) and/or invalid currency!", "Be sure to use the ticker. (e.g. `btc`)"
+                "Invalid argument(s) and/or invalid currency!", "Be sure to use the symbol. (e.g. `btc`)"
             )
         await ctx.send(embed=e, file=image)
         if path.exists(imgName):
@@ -117,7 +121,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 if counter == 24:
                     break
             e.set_footer(
-                text=f"Use {self.client.command_prefix}coinprice <coin ticker> [vs currency] for more information."
+                text=f"Use {self.client.command_prefix}coinprice <coin symbol> [vs currency] for more information."
             )
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
