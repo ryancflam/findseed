@@ -31,20 +31,29 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         imgName = f"{time()}.png"
         fiat = fiat.upper()
         image = None
+        data = []
+        count = 0
         try:
             coinID = funcs.TICKERS[coin.casefold()]
         except KeyError:
             coinID = coin.casefold()
         try:
-            res = await funcs.getRequest(
-                COINGECKO_URL + "coins/markets", params={
-                    "ids": coinID,
-                    "vs_currency": fiat,
-                    "price_change_percentage": "1h,24h,7d"
-                }
-            )
-            data = res.json()[0]
-            if res.status_code == 200:
+            while not data:
+                res = await funcs.getRequest(
+                    COINGECKO_URL + "coins/markets", params={
+                        "ids": coinID,
+                        "vs_currency": fiat,
+                        "price_change_percentage": "1h,24h,7d"
+                    }
+                )
+                data = res.json()
+                if count == 1:
+                    break
+                count += 1
+                if not data:
+                    coinID = coinID.replace("-", "")
+            if data:
+                data = data[0]
                 percent1h = data["price_change_percentage_1h_in_currency"]
                 percent1d = data["price_change_percentage_24h_in_currency"]
                 percent7d = data["price_change_percentage_7d_in_currency"]
@@ -97,17 +106,17 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     e.set_image(url=f"attachment://{imgName}")
                 except:
                     pass
-            elif res.status_code == 400:
+            elif not data:
                 e = funcs.errorEmbed(
                     "Invalid argument(s) and/or invalid currency!",
-                    "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `bitcoin`)"
+                    "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `ethereum-classic`)"
                 )
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
             e = funcs.errorEmbed(
                 "Invalid argument(s) and/or invalid currency!",
-                "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `bitcoin`)"
+                "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `ethereum-classic`)"
             )
         await ctx.send(embed=e, file=image)
         if path.exists(imgName):
