@@ -54,21 +54,27 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     coinID = coinID.replace("-", "")
             if data:
                 data = data[0]
-                percent1h = data["price_change_percentage_1h_in_currency"]
-                percent1d = data["price_change_percentage_24h_in_currency"]
-                percent7d = data["price_change_percentage_7d_in_currency"]
+                percent1h = data["price_change_percentage_1h_in_currency"] or 0
+                percent1d = data["price_change_percentage_24h_in_currency"] or 0
+                percent7d = data["price_change_percentage_7d_in_currency"] or 0
                 totalSupply = data["total_supply"]
                 circulating = data["circulating_supply"]
                 currentPrice = data["current_price"]
-                ath = currentPrice if currentPrice >= data["ath"] else data["ath"]
-                athDate = funcs.timeStrToDatetime(data["ath_date"]) if ath > currentPrice else "Now! 🎉"
+                if currentPrice:
+                    ath = currentPrice if currentPrice >= data["ath"] else data["ath"]
+                else:
+                    ath = data["ath"]
+                if ath:
+                    athDate = funcs.timeStrToDatetime(data["ath_date"]) if ath > currentPrice else "Now! 🎉"
+                else:
+                    athDate = "N/A"
                 e = Embed(
                     description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-')}",
                     colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
-                e.add_field(name="Market Price", value="`{:,} {}`".format(currentPrice, fiat))
-                e.add_field(name=f"All-Time High ({athDate})", value="`{:,} {}`".format(ath, fiat))
+                e.add_field(name="Market Price", value=f"`{'None' if not currentPrice else '{:,}'.format(currentPrice)} {fiat}`")
+                e.add_field(name=f"All-Time High ({athDate})", value=f"`{'None' if not ath else '{:,}'.format(ath)} {fiat}`")
                 e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
                 e.add_field(name="Max Supply",
                             value="`None`" if not totalSupply else "`{:,}`".format(
@@ -109,14 +115,14 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             elif not data:
                 e = funcs.errorEmbed(
                     "Invalid argument(s) and/or invalid currency!",
-                    "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `ethereum-classic`)"
+                    "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
                 )
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
             e = funcs.errorEmbed(
                 "Invalid argument(s) and/or invalid currency!",
-                "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `ethereum-classic`)"
+                "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
             )
         await ctx.send(embed=e, file=image)
         if path.exists(imgName):
