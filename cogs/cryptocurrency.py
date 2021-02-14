@@ -107,7 +107,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         columns=["Open", "High", "Low", "Close"]
                     )
                     plot(df, type="candle", savefig=imgName,
-                         style="binance", ylabel=f"Price ({fiat})", title="24h Chart")
+                         style="yahoo", ylabel=f"Price ({fiat})", title=f"24h Chart ({data['name']})")
                     image = File(imgName)
                     e.set_image(url=f"attachment://{imgName}")
                 except:
