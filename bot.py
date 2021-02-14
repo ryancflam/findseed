@@ -54,7 +54,7 @@ class Bot(commands.Bot):
                 msg = " @ ${:,}{}".format(data["current_price"], ext)
             except:
                 msg = ""
-            await self.presence("Bitcoin" + msg)
+            await self.presence("BTC" + msg)
             await asyncio.sleep(15)
 
     async def presence(self, name):
