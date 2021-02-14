@@ -179,7 +179,10 @@ async def tickerToID():
     res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
     data = res.json()
     for i in data:
-        tickers[i["symbol"]] = i["id"]
+        try:
+            _ = tickers[i["symbol"]]
+        except KeyError:
+            tickers[i["symbol"]] = i["id"]
     return tickers
 
 

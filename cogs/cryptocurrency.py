@@ -25,25 +25,29 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
-                      usage="[cryptocurrency symbol] [to currency]")
+                      usage="[coin symbol/CoinGecko ID] [to currency]")
     async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
         fiat = fiat.upper()
         image = None
         try:
+            coinID = funcs.TICKERS[coin.casefold()]
+        except KeyError:
+            coinID = coin.casefold()
+        try:
             res = await funcs.getRequest(
                 COINGECKO_URL + "coins/markets", params={
-                    "ids": funcs.TICKERS[coin.casefold()],
+                    "ids": coinID,
                     "vs_currency": fiat,
                     "price_change_percentage": "1h,24h,7d"
                 }
             )
             data = res.json()[0]
             if res.status_code == 200:
-                percent1h = round(data["price_change_percentage_1h_in_currency"], 2)
-                percent1d = round(data["price_change_percentage_24h_in_currency"], 2)
-                percent7d = round(data["price_change_percentage_7d_in_currency"], 2)
+                percent1h = data["price_change_percentage_1h_in_currency"]
+                percent1d = data["price_change_percentage_24h_in_currency"]
+                percent7d = data["price_change_percentage_7d_in_currency"]
                 totalSupply = data["total_supply"]
                 circulating = data["circulating_supply"]
                 currentPrice = data["current_price"]
@@ -69,13 +73,16 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     name="Market Cap Rank",
                     value=f"`{'None' if not data['market_cap_rank'] else '{:,}'.format(data['market_cap_rank'])}`"
                 )
-                e.add_field(name="Price Change (1h)", value=f"`{percent1h}%`")
-                e.add_field(name="Price Change (24h)", value=f"`{percent1d}%`")
-                e.add_field(name="Price Change (7d)", value=f"`{percent7d}%`")
+                e.add_field(name="Price Change (1h)",
+                            value=f"`{'None' if not percent1h else '{:,}%'.format(round(percent1h, 2))}`")
+                e.add_field(name="Price Change (24h)",
+                            value=f"`{'None' if not percent1d else '{:,}%'.format(round(percent1d, 2))}`")
+                e.add_field(name="Price Change (7d)",
+                            value=f"`{'None' if not percent7d else '{:,}%'.format(round(percent7d, 2))}`")
                 e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC")
                 try:
                     res = await funcs.getRequest(
-                        COINGECKO_URL + f"coins/{funcs.TICKERS[coin.casefold()]}/ohlc",
+                        COINGECKO_URL + f"coins/{data['id']}/ohlc",
                         params={"vs_currency": fiat.casefold(), "days": "1"}
                     )
                     ohlcData = res.json()
@@ -92,13 +99,15 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     pass
             elif res.status_code == 400:
                 e = funcs.errorEmbed(
-                    "Invalid argument(s) and/or invalid currency!", "Be sure to use the symbol. (e.g. `btc`)"
+                    "Invalid argument(s) and/or invalid currency!",
+                    "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `bitcoin`)"
                 )
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
         except Exception:
             e = funcs.errorEmbed(
-                "Invalid argument(s) and/or invalid currency!", "Be sure to use the symbol. (e.g. `btc`)"
+                "Invalid argument(s) and/or invalid currency!",
+                "Be sure to use the correct symbol or CoinGecko ID. (e.g. `btc` or `bitcoin`)"
             )
         await ctx.send(embed=e, file=image)
         if path.exists(imgName):
