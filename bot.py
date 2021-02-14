@@ -49,7 +49,9 @@ class Bot(commands.Bot):
                     "https://api.coingecko.com/api/v3/coins/markets",
                     params={"vs_currency": "usd", "ids": "bitcoin"}
                 )
-                msg = " @ ${:,}".format(res.json()[0]['current_price'])
+                data = res.json()[0]
+                ext = "🎉" if data["ath"] < data["current_price"] else ""
+                msg = " @ ${:,}{}".format(data["current_price"], ext)
             except:
                 msg = ""
             await self.presence("Bitcoin" + msg)

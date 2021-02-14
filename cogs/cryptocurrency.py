@@ -44,16 +44,18 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 percent1h = round(data["price_change_percentage_1h_in_currency"], 2)
                 percent1d = round(data["price_change_percentage_24h_in_currency"], 2)
                 percent7d = round(data["price_change_percentage_7d_in_currency"], 2)
-                totalSupply = data['total_supply']
-                circulating = data['circulating_supply']
+                totalSupply = data["total_supply"]
+                circulating = data["circulating_supply"]
+                currentPrice = data["current_price"]
+                ath = currentPrice if currentPrice >= data["ath"] else data["ath"]
+                athDate = funcs.timeStrToDatetime(data["ath_date"]) if ath > currentPrice else "Now! 🎉"
                 e = Embed(
                     description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-')}",
                     colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
-                e.add_field(name="Market Price", value="`{:,} {}`".format(data['current_price'], fiat))
-                e.add_field(name=f"All-Time High ({funcs.timeStrToDatetime(data['ath_date'])})",
-                            value="`{:,} {}`".format(data['ath'], fiat))
+                e.add_field(name="Market Price", value="`{:,} {}`".format(currentPrice, fiat))
+                e.add_field(name=f"All-Time High ({athDate})", value="`{:,} {}`".format(ath, fiat))
                 e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
                 e.add_field(name="Max Supply",
                             value="`None`" if not totalSupply else "`{:,}`".format(
