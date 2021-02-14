@@ -74,27 +74,30 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
                 e.add_field(name="Market Price", value=f"`{'None' if not currentPrice else '{:,}'.format(currentPrice)} {fiat}`")
-                e.add_field(name=f"All-Time High ({athDate})", value=f"`{'None' if not ath else '{:,}'.format(ath)} {fiat}`")
-                e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
-                e.add_field(name="Max Supply",
-                            value="`None`" if not totalSupply else "`{:,}`".format(
-                                int(totalSupply) if int(totalSupply) == totalSupply else totalSupply
-                            ))
-                e.add_field(name="Circulating",
-                            value="`None`" if not circulating else "`{:,}`".format(
-                                int(circulating) if int(circulating) == circulating else circulating
-                            ))
-                e.add_field(
-                    name="Market Cap Rank",
-                    value=f"`{'None' if not data['market_cap_rank'] else '{:,}'.format(data['market_cap_rank'])}`"
-                )
-                e.add_field(name="Price Change (1h)",
-                            value=f"`{'None' if not percent1h else '{:,}%'.format(round(percent1h, 2))}`")
-                e.add_field(name="Price Change (24h)",
-                            value=f"`{'None' if not percent1d else '{:,}%'.format(round(percent1d, 2))}`")
-                e.add_field(name="Price Change (7d)",
-                            value=f"`{'None' if not percent7d else '{:,}%'.format(round(percent7d, 2))}`")
-                e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC")
+                if data["symbol"].upper() != fiat:
+                    e.add_field(name=f"All-Time High ({athDate})", value=f"`{'None' if not ath else '{:,}'.format(ath)} {fiat}`")
+                    e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
+                    e.add_field(name="Max Supply",
+                                value="`None`" if not totalSupply else "`{:,}`".format(
+                                    int(totalSupply) if int(totalSupply) == totalSupply else totalSupply
+                                ))
+                    e.add_field(name="Circulating",
+                                value="`None`" if not circulating else "`{:,}`".format(
+                                    int(circulating) if int(circulating) == circulating else circulating
+                                ))
+                    e.add_field(
+                        name="Market Cap Rank",
+                        value=f"`{'None' if not data['market_cap_rank'] else '{:,}'.format(data['market_cap_rank'])}`"
+                    )
+                    e.add_field(name="Price Change (1h)",
+                                value=f"`{'None' if not percent1h else '{:,}%'.format(round(percent1h, 2))}`")
+                    e.add_field(name="Price Change (24h)",
+                                value=f"`{'None' if not percent1d else '{:,}%'.format(round(percent1d, 2))}`")
+                    e.add_field(name="Price Change (7d)",
+                                value=f"`{'None' if not percent7d else '{:,}%'.format(round(percent7d, 2))}`")
+                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC")
+                else:
+                    e.set_footer(text="What are you doing you socialite?")
                 try:
                     res = await funcs.getRequest(
                         COINGECKO_URL + f"coins/{data['id']}/ohlc",
