@@ -73,9 +73,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
-                e.add_field(name="Market Price", value=f"`{'None' if not currentPrice else '{:,}'.format(currentPrice)} {fiat}`")
+                e.add_field(name="Market Price", value=f"`{'None' if not currentPrice else '{:,} {}'.format(currentPrice, fiat)}`")
                 if data["symbol"].upper() != fiat:
-                    e.add_field(name=f"All-Time High ({athDate})", value=f"`{'None' if not ath else '{:,}'.format(ath)} {fiat}`")
+                    e.add_field(name=f"All-Time High ({athDate})", value=f"`{'None' if not ath else '{:,} {}'.format(ath, fiat)}`")
                     e.add_field(name="Market Cap", value="`{:,} {}`".format(data['market_cap'], fiat))
                     e.add_field(name="Max Supply",
                                 value="`None`" if not totalSupply else "`{:,}`".format(
