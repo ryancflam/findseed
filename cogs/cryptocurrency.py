@@ -30,6 +30,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
         fiat = fiat.upper()
+        coin = coin.replace("**", "eo")
         image = None
         data = []
         count = 0
