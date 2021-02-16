@@ -389,13 +389,13 @@ class Minecraft(commands.Cog, name="Minecraft"):
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="wr", description="Shows the current world records for some of the most prominent " + \
-                                             "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord"])
-    async def wr(self, ctx):
+    @commands.command(name="mcwr", description="Shows the current world records for some of the most prominent Any% " + \
+                                               "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord", "wr"])
+    async def mcwr(self, ctx):
         await ctx.send("Getting speedrun.com data. Please wait...")
         try:
             e = Embed(
-                title="Minecraft Speedrun World Records",
+                title="Minecraft Speedrun World Records - Any% Solo",
                 description="https://www.speedrun.com/mc"
             )
             urls = [

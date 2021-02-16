@@ -285,16 +285,16 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="currency", description="Converts the price of one currency to another",
-                      aliases=["fiat", "cc"], usage="<amount> <from currency> <to currency>")
-    async def currency(self, ctx, amount, fromC, toC):
+                      aliases=["fiat", "cc"], usage="<from currency> <to currency> [amount]")
+    async def currency(self, ctx, fromC, toC, amount="1"):
         try:
-            output = [amount, fromC.upper(), toC.upper()]
+            output = [fromC.upper(), toC.upper(), amount]
             res = await funcs.getRequest("http://data.fixer.io/api/latest", params={"access_key": config.fixerKey})
             data = res.json()
-            amount = float(output[0].replace(",", ""))
+            amount = float(output[2].replace(",", ""))
             initialamount = amount
-            fromCurrency = output[1]
-            toCurrency = output[2]
+            fromCurrency = output[0]
+            toCurrency = output[1]
             coingecko = "https://api.coingecko.com/api/v3/coins/markets"
             if fromCurrency != "EUR":
                 try:

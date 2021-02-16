@@ -86,11 +86,14 @@ class Bot(commands.Bot):
         )
 
     async def on_message(self, message):
-        if (await self.get_context(message)).valid \
+        if (await self.get_context(message)).valid and not self.is_ready() \
                 and userNotBlacklisted(self, message):
-            if self.is_ready():
-                await self.process_commands(message)
-            else:
-                await message.channel.send(
-                    f"{self.user.name} is not ready yet, please wait!"
+            return await message.channel.send(
+                f"{self.user.name} is not ready yet, please wait!"
+            )
+        if self.is_ready() and userNotBlacklisted(self, message):
+            while message.content.startswith(f"{self.command_prefix} "):
+                message.content = message.content.replace(
+                    f"{self.command_prefix} ", f"{self.command_prefix}", 1
                 )
+            await self.process_commands(message)
