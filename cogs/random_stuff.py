@@ -322,7 +322,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="avatar", description="Shows the avatar of a user.",
-                      aliases=["pfp"], usage="[@mention]")
+                      aliases=["pfp", "icon"], usage="[@mention]")
     async def avatar(self, ctx, *, user: Member=None):
         user = user or ctx.author
         ext = "gif" if user.is_avatar_animated() else "png"
@@ -411,8 +411,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         if term == "":
             e = funcs.errorEmbed(None, "Empty input.")
         else:
-            params = {"term": term.replace(" ", "%20")}
-            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params=params)
+            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params={"term": term})
             data = res.json()
             terms = data["list"]
             if len(terms) == 0:
