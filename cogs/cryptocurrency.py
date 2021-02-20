@@ -22,6 +22,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     def __init__(self, client: commands.Bot):
         self.client = client
 
+    @staticmethod
+    def weiToETH(value):
+        return value / 1000000000000000000
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
@@ -30,14 +34,15 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
         fiat = fiat.upper()
-        coin = coin.replace("**", "eo")
+        coin = "neo" if coin.casefold().startswith("n*") or coin.casefold() == "neo" \
+               or coin.casefold().startswith("noeo") or coin.casefold().startswith("neoe") else coin.casefold()
         image = None
         data = []
         count = 0
         try:
-            coinID = funcs.TICKERS[coin.casefold()]
+            coinID = funcs.TICKERS[coin]
         except KeyError:
-            coinID = coin.casefold()
+            coinID = coin
         try:
             while not data:
                 res = await funcs.getRequest(
@@ -70,7 +75,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 else:
                     athDate = "N/A"
                 e = Embed(
-                    description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-')}",
+                    description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-').replace('.', '-')}",
                     colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
@@ -215,8 +220,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 data = res.json()
                 e = Embed(description=f"https://live.blockcypher.com/eth/tx/{hashstr}", colour=Colour.light_grey())
                 blockHeight = data["block_height"]
-                total = data["total"] / 1000000000000000000
-                fees = data["fees"] / 1000000000000000000
+                total = self.weiToETH(data["total"])
+                fees = self.weiToETH(data["fees"])
                 try:
                     relayed = data["relayed_by"]
                 except:
@@ -331,10 +336,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     f"https://api.blockcypher.com/v1/eth/main/addrs/{inphash}", params=BLOCKCYPHER_PARAMS
                 )
                 data = res.json()
-                finalBalance = data["final_balance"] / 1000000000000000000
-                unconfirmed = data["unconfirmed_balance"] / 1000000000000000000
-                totalSent = data["total_sent"] / 1000000000000000000
-                totalReceived =  data["total_received"] / 1000000000000000000
+                finalBalance = self.weiToETH(data["final_balance"])
+                unconfirmed = self.weiToETH(data["unconfirmed_balance"])
+                totalSent = self.weiToETH(data["total_sent"])
+                totalReceived = self.weiToETH(data["total_received"])
                 transactions = data["n_tx"]
                 e = Embed(
                     title="Ethereum Address",
@@ -350,7 +355,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 e.add_field(name="Transactions", value="`{:,}`".format(transactions))
                 if transactions:
                     latestTx = data["txrefs"][0]
-                    value = latestTx["value"] / 1000000000000000000
+                    value = self.weiToETH(latestTx["value"])
                     e.add_field(
                         name=f"Last Transaction ({funcs.timeStrToDatetime(latestTx['confirmed'])})",
                         value=f"`{'-' if latestTx['tx_output_n'] == -1 and value else '+'}" + \
@@ -447,8 +452,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Hash", value=f"`{h}`")
             e.add_field(name="Merkle Root", value=f"`{data['mrkl_root']}`")
             e.add_field(name="Transactions", value="`{:,}`".format(data['n_tx']))
-            e.add_field(name="Total Transacted", value="`{:,} ETH`".format(data['total'] / 1000000000000000000))
-            e.add_field(name="Fees", value="`{:,} ETH`".format(data['fees'] / 1000000000000000000))
+            e.add_field(name="Total Transacted", value="`{:,} ETH`".format(self.weiToETH(data['total'])))
+            e.add_field(name="Fees", value="`{:,} ETH`".format(self.weiToETH(data['fees'])))
             e.add_field(name="Size", value="`{:,} bytes`".format(data['size']))
             e.add_field(name="Depth", value="`{:,}`".format(data['depth']))
             e.add_field(name="Version", value=f"`{data['ver']}`")
