@@ -327,6 +327,67 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
         await ctx.send(file=file)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="dogecoinbuyers", description="Dogecoin buyers.")
+    async def dogecoinbuyers(self, ctx):
+        url = "https://media.discordapp.net/attachments/777818814829690884/813483257860849664/PicsArt_02-14-07.56.48.jpg"
+        file = File(await funcs.getImage(url), "dogecoinbuyers.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="dogecoin", description="Dogecoin.")
+    async def dogecoin(self, ctx):
+        url = "https://media.discordapp.net/attachments/777818814829690884/813483345584586803/PicsArt_02-19-10.26.36.png"
+        file = File(await funcs.getImage(url), "dogecoin.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="audiblechokehold", description="Audible choke hold.")
+    async def audiblechokehold(self, ctx):
+        url = "https://media.discordapp.net/attachments/777818814829690884/813483462967296031/PicsArt_02-12-08.53.46.jpg"
+        file = File(await funcs.getImage(url), "audiblechokehold.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="theronsays", description="The Ron says.")
+    async def theronsays(self, ctx):
+        url = "https://media.discordapp.net/attachments/777818814829690884/813484512796606527/PicsArt_02-14-07.49.34.jpg"
+        file = File(await funcs.getImage(url), "theronsays.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="youcantseeme", description="You can't see me.")
+    async def youcantseeme(self, ctx):
+        url = "https://media.discordapp.net/attachments/792042955509858311/817420684749439036/unknown.png"
+        file = File(await funcs.getImage(url), "youcantseeme.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="falineguerrero", description="Faline Guerrero.")
+    async def falineguerrero(self, ctx):
+        url = choice([
+            "https://media.discordapp.net/attachments/777818814829690884/813483089263198309/PicsArt_02-16-08.33.59.jpg",
+            "https://media.discordapp.net/attachments/777818814829690884/813483868446261248/PicsArt_02-11-07.36.13.png",
+            "https://media.discordapp.net/attachments/777818814829690884/813483973799968828/PicsArt_02-11-07.46.48.png",
+            "https://media.discordapp.net/attachments/777818814829690884/813483974092390460/PicsArt_02-11-07.25.59.jpg"
+        ])
+        file = File(await funcs.getImage(url), "falineguerrero.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="audeerble", description=">C but deer.")
+    async def audeerble(self, ctx):
+        url = choice([
+            "https://media.discordapp.net/attachments/777818814829690884/813484271620194304/PicsArt_02-11-07.17.02.png",
+            "https://media.discordapp.net/attachments/777818814829690884/813484271934242836/JPEG_20210208_084849.jpg",
+            "https://media.discordapp.net/attachments/777818814829690884/813484272249602048/PicsArt_02-05-12.50.25.png",
+            "https://media.discordapp.net/attachments/777818814829690884/813484272525901884/magik-3.png",
+            "https://media.discordapp.net/attachments/777818814829690884/813484272794599534/PicsArt_02-05-05.37.28.jpg",
+            "https://media.discordapp.net/attachments/777818814829690884/813484273062379550/JPEG_20210205_052551.jpg"
+        ])
+        file = File(await funcs.getImage(url), "audeerble.png")
+        await ctx.send(file=file)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="conversion", description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕")
     async def conversion(self, ctx):
         for i in range(2):

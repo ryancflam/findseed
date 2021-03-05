@@ -267,15 +267,17 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     e.add_field(name="Block Height", value="`{:,}`".format(txinfo['block_height']))
                 except:
                     e.add_field(name="Block Height", value="`Unconfirmed`")
-                e.add_field(name="Size",value=f"`{txinfo['size']} bytes`")
+                size = txinfo["size"]
+                fee = txinfo2["fees"]
+                e.add_field(name="Size",value="`{:,} bytes`".format(size))
                 e.add_field(name="Weight",value="`{:,} WU`".format(txinfo['weight']))
                 e.add_field(
                     name="Total", value="`{:,} sat.`".format(txinfo2['total']) if txinfo2["total"] < 10000
                     else "`{:,} BTC`".format(round(int(txinfo2['total']) * 0.00000001, 8))
                 )
                 e.add_field(
-                    name="Fees", value="`{:,} sat.`".format(txinfo2['fees']) if txinfo2["fees"] < 10000
-                    else "`{:,} BTC`".format(round(int(txinfo2['fees']) * 0.00000001, 8))
+                    name="Fees", value=("`{:,} sat.".format(fee) if fee < 10000
+                    else "`{:,} BTC".format(round(int(fee) * 0.00000001, 8))) + f" ({round(fee / size, 2)} sat/byte)`"
                 )
                 e.add_field(name="Confirmations", value="`{:,}`".format(txinfo2['confirmations']))
                 try:
@@ -431,7 +433,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         hashjson = hashget.json()
         latestHeight = hashjson["height"]
         hashstr = hashstr or latestHeight
-        hashstr = str(hashstr).casefold().replace("`", "").replace(" ", "")
+        hashstr = str(hashstr).casefold().replace("`", "").replace(" ", "").replace(",", "")
         if hashstr.casefold().startswith("0x"):
             hashstr = hashstr[2:]
         try:
@@ -481,7 +483,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             hashget = await funcs.getRequest("https://blockchain.info/latestblock")
             hashjson = hashget.json()
             hashstr = hashjson["hash"]
-        hashstr = hashstr.casefold().replace("`", "").replace(" ", "")
+        hashstr = hashstr.casefold().replace("`", "").replace(" ", "").replace(",", "")
         try:
             try:
                 hashstr = int(hashstr)
