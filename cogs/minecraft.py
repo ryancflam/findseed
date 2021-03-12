@@ -372,8 +372,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="coordsdist", description="Calculates the distance between two sets of coordinates.",
                       aliases=["coords", "distance", "dist", "coord", "coordinates", "coordinate"],
-                      usage="<x1> <z1> <x2> <z2>")
-    async def coords(self, ctx, *, inp):
+                      usage="<<F3+C data> OR <x1> <z1>> <x2> <z2>")
+    async def coords(self, ctx, *, inp: str):
         args = inp.split(" ")
         try:
             try:

@@ -29,7 +29,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg"],
-                      usage="[coin symbol/CoinGecko ID] [to currency]")
+                      usage="[coin symbol OR CoinGecko ID] [to currency]")
     async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
@@ -426,7 +426,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="ethblock", description="Gets information about an Ethereum block.",
-                      aliases=["eblock", "eb", "ethheight"], usage="<block hash/height>")
+                      aliases=["eblock", "eb", "ethheight"], usage="<block hash OR height>")
     async def ethblock(self, ctx, *, hashstr: str=""):
         await ctx.send("Getting Ethereum block information. Please wait...")
         hashget = await funcs.getRequest("https://api.blockcypher.com/v1/eth/main", params=BLOCKCYPHER_PARAMS)
@@ -476,7 +476,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcblock", description="Gets information about a Bitcoin block.",
-                      aliases=["bblock", "bb", "btcheight"], usage="<block hash/height>")
+                      aliases=["bblock", "bb", "btcheight"], usage="<block hash OR height>")
     async def btcblock(self, ctx, *, hashstr: str=""):
         await ctx.send("Getting Bitcoin block information. Please wait...")
         if hashstr == "":

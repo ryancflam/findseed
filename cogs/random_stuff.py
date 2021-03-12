@@ -1,12 +1,15 @@
 import hashlib
 from json import load
 from time import time
+from datetime import datetime
+from asyncpraw import Reddit
 from asyncio import sleep, TimeoutError
 from random import choice, randint, shuffle
 
-from discord import Embed, Member, File
+from discord import Embed, Member, File, channel
 from discord.ext import commands
 
+import config
 from other_utils import funcs
 
 
@@ -17,6 +20,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
         self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
+        self.reddit = Reddit(client_id=config.redditClientID,
+                             client_secret=config.redditClientSecret,
+                             user_agent="*")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
@@ -424,15 +430,104 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 permalink = terms[0]["permalink"]
                 word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
                 e = Embed(title=word, description=permalink)
-                e.add_field(name="Definition", value=funcs.formatting(definition))
+                e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                 e.set_thumbnail(url=thumbnail)
                 if example:
-                    e.add_field(name="Example(s)", value=funcs.formatting(example))
+                    e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
                 e.set_footer(
                     text=f"Submitted by {terms[0]['author']} | Approval rate: " + \
                          f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
                          f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎)"
                 )
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
+                      aliases=["subreddit", "r", "redditor"], usage="<r/subreddit OR u/redditor>")
+    async def reddit(self, ctx, *, inp=""):
+        inp = inp.replace(" ", "")
+        while inp.startswith("/"):
+            inp = inp[1:]
+        try:
+            if inp.casefold().startswith("r") and "/" in inp:
+                subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
+                if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) \
+                        and not ctx.channel.is_nsfw():
+                    e = funcs.errorEmbed("NSFW/Over 18!", "Please view this community in an NSFW channel.")
+                else:
+                    tags = [
+                        i for i in [
+                            "Link Flairs" if subreddit.can_assign_link_flair else 0,
+                            "User Flairs" if subreddit.can_assign_user_flair else 0,
+                            "Spoilers Enabled" if subreddit.spoilers_enabled else 0,
+                            "NSFW" if subreddit.over18 else 0
+                        ] if i
+                    ]
+                    e = Embed(title="r/" + subreddit.display_name,
+                              description=f"https://www.reddit.com/r/{subreddit.display_name}")
+                    if tags:
+                        e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
+                    e.set_footer(text=subreddit.public_description)
+                    e.add_field(name="Created (UTC)", value=f"`{datetime.fromtimestamp(subreddit.created_utc)}`")
+                    e.add_field(name="Subscribers", value="`{:,}`".format(subreddit.subscribers))
+                    async for submission in subreddit.new(limit=1):
+                        e.add_field(
+                            name="Latest Post ({:,} point{}; from u/{})".format(
+                                submission.score, "" if submission.score == 1 else "s", submission.author.name
+                            ),
+                            value=f"https://www.reddit.com{submission.permalink}",
+                            inline=False
+                        )
+            elif inp.casefold().startswith("u") and "/" in inp:
+                redditor = await self.reddit.redditor(inp.split("/")[-1], fetch=True)
+                try:
+                    suspended = redditor.is_suspended
+                    tags = ["Suspended"]
+                except:
+                    suspended = False
+                    tags = [
+                        i for i in [
+                            "Verified" if redditor.has_verified_email else 0,
+                            "Reddit Employee" if redditor.is_employee else 0,
+                            "Moderator" if redditor.is_mod else 0,
+                            "Gold" if redditor.is_gold else 0,
+                            "NSFW" if redditor.subreddit["over_18"] else 0
+                        ] if i
+                    ]
+                if redditor.subreddit["over_18"] and not isinstance(ctx.channel, channel.DMChannel) \
+                        and not ctx.channel.is_nsfw():
+                    e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
+                else:
+                    e = Embed(title="u/" + redditor.name, description=f"https://www.reddit.com/user/{redditor.name}")
+                    if tags:
+                        e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
+                    if not suspended:
+                        lkarma = redditor.link_karma
+                        ckarma = redditor.comment_karma
+                        e.set_thumbnail(url=redditor.icon_img)
+                        e.add_field(name="Join Date (UTC)", value=f"`{datetime.fromtimestamp(redditor.created_utc)}`")
+                        e.add_field(name="Total Karma", value="`{:,}`".format(lkarma + ckarma))
+                        e.add_field(name="Post Karma", value="`{:,}`".format(lkarma))
+                        e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
+                        async for submission in redditor.submissions.new(limit=1):
+                            e.add_field(
+                                name=f"Latest Post (on r/{submission.subreddit.display_name}; " + \
+                                     f"{'{:,}'.format(submission.score)} point{'' if submission.score == 1 else 's'})",
+                                value=f"https://www.reddit.com{submission.permalink}",
+                                inline=False
+                            )
+                        async for comment in redditor.comments.new(limit=1):
+                            e.add_field(
+                                name=f"Latest Comment (on r/{comment.subreddit.display_name}; " + \
+                                     f"{'{:,}'.format(comment.score)} point{'' if comment.score == 1 else 's'})",
+                                value=funcs.formatting(comment.body, limit=1000),
+                                inline=False
+                            )
+            else:
+                e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
+        except Exception as ex:
+            print(ex)
+            e = funcs.errorEmbed(None, "Invalid search.")
         await ctx.send(embed=e)
 
 

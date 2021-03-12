@@ -115,8 +115,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except ValueError:
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
 
-    @commands.command(name="code", description="Returns statistics about the bot source code.",
-                      aliases=["sloc", "loc"])
+    @commands.command(name="code", description="Returns statistics about the bot source code.", aliases=["sloc", "loc"])
     @commands.is_owner()
     async def code(self, ctx):
         await ctx.send("Getting repository code statistics. Please wait...")
@@ -180,8 +179,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=e)
         await ctx.send(output.replace("@everyone", "everyone").replace("@here", "here"))
 
-    @commands.command(name="servers", description="Returns a list of servers the bot is in.",
-                      aliases=["sl", "serverlist"])
+    @commands.command(name="servers", description="Returns a list of servers the bot is in.", aliases=["sl", "serverlist"])
     @commands.is_owner()
     async def servers(self, ctx):
         serverList = ""
