@@ -494,7 +494,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                             "NSFW" if redditor.subreddit["over_18"] else 0
                         ] if i
                     ]
-                if redditor.subreddit["over_18"] and not isinstance(ctx.channel, channel.DMChannel) \
+                if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) \
                         and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
                 else:
@@ -525,8 +525,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                             )
             else:
                 e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
-        except Exception as ex:
-            print(ex)
+        except Exception:
             e = funcs.errorEmbed(None, "Invalid search.")
         await ctx.send(embed=e)
 
