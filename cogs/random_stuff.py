@@ -507,11 +507,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     if not suspended:
                         lkarma = redditor.link_karma
                         ckarma = redditor.comment_karma
+                        trophies = await redditor.trophies()
                         e.set_thumbnail(url=redditor.icon_img)
                         e.add_field(name="Join Date (UTC)", value=f"`{datetime.fromtimestamp(redditor.created_utc)}`")
                         e.add_field(name="Total Karma", value="`{:,}`".format(lkarma + ckarma))
                         e.add_field(name="Post Karma", value="`{:,}`".format(lkarma))
                         e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
+                        if trophies:
+                            e.add_field(
+                                name="Trophies", value=", ".join(f"`{trophy.name}`" for trophy in trophies), inline=False
+                            )
                         async for submission in redditor.submissions.new(limit=1):
                             e.add_field(
                                 name=f"Latest Post (on r/{submission.subreddit.display_name}; " + \
