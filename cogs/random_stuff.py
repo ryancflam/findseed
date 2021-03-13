@@ -523,6 +523,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                                 value=funcs.formatting(comment.body, limit=1000),
                                 inline=False
                             )
+                        e.set_footer(text=redditor.subreddit["public_description"])
             else:
                 e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
         except Exception:
