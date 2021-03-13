@@ -483,6 +483,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 try:
                     suspended = redditor.is_suspended
                     tags = ["Suspended"]
+                    nickname = ""
                 except:
                     suspended = False
                     tags = [
@@ -494,11 +495,13 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                             "NSFW" if redditor.subreddit["over_18"] else 0
                         ] if i
                     ]
+                    nickname = redditor.subreddit["title"]
                 if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) \
                         and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
                 else:
-                    e = Embed(title="u/" + redditor.name, description=f"https://www.reddit.com/user/{redditor.name}")
+                    e = Embed(title="u/" + redditor.name + (f" ({nickname})" if nickname else ""),
+                              description=f"https://www.reddit.com/user/{redditor.name}")
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     if not suspended:
@@ -524,6 +527,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                                 inline=False
                             )
                         e.set_footer(text=redditor.subreddit["public_description"])
+                        e.set_image(url=redditor.subreddit["banner_img"])
             else:
                 e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
         except Exception:
