@@ -445,7 +445,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
                       aliases=["subreddit", "r", "redditor"], usage="<r/subreddit OR u/redditor>")
     async def reddit(self, ctx, *, inp=""):
-        inp = inp.replace(" ", "")
+        inp = inp.replace(" ", "/")
         while inp.startswith("/"):
             inp = inp[1:]
         try:
@@ -515,7 +515,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                         e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
                         if trophies:
                             e.add_field(
-                                name="Trophies", value=", ".join(f"`{trophy.name}`" for trophy in trophies), inline=False
+                                name="Trophies ({:,})".format(len(trophies)),
+                                value=", ".join(f"`{trophy.name}`" for trophy in trophies),
+                                inline=False
                             )
                         async for submission in redditor.submissions.new(limit=1):
                             e.add_field(

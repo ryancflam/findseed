@@ -83,7 +83,7 @@ class General(commands.Cog, name="General"):
                 ))
                 value = ", ".join(f"`{prefix}{str(command)}`" for command in commandsList)
                 if value:
-                    e.add_field(name=cog + f" ({len(commandsList)})", value=value, inline=False)
+                    e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
         else:
             if self.client.get_command(cmd[0].replace(prefix, "")):
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
