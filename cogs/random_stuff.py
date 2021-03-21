@@ -448,6 +448,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         inp = inp.replace(" ", "/")
         while inp.startswith("/"):
             inp = inp[1:]
+        while inp.endswith("/"):
+            inp = inp[:-1]
         try:
             if inp.casefold().startswith("r") and "/" in inp:
                 subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
@@ -464,7 +466,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                         ] if i
                     ]
                     e = Embed(title="r/" + subreddit.display_name,
-                              description=f"https://www.reddit.com/r/{subreddit.display_name}")
+                              description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" + \
+                                          f"https://old.reddit.com/r/{subreddit.display_name}))")
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     e.set_footer(text=subreddit.public_description)
@@ -475,7 +478,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                             name="Latest Post ({:,} point{}; from u/{})".format(
                                 submission.score, "" if submission.score == 1 else "s", submission.author.name
                             ),
-                            value=f"https://www.reddit.com{submission.permalink}",
+                            value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
+                                  f"https://old.reddit.com{submission.permalink}))",
                             inline=False
                         )
             elif inp.casefold().startswith("u") and "/" in inp:
@@ -501,7 +505,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
                 else:
                     e = Embed(title="u/" + redditor.name + (f" ({nickname})" if nickname else ""),
-                              description=f"https://www.reddit.com/user/{redditor.name}")
+                              description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
+                                          f"https://old.reddit.com/user/{redditor.name}))")
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     if not suspended:
@@ -516,14 +521,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                         if trophies:
                             e.add_field(
                                 name="Trophies ({:,})".format(len(trophies)),
-                                value=", ".join(f"`{trophy.name}`" for trophy in trophies),
+                                value=", ".join(f"`{trophy.name}`" for trophy in trophies[:50])
+                                      + ("..." if len(trophies) > 50 else ""),
                                 inline=False
                             )
                         async for submission in redditor.submissions.new(limit=1):
                             e.add_field(
                                 name=f"Latest Post (on r/{submission.subreddit.display_name}; " + \
                                      f"{'{:,}'.format(submission.score)} point{'' if submission.score == 1 else 's'})",
-                                value=f"https://www.reddit.com{submission.permalink}",
+                                value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
+                                      f"https://old.reddit.com{submission.permalink}))",
                                 inline=False
                             )
                         async for comment in redditor.comments.new(limit=1):
