@@ -474,9 +474,12 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     e.add_field(name="Created (UTC)", value=f"`{datetime.fromtimestamp(subreddit.created_utc)}`")
                     e.add_field(name="Subscribers", value="`{:,}`".format(subreddit.subscribers))
                     async for submission in subreddit.new(limit=1):
+                        sauthor = submission.author or "[deleted]"
+                        if sauthor != "[deleted]":
+                            sauthor = sauthor.name
                         e.add_field(
                             name="Latest Post ({:,} point{}; from u/{})".format(
-                                submission.score, "" if submission.score == 1 else "s", submission.author.name
+                                submission.score, "" if submission.score == 1 else "s", sauthor
                             ),
                             value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
                                   f"https://old.reddit.com{submission.permalink}))",
