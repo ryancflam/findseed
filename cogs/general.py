@@ -25,13 +25,16 @@ class General(commands.Cog, name="General"):
             newmsg += "\n\nWell that was slow..."
         await msg.edit(content=newmsg)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="invite", description="Invite the bot to your server.")
-    async def invite(self, ctx):
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="invite", description="Invite any bot to your server.", usage="[bot user ID]")
+    async def invite(self, ctx, *, botid=""):
+        botid = botid.replace(" ", "") or self.client.user.id
         e = Embed(
-            description=f"[Invite Link](https://discord.com/oauth2/authorize?client_id={self.client.user.id}" + \
+            description=f"[Invite Link](https://discord.com/oauth2/authorize?client_id={botid}" + \
                         "&permissions=473196598&scope=bot)"
         )
+        if botid != self.client.user.id:
+            e.set_footer(text="Note: Invite link may be invalid.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
