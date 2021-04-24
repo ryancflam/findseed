@@ -356,7 +356,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 value = round(number * 2.2046226218, 3)
                 e = Embed(
                     title="Kilograms to Pounds",
-                    description=funcs.formatting(str(value) + " kg")
+                    description=funcs.formatting(str(value) + " lbs")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")

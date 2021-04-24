@@ -291,7 +291,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="lovecalc", description="Calculates the love percentage between two users.",
-                      aliases=["love", "lovecalculator"], usage="<@mention> [@mention]")
+                      aliases=["love", "lovecalculator", "lc"], usage="<@mention> [@mention]")
     async def lovecalc(self, ctx, first: Member=None, second: Member=None):
         if first is None:
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
