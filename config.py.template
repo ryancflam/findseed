@@ -10,6 +10,7 @@ fixerKey = "" # https://fixer.io/signup/free
 rapidApiKey = "" # https://docs.rapidapi.com/docs/keys
 glotIoKey = "" # https://glot.io/account/token
 blockCypherKey = "" # https://www.blockcypher.com/dev/
+ethGasStationKey = "" # https://docs.ethgasstation.info/
 bitmixRef = "" # https://bitmix.biz/en/pages/api
 redditClientID = "" # https://www.reddit.com/prefs/apps/
 redditClientSecret = "" # https://www.reddit.com/prefs/apps/

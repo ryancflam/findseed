@@ -262,6 +262,7 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Unknown location or server error.")
         await ctx.send(embed=e)
 
+    # Partially not working
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="translate", description="Translates text to a different language.", hidden=True,
                       aliases=["t", "translator", "trans", "tr"], usage="<language code to translate to> <input>")
@@ -500,26 +501,7 @@ class Utility(commands.Cog, name="Utility"):
         versionurl = f"https://run.glot.io/languages/{language}"
         res = await funcs.getRequest(versionurl, verify=False)
         data = res.json()
-        url = data[0]["url"]
-        if len(data) > 1:
-            versions = [i["version"] for i in data]
-            output = ", ".join(f"`{j}`" for j in versions)
-            version = ""
-            await ctx.send(embed=Embed(title="Please select a version below or input `quit` to quit...",
-                                       description=output))
-            while version not in versions and version != "quit":
-                try:
-                    option = await self.client.wait_for(
-                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
-                    )
-                    version = option.content.casefold()
-                    if version not in versions and version != "quit":
-                        await ctx.send(embed=funcs.errorEmbed(None, "Invalid version."))
-                except TimeoutError:
-                    return await ctx.send("Cancelling compilation...")
-            if version == "quit":
-                return await ctx.send("Cancelling compilation...")
-            url = f"{versionurl}/{version}"
+        url = data["url"]
         await ctx.send("**You have 15 minutes to type out your code. Input `quit` to quit.**")
         code = None
         try:

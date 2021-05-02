@@ -2,7 +2,7 @@ from os import path, remove
 from time import time
 from asyncio import TimeoutError
 from datetime import datetime
-from mplfinance import plot
+from mplfinance import plot, make_marketcolors, make_mpf_style
 from pandas import DataFrame, DatetimeIndex
 
 from discord import Embed, Colour, File
@@ -28,17 +28,37 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
-                      aliases=["cp", "cmc", "coin", "coingecko", "cg"],
-                      usage="[coin symbol OR CoinGecko ID] [to currency]")
-    async def cryptoprice(self, ctx, coin: str="btc", fiat: str="usd"):
+                      aliases=["cp", "cmc", "coin", "coingecko", "cg", "coinprice"],
+                      usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
+                            "Valid options:\nTime intervals - d, w, m, y\nOther - ma/mav (moving averages), line (line graph)")
+    async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
-        fiat = fiat.upper()
+        days = "1"
+        chartType = "candle"
+        fiat = "USD"
+        mav = (0, 0)
         coin = "neo" if coin.casefold().startswith("n*") or coin.casefold() == "neo" \
                or coin.casefold().startswith("noeo") or coin.casefold().startswith("neoe") else coin.casefold()
         image = None
         data = []
         count = 0
+        for arg in args:
+            arg = arg.casefold()
+            if arg == "d":
+                days = "1"
+            elif arg == "w":
+                days = "7"
+            elif arg == "m":
+                days = "30"
+            elif arg == "y":
+                days = "365"
+            elif arg == "line":
+                chartType = "line"
+            elif arg == "ma" or arg == "mav":
+                mav = (3, 6, 9)
+            else:
+                fiat = arg.upper()
         try:
             coinID = funcs.TICKERS[coin]
         except KeyError:
@@ -107,16 +127,20 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 try:
                     res = await funcs.getRequest(
                         COINGECKO_URL + f"coins/{data['id']}/ohlc",
-                        params={"vs_currency": fiat.casefold(), "days": "1"}
+                        params={"vs_currency": fiat.casefold(), "days": days}
                     )
                     ohlcData = res.json()
+                    style = make_mpf_style(
+                        base_mpf_style="nightclouds",
+                        marketcolors=make_marketcolors(base_mpf_style="binance", inherit=True)
+                    )
                     df = DataFrame(
                         [date[1:] for date in ohlcData],
                         index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
                         columns=["Open", "High", "Low", "Close"]
                     )
-                    plot(df, type="candle", savefig=imgName,
-                         style="yahoo", ylabel=f"Price ({fiat})", title=f"24h Chart ({data['name']})")
+                    plot(df, type=chartType, savefig=imgName, mav=mav,
+                         style=style, ylabel=f"Price ({fiat})", title=f"{days}d Chart ({data['name']})")
                     image = File(imgName)
                     e.set_image(url=f"attachment://{imgName}")
                 except:
@@ -162,6 +186,23 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.send(embed=e, file=image)
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="ethgas", description="Shows the recommended gas prices for Ethereum transactions.",
+                      aliases=["eg", "ef", "ethfee", "ethfees", "egas", "efee", "efees", "gasprice", "gasfee"])
+    async def ethgas(self, ctx):
+        res = await funcs.getRequest(
+            f"https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key={config.ethGasStationKey}"
+        )
+        data = res.json()
+        e = Embed(colour=Colour.light_grey())
+        e.set_author(name="Recommended Ethereum Gas Prices", icon_url=ETHEREUM_LOGO)
+        e.add_field(name="Fastest (<30s)", value=f"`{int(data['fastest'] / 10)} gwei`")
+        e.add_field(name="Fast (<2m)", value=f"`{int(data['fast'] / 10)} gwei`")
+        e.add_field(name="Average (<5m)", value=f"`{int(data['average'] / 10)} gwei`")
+        e.add_field(name="Safe Low (<30m)", value=f"`{int(data['safeLow'] / 10)} gwei`")
+        e.set_footer(text="1 gwei = 0.000000001 ETH")
+        await ctx.send(embed=e)
+
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
                       aliases=["btc", "bitcoinnetwork", "bn", "bitcoin"])
@@ -174,6 +215,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             blockchain2 = data.json()
             data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
             blockchain3 = data.json()
+            data = await funcs.getRequest("https://mempool.space/api/v1/fees/recommended")
+            fees = data.json()
             e = Embed(description="https://www.blockchain.com/stats", colour=Colour.orange())
             height = blockchain2["height"]
             blockreward = 50
@@ -198,6 +241,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(
                 name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc'] * 0.00000001, 8)} BTC`"
             )
+            e.add_field(name="High Priority Fee (~10m)", value=f"`{fees['fastestFee']} sats/vB`")
+            e.add_field(name="Medium Priority Fee (~3h)", value=f"`{fees['halfHourFee']} sats/vB`")
+            e.add_field(name="Low Priority Fee (~1d)", value=f"`{fees['hourFee']} sats/vB`")
+            e.add_field(name="Minimum Fee", value=f"`{fees['minimumFee']} sats/vB`")
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.send(embed=e)

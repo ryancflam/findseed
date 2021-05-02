@@ -388,9 +388,11 @@ class Minecraft(commands.Cog, name="Minecraft"):
             f"**~{round(self.coordsDifference((x1, z1), (x2, z2)))}**"
         )
 
+    # Partially not working
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="mcwr", description="Shows the current world records for some of the most prominent Any% " + \
-                                               "Minecraft: Java Edition speedrun categories.", aliases=["worldrecord", "wr"])
+                                               "Minecraft: Java Edition speedrun categories.",
+                      aliases=["worldrecord", "wr"], hidden=True)
     async def mcwr(self, ctx):
         await ctx.send("Getting speedrun.com data. Please wait...")
         try:
