@@ -27,10 +27,11 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         return value / 1000000000000000000
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="cryptoprice", description="Finds the current price of a cryptocurrency.",
-                      aliases=["cp", "cmc", "coin", "coingecko", "cg", "coinprice"],
+    @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
+                      aliases=["cp", "cmc", "coin", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
-                            "Valid options:\nTime intervals - d, w, m, y\nOther - ma/mav (moving averages), line (line graph)")
+                            "Valid options:\n\nTime intervals - d, w, m, y\nOther - ma/mav (moving averages), line (line" + \
+                            " graph)\n\nAny other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
@@ -38,24 +39,24 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         chartType = "candle"
         fiat = "USD"
         mav = (0, 0)
-        coin = "neo" if coin.casefold().startswith("n*") or coin.casefold() == "neo" \
-               or coin.casefold().startswith("noeo") or coin.casefold().startswith("neoe") else coin.casefold()
+        coin = "neo" if coin.casefold().startswith("n*") or coin.casefold() == "neo" or coin.casefold().startswith("ronneo") \
+               or coin.casefold().startswith("noeo") or coin.casefold().startswith("neoe") \
+               or coin.casefold().startswith("neoo") or coin.casefold().startswith("noee") else coin.casefold()
         image = None
         data = []
         count = 0
         for arg in args:
-            arg = arg.casefold()
-            if arg == "d":
+            if arg.casefold() == "d":
                 days = "1"
-            elif arg == "w":
+            elif arg.casefold() == "w":
                 days = "7"
-            elif arg == "m":
+            elif arg.casefold() == "m":
                 days = "30"
-            elif arg == "y":
+            elif arg.casefold() == "y":
                 days = "365"
-            elif arg == "line":
+            elif arg.casefold() == "line":
                 chartType = "line"
-            elif arg == "ma" or arg == "mav":
+            elif arg.casefold() == "ma" or arg.casefold() == "mav":
                 mav = (3, 6, 9)
             else:
                 fiat = arg.upper()
@@ -205,7 +206,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
-                      aliases=["btc", "bitcoinnetwork", "bn", "bitcoin"])
+                      aliases=["btc", "bitcoinnetwork", "bn", "bitcoin", "bf", "btcfee", "btcfees"])
     async def btcnetwork(self, ctx):
         await ctx.send("Getting Bitcoin network information. Please wait...")
         try:
