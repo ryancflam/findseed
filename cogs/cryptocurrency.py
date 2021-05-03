@@ -31,7 +31,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                       aliases=["cp", "cmc", "coin", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
                             "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n" + \
-                            "Other - ma/mav (moving averages), line (line graph)\n\n" + \
+                            "Other - ma (moving averages), line (line graph)\n\n" + \
                             "Any other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
@@ -48,25 +48,27 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         count = 0
         for arg in args:
             try:
-                days = "1" if int(arg) not in [1, 7, 14, 30, 90, 180, 365] else arg
+                days = "1" if int(arg) not in [1, 7, 14, 30, 90, 180, 365, 2, 3, 6, 12] else arg
+                days = "14" if days == "2" else "90" if days == "3" else "180" if days == "6" else "365" if days == "12" else days
             except ValueError:
-                if arg.casefold() == "d" or arg.casefold() == "1d":
+                if arg.casefold() == "d" or arg.casefold().startswith("1d"):
                     days = "1"
-                elif arg.casefold() == "w" or arg.casefold() == "1w" or arg.casefold() == "7d":
+                elif arg.casefold() == "w" or arg.casefold().startswith("1w") or arg.casefold().startswith("7d"):
                     days = "7"
-                elif arg.casefold() == "2w" or arg.casefold() == "14d":
+                elif arg.casefold().startswith("2w") or arg.casefold().startswith("14d"):
                     days = "14"
-                elif arg.casefold() == "m" or arg.casefold() == "30d":
+                elif arg.casefold() == "m" or arg.casefold().startswith("30d"):
                     days = "30"
-                elif arg.casefold() == "3m" or arg.casefold() == "90d":
+                elif arg.casefold().startswith("3m") or arg.casefold().startswith("90d"):
                     days = "90"
-                elif arg.casefold() == "6m" or arg.casefold() == "180d":
+                elif arg.casefold().startswith("6m") or arg.casefold().startswith("180d"):
                     days = "180"
-                elif arg.casefold() == "y" or arg.casefold() == "365d" or arg.casefold() == "12m":
+                elif arg.casefold() == "y" or arg.casefold().startswith("365d") or arg.casefold().startswith("12m") \
+                        or arg.casefold().startswith("1y"):
                     days = "365"
-                elif arg.casefold() == "max":
+                elif arg.casefold().startswith("max"):
                     days = "max"
-                elif arg.casefold() == "line":
+                elif arg.casefold().startswith("line"):
                     chartType = "line"
                 elif arg.casefold() == "ma" or arg.casefold() == "mav":
                     mav = (3, 6, 9)
