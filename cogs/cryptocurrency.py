@@ -30,8 +30,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
                       aliases=["cp", "cmc", "coin", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
-                            "Valid options:\n\nTime intervals - d, w, m, y\nOther - ma/mav (moving averages), line (line" + \
-                            " graph)\n\nAny other option will be counted as a comparing currency (e.g. GBP, EUR...)")
+                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n" + \
+                            "Other - ma/mav (moving averages), line (line graph)\n\n" + \
+                            "Any other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
@@ -46,20 +47,31 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         data = []
         count = 0
         for arg in args:
-            if arg.casefold() == "d":
-                days = "1"
-            elif arg.casefold() == "w":
-                days = "7"
-            elif arg.casefold() == "m":
-                days = "30"
-            elif arg.casefold() == "y":
-                days = "365"
-            elif arg.casefold() == "line":
-                chartType = "line"
-            elif arg.casefold() == "ma" or arg.casefold() == "mav":
-                mav = (3, 6, 9)
-            else:
-                fiat = arg.upper()
+            try:
+                days = "1" if int(arg) not in [1, 7, 14, 30, 90, 180, 365] else arg
+            except ValueError:
+                if arg.casefold() == "d" or arg.casefold() == "1d":
+                    days = "1"
+                elif arg.casefold() == "w" or arg.casefold() == "1w" or arg.casefold() == "7d":
+                    days = "7"
+                elif arg.casefold() == "2w" or arg.casefold() == "14d":
+                    days = "14"
+                elif arg.casefold() == "m" or arg.casefold() == "30d":
+                    days = "30"
+                elif arg.casefold() == "3m" or arg.casefold() == "90d":
+                    days = "90"
+                elif arg.casefold() == "6m" or arg.casefold() == "180d":
+                    days = "180"
+                elif arg.casefold() == "y" or arg.casefold() == "365d" or arg.casefold() == "12m":
+                    days = "365"
+                elif arg.casefold() == "max":
+                    days = "max"
+                elif arg.casefold() == "line":
+                    chartType = "line"
+                elif arg.casefold() == "ma" or arg.casefold() == "mav":
+                    mav = (3, 6, 9)
+                else:
+                    fiat = arg.upper()
         try:
             coinID = funcs.TICKERS[coin]
         except KeyError:
@@ -140,8 +152,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
                         columns=["Open", "High", "Low", "Close"]
                     )
-                    plot(df, type=chartType, savefig=imgName, mav=mav,
-                         style=style, ylabel=f"Price ({fiat})", title=f"{days}d Chart ({data['name']})")
+                    plot(df, type=chartType, savefig=imgName, mav=mav, style=style, ylabel=f"Price ({fiat})",
+                         title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})")
                     image = File(imgName)
                     e.set_image(url=f"attachment://{imgName}")
                 except:
