@@ -3,9 +3,10 @@ from json import dumps
 from datetime import datetime
 from urllib.parse import quote
 from asyncio import TimeoutError, sleep
+from asyncpraw import Reddit
 from googletrans import Translator, constants
 
-from discord import Embed
+from discord import Embed, channel
 from discord.ext import commands
 
 import config
@@ -15,6 +16,9 @@ from other_utils import funcs
 class Utility(commands.Cog, name="Utility"):
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.reddit = Reddit(client_id=config.redditClientID,
+                             client_secret=config.redditClientSecret,
+                             user_agent="*")
 
     @staticmethod
     def degreesToDirection(value):
@@ -627,6 +631,146 @@ class Utility(commands.Cog, name="Utility"):
                 await poll.add_reaction(emoji)
         except Exception:
             return await ctx.send(embed=funcs.errorEmbed(None, "Too many choices?"))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
+                      aliases=["ud", "urbandictionary"], usage="<term>")
+    async def urban(self, ctx, *, term=""):
+        if term == "":
+            e = funcs.errorEmbed(None, "Empty input.")
+        else:
+            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params={"term": term})
+            data = res.json()
+            terms = data["list"]
+            if len(terms) == 0:
+                e = funcs.errorEmbed(None, "Unknown term.")
+            else:
+                example = terms[0]["example"].replace("[", "").replace("]", "")
+                definition = terms[0]["definition"].replace("[", "").replace("]", "")
+                permalink = terms[0]["permalink"]
+                word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
+                e = Embed(description=permalink)
+                e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                                 "669142387330777115/urban-dictionary-android.png")
+                e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
+                if example:
+                    e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
+                e.set_footer(
+                    text=f"Submitted by {terms[0]['author']} | Approval rate: " + \
+                         f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
+                         f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎)"
+                )
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
+                      aliases=["subreddit", "r", "redditor"], usage="<r/subreddit OR u/redditor>")
+    async def reddit(self, ctx, *, inp=""):
+        inp = inp.replace(" ", "/")
+        while inp.startswith("/"):
+            inp = inp[1:]
+        while inp.endswith("/"):
+            inp = inp[:-1]
+        try:
+            if inp.casefold().startswith("r") and "/" in inp:
+                subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
+                if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) \
+                        and not ctx.channel.is_nsfw():
+                    e = funcs.errorEmbed("NSFW/Over 18!", "Please view this community in an NSFW channel.")
+                else:
+                    tags = [
+                        i for i in [
+                            "Link Flairs" if subreddit.can_assign_link_flair else 0,
+                            "User Flairs" if subreddit.can_assign_user_flair else 0,
+                            "Spoilers Enabled" if subreddit.spoilers_enabled else 0,
+                            "NSFW" if subreddit.over18 else 0
+                        ] if i
+                    ]
+                    e = Embed(title="r/" + subreddit.display_name,
+                              description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" + \
+                                          f"https://old.reddit.com/r/{subreddit.display_name}))")
+                    if tags:
+                        e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
+                    e.set_footer(text=subreddit.public_description)
+                    e.add_field(name="Created (UTC)", value=f"`{datetime.fromtimestamp(subreddit.created_utc)}`")
+                    e.add_field(name="Subscribers", value="`{:,}`".format(subreddit.subscribers))
+                    async for submission in subreddit.new(limit=1):
+                        sauthor = submission.author or "[deleted]"
+                        if sauthor != "[deleted]":
+                            sauthor = sauthor.name
+                        e.add_field(
+                            name="Latest Post ({:,} point{}; from u/{})".format(
+                                submission.score, "" if submission.score == 1 else "s", sauthor
+                            ),
+                            value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
+                                  f"https://old.reddit.com{submission.permalink}))",
+                            inline=False
+                        )
+            elif inp.casefold().startswith("u") and "/" in inp:
+                redditor = await self.reddit.redditor(inp.split("/")[-1], fetch=True)
+                try:
+                    suspended = redditor.is_suspended
+                    tags = ["Suspended"]
+                    nickname = ""
+                except:
+                    suspended = False
+                    tags = [
+                        i for i in [
+                            "Verified" if redditor.has_verified_email else 0,
+                            "Reddit Employee" if redditor.is_employee else 0,
+                            "Moderator" if redditor.is_mod else 0,
+                            "Gold" if redditor.is_gold else 0,
+                            "NSFW" if redditor.subreddit["over_18"] else 0
+                        ] if i
+                    ]
+                    nickname = redditor.subreddit["title"]
+                if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) \
+                        and not ctx.channel.is_nsfw():
+                    e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
+                else:
+                    e = Embed(title="u/" + redditor.name + (f" ({nickname})" if nickname else ""),
+                              description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
+                                          f"https://old.reddit.com/user/{redditor.name}))")
+                    if tags:
+                        e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
+                    if not suspended:
+                        lkarma = redditor.link_karma
+                        ckarma = redditor.comment_karma
+                        trophies = await redditor.trophies()
+                        e.set_thumbnail(url=redditor.icon_img)
+                        e.add_field(name="Join Date (UTC)", value=f"`{datetime.fromtimestamp(redditor.created_utc)}`")
+                        e.add_field(name="Total Karma", value="`{:,}`".format(lkarma + ckarma))
+                        e.add_field(name="Post Karma", value="`{:,}`".format(lkarma))
+                        e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
+                        if trophies:
+                            e.add_field(
+                                name="Trophies ({:,})".format(len(trophies)),
+                                value=", ".join(f"`{trophy.name}`" for trophy in trophies[:50])
+                                      + ("..." if len(trophies) > 50 else ""),
+                                inline=False
+                            )
+                        async for submission in redditor.submissions.new(limit=1):
+                            e.add_field(
+                                name=f"Latest Post (on r/{submission.subreddit.display_name}; " + \
+                                     f"{'{:,}'.format(submission.score)} point{'' if submission.score == 1 else 's'})",
+                                value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
+                                      f"https://old.reddit.com{submission.permalink}))",
+                                inline=False
+                            )
+                        async for comment in redditor.comments.new(limit=1):
+                            e.add_field(
+                                name=f"Latest Comment (on r/{comment.subreddit.display_name}; " + \
+                                     f"{'{:,}'.format(comment.score)} point{'' if comment.score == 1 else 's'})",
+                                value=funcs.formatting(comment.body, limit=1000),
+                                inline=False
+                            )
+                        e.set_footer(text=redditor.subreddit["public_description"])
+                        e.set_image(url=redditor.subreddit["banner_img"])
+            else:
+                e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid search.")
+        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):

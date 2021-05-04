@@ -1,3 +1,5 @@
+import hashlib
+
 from discord import Embed
 from discord.ext import commands
 
@@ -9,6 +11,51 @@ from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 class Conversion(commands.Cog, name="Conversion"):
     def __init__(self, client: commands.Bot):
         self.client = client
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
+                      aliases=["hashing", "hashbrown"], usage="<algorithm> [input]")
+    async def hash(self, ctx, algo=None, *, msg=""):
+        algorithms = [
+            "md5", "blake2b", "blake2s", "sha1", "sha224", "sha256", "sha384", "sha512", "sha", "md"
+        ]
+        if not algo:
+            e = funcs.errorEmbed(None, "Please select a hashing algorithm.")
+        else:
+            algo = algo.casefold().replace("-", "").replace("_", "").strip()
+            if algo not in algorithms:
+                e = funcs.errorEmbed(
+                    "Invalid algorithm!",
+                    "Valid options:\n\n`MD5`, `BLAKE2b`, `BLAKE2s`, " + \
+                    "`SHA1`, `SHA224`, `SHA256`, `SHA384`, `SHA512`"
+                )
+            else:
+                if algo.startswith("md"):
+                    algo = "MD5"
+                    output = str(hashlib.md5(msg.encode("utf-8")).hexdigest())
+                elif algo == "blake2b":
+                    algo = "BLAKE2b"
+                    output = str(hashlib.blake2b(msg.encode("utf-8")).hexdigest())
+                elif algo == "blake2s":
+                    algo = "BLAKE2s"
+                    output = str(hashlib.blake2s(msg.encode("utf-8")).hexdigest())
+                elif algo == "sha1" or algo == "sha":
+                    algo = "SHA1"
+                    output = str(hashlib.sha1(msg.encode("utf-8")).hexdigest())
+                elif algo == "sha224":
+                    algo = "SHA224"
+                    output = str(hashlib.sha224(msg.encode("utf-8")).hexdigest())
+                elif algo == "sha256":
+                    algo = "SHA256"
+                    output = str(hashlib.sha256(msg.encode("utf-8")).hexdigest())
+                elif algo == "sha384":
+                    algo = "SHA384"
+                    output = str(hashlib.sha384(msg.encode("utf-8")).hexdigest())
+                else:
+                    algo = "SHA512"
+                    output = str(hashlib.sha512(msg.encode("utf-8")).hexdigest())
+                e = Embed(title=algo, description=funcs.formatting(output))
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",

@@ -1,15 +1,11 @@
-import hashlib
 from json import load
 from time import time
-from datetime import datetime
-from asyncpraw import Reddit
 from asyncio import sleep, TimeoutError
 from random import choice, randint, shuffle
 
-from discord import Embed, Member, File, channel
+from discord import Embed, Member, File
 from discord.ext import commands
 
-import config
 from other_utils import funcs
 from other_utils.playing_cards import PlayingCards
 
@@ -21,9 +17,6 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
         self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
-        self.reddit = Reddit(client_id=config.redditClientID,
-                             client_secret=config.redditClientSecret,
-                             user_agent="*")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
@@ -366,193 +359,10 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         ]
         await ctx.send(f":8ball: {mention}: `{'Empty input...' if msg == '' else choice(responses)}`")
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
-                      aliases=["hashing", "hashbrown"], usage="<algorithm> [input]")
-    async def hash(self, ctx, algo=None, *, msg=""):
-        algorithms = [
-            "md5", "blake2b", "blake2s", "sha1", "sha224", "sha256", "sha384", "sha512", "sha", "md"
-        ]
-        if not algo:
-            e = funcs.errorEmbed(None, "Please select a hashing algorithm.")
-        else:
-            algo = algo.casefold().replace("-", "").replace("_", "").strip()
-            if algo not in algorithms:
-                e = funcs.errorEmbed(
-                    "Invalid algorithm!",
-                    "Valid options:\n\n`MD5`, `BLAKE2b`, `BLAKE2s`, " + \
-                    "`SHA1`, `SHA224`, `SHA256`, `SHA384`, `SHA512`"
-                )
-            else:
-                if algo.startswith("md"):
-                    algo = "MD5"
-                    output = str(hashlib.md5(msg.encode("utf-8")).hexdigest())
-                elif algo == "blake2b":
-                    algo = "BLAKE2b"
-                    output = str(hashlib.blake2b(msg.encode("utf-8")).hexdigest())
-                elif algo == "blake2s":
-                    algo = "BLAKE2s"
-                    output = str(hashlib.blake2s(msg.encode("utf-8")).hexdigest())
-                elif algo == "sha1" or algo == "sha":
-                    algo = "SHA1"
-                    output = str(hashlib.sha1(msg.encode("utf-8")).hexdigest())
-                elif algo == "sha224":
-                    algo = "SHA224"
-                    output = str(hashlib.sha224(msg.encode("utf-8")).hexdigest())
-                elif algo == "sha256":
-                    algo = "SHA256"
-                    output = str(hashlib.sha256(msg.encode("utf-8")).hexdigest())
-                elif algo == "sha384":
-                    algo = "SHA384"
-                    output = str(hashlib.sha384(msg.encode("utf-8")).hexdigest())
-                else:
-                    algo = "SHA512"
-                    output = str(hashlib.sha512(msg.encode("utf-8")).hexdigest())
-                e = Embed(title=algo, description=funcs.formatting(output))
-        await ctx.send(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
-                      aliases=["ud", "urbandictionary"], usage="<term>")
-    async def urban(self, ctx, *, term=""):
-        if term == "":
-            e = funcs.errorEmbed(None, "Empty input.")
-        else:
-            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params={"term": term})
-            data = res.json()
-            terms = data["list"]
-            if len(terms) == 0:
-                e = funcs.errorEmbed(None, "Unknown term.")
-            else:
-                example = terms[0]["example"].replace("[", "").replace("]", "")
-                definition = terms[0]["definition"].replace("[", "").replace("]", "")
-                permalink = terms[0]["permalink"]
-                word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
-                e = Embed(description=permalink)
-                e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                 "669142387330777115/urban-dictionary-android.png")
-                e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                if example:
-                    e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
-                e.set_footer(
-                    text=f"Submitted by {terms[0]['author']} | Approval rate: " + \
-                         f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                         f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎)"
-                )
-        await ctx.send(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
-                      aliases=["subreddit", "r", "redditor"], usage="<r/subreddit OR u/redditor>")
-    async def reddit(self, ctx, *, inp=""):
-        inp = inp.replace(" ", "/")
-        while inp.startswith("/"):
-            inp = inp[1:]
-        while inp.endswith("/"):
-            inp = inp[:-1]
-        try:
-            if inp.casefold().startswith("r") and "/" in inp:
-                subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
-                if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) \
-                        and not ctx.channel.is_nsfw():
-                    e = funcs.errorEmbed("NSFW/Over 18!", "Please view this community in an NSFW channel.")
-                else:
-                    tags = [
-                        i for i in [
-                            "Link Flairs" if subreddit.can_assign_link_flair else 0,
-                            "User Flairs" if subreddit.can_assign_user_flair else 0,
-                            "Spoilers Enabled" if subreddit.spoilers_enabled else 0,
-                            "NSFW" if subreddit.over18 else 0
-                        ] if i
-                    ]
-                    e = Embed(title="r/" + subreddit.display_name,
-                              description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" + \
-                                          f"https://old.reddit.com/r/{subreddit.display_name}))")
-                    if tags:
-                        e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
-                    e.set_footer(text=subreddit.public_description)
-                    e.add_field(name="Created (UTC)", value=f"`{datetime.fromtimestamp(subreddit.created_utc)}`")
-                    e.add_field(name="Subscribers", value="`{:,}`".format(subreddit.subscribers))
-                    async for submission in subreddit.new(limit=1):
-                        sauthor = submission.author or "[deleted]"
-                        if sauthor != "[deleted]":
-                            sauthor = sauthor.name
-                        e.add_field(
-                            name="Latest Post ({:,} point{}; from u/{})".format(
-                                submission.score, "" if submission.score == 1 else "s", sauthor
-                            ),
-                            value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
-                                  f"https://old.reddit.com{submission.permalink}))",
-                            inline=False
-                        )
-            elif inp.casefold().startswith("u") and "/" in inp:
-                redditor = await self.reddit.redditor(inp.split("/")[-1], fetch=True)
-                try:
-                    suspended = redditor.is_suspended
-                    tags = ["Suspended"]
-                    nickname = ""
-                except:
-                    suspended = False
-                    tags = [
-                        i for i in [
-                            "Verified" if redditor.has_verified_email else 0,
-                            "Reddit Employee" if redditor.is_employee else 0,
-                            "Moderator" if redditor.is_mod else 0,
-                            "Gold" if redditor.is_gold else 0,
-                            "NSFW" if redditor.subreddit["over_18"] else 0
-                        ] if i
-                    ]
-                    nickname = redditor.subreddit["title"]
-                if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) \
-                        and not ctx.channel.is_nsfw():
-                    e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
-                else:
-                    e = Embed(title="u/" + redditor.name + (f" ({nickname})" if nickname else ""),
-                              description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
-                                          f"https://old.reddit.com/user/{redditor.name}))")
-                    if tags:
-                        e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
-                    if not suspended:
-                        lkarma = redditor.link_karma
-                        ckarma = redditor.comment_karma
-                        trophies = await redditor.trophies()
-                        e.set_thumbnail(url=redditor.icon_img)
-                        e.add_field(name="Join Date (UTC)", value=f"`{datetime.fromtimestamp(redditor.created_utc)}`")
-                        e.add_field(name="Total Karma", value="`{:,}`".format(lkarma + ckarma))
-                        e.add_field(name="Post Karma", value="`{:,}`".format(lkarma))
-                        e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
-                        if trophies:
-                            e.add_field(
-                                name="Trophies ({:,})".format(len(trophies)),
-                                value=", ".join(f"`{trophy.name}`" for trophy in trophies[:50])
-                                      + ("..." if len(trophies) > 50 else ""),
-                                inline=False
-                            )
-                        async for submission in redditor.submissions.new(limit=1):
-                            e.add_field(
-                                name=f"Latest Post (on r/{submission.subreddit.display_name}; " + \
-                                     f"{'{:,}'.format(submission.score)} point{'' if submission.score == 1 else 's'})",
-                                value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
-                                      f"https://old.reddit.com{submission.permalink}))",
-                                inline=False
-                            )
-                        async for comment in redditor.comments.new(limit=1):
-                            e.add_field(
-                                name=f"Latest Comment (on r/{comment.subreddit.display_name}; " + \
-                                     f"{'{:,}'.format(comment.score)} point{'' if comment.score == 1 else 's'})",
-                                value=funcs.formatting(comment.body, limit=1000),
-                                inline=False
-                            )
-                        e.set_footer(text=redditor.subreddit["public_description"])
-                        e.set_image(url=redditor.subreddit["banner_img"])
-            else:
-                e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
-        except Exception:
-            e = funcs.errorEmbed(None, "Invalid search.")
-        await ctx.send(embed=e)
-
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="coin", description="Flips coins.", usage="[amount up to 100]", aliases=["coins", "flip"])
+    @commands.command(name="coin", description="Flips coins.", usage="[amount up to 100]",
+                      aliases=["coins", "flip", "fc", "flipcoin", "coinflip",
+                               "flipcoins", "tosscoins", "cointoss", "tosscoin", "toss"])
     async def coin(self, ctx, amount="1"):
         try:
             amount = int(amount)
@@ -561,24 +371,34 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         if not 0 < amount < 101:
             return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
         coins = []
-        total = {1: 0, 2: 0}
+        total = {"Heads": 0, "Tails": 0, "Edge": 0}
+        edgeOdds = 10001
         for _ in range(amount):
-            randomcoin = randint(1, 2)
-            coins.append(randomcoin)
-            total[randomcoin] += 1
+            randomcoin = randint(1, edgeOdds)
+            coins.append("Heads" if randomcoin < 5001 else "Tails" if randomcoin < 10001 else "Edge")
+            total[coins[-1]] += 1
         if amount == 1:
-            e = Embed(title="Heads" if coins[0] == 1 else "Tails", description=f"Requested by: {ctx.author.mention}")
-            e.set_image(url=f"https://flipacoin.fun/images/coin/coin{coins[0]}.png")
+            isEdge = coins[0] == "Edge"
+            thumbnail = "https://upload.wikimedia.org/wikipedia/commons/6/67/1_oz_Vienna_Philharmonic_2017_edge.png" \
+                        if isEdge else f"https://flipacoin.fun/images/coin/coin{'1' if coins[0] == 'Heads' else '2'}.png"
+            e = Embed(title="WTF NO WAY" if isEdge else coins[0], description=f"Requested by: {ctx.author.mention}")
+            e.set_image(url=thumbnail)
+            if isEdge:
+                e.set_footer(text="1 in {:,} chance".format(edgeOdds))
             await ctx.send(embed=e)
         else:
-            joined = ", ".join("Heads" if coin == 1 else "Tails" for coin in coins)
             result = ""
-            for i in range(1, 3):
-                result += f"\n{'Heads' if i == 1 else 'Tails'}: {total[i]} time{'s' if total[i] > 1 else ''}" if total[i] else ""
-            await ctx.send(f"```{joined}\n{result}\n\nRequested by: {ctx.author}```")
+            for i in range(1, 4):
+                type = 'Heads' if i == 1 else 'Tails' if i == 2 else 'Edge'
+                result += "\n{}{}: {} time{}".format(
+                    type, (" (1 in {:,} chance)".format(edgeOdds) if i == 3 else ""),
+                    total[type], "s" if total[type] > 1 else ""
+                ) if total[type] else ""
+            await ctx.send(f"```{', '.join(coin for coin in coins)}\n{result}\n\nRequested by: {ctx.author}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="die", description="Rolls dice.", usage="[amount up to 100]", aliases=["dice", "roll"])
+    @commands.command(name="die", description="Rolls dice.", usage="[amount up to 100]",
+                      aliases=["dice", "roll", "rd", "rolldice", "rolldie", "diceroll", "dieroll"])
     async def die(self, ctx, amount="1"):
         try:
             amount = int(amount)
