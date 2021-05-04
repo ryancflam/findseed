@@ -43,19 +43,21 @@ class Bot(commands.Bot):
             return ex
 
     async def bitcoin(self):
+        btc = True
         while True:
             try:
                 res = await getRequest(
                     "https://api.coingecko.com/api/v3/coins/markets",
-                    params={"vs_currency": "usd", "ids": "bitcoin"}
+                    params={"vs_currency": "usd", "ids": ("bitcoin" if btc else "ethereum")}
                 )
                 data = res.json()[0]
                 ext = "🎉" if data["ath"] < data["current_price"] else ""
                 msg = " @ ${:,}{}".format(data["current_price"], ext)
             except:
                 msg = ""
-            await self.presence("BTC" + msg)
-            await asyncio.sleep(20)
+            await self.presence(("BTC" if btc else "ETH") + msg)
+            await asyncio.sleep(30)
+            btc = not btc
 
     async def presence(self, name):
         await self.change_presence(

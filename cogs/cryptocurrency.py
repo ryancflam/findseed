@@ -63,7 +63,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "gas"})
         gasusd = res.json()["tickers"][0]["converted_last"]["usd"]
         gasbtc = res.json()["tickers"][0]["converted_last"]["btc"]
-        e = Embed(description=f"Requested by: {ctx.author.mention}", colour=Colour.green())
+        e = Embed(colour=Colour.green())
         e.set_author(name=f"GAS Earnings for {amount} NEO",
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
         e.set_footer(text=f"GAS price: {gasbtc} BTC | {gasusd} USD")
