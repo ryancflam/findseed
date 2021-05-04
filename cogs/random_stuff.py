@@ -372,10 +372,10 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
         coins = []
         total = {"Heads": 0, "Tails": 0, "Edge": 0}
-        edgeOdds = 10001
+        edgeOdds = 6001
         for _ in range(amount):
             randomcoin = randint(1, edgeOdds)
-            coins.append("Heads" if randomcoin < 5001 else "Tails" if randomcoin < 10001 else "Edge")
+            coins.append("Heads" if randomcoin <= ((edgeOdds - 1) / 2) else "Tails" if randomcoin < edgeOdds else "Edge")
             total[coins[-1]] += 1
         if amount == 1:
             isEdge = coins[0] == "Edge"
