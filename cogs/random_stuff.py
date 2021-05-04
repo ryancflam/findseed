@@ -551,7 +551,58 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             e = funcs.errorEmbed(None, "Invalid search.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="coin", description="Flips coins.", usage="[amount up to 100]", aliases=["coins", "flip"])
+    async def coin(self, ctx, amount="1"):
+        try:
+            amount = int(amount)
+        except ValueError:
+            amount = 1
+        if not 0 < amount < 101:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
+        coins = []
+        total = {1: 0, 2: 0}
+        for _ in range(amount):
+            randomcoin = randint(1, 2)
+            coins.append(randomcoin)
+            total[randomcoin] += 1
+        if amount == 1:
+            e = Embed(title="Heads" if coins[0] == 1 else "Tails", description=f"Requested by: {ctx.author.mention}")
+            e.set_image(url=f"https://flipacoin.fun/images/coin/coin{coins[0]}.png")
+            await ctx.send(embed=e)
+        else:
+            joined = ", ".join("Heads" if coin == 1 else "Tails" for coin in coins)
+            result = ""
+            for i in range(1, 3):
+                result += f"\n{'Heads' if i == 1 else 'Tails'}: {total[i]} time{'s' if total[i] > 1 else ''}" if total[i] else ""
+            await ctx.send(f"```{joined}\n{result}\n\nRequested by: {ctx.author}```")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="die", description="Rolls dice.", usage="[amount up to 100]", aliases=["dice", "roll"])
+    async def die(self, ctx, amount="1"):
+        try:
+            amount = int(amount)
+        except ValueError:
+            amount = 1
+        if not 0 < amount < 101:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
+        dice = []
+        total = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+        for _ in range(amount):
+            randomdice = randint(1, 6)
+            dice.append(randomdice)
+            total[randomdice] += 1
+        if amount == 1:
+            e = Embed(title=dice[0], description=f"Requested by: {ctx.author.mention}")
+            e.set_image(url=f"https://rolladie.net/images/dice/dice{dice[0]}.jpg")
+            await ctx.send(embed=e)
+        else:
+            result = ""
+            for i in range(1, 7):
+                result += f"\n{i}: {total[i]} time{'s' if total[i] > 1 else ''}" if total[i] else ""
+            await ctx.send(f"```{', '.join(str(die) for die in dice)}\n{result}\n\nRequested by: {ctx.author}```")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="card", description="Deals random cards.", usage="[amount up to 52]",
                       aliases=["rc", "cards", "deal", "randomcard", "randomcards"])
     async def card(self, ctx, amount="1"):

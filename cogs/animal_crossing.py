@@ -77,7 +77,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
                                                 "particular month in Animal Crossing: New Horizons.",
                       aliases=["acn", "acarriving", "acarrive"], usage="[month]")
-    async def acnew(self, ctx, month=str(datetime.now().month)):
+    async def acnew(self, ctx, month=""):
+        month = month or str(datetime.now().month)
         try:
             _ = int(month)
         except ValueError:
@@ -88,7 +89,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
                                                     "particular month in Animal Crossing: New Horizons.",
                       aliases=["acl", "acleave"], usage="[month]")
-    async def acleaving(self, ctx, month=str(datetime.now().month)):
+    async def acleaving(self, ctx, month=""):
+        month = month or str(datetime.now().month)
         try:
             _ = int(month)
         except ValueError:

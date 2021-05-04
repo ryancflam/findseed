@@ -78,7 +78,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
-                      aliases=["cp", "cmc", "coin", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
+                      aliases=["cp", "cmc", "price", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
                             "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n" + \
                             "Other - ma (moving averages), line (line graph)\n\n" + \
