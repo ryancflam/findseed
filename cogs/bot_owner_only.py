@@ -223,7 +223,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
-                      aliases=["evaluate", "calc"], usage="<code>")
+                      aliases=["evaluate"], usage="<code>")
     @commands.is_owner()
     async def eval(self, ctx, *, code: str=""):
         if code == "":

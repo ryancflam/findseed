@@ -1,12 +1,12 @@
 {
-    "messages":{
-        "list":[
+    "messages": {
+        "list": [
             "is a clown",
             "is a dummy!",
             "is one of the dumbest of all pundits",
             "has no sense of the real world!",
             "is closing in on being the dumbest of them all",
-            "doesn’t have a clue",
+            "doesn\u2019t have a clue",
             "is a disaster",
             "is a dope!",
             "knows nothing",
@@ -365,7 +365,7 @@
             "should focus on fair and balanced reporting",
             "made all bad decisions over the last decade",
             "is falling apart",
-            "is always looking for a hit to bring them back into relevancy—ain't working",
+            "is always looking for a hit to bring them back into relevancy\u2014ain't working",
             "is now irrelevant",
             "is one of the dumbest people in politics",
             "has no talent, no TV persona",
@@ -528,7 +528,7 @@
             "is one of the least productive U.S. Senators",
             "gets nothing done",
             "does nothing to help!",
-            "didn’t have the guts to run for POTUS",
+            "didn\u2019t have the guts to run for POTUS",
             "has a career that is totally based on a lie",
             "wrote letter to me begging for forgiveness",
             "selfishly opposed to me!",

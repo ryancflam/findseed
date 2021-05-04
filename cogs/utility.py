@@ -4,6 +4,7 @@ from datetime import datetime
 from urllib.parse import quote
 from asyncio import TimeoutError, sleep
 from asyncpraw import Reddit
+from random import choice
 from googletrans import Translator, constants
 
 from discord import Embed, channel
@@ -11,6 +12,7 @@ from discord.ext import commands
 
 import config
 from other_utils import funcs
+from other_utils.safe_eval import SafeEval
 
 
 class Utility(commands.Cog, name="Utility"):
@@ -770,6 +772,56 @@ class Utility(commands.Cog, name="Utility"):
                 e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
         except Exception:
             e = funcs.errorEmbed(None, "Invalid search.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="calc", description="Does math.",
+                      aliases=["calculate", "calculator", "cal", "math", "maths"], usage="<input>")
+    async def calc(self, ctx, *, inp):
+        inp = inp.casefold().replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100") \
+              .replace("×", "*").replace(" ", "")
+        try:
+            e = Embed(description=funcs.formatting("{:,}".format(SafeEval(inp).safeEval())))
+        except ZeroDivisionError:
+            answer = choice([
+                "Stop right there, that's illegal!",
+                "Wait hol up...",
+                "FBI OPEN UP!!!",
+                "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
+                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
+                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL",
+                "You madlad...",
+                "God damn you.",
+                "......................................................",
+                "Why the hell do you exist?",
+                "Mate I think you've got issues.",
+                "Are you okay?",
+                "You tell me the answer.",
+                "What is wrong with you?",
+                "Disgraceful.",
+                "Don't you dare.",
+                "HOW DARE YOU?!?",
+                "You bloody bastard...",
+                "Do that again and I will stick that zero down your throat. Egg for breakfast, anyone?",
+                "Get a life.",
+                "Dio taxista Ronnosessuale dio animale porca di quella madonna vacca in calore rotta in settecento mila pezzi",
+                "Naughty naughty naughty, you filthy old soomaka!",
+                "Hey that's my yarbles! Give it back!",
+                "*magic portal opens...*",
+                "Go to the den.",
+                "EXXXXXCCCCCCUUUUUSEEEE MEEE",
+                "what", "wat", "wut",
+                "Der Mann sprach für seine Rechte\ner ist verstört, er ist ein egoistischer Gör!",
+                "You did absolutely **** all to resolve the pandemic, you did close to nothing to " + \
+                "prepare yourselves for it, and let alone did you do anything to functionally reso" + \
+                "lve problems. You are oppressing our individual liberties because of the shortcom" + \
+                "ings of your institutions. You are stifling your economy and, as a consequence, o" + \
+                "ur income because of your vices. And last but not least, you seem to be absolutel" + \
+                "y stuck into a self-repetitive loop of making the same idiotic mistakes over and over again."
+            ])
+            e = Embed(description=f"```{answer}```")
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
 

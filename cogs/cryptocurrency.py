@@ -98,7 +98,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         count = 0
         for arg in args:
             try:
-                days = "1" if int(arg) not in [1, 7, 14, 30, 90, 180, 365, 2, 3, 6, 12] else arg
+                days = "1" if int(arg) not in [1, 2, 3, 6, 7, 12, 14, 30, 90, 180, 365] else arg
                 days = "14" if days == "2" else "90" if days == "3" else "180" if days == "6" else "365" if days == "12" else days
             except ValueError:
                 if arg.casefold() == "d" or arg.casefold().startswith("1d"):

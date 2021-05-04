@@ -103,17 +103,11 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     async def acart(self, ctx, *, art):
         try:
             artdata = self.findData(self.art, art)
-            artname = artdata["name"]["name-USen"].title()
-            hasFake = str(artdata["hasFake"])
-            buyPrice = artdata["buy-price"]
-            sellPrice = artdata["sell-price"]
-            img = artdata["image_uri"]
-            desc = artdata["museum-desc"]
-            e = Embed(title=artname, description=desc)
-            e.add_field(name="Has Fake", value=f"`{hasFake}`")
-            e.add_field(name="Buy Price", value="`{:,}`".format(buyPrice))
-            e.add_field(name="Sell Price", value="`{:,}`".format(sellPrice))
-            e.set_image(url=img)
+            e = Embed(title=artdata["name"]["name-USen"].title(), description=artdata["museum-desc"])
+            e.add_field(name="Has Fake", value=f"`{str(artdata['hasFake'])}`")
+            e.add_field(name="Buy Price", value="`{:,}`".format(artdata['buy-price']))
+            e.add_field(name="Sell Price", value="`{:,}`".format(artdata['sell-price']))
+            e.set_image(url=artdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -125,27 +119,21 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     async def acbug(self, ctx, *, bug):
         try:
             bugdata = self.findData(self.bugs, bug)
-            bugname = bugdata["name"]["name-USen"].title().replace("'S", "'s")
             northmonths = bugdata["availability"]["month-northern"] if bugdata["availability"]["month-northern"] != "" \
                           else "All Year"
             southmonths = bugdata["availability"]["month-southern"] if bugdata["availability"]["month-southern"] != "" \
                           else "All Year"
             time = bugdata["availability"]["time"] if bugdata["availability"]["time"] != "" else "All Day"
-            price = bugdata["price"]
-            flickprice = bugdata["price-flick"]
-            catch = '"{}"'.format(bugdata["catch-phrase"])
-            location = bugdata["availability"]["location"]
-            rarity = bugdata["availability"]["rarity"]
-            img = bugdata["image_uri"]
-            e = Embed(title=bugname, description=catch)
-            e.add_field(name="Location", value=f"`{location}`")
-            e.add_field(name="Rarity", value=f"`{rarity}`")
+            e = Embed(description='"{}"'.format(bugdata["catch-phrase"]))
+            e.set_author(name=bugdata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=bugdata["icon_uri"])
+            e.add_field(name="Location", value=f"`{bugdata['availability']['location']}`")
+            e.add_field(name="Rarity", value=f"`{bugdata['availability']['rarity']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value="`{:,}`".format(price))
-            e.add_field(name="Sell Price (Flick)", value="`{:,}`".format(flickprice))
-            e.set_image(url=img)
+            e.add_field(name="Sell Price", value="`{:,}`".format(bugdata['price']))
+            e.add_field(name="Sell Price (Flick)", value="`{:,}`".format(bugdata['price-flick']))
+            e.set_image(url=bugdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -157,29 +145,22 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     async def acfish(self, ctx, *, fish):
         try:
             fishdata = self.findData(self.fish, fish)
-            fishname = fishdata["name"]["name-USen"].title().replace("'S", "'s")
             northmonths = fishdata["availability"]["month-northern"] if fishdata["availability"]["month-northern"] != "" \
                           else "All Year"
             southmonths = fishdata["availability"]["month-southern"] if fishdata["availability"]["month-southern"] != "" \
                           else "All Year"
             time = fishdata["availability"]["time"] if fishdata["availability"]["time"] != "" else "All Day"
-            price = fishdata["price"]
-            cjprice = fishdata["price-cj"]
-            catch = '"{}"'.format(fishdata["catch-phrase"])
-            location = fishdata["availability"]["location"]
-            rarity = fishdata["availability"]["rarity"]
-            shadow = fishdata["shadow"]
-            img = fishdata["image_uri"]
-            e = Embed(title=fishname, description=catch)
-            e.add_field(name="Shadow",value=f"`{shadow}`")
-            e.add_field(name="Location", value=f"`{location}`")
-            e.add_field(name="Rarity", value=f"`{rarity}`")
+            e = Embed(description='"{}"'.format(fishdata["catch-phrase"]))
+            e.set_author(name=fishdata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=fishdata["icon_uri"])
+            e.add_field(name="Shadow",value=f"`{fishdata['shadow']}`")
+            e.add_field(name="Location", value=f"`{fishdata['availability']['location']}`")
+            e.add_field(name="Rarity", value=f"`{fishdata['availability']['rarity']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value="`{:,}`".format(price))
-            e.add_field(name="Sell Price (C.J.)", value="`{:,}`".format(cjprice))
-            e.set_image(url=img)
+            e.add_field(name="Sell Price", value="`{:,}`".format(fishdata['price']))
+            e.add_field(name="Sell Price (C.J.)", value="`{:,}`".format(fishdata['price-cj']))
+            e.set_image(url=fishdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -191,15 +172,11 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     async def acfossil(self, ctx, *, fossil):
         try:
             fossildata = self.findData(self.fossils, fossil)
-            fossilname = fossildata["name"]["name-USen"].title().replace("'S", "'s")
-            price = fossildata["price"]
-            phrase = fossildata["museum-phrase"]
-            partof = fossildata["part-of"].title()
-            img = fossildata["image_uri"]
-            e = Embed(title=fossilname, description=phrase)
-            e.add_field(name="Sell Price", value="`{:,}`".format(price))
-            e.add_field(name="Part Of", value=f"`{partof}`")
-            e.set_image(url=img)
+            e = Embed(title=fossildata["name"]["name-USen"].title().replace("'S", "'s"),
+                      description=fossildata["museum-phrase"])
+            e.add_field(name="Sell Price", value="`{:,}`".format(fossildata['price']))
+            e.add_field(name="Part Of", value=f"`{fossildata['part-of'].title()}`")
+            e.set_image(url=fossildata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -211,25 +188,20 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     async def acsea(self, ctx, *, sea):
         try:
             seadata = self.findData(self.sea, sea)
-            seaname = seadata["name"]["name-USen"].title().replace("'S", "'s")
-            price = seadata["price"]
             northmonths = seadata["availability"]["month-northern"] if seadata["availability"]["month-northern"] != "" \
                           else "All Year"
             southmonths = seadata["availability"]["month-southern"] if seadata["availability"]["month-southern"] != "" \
                           else "All Year"
             time = seadata["availability"]["time"] if seadata["availability"]["time"] != "" else "All Day"
-            speed = seadata["speed"]
-            shadow = seadata["shadow"]
-            catch = '"{}"'.format(seadata["catch-phrase"])
-            img = seadata["image_uri"]
-            e = Embed(title=seaname, description=catch)
-            e.add_field(name="Shadow",value=f"`{shadow}`")
-            e.add_field(name="Speed",value=f"`{speed}`")
+            e = Embed(description='"{}"'.format(seadata["catch-phrase"]))
+            e.set_author(name=seadata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=seadata["icon_uri"])
+            e.add_field(name="Shadow",value=f"`{seadata['shadow']}`")
+            e.add_field(name="Speed",value=f"`{seadata['speed']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value="`{:,}`".format(price))
-            e.set_image(url=img)
+            e.add_field(name="Sell Price", value="`{:,}`".format(seadata["price"]))
+            e.set_image(url=seadata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -249,24 +221,16 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                     break
             if not found:
                 return await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
-            villagername = villagerdata["name"]["name-USen"].title()
-            personality = villagerdata["personality"]
-            birth = villagerdata["birthday-string"]
-            species = f'{villagerdata["species"]} ({villagerdata["subtype"]})'
-            gender = villagerdata["gender"]
-            phrase = villagerdata["catch-phrase"]
-            saying = villagerdata["saying"]
-            hobby = villagerdata["hobby"]
-            image = villagerdata["image_uri"]
-            e = Embed(title=f"{villagername}", description=f'"{saying}"')
-            e.set_image(url=image)
+            e = Embed(description='"' + villagerdata["saying"] + '"')
+            e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"])
+            e.set_image(url=villagerdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
-            e.add_field(name="Personality", value=f"`{personality}`")
-            e.add_field(name="Birthday", value=f"`{birth}`")
-            e.add_field(name="Species", value=f"`{species}`")
-            e.add_field(name="Gender", value=f"`{gender}`")
-            e.add_field(name="Hobby", value=f"`{hobby}`")
-            e.add_field(name="Initial Phrase", value='`"{}"`'.format(phrase))
+            e.add_field(name="Personality", value=f"`{villagerdata['personality']}`")
+            e.add_field(name="Birthday", value=f"`{villagerdata['birthday-string']}`")
+            e.add_field(name="Species", value="`{}`".format(f'{villagerdata["species"]} ({villagerdata["subtype"]})'))
+            e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
+            e.add_field(name="Hobby", value=f"`{villagerdata['hobby']}`")
+            e.add_field(name="Initial Phrase", value='`"{}"`'.format(villagerdata["catch-phrase"]))
         except Exception as ex:
             e = funcs.errorEmbed(None, f"An error occurred - {ex}")
         await ctx.send(embed=e)
