@@ -1,3 +1,6 @@
+from random import sample
+
+
 class PlayingCards:
     def __init__(self):
         self.__number = [
@@ -7,6 +10,9 @@ class PlayingCards:
 
     def getCards(self):
         return [x + y for y in self.__suit for x in self.__number]
+
+    def randomCard(self, amount=1):
+        return sample(self.getCards(), amount)
 
     @staticmethod
     def returnCardName(card):

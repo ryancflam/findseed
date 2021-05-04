@@ -12,6 +12,8 @@ import config
 from other_utils import funcs
 from other_utils.bitcoin_address import BitcoinAddress
 
+GAS_HODL = 0.00088
+GAS_GOVN = 0.03504
 COINGECKO_URL = "https://api.coingecko.com/api/v3/"
 BITCOIN_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
 ETHEREUM_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png"
@@ -25,6 +27,51 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     @staticmethod
     def weiToETH(value):
         return value / 1000000000000000000
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
+                      aliases=["n3", "n3o", "noe", "ronneo"])
+    async def neo(self, ctx):
+        res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "neo,gas"})
+        tickers = res.json()["tickers"]
+        neobtc, neousd, gasbtc, gasusd = None, None, None, None
+        for ticker in tickers:
+            if ticker["base"] == "NEO" and ticker["target"] == "BTC":
+                neobtc = ticker["last"]
+                neousd = ticker["converted_last"]["usd"]
+            elif ticker["base"] == "GAS" and ticker["target"] == "BTC":
+                gasbtc = ticker["last"]
+                gasusd = ticker["converted_last"]["usd"]
+            else:
+                continue
+        await ctx.send(
+            f"```NEO: {neobtc} BTC | {neousd} USD\nGAS: {gasbtc} BTC | {gasusd} USD\n\n" + \
+            f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%```"
+        )
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="gas", description="Calculates N3 GAS earnings based on the amount of NEO you hold.",
+                      usage="[amount of NEO]", aliases=["gc", "gascalc", "calcgas"])
+    async def gas(self, ctx, amount="1"):
+        try:
+            amount = int(amount)
+        except ValueError:
+            amount = 1
+        if amount < 1:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be 1 or greater."))
+        hodl, governance = GAS_HODL * amount, GAS_GOVN * amount
+        res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "gas"})
+        gasusd = res.json()["tickers"][0]["converted_last"]["usd"]
+        gasbtc = res.json()["tickers"][0]["converted_last"]["btc"]
+        e = Embed(description=f"Requested by: {ctx.author.mention}", colour=Colour.green())
+        e.set_author(name=f"GAS Earnings for {amount} NEO",
+                     icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
+        e.set_footer(text=f"GAS price: {gasbtc} BTC | {gasusd} USD")
+        e.add_field(name="Monthly Holding Reward",
+                    value=f"`~{round(hodl, 5)} GAS ({round(gasusd * hodl, 5)} USD)`", inline=False)
+        e.add_field(name="Monthly Governance Participation Reward",
+                    value=f"`~{round(governance, 5)} GAS ({round(gasusd * governance, 5)} USD)`", inline=False)
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
@@ -110,7 +157,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 else:
                     athDate = "N/A"
                 e = Embed(
-                    description=f"https://www.coingecko.com/en/coins/{data['name'].casefold().replace(' ', '-').replace('.', '-')}",
+                    description="https://www.coingecko.com/en/coins/" + \
+                                f"{data['name'].casefold().replace(' ', '-').replace('.', '-').replace('τ', 't-')}",
                     colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])

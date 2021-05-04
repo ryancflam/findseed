@@ -11,6 +11,7 @@ from discord.ext import commands
 
 import config
 from other_utils import funcs
+from other_utils.playing_cards import PlayingCards
 
 
 class RandomStuff(commands.Cog, name="Random Stuff"):
@@ -550,6 +551,29 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         except Exception:
             e = funcs.errorEmbed(None, "Invalid search.")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="card", description="Deals random cards.", usage="[amount up to 52]",
+                      aliases=["rc", "cards", "deal", "randomcard", "randomcards"])
+    async def card(self, ctx, amount="1"):
+        try:
+            amount = int(amount)
+        except ValueError:
+            amount = 1
+        if not 0 < amount < 53:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 52."))
+        pc = PlayingCards()
+        cards = pc.randomCard(amount)
+        if amount == 1:
+            e = Embed(title=pc.returnCardName(cards[0]), description=f"Requested by: {ctx.author.mention}")
+            e.set_image(url=pc.returnCardImage(cards[0]))
+            await ctx.send(embed=e)
+        else:
+            await ctx.send(
+                "```{}\n\nRequested by: {}```".format(
+                    "\n".join(f"{card} | {pc.returnCardName(card)}" for card in cards), ctx.author
+                )
+            )
 
 
 def setup(client: commands.Bot):

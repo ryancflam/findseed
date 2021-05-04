@@ -12,7 +12,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neothinks", description="What Neo thinks about something or someone.",
-                      aliases=["nt", "plsneo", "neosays", "neo", "neot"], usage="<input>")
+                      aliases=["nt", "plsneo", "neosays", "neot"], usage="<input>")
     async def neothinks(self, ctx, *, something: str=""):
         if something == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
@@ -237,7 +237,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="neomeme", description="Neo.")
-    async def neo(self, ctx):
+    async def neomeme(self, ctx):
         url = choice([
             "https://media.discordapp.net/attachments/362589047018749955/759806426230161466/unknown.png",
             "https://media.discordapp.net/attachments/362589047018749955/764478615164420106/unknown.png",
@@ -249,7 +249,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="audiblememe", description="Audible Individualism intensifies.")
-    async def audible(self, ctx):
+    async def audiblememe(self, ctx):
         url = choice([
             "https://media.discordapp.net/attachments/769899860253736990/772099297189560340/unknown.png",
             "https://media.discordapp.net/attachments/769899860253736990/772100077111738408/PicsArt_10-21-03.07.47.jpg",

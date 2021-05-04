@@ -139,8 +139,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     @commands.command(name="bartering", description="Finds the probability of getting 12 or more ender pearls" + \
                                                     " in a given number of piglin trades in Minecraft 1.16.1.",
                       aliases=["piglin", "barter", "pearlbarter", "pearl", "pearls", "trades", "trade", "bart"],
-                      usage="<total gold ingots>")
-    async def pearlbarter(self, ctx, *, trades: str=""):
+                      usage=f"[total gold ingots up to {BARTER_LIMIT}]")
+    async def pearlbarter(self, ctx, *, trades: str="2"):
         try:
             n = int(trades)
             if not 2 <= n <= BARTER_LIMIT:
