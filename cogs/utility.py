@@ -85,14 +85,10 @@ class Utility(commands.Cog, name="Utility"):
                         break
                 if not found:
                     total = data["world_total"]
-            e = Embed(
-                title=f"COVID-19 Statistics ({total['country_name'] if found else 'Global'})",
-                description="Statistics taken at: `" + data["statistic_taken_at"] + " UTC`"
-            )
-            e.set_thumbnail(
-                url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/" + \
-                    "SARS-CoV-2_without_background.png/220px-SARS-CoV-2_without_background.png"
-            )
+            e = Embed(description="Statistics taken at: `" + data["statistic_taken_at"] + " UTC`")
+            e.set_author(name=f"COVID-19 Statistics ({total['country_name'] if found else 'Global'})",
+                         icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/" + \
+                                  "SARS-CoV-2_without_background.png/220px-SARS-CoV-2_without_background.png")
             if found:
                 e.add_field(name="Country", value=f"`{total['country_name']}`")
                 e.add_field(name="Total Cases", value=f"`{total['cases']}`")
@@ -221,7 +217,8 @@ class Utility(commands.Cog, name="Utility"):
                 e.add_field(name=arrive, value=f"`{realarrive}`")
                 if eta != "":
                     e.add_field(name=eta, value=f"`{duration}`")
-                e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.")
+                e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.",
+                             icon_url="https://i.pinimg.com/564x/8c/90/8f/8c908ff985364bdba5514129d3d4e799.jpg")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown flight or server error.")
         await ctx.send(embed=e)
@@ -256,7 +253,8 @@ class Utility(commands.Cog, name="Utility"):
                         value="`{}° ({})`".format(int(winddegrees), self.degreesToDirection(winddegrees)))
             e.add_field(name="Local Time", value=f"`{timenow}`")
             e.add_field(name="Last Updated (Local time)", value=f"`{lastupdate}`")
-            e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.")
+            e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.",
+                         icon_url="https://openweathermap.org/themes/openweathermap/assets/img/mobile_app/android_icon.png")
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
         except:
             e = funcs.errorEmbed(None, "Unknown location or server error.")
@@ -360,14 +358,13 @@ class Utility(commands.Cog, name="Utility"):
                 summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"]
                 if len(summary) != len(wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000]):
                     summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000] + "..."
-                e = Embed(
-                    title=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
-                    description="https://en.wikipedia.org/wiki/" + \
-                                f"{wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')}"
+                e = Embed(description="https://en.wikipedia.org/wiki/" + \
+                                      f"{wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')}"
                 )
+                e.set_author(name=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
+                             icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                      "677853982718165001/1122px-Wikipedia-logo-v2.png")
                 e.add_field(name="Extract", value=f"```{summary}```")
-                logo = "https://cdn.discordapp.com/attachments/659771291858894849/677853982718165001/1122px-Wikipedia-logo-v2.png"
-                e.set_thumbnail(url=logo)
             except Exception:
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.send(embed=e)
@@ -576,7 +573,7 @@ class Utility(commands.Cog, name="Utility"):
                             for k in definitions:
                                 definition = k["definition"]
                                 output += f"- {definition} [{partOfSpeech}]\n"
-                    e = Embed(title=word).add_field(name="Definition(s)", value=funcs.formatting(output[:-1]))
+                    e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1]))
                 except Exception:
                     e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.send(embed=e)

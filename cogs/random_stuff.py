@@ -424,15 +424,14 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             if len(terms) == 0:
                 e = funcs.errorEmbed(None, "Unknown term.")
             else:
-                thumbnail = "https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                            "669142387330777115/urban-dictionary-android.png"
                 example = terms[0]["example"].replace("[", "").replace("]", "")
                 definition = terms[0]["definition"].replace("[", "").replace("]", "")
                 permalink = terms[0]["permalink"]
                 word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
-                e = Embed(title=word, description=permalink)
+                e = Embed(description=permalink)
+                e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                                 "669142387330777115/urban-dictionary-android.png")
                 e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                e.set_thumbnail(url=thumbnail)
                 if example:
                     e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
                 e.set_footer(

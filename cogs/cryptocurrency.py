@@ -44,10 +44,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 gasusd = ticker["converted_last"]["usd"]
             else:
                 continue
-        await ctx.send(
-            f"```NEO: {neobtc} BTC | {neousd} USD\nGAS: {gasbtc} BTC | {gasusd} USD\n\n" + \
-            f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%```"
-        )
+        e = Embed(colour=Colour.green())
+        e.set_author(name="NEO and GAS Prices",
+                     icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
+        e.add_field(name="NEO", value="`{:,} BTC | {:,} USD`".format(neobtc, neousd), inline=False)
+        e.add_field(name="GAS", value="`{:,} BTC | {:,} USD`".format(gasbtc, gasusd), inline=False)
+        e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="gas", description="Calculates N3 GAS earnings based on the amount of NEO you hold.",
@@ -64,13 +67,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         gasusd = res.json()["tickers"][0]["converted_last"]["usd"]
         gasbtc = res.json()["tickers"][0]["converted_last"]["btc"]
         e = Embed(colour=Colour.green())
-        e.set_author(name=f"GAS Earnings for {amount} NEO",
+        e.set_author(name="GAS Earnings for {:,} NEO".format(amount),
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.set_footer(text=f"GAS price: {gasbtc} BTC | {gasusd} USD")
-        e.add_field(name="Monthly Holding Reward",
-                    value=f"`~{round(hodl, 5)} GAS ({round(gasusd * hodl, 5)} USD)`", inline=False)
-        e.add_field(name="Monthly Governance Participation Reward",
-                    value=f"`~{round(governance, 5)} GAS ({round(gasusd * governance, 5)} USD)`", inline=False)
+        e.set_footer(text="GAS price: {:,} BTC | {:,} USD".format(gasbtc, gasusd))
+        e.add_field(name="Monthly Holding Reward", inline=False,
+                    value="`~{:,} GAS ({:,} USD)`".format(round(hodl, 5), round(gasusd * hodl, 5)))
+        e.add_field(name="Monthly Governance Participation Reward", inline=False,
+                    value="`~{:,} GAS ({:,} USD)`".format(round(governance, 5), round(gasusd * governance, 5)))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -184,7 +187,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                                 value=f"`{'None' if not percent1d else '{:,}%'.format(round(percent1d, 2))}`")
                     e.add_field(name="Price Change (7d)",
                                 value=f"`{'None' if not percent7d else '{:,}%'.format(round(percent7d, 2))}`")
-                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC")
+                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC",
+                                 icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" + \
+                                          "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")
                 else:
                     e.set_footer(text="What are you doing you socialite?")
                 try:
@@ -259,10 +264,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         data = res.json()
         e = Embed(colour=Colour.light_grey())
         e.set_author(name="Recommended Ethereum Gas Prices", icon_url=ETHEREUM_LOGO)
-        e.add_field(name="Fastest (<30s)", value=f"`{int(data['fastest'] / 10)} gwei`")
-        e.add_field(name="Fast (<2m)", value=f"`{int(data['fast'] / 10)} gwei`")
-        e.add_field(name="Average (<5m)", value=f"`{int(data['average'] / 10)} gwei`")
-        e.add_field(name="Safe Low (<30m)", value=f"`{int(data['safeLow'] / 10)} gwei`")
+        e.add_field(name="Fastest (<30s)", value="`{:,} gwei`".format(int(data['fastest'] / 10)))
+        e.add_field(name="Fast (<2m)", value="`{:,} gwei`".format(int(data['fast'] / 10)))
+        e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
+        e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
         await ctx.send(embed=e)
 
@@ -304,10 +309,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(
                 name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc'] * 0.00000001, 8)} BTC`"
             )
-            e.add_field(name="High Priority Fee (~10m)", value=f"`{fees['fastestFee']} sats/vB`")
-            e.add_field(name="Medium Priority Fee (~3h)", value=f"`{fees['halfHourFee']} sats/vB`")
-            e.add_field(name="Low Priority Fee (~1d)", value=f"`{fees['hourFee']} sats/vB`")
-            e.add_field(name="Minimum Fee", value=f"`{fees['minimumFee']} sats/vB`")
+            e.add_field(name="High Priority Fee (~10m)", value="`{:,} sats/vB`".format(fees['fastestFee']))
+            e.add_field(name="Medium Priority Fee (~3h)", value="`{:,} sats/vB`".format(fees['halfHourFee']))
+            e.add_field(name="Low Priority Fee (~1d)", value="`{:,} sats/vB`".format(fees['hourFee']))
+            e.add_field(name="Minimum Fee", value="`{:,} sats/vB`".format(fees['minimumFee']))
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.send(embed=e)
