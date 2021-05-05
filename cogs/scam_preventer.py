@@ -13,7 +13,8 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    async def deleteEmbedOrAttachment(self, message, qrlink):
+    @staticmethod
+    async def deleteEmbedOrAttachment(message, qrlink):
         qr = await funcs.decodeQR(qrlink)
         if SCAM_URL in qr:
             await message.delete()

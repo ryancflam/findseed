@@ -193,19 +193,16 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 else:
                     e.set_footer(text="What are you doing you socialite?")
                 try:
-                    res = await funcs.getRequest(
-                        COINGECKO_URL + f"coins/{data['id']}/ohlc",
-                        params={"vs_currency": fiat.casefold(), "days": days}
+                    res = await funcs.getRequest(COINGECKO_URL + f"coins/{data['id']}/ohlc",
+                                                 params={"vs_currency": fiat.casefold(), "days": days}
                     )
                     ohlcData = res.json()
                     style = make_mpf_style(
-                        base_mpf_style="nightclouds",
-                        marketcolors=make_marketcolors(base_mpf_style="binance", inherit=True)
+                        base_mpf_style="nightclouds", marketcolors=make_marketcolors(base_mpf_style="binance", inherit=True)
                     )
                     df = DataFrame(
-                        [date[1:] for date in ohlcData],
-                        index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData]),
-                        columns=["Open", "High", "Low", "Close"]
+                        [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
+                        index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
                     )
                     plot(df, type=chartType, savefig=imgName, mav=mav, style=style, ylabel=f"Price ({fiat})",
                          title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})")
@@ -267,7 +264,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e.add_field(name="Fastest (<30s)", value="`{:,} gwei`".format(int(data['fastest'] / 10)))
         e.add_field(name="Fast (<2m)", value="`{:,} gwei`".format(int(data['fast'] / 10)))
         e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
-        e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
         await ctx.send(embed=e)
 

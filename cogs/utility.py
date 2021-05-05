@@ -331,7 +331,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="wiki", description="Returns a Wikipedia article.",
-                      aliases=["wikipedia"], usage="<article>")
+                      aliases=["wikipedia"], usage="<article title (case sensitive)>")
     async def wiki(self, ctx, *, page: str=""):
         if page == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
@@ -463,9 +463,9 @@ class Utility(commands.Cog, name="Utility"):
     async def qrread(self, ctx):
         await ctx.send("Reading image. Please wait... " + \
                        "(URL embeds take longer to process than image attachments)")
-        if ctx.message.attachments == []:
+        if not ctx.message.attachments:
             await sleep(3)
-        if ctx.message.attachments != [] or ctx.message.embeds != []:
+        if ctx.message.attachments or ctx.message.embeds:
             try:
                 qrlink = ctx.message.attachments[0].url if ctx.message.attachments else ctx.message.embeds[0].thumbnail.url
                 qr = await funcs.decodeQR(qrlink)
@@ -608,7 +608,7 @@ class Utility(commands.Cog, name="Utility"):
             if entry.content.casefold() == "!done":
                 break
             if entry.content.casefold() == "!undo":
-                if answers != []:
+                if answers:
                     answers.pop()
                     count -= 1
                 else:
@@ -810,7 +810,7 @@ class Utility(commands.Cog, name="Utility"):
                 "*magic portal opens...*", "[magic humming]",
                 "Go to the den.",
                 "EXXXXXCCCCCCUUUUUSEEEE MEEE",
-                "what", "wat", "wut", "Negative nothing",
+                "what", "wat", "wut", "Negative nothing", "屌",
                 "Der Mann sprach für seine Rechte\ner ist verstört, er ist ein egoistischer Gör!",
                 "You did absolutely **** all to resolve the pandemic, you did close to nothing to " + \
                 "prepare yourselves for it, and let alone did you do anything to functionally reso" + \
@@ -820,7 +820,12 @@ class Utility(commands.Cog, name="Utility"):
                 "y stuck into a self-repetitive loop of making the same idiotic mistakes over and over again.",
                 "ENOUGH! Because of you, I almost lost my way! But everycreature here has reminded me of " + \
                 "the true power of friendship! There will always be darkness in the world, but there will " + \
-                "also always be those who find the light!"
+                "also always be those who find the light!",
+                "Focusing on our differences keeps us divided! Villains and creatures use that division against us!",
+                "SSSSHHHHHAAAAAAAAAAAHHDAAAHHHPPP",
+                "YOU! YOU TRIPLE GREASY WALKING SECOND DINING COURSE, YOU'RE JUST A PHONY! YOU'RE A GIANT, MORALIST" + \
+                " PHONY WHO CAN'T TAKE CARE OF ANYONE, ESPECIALLY HIMSELF! YOU HAVE YOUR OWN DISCIPLINE UP YOUR OWN" + \
+                " ARSE AND YOU DON'T EVEN SEE IT!"
             ])
             e = Embed(description=f"```{answer}```")
         except Exception:
