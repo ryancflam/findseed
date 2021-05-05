@@ -145,9 +145,24 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     coinID = coinID.replace("-", "")
             if data:
                 data = data[0]
+                try:
+                    res = await funcs.getRequest(COINGECKO_URL + f"coins/{data['id']}/ohlc",
+                                                 params={"vs_currency": fiat.casefold(), "days": days}
+                    )
+                    ohlcData = res.json()
+                    difference = ohlcData[-1][4] - ohlcData[0][1]
+                    chartData = True
+                except:
+                    ohlcData = []
+                    difference = None
+                    chartData = False
                 percent1h = data["price_change_percentage_1h_in_currency"] or 0
                 percent1d = data["price_change_percentage_24h_in_currency"] or 0
                 percent7d = data["price_change_percentage_7d_in_currency"] or 0
+                if chartData:
+                    colour = Colour.red() if difference < 0 else Colour.green() if difference > 0 else Colour.light_grey()
+                else:
+                    colour = Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
                 totalSupply = data["total_supply"]
                 circulating = data["circulating_supply"]
                 currentPrice = data["current_price"]
@@ -160,9 +175,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 else:
                     athDate = "N/A"
                 e = Embed(
-                    description="https://www.coingecko.com/en/coins/" + \
-                                f"{data['name'].casefold().replace(' ', '-').replace('.', '-').replace('τ', 't-')}",
-                    colour=Colour.red() if percent1d < 0 else Colour.green() if percent1d > 0 else Colour.light_grey()
+                    colour=colour, description="https://www.coingecko.com/en/coins/" + \
+                                               f"{data['name'].casefold().replace(' ', '-').replace('.', '-').replace('τ', 't-')}",
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
                 e.add_field(name="Market Price", value=f"`{'None' if not currentPrice else '{:,} {}'.format(currentPrice, fiat)}`")
@@ -192,24 +206,21 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                                           "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")
                 else:
                     e.set_footer(text="What are you doing you socialite?")
-                try:
-                    res = await funcs.getRequest(COINGECKO_URL + f"coins/{data['id']}/ohlc",
-                                                 params={"vs_currency": fiat.casefold(), "days": days}
-                    )
-                    ohlcData = res.json()
-                    style = make_mpf_style(
-                        base_mpf_style="nightclouds", marketcolors=make_marketcolors(base_mpf_style="binance", inherit=True)
-                    )
-                    df = DataFrame(
-                        [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
-                        index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
-                    )
-                    plot(df, type=chartType, savefig=imgName, mav=mav, style=style, ylabel=f"Price ({fiat})",
-                         title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})")
-                    image = File(imgName)
-                    e.set_image(url=f"attachment://{imgName}")
-                except:
-                    pass
+                if chartData:
+                    try:
+                        style = make_mpf_style(
+                            base_mpf_style="nightclouds", marketcolors=make_marketcolors(base_mpf_style="binance", inherit=True)
+                        )
+                        df = DataFrame(
+                            [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
+                            index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
+                        )
+                        plot(df, type=chartType, savefig=imgName, mav=mav, style=style, ylabel=f"Price ({fiat})",
+                             title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})")
+                        image = File(imgName)
+                        e.set_image(url=f"attachment://{imgName}")
+                    except:
+                        pass
             elif not data:
                 e = funcs.errorEmbed(
                     "Invalid argument(s) and/or invalid currency!",
