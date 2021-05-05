@@ -9,6 +9,8 @@ from discord.ext import commands
 from other_utils import funcs
 from other_utils.playing_cards import PlayingCards
 
+COIN_EDGE_ODDS = 6001
+
 
 class RandomStuff(commands.Cog, name="Random Stuff"):
     def __init__(self, client: commands.Bot):
@@ -372,28 +374,29 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
         coins = []
         total = {"Heads": 0, "Tails": 0, "Edge": 0}
-        edgeOdds = 6001
         for _ in range(amount):
-            randomcoin = randint(1, edgeOdds)
-            coins.append("Heads" if randomcoin <= ((edgeOdds - 1) / 2) else "Tails" if randomcoin < edgeOdds else "Edge")
+            randomcoin = randint(1, COIN_EDGE_ODDS)
+            coins.append(
+                "Heads" if randomcoin <= ((COIN_EDGE_ODDS - 1) / 2) else "Tails" if randomcoin < COIN_EDGE_ODDS else "Edge"
+            )
             total[coins[-1]] += 1
         if amount == 1:
             isEdge = coins[0] == "Edge"
             thumbnail = "https://upload.wikimedia.org/wikipedia/commons/6/67/1_oz_Vienna_Philharmonic_2017_edge.png" \
                         if isEdge else f"https://flipacoin.fun/images/coin/coin{'1' if coins[0] == 'Heads' else '2'}.png"
-            e = Embed(title="WTF NO WAY" if isEdge else coins[0], description=f"Requested by: {ctx.author.mention}")
+            e = Embed(title="OMG NO WAY!" if isEdge else coins[0], description=f"Requested by: {ctx.author.mention}")
             e.set_image(url=thumbnail)
             if isEdge:
-                e.set_footer(text="1 in {:,} chance".format(edgeOdds))
+                e.set_footer(text="1 in {:,} chance".format(COIN_EDGE_ODDS))
             await ctx.send(embed=e)
         else:
             result = ""
             for i in range(1, 4):
-                type = 'Heads' if i == 1 else 'Tails' if i == 2 else 'Edge'
+                cointype = 'Heads' if i == 1 else 'Tails' if i == 2 else 'Edge'
                 result += "\n{}{}: {} time{}".format(
-                    type, (" (1 in {:,} chance)".format(edgeOdds) if i == 3 else ""),
-                    total[type], "s" if total[type] > 1 else ""
-                ) if total[type] else ""
+                    cointype, (" (1 in {:,} chance)".format(COIN_EDGE_ODDS) if i == 3 else ""),
+                    total[cointype], "s" if total[cointype] > 1 else ""
+                ) if total[cointype] else ""
             await ctx.send(f"```{', '.join(coin for coin in coins)}\n{result}\n\nRequested by: {ctx.author}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -423,7 +426,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             await ctx.send(f"```{', '.join(str(die) for die in dice)}\n{result}\n\nRequested by: {ctx.author}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="card", description="Deals random cards.", usage="[amount up to 52]",
+    @commands.command(name="card", description="Deals cards.", usage="[amount up to 52]",
                       aliases=["rc", "cards", "deal", "randomcard", "randomcards"])
     async def card(self, ctx, amount="1"):
         try:

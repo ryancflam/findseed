@@ -775,8 +775,8 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="calc", description="Does math.",
-                      aliases=["calculate", "calculator", "cal", "math", "maths"], usage="<input>")
+    @commands.command(name="calc", description="Does simple math.",
+                      aliases=["calculate", "calculator", "cal", "math", "maths", "safeeval"], usage="<input>")
     async def calc(self, ctx, *, inp):
         inp = inp.casefold().replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100") \
               .replace("×", "*").replace(" ", "")
@@ -787,8 +787,8 @@ class Utility(commands.Cog, name="Utility"):
                 "Stop right there, that's illegal!",
                 "Wait hol up...",
                 "FBI OPEN UP!!!",
-                "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
-                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
+                "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
+                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
                 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL",
                 "You madlad...",
                 "God damn you.",
@@ -807,17 +807,20 @@ class Utility(commands.Cog, name="Utility"):
                 "Dio taxista Ronnosessuale dio animale porca di quella madonna vacca in calore rotta in settecento mila pezzi",
                 "Naughty naughty naughty, you filthy old soomaka!",
                 "Hey that's my yarbles! Give it back!",
-                "*magic portal opens...*",
+                "*magic portal opens...*", "[magic humming]",
                 "Go to the den.",
                 "EXXXXXCCCCCCUUUUUSEEEE MEEE",
-                "what", "wat", "wut",
+                "what", "wat", "wut", "Negative nothing",
                 "Der Mann sprach für seine Rechte\ner ist verstört, er ist ein egoistischer Gör!",
                 "You did absolutely **** all to resolve the pandemic, you did close to nothing to " + \
                 "prepare yourselves for it, and let alone did you do anything to functionally reso" + \
                 "lve problems. You are oppressing our individual liberties because of the shortcom" + \
                 "ings of your institutions. You are stifling your economy and, as a consequence, o" + \
                 "ur income because of your vices. And last but not least, you seem to be absolutel" + \
-                "y stuck into a self-repetitive loop of making the same idiotic mistakes over and over again."
+                "y stuck into a self-repetitive loop of making the same idiotic mistakes over and over again.",
+                "ENOUGH! Because of you, I almost lost my way! But everycreature here has reminded me of " + \
+                "the true power of friendship! There will always be darkness in the world, but there will " + \
+                "also always be those who find the light!"
             ])
             e = Embed(description=f"```{answer}```")
         except Exception:

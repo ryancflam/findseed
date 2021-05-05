@@ -41,15 +41,13 @@ class Evaluable(type):
             if key in Evaluable.NH:
                 raise ValueError
             func = classdict.get(key)
-            if not func:
-                raise ValueError
-            if not isinstance(func, classmethod):
+            if not func or not isinstance(func, classmethod):
                 raise ValueError
             nhl.append(key)
-        asdf = super().__new__(mcs, name, bases, classdict)
+        sc = super().__new__(mcs, name, bases, classdict)
         for handler in nhl:
-            Evaluable.NH[handler]=getattr(asdf, handler)
-        return asdf
+            Evaluable.NH[handler] = getattr(sc, handler)
+        return sc
 
 
 class Arithmetic(metaclass=Evaluable, en=(ast.Num, ast.UnaryOp, ast.BinOp)):
