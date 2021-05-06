@@ -28,6 +28,17 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     def weiToETH(value):
         return value / 1000000000000000000
 
+    @staticmethod
+    def getCoinGeckoID(coin):
+        coin = coin.casefold()
+        joke = "neo" if coin == "neo" or coin.startswith("noeo") or coin.startswith("ronneo") or coin.startswith("neoo") \
+               or coin.startswith("n*") or coin.startswith("neoe") or coin.startswith("noee") or coin.startswith("ronnoe") \
+               else coin
+        try:
+            return funcs.TICKERS[joke]
+        except KeyError:
+            return joke
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
                       aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"])
@@ -81,15 +92,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                       description="Compares the prices of two cryptocurrencies if they had the same market capitalisation.",
                       usage="[coin symbol OR CoinGecko ID] [coin symbol OR CoinGecko ID]")
     async def cryptovs(self, ctx, coin1: str="eth", coin2: str="btc"):
-        try:
-            coinID1 = funcs.TICKERS[coin1]
-        except KeyError:
-            coinID1 = coin1
-        try:
-            coinID2 = funcs.TICKERS[coin2]
-        except KeyError:
-            coinID2 = coin2
-        if coin1 == coin2:
+        coinID1, coinID2 = self.getCoinGeckoID(coin1), self.getCoinGeckoID(coin2)
+        if coinID1 == coinID2:
             return await ctx.send(embed=funcs.errorEmbed(None, "Both cryptocurrencies are the same."))
         try:
             res = await funcs.getRequest(
@@ -105,13 +109,17 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             coin2cap = data[1]["market_cap"]
             coin2price = data[1]["current_price"]
             newvalue = coin1cap / coin2cap
+            newvalue2 = coin2cap / coin1cap
             await ctx.send(f"If **{coin2name} ({coin2symb})** had the market cap of **{coin1name} ({coin1symb})**:\n\n`" + \
-                           "{:,} USD` per {} **({:,}% upside)**\n\n".format(
+                           "{:,} USD` per {} **(+{:,}%)**\n\n".format(
                                round(newvalue * coin2price, 4), coin2symb, round((newvalue - 1) * 100, 2)
-                           ) + "{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
-                               coin1symb, coin1price, coin1symb, coin1cap
-                           ) + "\n{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
-                               coin2symb, coin2price, coin2symb, coin2cap
+                           ) + f"If **{coin1name} ({coin1symb})** had the market cap of **{coin2name} ({coin2symb})**:\n\n`" + \
+                           "{:,} USD` per {} **({:,}%)**\n\n".format(
+                               round(newvalue2 * coin1price, 4), coin1symb, round((newvalue2 - 1) * 100, 2)
+                           ) + "{} price: `{:,} USD` | {} market cap: `{:,} USD` (Rank #{:,})".format(
+                               coin1symb, coin1price, coin1symb, coin1cap, data[0]["market_cap_rank"]
+                           ) + "\n{} price: `{:,} USD` | {} market cap: `{:,} USD` (Rank #{:,})".format(
+                               coin2symb, coin2price, coin2symb, coin2cap, data[1]["market_cap_rank"]
                            ))
         except Exception:
             return await ctx.send(embed=funcs.errorEmbed(
@@ -133,9 +141,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         chartType = "candle"
         fiat = "USD"
         mav = (0, 0)
-        coin = "neo" if coin.casefold().startswith("n*") or coin.casefold() == "neo" or coin.casefold().startswith("ronneo") \
-               or coin.casefold().startswith("noeo") or coin.casefold().startswith("neoe") \
-               or coin.casefold().startswith("neoo") or coin.casefold().startswith("noee") else coin.casefold()
         image = None
         data = []
         count = 0
@@ -144,33 +149,30 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 days = "1" if int(arg) not in [1, 2, 3, 6, 7, 12, 14, 30, 90, 180, 365] else arg
                 days = "14" if days == "2" else "90" if days == "3" else "180" if days == "6" else "365" if days == "12" else days
             except ValueError:
-                if arg.casefold() == "d" or arg.casefold().startswith("1d"):
+                arg = arg.casefold()
+                if arg == "d" or arg.startswith("1d"):
                     days = "1"
-                elif arg.casefold() == "w" or arg.casefold().startswith("1w") or arg.casefold().startswith("7d"):
+                elif arg == "w" or arg.startswith("1w") or arg.startswith("7d"):
                     days = "7"
-                elif arg.casefold().startswith("2w") or arg.casefold().startswith("14d"):
+                elif arg.startswith("2w") or arg.startswith("14d"):
                     days = "14"
-                elif arg.casefold() == "m" or arg.casefold().startswith("30d"):
+                elif arg == "m" or arg.startswith("30d"):
                     days = "30"
-                elif arg.casefold().startswith("3m") or arg.casefold().startswith("90d"):
+                elif arg.startswith("3m") or arg.startswith("90d"):
                     days = "90"
-                elif arg.casefold().startswith("6m") or arg.casefold().startswith("180d"):
+                elif arg.startswith("6m") or arg.startswith("180d"):
                     days = "180"
-                elif arg.casefold() == "y" or arg.casefold().startswith("365d") or arg.casefold().startswith("12m") \
-                        or arg.casefold().startswith("1y"):
+                elif arg == "y" or arg.startswith("365d") or arg.startswith("12m") or arg.startswith("1y"):
                     days = "365"
-                elif arg.casefold().startswith("max"):
+                elif arg.startswith("max"):
                     days = "max"
-                elif arg.casefold().startswith("line"):
+                elif arg.startswith("line"):
                     chartType = "line"
-                elif arg.casefold() == "ma" or arg.casefold() == "mav":
+                elif arg == "ma" or arg == "mav":
                     mav = (3, 6, 9)
                 else:
                     fiat = arg.upper()
-        try:
-            coinID = funcs.TICKERS[coin]
-        except KeyError:
-            coinID = coin
+        coinID = self.getCoinGeckoID(coin)
         try:
             while not data:
                 res = await funcs.getRequest(

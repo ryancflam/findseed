@@ -810,7 +810,7 @@ class Utility(commands.Cog, name="Utility"):
                 "*magic portal opens...*", "[magic humming]",
                 "Go to the den.",
                 "EXXXXXCCCCCCUUUUUSEEEE MEEE",
-                "what", "wat", "wut", "Negative nothing", "屌",
+                "what", "wat", "wut", "Negative nothing", "屌", "No.", "no",
                 "Der Mann sprach für seine Rechte\ner ist verstört, er ist ein egoistischer Gör!",
                 "You did absolutely **** all to resolve the pandemic, you did close to nothing to " + \
                 "prepare yourselves for it, and let alone did you do anything to functionally reso" + \
