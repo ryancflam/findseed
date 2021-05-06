@@ -7,12 +7,10 @@ class PlayingCards:
             "A  ", "2  ", "3  ", "4  ", "5  ", "6  ", "7  ", "8  ", "9  ", "10 ", "J  ", "Q  ", "K  "
         ]
         self.__suit = ["♠", "♦", "♥", "♣"]
-
-    def getCards(self):
-        return [x + y for y in self.__suit for x in self.__number]
+        self.__cards = [x + y for y in self.__suit for x in self.__number]
 
     def randomCard(self, amount=1):
-        return sample(self.getCards(), amount)
+        return sample(self.__cards, amount)
 
     @staticmethod
     def returnCardName(card):

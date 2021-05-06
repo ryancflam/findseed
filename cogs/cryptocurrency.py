@@ -30,7 +30,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "ronneo"])
+                      aliases=["n3", "n3o", "noe", "ronneo", "n30"])
     async def neo(self, ctx):
         res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "neo,gas"})
         tickers = res.json()["tickers"]
@@ -75,6 +75,47 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e.add_field(name="Monthly Governance Participation Reward", inline=False,
                     value="`~{:,} GAS ({:,} USD)`".format(round(governance, 5), round(gasusd * governance, 5)))
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="cryptovs", aliases=["cvs", "vs", "coinvs", "vscoin", "vscrypto", "vsc"],
+                      description="Compares the prices of two cryptocurrencies if they had the same market capitalisation.",
+                      usage="[coin symbol OR CoinGecko ID] [coin symbol OR CoinGecko ID]")
+    async def cryptovs(self, ctx, coin1: str="eth", coin2: str="btc"):
+        try:
+            coinID1 = funcs.TICKERS[coin1]
+        except KeyError:
+            coinID1 = coin1
+        try:
+            coinID2 = funcs.TICKERS[coin2]
+        except KeyError:
+            coinID2 = coin2
+        if coin1 == coin2:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Both cryptocurrencies are the same."))
+        try:
+            res = await funcs.getRequest(
+                COINGECKO_URL + "coins/markets", params={"ids": f"{coinID1},{coinID2}", "vs_currency": "usd"}
+            )
+            data = res.json()
+            coin1name = data[0]["name"]
+            coin1symbol = data[0]["symbol"].upper()
+            coin1cap = data[0]["market_cap"]
+            coin1price = data[0]["current_price"]
+            coin2name = data[1]["name"]
+            coin2symbol = data[1]["symbol"].upper()
+            coin2cap = data[1]["market_cap"]
+            coin2price = data[1]["current_price"]
+            await ctx.send(f"If **{coin2name} ({coin2symbol})** had the market cap of **{coin1name} ({coin1symbol})**:" + \
+                           "\n\n`{:,} USD` per {}\n\n".format(round(coin1cap / coin2cap * coin2price, 4), coin2symbol) + \
+                           "{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
+                               coin1symbol, coin1price, coin1symbol, coin1cap
+                           ) + "\n{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
+                               coin2symbol, coin2price, coin2symbol, coin2cap
+                           ))
+        except Exception:
+            return await ctx.send(embed=funcs.errorEmbed(
+                "Invalid argument(s) and/or invalid currency!",
+                "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
+            ))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",

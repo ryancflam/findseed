@@ -1,11 +1,9 @@
-from random import sample
-
 from other_utils.playing_cards import PlayingCards
 
 
 class CardTrick:
     def __init__(self):
-        self.__sample = sample(PlayingCards().getCards(), 21)
+        self.__sample = PlayingCards().randomCard(21)
 
     @staticmethod
     def piles(deck):
