@@ -423,11 +423,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             result = ""
             for i in range(1, 7):
                 result += f"\n{i}: {total[i]} time{'s' if total[i] > 1 else ''}" if total[i] else ""
-            await ctx.send(f"```{', '.join(str(die) for die in dice)}\n{result}\n\nRequested by: {ctx.author}```")
+            dicesum = sum(dice)
+            possiblepts = amount * 6
+            await ctx.send(
+                f"```{', '.join(str(die) for die in dice)}\n{result}\n\nTotal value: " + \
+                f"{dicesum} out of {possiblepts} ({round(dicesum / possiblepts * 100, 3)}%)\n\nRequested by: {ctx.author}```"
+            )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="card", description="Deals cards.", usage="[amount up to 52]",
-                      aliases=["rc", "cards", "deal", "randomcard", "randomcards"])
+                      aliases=["rc", "cards", "deal", "randomcard", "randomcards", "dc", "dealcard", "dealcards"])
     async def card(self, ctx, amount="1"):
         try:
             amount = int(amount)

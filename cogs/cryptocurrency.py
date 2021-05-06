@@ -30,7 +30,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "ronneo", "n30"])
+                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"])
     async def neo(self, ctx):
         res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "neo,gas"})
         tickers = res.json()["tickers"]
@@ -54,7 +54,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="gas", description="Calculates N3 GAS earnings based on the amount of NEO you hold.",
-                      usage="[amount of NEO]", aliases=["gc", "gascalc", "calcgas"])
+                      usage="[amount of NEO]", aliases=["gc", "gascalc", "calcgas", "g"])
     async def gas(self, ctx, amount="1"):
         try:
             amount = int(amount)
@@ -97,19 +97,21 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             )
             data = res.json()
             coin1name = data[0]["name"]
-            coin1symbol = data[0]["symbol"].upper()
+            coin1symb = data[0]["symbol"].upper()
             coin1cap = data[0]["market_cap"]
             coin1price = data[0]["current_price"]
             coin2name = data[1]["name"]
-            coin2symbol = data[1]["symbol"].upper()
+            coin2symb = data[1]["symbol"].upper()
             coin2cap = data[1]["market_cap"]
             coin2price = data[1]["current_price"]
-            await ctx.send(f"If **{coin2name} ({coin2symbol})** had the market cap of **{coin1name} ({coin1symbol})**:" + \
-                           "\n\n`{:,} USD` per {}\n\n".format(round(coin1cap / coin2cap * coin2price, 4), coin2symbol) + \
-                           "{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
-                               coin1symbol, coin1price, coin1symbol, coin1cap
+            newvalue = coin1cap / coin2cap
+            await ctx.send(f"If **{coin2name} ({coin2symb})** had the market cap of **{coin1name} ({coin1symb})**:\n\n`" + \
+                           "{:,} USD` per {} **({:,}% upside)**\n\n".format(
+                               round(newvalue * coin2price, 4), coin2symb, round((newvalue - 1) * 100, 2)
+                           ) + "{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
+                               coin1symb, coin1price, coin1symb, coin1cap
                            ) + "\n{} price: `{:,} USD` | {} market cap: `{:,} USD`".format(
-                               coin2symbol, coin2price, coin2symbol, coin2cap
+                               coin2symb, coin2price, coin2symb, coin2cap
                            ))
         except Exception:
             return await ctx.send(embed=funcs.errorEmbed(
