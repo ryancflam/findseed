@@ -79,7 +79,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         gasbtc = res.json()["tickers"][0]["converted_last"]["btc"]
         e = Embed(colour=Colour.green())
         e.set_author(name="GAS Earnings for {:,} NEO".format(amount),
-                     icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
+                     icon_url="https://assets.coingecko.com/coins/images/858/large/GAS_512_512.png")
         e.set_footer(text="GAS price: {:,} BTC | {:,} USD".format(gasbtc, gasusd))
         e.add_field(name="Monthly Holding Reward", inline=False,
                     value="`~{:,} GAS ({:,} USD)`".format(round(hodl, 5), round(gasusd * hodl, 5)))

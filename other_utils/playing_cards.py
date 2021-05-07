@@ -9,7 +9,7 @@ class PlayingCards:
         self.__suit = ["♠", "♦", "♥", "♣"]
         self.__cards = [x + y for y in self.__suit for x in self.__number]
 
-    def randomCard(self, amount=1):
+    def randomCard(self, amount: int=1):
         return sample(self.__cards, amount)
 
     @staticmethod

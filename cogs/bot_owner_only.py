@@ -151,7 +151,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except TimeoutError:
             return await ctx.send("Cancelling restart.")
         gitpull = ""
-        await ctx.send("Pull from GitHub repository?")
+        await ctx.send("Pull from Git repository?")
         try:
             await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
@@ -196,6 +196,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
             self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            print(f"Reloaded cog: {cog}")
             await ctx.send(":ok_hand:")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
@@ -207,6 +208,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
             self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            print(f"Loaded cog: {cog}")
             await ctx.send(":ok_hand:")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
@@ -218,6 +220,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
             self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            print(f"Unloaded cog: {cog}")
             await ctx.send(":ok_hand:")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))

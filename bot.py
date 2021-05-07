@@ -26,6 +26,7 @@ class Bot(commands.Bot):
         for cog in listdir(f"{self.__path}/cogs"):
             if cog.endswith(".py"):
                 self.load_extension(f"cogs.{cog[:-3]}")
+                print(f"Loaded cog: {cog[:-3]}")
         super().run(self.__token, bot=True, reconnect=True)
 
     def kill(self):
