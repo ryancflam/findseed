@@ -126,6 +126,18 @@ def timeStrToDatetime(date: str):
     return f"{dateObj.date()} {dateObj.time()}"
 
 
+async def tickerToID():
+    tickers = {}
+    res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
+    data = res.json()
+    for i in data:
+        try:
+            _ = tickers[i["symbol"]]
+        except KeyError:
+            tickers[i["symbol"]] = i["id"]
+    return tickers
+
+
 async def reactionRemove(reaction, user):
     try:
         await reaction.remove(user)

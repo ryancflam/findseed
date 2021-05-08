@@ -21,6 +21,11 @@ class Utility(commands.Cog, name="Utility"):
         self.reddit = Reddit(client_id=config.redditClientID,
                              client_secret=config.redditClientSecret,
                              user_agent="*")
+        self.tickers = {}
+        self.client.loop.create_task(self.tickerToID())
+
+    async def tickerToID(self):
+        self.tickers = await funcs.tickerToID()
 
     @staticmethod
     def degreesToDirection(value):
@@ -306,7 +311,7 @@ class Utility(commands.Cog, name="Utility"):
                     amount /= data["rates"][fromCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": funcs.TICKERS[fromCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": self.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     amount *= cgData[0]["current_price"]
@@ -315,7 +320,7 @@ class Utility(commands.Cog, name="Utility"):
                     amount *= data["rates"][toCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": funcs.TICKERS[toCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": self.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     if fromCurrency.upper() == toCurrency.upper():

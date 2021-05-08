@@ -27,15 +27,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         self.client.loop.create_task(self.tickerToID())
 
     async def tickerToID(self):
-        tickers = {}
-        res = await funcs.getRequest("https://api.coingecko.com/api/v3/coins/list")
-        data = res.json()
-        for i in data:
-            try:
-                _ = tickers[i["symbol"]]
-            except KeyError:
-                tickers[i["symbol"]] = i["id"]
-        self.tickers = tickers
+        self.tickers = await funcs.tickerToID()
 
     def getCoinGeckoID(self, coin):
         coin = coin.casefold()
