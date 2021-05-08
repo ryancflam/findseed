@@ -1335,7 +1335,7 @@
             "location": "On the ground",
             "month-northern": "5-10",
             "month-southern": "11-4",
-            "rarity": "Common",
+            "rarity": "Rare",
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught a scorpion! It was a sting operation!",
@@ -1415,7 +1415,7 @@
             "location": "On the ground",
             "month-northern": "11-4",
             "month-southern": "5-10",
-            "rarity": "Common",
+            "rarity": "Rare",
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught a tarantula! This situation just got hairy!",

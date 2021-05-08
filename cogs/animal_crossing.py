@@ -131,7 +131,9 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 catchphrases.append(bugdata["catch-phrase"])
             except:
                 catchphrases = [bugdata["catch-phrase"]]
-            e.set_footer(text='"{}"'.format(choice(catchphrases)))
+            e.set_footer(
+                text='"{}"'.format(choice(catchphrases).replace('"', "'").replace("Walker ...", f"Walker {ctx.author.name}"))
+            )
             e.set_author(name=bugdata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=bugdata["icon_uri"])
             e.add_field(name="Location", value=f"`{bugdata['availability']['location']}`")
             e.add_field(name="Rarity", value=f"`{bugdata['availability']['rarity']}`")
@@ -163,7 +165,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 catchphrases.append(fishdata["catch-phrase"])
             except:
                 catchphrases = [fishdata["catch-phrase"]]
-            e.set_footer(text='"{}"'.format(choice(catchphrases)))
+            e.set_footer(text='"{}"'.format(choice(catchphrases).replace('"', "'")))
             e.set_author(name=fishdata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=fishdata["icon_uri"])
             e.add_field(name="Shadow",value=f"`{fishdata['shadow']}`")
             e.add_field(name="Location", value=f"`{fishdata['availability']['location']}`")
