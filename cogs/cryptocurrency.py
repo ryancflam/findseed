@@ -23,21 +23,33 @@ BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.tickers = {}
+        self.client.loop.create_task(self.tickerToID())
 
-    @staticmethod
-    def weiToETH(value):
-        return value / 1000000000000000000
+    async def tickerToID(self):
+        tickers = {}
+        res = await funcs.getRequest("https://api.coingecko.com/api/v3/coins/list")
+        data = res.json()
+        for i in data:
+            try:
+                _ = tickers[i["symbol"]]
+            except KeyError:
+                tickers[i["symbol"]] = i["id"]
+        self.tickers = tickers
 
-    @staticmethod
-    def getCoinGeckoID(coin):
+    def getCoinGeckoID(self, coin):
         coin = coin.casefold()
         joke = "neo" if coin == "neo" or coin.startswith("noeo") or coin.startswith("ronneo") or coin.startswith("neoo") \
                or coin.startswith("n*") or coin.startswith("neoe") or coin.startswith("noee") or coin.startswith("ronnoe") \
                else coin
         try:
-            return funcs.TICKERS[joke]
+            return self.tickers[joke]
         except KeyError:
             return joke
+
+    @staticmethod
+    def weiToETH(value):
+        return value / 1000000000000000000
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
@@ -58,8 +70,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e = Embed(colour=Colour.green())
         e.set_author(name="NEO and GAS Prices",
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.add_field(name="NEO", value="`{:,} BTC | {:,} USD`".format(neobtc, neousd), inline=False)
-        e.add_field(name="GAS", value="`{:,} BTC | {:,} USD`".format(gasbtc, gasusd), inline=False)
+        e.add_field(name="NEO", inline=False,
+                    value="`{:,} BTC | {:,} USD | {:,} GAS`".format(neobtc, neousd, round(neousd / gasusd, 3)))
+        e.add_field(name="GAS", inline=False,
+                    value="`{:,} BTC | {:,} USD | {:,} NEO`".format(gasbtc, gasusd, round(gasusd / neousd, 3)))
         e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
         await ctx.send(embed=e)
 
@@ -68,7 +82,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                       usage="[amount of NEO]", aliases=["gc", "gascalc", "calcgas", "g"])
     async def gas(self, ctx, amount="1"):
         try:
-            amount = int(amount)
+            amount = int(amount.rsplit(".")[0])
         except ValueError:
             amount = 1
         if amount < 1:

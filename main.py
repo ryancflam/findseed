@@ -3,10 +3,11 @@
 from os import path, makedirs
 from sys import exit
 from time import time
+from json import dump
 from asyncio import get_event_loop as loop
 
 from bot import Bot
-from other_utils.funcs import getPath, generateJson
+from other_utils.funcs import getPath
 
 try:
     import config
@@ -17,14 +18,23 @@ except ModuleNotFoundError:
         f.write(template.read())
         template.close()
     f.close()
-    print("Generated file 'config.py', please modify it before using.")
+    print("Generated file: config.py [please modify before using]")
     exit()
+
+
+def generateJson(name, data: dict):
+    file = f"{getPath()}/data/{name}.json"
+    if not path.exists(file):
+        f = open(file, "w")
+        dump(data, f, sort_keys=True, indent=4)
+        f.close()
+        print(f"Generated file: {name}.json")
 
 
 def generateFiles():
     if not path.exists(f"{getPath()}/data"):
         makedirs(f"{getPath()}/data")
-        print("Generated directory 'data'.")
+        print("Generated directory: data")
     generateJson("blacklist", {"servers": [], "users": []})
     generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
     generateJson(

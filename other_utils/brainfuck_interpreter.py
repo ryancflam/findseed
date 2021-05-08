@@ -41,9 +41,7 @@ class BrainfuckInterpreter:
                 try:
                     loopEnd = self.__lookForward()
                 except ValueError:
-                    raise ValueError(
-                        f"No closing bracket for loop found on index: {self.__instructionPointer}"
-                    )
+                    raise ValueError(f"No closing bracket for loop found on index: {self.__instructionPointer}")
                 self.__instructionPointer = loopEnd
             else:
                 self.__openingBracketIndexes.append(self.__instructionPointer)
@@ -52,9 +50,7 @@ class BrainfuckInterpreter:
                 try:
                     openingBracketIndex = self.__openingBracketIndexes.pop(-1)
                 except IndexError:
-                    raise ValueError(
-                        f"No opening bracket for loop on index: {self.__instructionPointer}"
-                    )
+                    raise ValueError(f"No opening bracket for loop on index: {self.__instructionPointer}")
                 self.__instructionPointer = openingBracketIndex - 1
             else:
                 self.__openingBracketIndexes.pop(-1)

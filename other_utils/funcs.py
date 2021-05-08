@@ -1,11 +1,10 @@
 from os import path
 from io import BytesIO
-from json import load, dump
+from json import load
 from httpx import AsyncClient
 from datetime import datetime
-from asyncio import get_event_loop
 
-from discord import Embed, Colour
+from discord import Embed
 
 
 def getPath():
@@ -35,11 +34,7 @@ def sign(value):
 
 
 def errorEmbed(error, message):
-    return Embed(
-        title=f":no_entry: {error or 'Error'}",
-        colour=Colour.red(),
-        description=message
-    )
+    return Embed(title=f":no_entry: {error or 'Error'}", colour=0xe74c3c, description=message)
 
 
 def formatting(text, limit: int=2048):
@@ -117,20 +112,10 @@ def monthNameToNumber(name: str):
         return "11"
     if name.casefold().startswith("d"):
         return "12"
-    return "13"
 
 
 def celsiusToFahrenheit(value):
     return value * 9 / 5 + 32
-
-
-def generateJson(name, data: dict):
-    file = f"{getPath()}/data/{name}.json"
-    if not path.exists(file):
-        f = open(file, "w")
-        dump(data, f, sort_keys=True, indent=4)
-        f.close()
-        print(f"Generated file '{name}.json'.")
 
 
 def timeStrToDatetime(date: str):
@@ -172,18 +157,3 @@ async def decodeQR(link):
         params={"fileurl": link}
     )
     return res.json()[0]["symbol"][0]["data"]
-
-
-async def tickerToID():
-    tickers = {}
-    res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
-    data = res.json()
-    for i in data:
-        try:
-            _ = tickers[i["symbol"]]
-        except KeyError:
-            tickers[i["symbol"]] = i["id"]
-    return tickers
-
-
-TICKERS = get_event_loop().run_until_complete(tickerToID())

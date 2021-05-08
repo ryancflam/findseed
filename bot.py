@@ -70,7 +70,7 @@ class Bot(commands.Bot):
         )
 
     async def on_ready(self):
-        print(f"Logged in as {self.user}")
+        print(f"Logged in as: {self.user}")
         if self.__activityName.casefold() == "bitcoin":
             await self.loop.create_task(self.bitcoin())
         else:
