@@ -45,8 +45,16 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"])
-    async def neo(self, ctx):
+                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"], usage="[amount of NEO or GAS]")
+    async def neo(self, ctx, amount="1"):
+        try:
+            gasamount = float(amount)
+            amount = int(gasamount)
+        except ValueError:
+            amount = 1
+            gasamount = 1
+        if amount < 1:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be 1 or greater."))
         res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "neo,gas"})
         tickers = res.json()["tickers"]
         neobtc, neousd, gasbtc, gasusd = None, None, None, None
@@ -62,10 +70,14 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e = Embed(colour=Colour.green())
         e.set_author(name="NEO and GAS Prices",
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.add_field(name="NEO", inline=False,
-                    value="`{:,} BTC | {:,} USD | {:,} GAS`".format(neobtc, neousd, round(neousd / gasusd, 3)))
-        e.add_field(name="GAS", inline=False,
-                    value="`{:,} BTC | {:,} USD | {:,} NEO`".format(gasbtc, gasusd, round(gasusd / neousd, 3)))
+        e.add_field(name=f"{'' if amount == 1 else str(amount) + ' '}NEO", inline=False,
+                    value="`{:,} BTC | {:,} USD | {:,} GAS`".format(
+                        neobtc * amount, neousd * amount, round(neousd / gasusd * amount, 3)
+                    ))
+        e.add_field(name=f"{'' if gasamount == 1 else str(gasamount) + ' '}GAS", inline=False,
+                    value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
+                        gasbtc * gasamount, gasusd * gasamount, round(gasusd / neousd * gasamount, 3)
+                    ))
         e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
         await ctx.send(embed=e)
 
