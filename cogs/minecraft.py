@@ -79,7 +79,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             foundTime = f"{funcs.timeDifferenceStr(time(), highestTime)}"
         e = Embed(
             title=f"{self.client.command_prefix}findseed",
-            description=f"{ctx.message.author.mention} --> Your seed is a **{eyes} eye**."
+            description=f"{ctx.message.author.mention}'s seed is a **{eyes} eye**."
         )
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
         e.add_field(name="Most Eyes Found",
@@ -117,19 +117,19 @@ class Minecraft(commands.Cog, name="Minecraft"):
         data["mostPearls"] = pearls if pearls >= mostPearls else mostPearls
         data["mostRods"] = rods if rods >= mostRods else mostRods
         data["iteration"] += 1
-        iter = data['iteration']
+        iters = data['iteration']
         with open(f"{funcs.getPath()}/data/finddream.json", "w") as f:
             dump(data, f, sort_keys=True, indent=4)
         f.close()
         e = Embed(
             title=f"{self.client.command_prefix}finddream",
             description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " + \
-                        "Can you achieve his 'luck'?"
+                        f"Can you achieve his 'luck'?\n\nRequested by: {ctx.author.mention}"
         )
         e.add_field(name="Your Pearl Trades", value=f"`{pearls} ({round(pearls / dpearls * 100, 3)}%)`")
         e.add_field(name="Your Rod Drops", value=f"`{rods} ({round(rods / drods * 100, 3)}%)`")
         e.set_footer(
-            text=f"The command has been called {'{:,}'.format(iter)} time{'' if iter == 1 else 's'}. " + \
+            text=f"The command has been called {'{:,}'.format(iters)} time{'' if iters == 1 else 's'}. " + \
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
@@ -500,9 +500,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="fossil", description="Brings up a Minecraft fossil identification chart for divine travel.",
-                      aliases=["ft", "fossiltable", "fossilchart", "fossils"])
-    async def fossil(self, ctx):
+    @commands.command(name="fossils", description="Brings up a Minecraft fossil identification chart for divine travel.",
+                      aliases=["ft", "fossiltable", "fossilchart", "fossil"])
+    async def fossils(self, ctx):
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
         await funcs.sendImage(ctx, url)
 

@@ -876,8 +876,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="altseason", description="Returns the altcoin season index dataa.",
-                      aliases=["alt", "asi", "alts", "altcoinseason", "altcoinseasonindex", "altcoinindex", "ai"])
+    @commands.command(name="altseason", description="Returns the altcoin season index.",
+                      aliases=["alt", "asi", "alts", "altcoinseason", "altcoinindex", "ai", "altindex", "altsindex"])
     async def altseason(self, ctx):
         url = "https://www.blockchaincenter.net/altcoin-season-index/"
         res = await funcs.getRequest(url)

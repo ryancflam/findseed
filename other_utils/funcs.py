@@ -55,8 +55,8 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
         milli = (seconds - int(seconds)) * 1000
         return int(hours), int(minutes), int(seconds), int(round(milli, 0))
     days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
-    return f"{days} day{'' if days==1 else 's'}, {hours} hour{'' if hours==1 else 's'}, {minutes}" + \
-           f" minute{'' if minutes==1 else 's'}, and {seconds} second{'' if seconds==1 else 's'}"
+    return "{:,} day{}, {} hour{}".format(days, "" if days == 1 else "s", hours, "" if hours == 1 else "s") + \
+           f", {minutes} minute{'' if minutes == 1 else 's'}, and {seconds} second{'' if seconds == 1 else 's'}"
 
 
 def monthNumberToName(number):
