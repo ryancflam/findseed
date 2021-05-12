@@ -1,12 +1,13 @@
-from os import path, remove
-from time import time
 from asyncio import TimeoutError
 from datetime import datetime
-from mplfinance import plot, make_marketcolors, make_mpf_style
-from pandas import DataFrame, DatetimeIndex
+from os import path, remove
+from time import time
 
-from discord import Embed, Colour, File
+from bs4 import BeautifulSoup as bs4
+from discord import Colour, Embed, File
 from discord.ext import commands
+from mplfinance import make_marketcolors, make_mpf_style, plot
+from pandas import DataFrame, DatetimeIndex
 
 import config
 from other_utils import funcs
@@ -23,11 +24,7 @@ BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.tickers = {}
-        self.client.loop.create_task(self.tickerToID())
-
-    async def tickerToID(self):
-        self.tickers = await funcs.tickerToID()
+        self.tickers = funcs.getTickers()
 
     def getCoinGeckoID(self, coin):
         coin = coin.casefold()
@@ -72,14 +69,14 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e = Embed(colour=Colour.green())
         e.set_author(name="NEO and GAS Prices",
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.add_field(name=f"{'' if amount == 1 else str(amount) + ' '}NEO", inline=False,
+        e.add_field(name=f"{'' if amount == 1 else str(amount) + ' '}NEO",
                     value="`{:,} BTC | {:,} USD | {:,} GAS`".format(
                         round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
-                    ))
-        e.add_field(name=f"{'' if gasamount == 1 else str(gasamount) + ' '}GAS", inline=False,
+                    ), inline=False)
+        e.add_field(name=f"{'' if gasamount == 1 else str(gasamount) + ' '}GAS",
                     value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
-                        round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), round(gasusd / neousd * gasamount, 3)
-                    ))
+                        round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
+                    ), inline=False)
         e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
         await ctx.send(embed=e)
 
@@ -876,6 +873,32 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.set_footer(
                 text="Note: The QR code is that of the input address. Your order will only be valid for 72 hours."
             )
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="altseason", aliases=["alt", "asi", "alts", "altcoinseason", "altcoinseasonindex", "altcoinindex", "ai"],
+                      description="Returns the altcoin season index dataa.")
+    async def altseason(self, ctx):
+        url = "https://www.blockchaincenter.net/altcoin-season-index/"
+        res = await funcs.getRequest(url)
+        soup = bs4(res.text, features="lxml")
+        index = soup.findAll("div", class_="bccblock")
+        month = index[0].find("div", style="margin-top:-74px;padding: 0px 10px;").find("div").getText()
+        season = index[1].find("div", style="margin-top:-74px;padding: 0px 10px;").find("div").getText()
+        year = index[2].find("div", style="margin-top:-74px;padding: 0px 10px;").find("div").getText()
+        e = Embed(title="Altcoin Season Index", description=url)
+        e.add_field(
+            name="Altcoin Index", inline=False,
+            value=f"`{season}{' (Altcoin Season!)' if int(season) > 74 else ' (Bitcoin Season!)' if int(season) < 26 else ''}`"
+        )
+        e.add_field(
+            name="Month Index", inline=False,
+            value=f"`{month}{' (Altcoin Month!)' if int(month) > 74 else ' (Bitcoin Month!)' if int(month) < 26 else ''}`"
+        )
+        e.add_field(
+            name="Year Index", inline=False,
+            value=f"`{year}{' (Altcoin Year!)' if int(year) > 74 else ' (Bitcoin Year!)' if int(year) < 26 else ''}`"
+        )
         await ctx.send(embed=e)
 
 

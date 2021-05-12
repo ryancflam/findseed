@@ -57,7 +57,7 @@ class Bot(commands.Bot):
             except:
                 msg = ""
             await self.presence(("BTC" if btc else "ETH") + msg)
-            await asyncio.sleep(30)
+            await asyncio.sleep(60)
             btc = not btc
 
     async def presence(self, name):

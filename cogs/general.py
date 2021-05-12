@@ -1,8 +1,8 @@
-import psutil
 from json import load
 from time import time
 
-from discord import Embed, __version__
+import psutil
+from discord import __version__, Embed
 from discord.ext import commands
 
 import config

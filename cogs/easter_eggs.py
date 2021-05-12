@@ -1,7 +1,7 @@
-from random import randint, choice
+from random import choice, randint
 
+from discord import Embed, Colour
 from discord.ext import commands
-from discord import Embed, File, Colour
 
 from other_utils import funcs
 
@@ -150,8 +150,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             )
         else:
             url = "https://media.discordapp.net/attachments/769899860253736990/772731790791278602/unknown.png"
-            file = File(await funcs.getImage(url), "mlp.png")
-            await ctx.send(file=file)
+            await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="zion1", description="May the Star be with you all.")
@@ -244,8 +243,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             "https://media.discordapp.net/attachments/362589047018749955/761920398102364170/unknown.png",
             "https://media.discordapp.net/attachments/769899860253736990/772088052407074836/neo_logic_meme.jpg"
         ])
-        file = File(await funcs.getImage(url), "neo.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="audiblememe", description="Audible Individualism intensifies.")
@@ -255,29 +253,25 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             "https://media.discordapp.net/attachments/769899860253736990/772100077111738408/PicsArt_10-21-03.07.47.jpg",
             "https://media.discordapp.net/attachments/769899860253736990/772101368412373012/PicsArt_10-31-03.14.46.png",
         ])
-        file = File(await funcs.getImage(url), "audible.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="akiangry", description="Akinator is angry.")
     async def akiangry(self, ctx):
         url = "https://media.discordapp.net/attachments/769899860253736990/775032980787691550/2017-12-12_12.png"
-        file = File(await funcs.getImage(url), "akiangry.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="childhoodnightmare", description="My childhood nightmare.")
     async def childhoodnightmare(self, ctx):
         url = "https://cdn.discordapp.com/attachments/777818814829690884/840635612847144960/latest.png"
-        file = File(await funcs.getImage(url), "childhoodnightmare.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="handkerchief", description="Need a handkerchief?")
     async def handkerchief(self, ctx):
         url = "https://media.discordapp.net/attachments/771404776410972161/776318693969756160/al_doctor.jpg"
-        file = File(await funcs.getImage(url), "handkerchief.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="you", description="You.")
@@ -288,85 +282,73 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
     @commands.command(name=">(", description="Just >(.", aliases=[">c"])
     async def angry(self, ctx):
         url = "https://media.discordapp.net/attachments/771404776410972161/776320128953745428/angry.png"
-        file = File(await funcs.getImage(url), ">(.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="marioannoyed", description="Server owner be like.")
     async def marioannoyed(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783004827322941480/image0.png"
-        file = File(await funcs.getImage(url), "marioannoyed.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="xmurry", description="...")
     async def xmurry(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783005790742249472/2018-04-19_5.png"
-        file = File(await funcs.getImage(url), "xmurry.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="oo", description="OO.")
     async def oo(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783006065028759552/2018-04-24.png"
-        file = File(await funcs.getImage(url), "oo.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="marionietzsche", description="Moustache.")
     async def marionietzsche(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783006357509898260/2018-01-03_13.png"
-        file = File(await funcs.getImage(url), "marionietzsche.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="mariowatchingmlp", description="He does not seem to like it...")
     async def mariowatchingmlp(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783006422844702720/2018-01-03_14.png"
-        file = File(await funcs.getImage(url), "mariowatchingmlp.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="owchild", description="Man, that must hurt...")
     async def owchild(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783006687623643226/2019-06-22.png"
-        file = File(await funcs.getImage(url), "owchild.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="dogecoinbuyers", description="Dogecoin buyers.")
     async def dogecoinbuyers(self, ctx):
         url = "https://media.discordapp.net/attachments/777818814829690884/813483257860849664/PicsArt_02-14-07.56.48.jpg"
-        file = File(await funcs.getImage(url), "dogecoinbuyers.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="dogecoin", description="Dogecoin.")
     async def dogecoin(self, ctx):
         url = "https://media.discordapp.net/attachments/777818814829690884/813483345584586803/PicsArt_02-19-10.26.36.png"
-        file = File(await funcs.getImage(url), "dogecoin.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="audiblechokehold", description="Audible choke hold.")
     async def audiblechokehold(self, ctx):
         url = "https://media.discordapp.net/attachments/777818814829690884/813483462967296031/PicsArt_02-12-08.53.46.jpg"
-        file = File(await funcs.getImage(url), "audiblechokehold.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="theronsays", description="The Ron says.")
     async def theronsays(self, ctx):
         url = "https://media.discordapp.net/attachments/777818814829690884/813484512796606527/PicsArt_02-14-07.49.34.jpg"
-        file = File(await funcs.getImage(url), "theronsays.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="youcantseeme", description="You can't see me.")
     async def youcantseeme(self, ctx):
         url = "https://media.discordapp.net/attachments/792042955509858311/817420684749439036/unknown.png"
-        file = File(await funcs.getImage(url), "youcantseeme.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="falineguerrero", description="Faline Guerrero.")
@@ -377,8 +359,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             "https://media.discordapp.net/attachments/777818814829690884/813483973799968828/PicsArt_02-11-07.46.48.png",
             "https://media.discordapp.net/attachments/777818814829690884/813483974092390460/PicsArt_02-11-07.25.59.jpg"
         ])
-        file = File(await funcs.getImage(url), "falineguerrero.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="audeerble", description=">C but deer.")
@@ -391,8 +372,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             "https://media.discordapp.net/attachments/777818814829690884/813484272794599534/PicsArt_02-05-05.37.28.jpg",
             "https://media.discordapp.net/attachments/777818814829690884/813484273062379550/JPEG_20210205_052551.jpg"
         ])
-        file = File(await funcs.getImage(url), "audeerble.png")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="conversion", description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕")

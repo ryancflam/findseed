@@ -1,5 +1,5 @@
-from re import findall
 from asyncio import sleep
+from re import findall
 
 from discord.ext import commands
 

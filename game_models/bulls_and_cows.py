@@ -1,5 +1,5 @@
-from time import time
 from random import sample
+from time import time
 
 from other_utils.funcs import timeDifferenceStr
 

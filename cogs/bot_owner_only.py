@@ -2,9 +2,9 @@
 # For eval
 
 import ast
-from os import system
-from json import load, dump
 from asyncio import TimeoutError
+from json import dump, load
+from os import system
 
 import discord
 from discord.ext import commands

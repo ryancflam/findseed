@@ -1,14 +1,14 @@
-from time import time
-from json import dumps
+from asyncio import sleep, TimeoutError
 from datetime import datetime
-from urllib.parse import quote
-from asyncio import TimeoutError, sleep
-from asyncpraw import Reddit
+from json import dumps
 from random import choice
-from googletrans import Translator, constants
+from time import time
+from urllib.parse import quote
 
-from discord import Embed, channel
+from asyncpraw import Reddit
+from discord import channel, Embed
 from discord.ext import commands
+from googletrans import constants, Translator
 
 import config
 from other_utils import funcs
@@ -21,11 +21,7 @@ class Utility(commands.Cog, name="Utility"):
         self.reddit = Reddit(client_id=config.redditClientID,
                              client_secret=config.redditClientSecret,
                              user_agent="*")
-        self.tickers = {}
-        self.client.loop.create_task(self.tickerToID())
-
-    async def tickerToID(self):
-        self.tickers = await funcs.tickerToID()
+        self.tickers = funcs.getTickers()
 
     @staticmethod
     def degreesToDirection(value):

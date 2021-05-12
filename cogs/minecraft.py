@@ -2,13 +2,13 @@
 # For blindtravel, doubletravel, educatedtravel, safeblind, triangulation
 
 import math
-from time import time
-from random import randint
-from base64 import b64decode
 from asyncio import TimeoutError
-from json import load, loads, dump
+from base64 import b64decode
+from json import dump, load, loads
+from random import randint
+from time import time
 
-from discord import Embed, File, Colour
+from discord import Colour, Embed, File
 from discord.ext import commands
 
 from assets import eye_data
@@ -229,7 +229,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        "This command is for versions 1.13+ and may not be" + \
                                                        " 100% accurate. This command may not be used in a " + \
                                                        "real speedrun.",
-                      aliases=["dt", "double"], usage="<F3+C data>")
+                      aliases=["double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -498,6 +498,20 @@ class Minecraft(commands.Cog, name="Minecraft"):
         except Exception:
             e = funcs.errorEmbed(None, "Invalid server address or server error?")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="fossil", description="Brings up a Minecraft fossil identification chart for divine travel.",
+                      aliases=["ft", "fossiltable", "fossilchart", "fossils"])
+    async def fossil(self, ctx):
+        url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
+        await funcs.sendImage(ctx, url)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="divinetravel", description="Brings up a Minecraft divine travel chart.",
+                      aliases=["dt", "divine", "div", "dv"])
+    async def divinetravel(self, ctx):
+        url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
+        await funcs.sendImage(ctx, url)
 
 
 def setup(client: commands.Bot):

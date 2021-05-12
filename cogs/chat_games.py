@@ -1,21 +1,21 @@
-from time import time
-from datetime import datetime
 from asyncio import TimeoutError
+from datetime import datetime
+from random import choice, randint, shuffle
 from string import ascii_lowercase
-from random import randint, choice, shuffle
+from time import time
+
 from akinator import CantGoBackAnyFurther
 from akinator.async_aki import Akinator
-
-from discord import Embed, Colour, File
+from discord import Colour, Embed, File
 from discord.ext import commands
 
-from other_utils import funcs
-from game_models.uno import Uno
+from game_models.battleship import Battleship
 from game_models.bulls_and_cows import BullsAndCows
 from game_models.card_trick import CardTrick
-from game_models.minesweeper import Minesweeper
-from game_models.battleship import Battleship
 from game_models.hangman import Hangman
+from game_models.minesweeper import Minesweeper
+from game_models.uno import Uno
+from other_utils import funcs
 
 
 class ChatGames(commands.Cog, name="Chat Games"):

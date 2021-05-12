@@ -1,10 +1,10 @@
 # Credit - https://github.com/primal100/pybitcointools
 # Credit - https://github.com/keis/base58
 
-from typing import Union
-from random import randrange
 from binascii import unhexlify
-from hashlib import sha256, new
+from hashlib import new, sha256
+from random import randrange
+from typing import Union
 
 HEX_DIGITS = "0123456789abcdef"
 ALPHABET = b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"

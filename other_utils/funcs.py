@@ -1,11 +1,10 @@
-from os import path
+from datetime import datetime
 from io import BytesIO
 from json import load
-from httpx import AsyncClient
-from datetime import datetime
+from os import path
 
-from discord import Embed
-
+from discord import Embed, File
+from httpx import AsyncClient, get
 
 def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
@@ -126,9 +125,9 @@ def timeStrToDatetime(date: str):
     return f"{dateObj.date()} {dateObj.time()}"
 
 
-async def tickerToID():
+def getTickers():
     tickers = {}
-    res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
+    res = get("https://api.coingecko.com/api/v3/coins/list")
     data = res.json()
     for i in data:
         try:
@@ -155,6 +154,10 @@ async def getImage(url, headers=None, params=None, timeout=None, verify=True):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
     return BytesIO(res.content)
+
+
+async def sendImage(ctx, url: str, name: str="image.png"):
+    await ctx.send(file=File(await getImage(url), name))
 
 
 async def postRequest(url, data=None, headers=None, timeout=None, verify=True, json=None):

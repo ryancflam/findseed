@@ -1,6 +1,6 @@
+from datetime import datetime
 from json import load
 from random import choice
-from datetime import datetime
 
 from discord import Embed
 from discord.ext import commands
@@ -183,7 +183,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acfossil", description="Shows information about an Animal Crossing: New Horizons fossil.",
-                      aliases=["fossil", "acnhfossil"], usage="<fossil name>")
+                      aliases=["acnhfossil"], usage="<fossil name>")
     async def acfossil(self, ctx, *, fossil):
         try:
             fossildata = self.findData(self.fossils, fossil)

@@ -1,5 +1,5 @@
-from time import time
 from random import randint, shuffle
+from time import time
 
 from other_utils.funcs import timeDifferenceStr
 from other_utils.item_cycle import ItemCycle

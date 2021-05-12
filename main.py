@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-from os import path, makedirs
+from asyncio import get_event_loop as loop
+from json import dump
+from os import makedirs, path
 from sys import exit
 from time import time
-from json import dump
-from asyncio import get_event_loop as loop
 
 from bot import Bot
 from other_utils.funcs import getPath

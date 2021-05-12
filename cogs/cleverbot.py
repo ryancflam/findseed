@@ -1,5 +1,5 @@
-from re import sub
 from random import choice
+from re import sub
 
 from discord.ext import commands
 

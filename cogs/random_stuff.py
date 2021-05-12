@@ -1,15 +1,16 @@
-from json import load
-from time import time
 from asyncio import sleep, TimeoutError
+from json import load
 from random import choice, randint, shuffle
+from time import time
 
-from discord import Embed, Member, File
+from discord import Embed, File, Member
 from discord.ext import commands
 
 from other_utils import funcs
 from other_utils.playing_cards import PlayingCards
 
 COIN_EDGE_ODDS = 6001
+RN_RANGE = 999999999999
 
 
 class RandomStuff(commands.Cog, name="Random Stuff"):
@@ -211,16 +212,14 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.command(name="dog", description="Sends a random dog image.")
     async def dog(self, ctx):
         res = await funcs.getRequest("https://dog.ceo/api/breeds/image/random")
-        res2 = File(await funcs.getImage(res.json()["message"]), "dog.jpg")
-        await ctx.send(file=res2)
+        await funcs.sendImage(ctx, res.json()["message"])
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cat", description="Sends a random cat image.")
     async def cat(self, ctx):
         res = await funcs.getRequest("https://api.thecatapi.com/v1/images/search")
         image = res.json()[0]["url"]
-        res2 = File(await funcs.getImage(image), image.split("thecatapi.com/images/")[1])
-        await ctx.send(file=res2)
+        await funcs.sendImage(ctx, image, name=image.split("thecatapi.com/images/")[1])
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="trumpthinks", description="What Donald Trump thinks about something or someone.",
@@ -328,9 +327,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     async def avatar(self, ctx, *, user: Member=None):
         user = user or ctx.author
         ext = "gif" if user.is_avatar_animated() else "png"
-        url = user.avatar_url_as(format=ext if ext != "gif" else None)
-        file = File(await funcs.getImage(str(url)), f"avatar.{ext}")
-        await ctx.send(file=file)
+        await funcs.sendImage(ctx, str(user.avatar_url_as(format=ext if ext != "gif" else None)), name=f"avatar.{ext}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="8ball", description="Ask 8ball a question.",
@@ -452,6 +449,24 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     "\n".join(f"{card} | {pc.returnCardName(card)}" for card in cards), ctx.author
                 )
             )
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="number", usage="[range up to {:,}] [starting point (0 OR 1)]".format(RN_RANGE),
+                      aliases=["rn", "numbers", "randomnumber", "rng"], description="Generates a random number.")
+    async def number(self, ctx, rnrange: str=str(RN_RANGE), start: str= "1"):
+        try:
+            rnrange = int(rnrange)
+            if not 0 < rnrange < (RN_RANGE + 1):
+                rnrange = RN_RANGE
+        except ValueError:
+            rnrange = RN_RANGE
+        try:
+            start = 1 if int(start) > 0 else 0
+        except ValueError:
+            start = 1
+        await ctx.send("```{:,} (Range: {:,} to {:,})\n\nRequested by: {}```".format(
+            randint(start, rnrange), start, rnrange, ctx.author
+        ))
 
 
 def setup(client: commands.Bot):

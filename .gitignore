@@ -1,3 +1,4 @@
+requirementsgen.bat
 config.py
 cogs/testcog.py
 data/*
