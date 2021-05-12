@@ -388,31 +388,30 @@ class Minecraft(commands.Cog, name="Minecraft"):
             f"**~{round(self.coordsDifference((x1, z1), (x2, z2)))}**"
         )
 
-    # Partially not working
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="mcwr", description="Shows the current world records for some of the most prominent Any% " + \
+    @commands.command(name="speedrunwr", description="Shows the current world records for the solo Any% Glitchless" + \
                                                "Minecraft: Java Edition speedrun categories.",
-                      aliases=["worldrecord", "wr"], hidden=True)
-    async def mcwr(self, ctx):
+                      aliases=["worldrecord", "wr", "src", "speedrun", "mcwr", "any", "ssg", "rsg"])
+    async def speedrunwr(self, ctx):
         await ctx.send("Getting speedrun.com data. Please wait...")
         try:
-            e = Embed(
-                title="Minecraft Speedrun World Records - Any% Solo",
-                description="https://www.speedrun.com/mc"
-            )
+            e = Embed(description="https://www.speedrun.com/mc")
+            e.set_author(name="Minecraft Speedrun World Records - Solo Any% Glitchless",
+                         icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103816761114624/mc.png")
             urls = [
                 "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=gq7zo9p1",
                 "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=21go6e6q",
                 "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=gq7zo9p1",
                 "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=21go6e6q",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731",
-                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=jqzywv2l",
-                "wkpn0vdr?var-2lgzk1o8=rqv4pz7q&var-wlexoyr8=klr6djol",
-                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=jqzywv2l",
-                "wkpn0vdr?var-2lgzk1o8=5lekrv5l&var-wlexoyr8=klr6djol"
+                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731"
             ]
-            categories = ["SSG Pre-1.9", "SSG 1.9+", "RSG Pre-1.9", "RSG 1.9-1.15", "RSG 1.16+",
-                          "SS Pre-1.9", "SS 1.9+", "RS Pre-1.9", "RS 1.9+"]
+            categories = [
+                "Set Seed Glitchless (Pre-1.9)",
+                "Set Seed Glitchless (1.9+)",
+                "Random Seed Glitchless (Pre-1.9)",
+                "Random Seed Glitchless (1.9-1.15)",
+                "Random Seed Glitchless (1.16+)"
+            ]
             count = 0
             for category in urls:
                 res = await funcs.getRequest(
@@ -423,9 +422,12 @@ class Minecraft(commands.Cog, name="Minecraft"):
                 res = await funcs.getRequest(wrdata["players"][0]["uri"])
                 runner = res.json()["data"]["names"]["international"]
                 h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
-                e.add_field(name=categories[count], value=f"`{h if h != 0 else ''}{'h ' if h != 0 else ''}{m}m {s}s " + \
-                                                          f"{ms if ms != 0 else ''}{'ms ' if ms != 0 else ''}(by {runner})`")
+                e.add_field(name=categories[count], inline=False,
+                            value=f"`{h if h != 0 else ''}{'h ' if h != 0 else ''}{m}m {s}s " + \
+                            f"{ms if ms != 0 else ''}{'ms ' if ms != 0 else ''}({runner})`")
                 count += 1
+            e.set_footer(text="Click the link above for more speedrun categories.",
+                         icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error.")
         await ctx.send(embed=e)
@@ -504,14 +506,22 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["ft", "fossiltable", "fossilchart", "fossil"])
     async def fossils(self, ctx):
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
-        await funcs.sendImage(ctx, url)
+        await funcs.sendImage(
+            ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
+                              "818310310153814056/Fossil_origin_identification_1.pdf" + \
+                              "\n\nCredit:\n<https://twitter.com/olive_was_here>\n<https://twitter.com/beljelb>"
+        )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="divinetravel", description="Brings up a Minecraft divine travel chart.",
                       aliases=["dt", "divine", "div", "dv"])
     async def divinetravel(self, ctx):
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
-        await funcs.sendImage(ctx, url)
+        await funcs.sendImage(
+            ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
+                              "841792714822909972/divine_travel_stuff_.pdf" + \
+                              "\n\nCredit:\n<https://twitter.com/olive_was_here>\n<https://twitter.com/beljelb>"
+        )
 
 
 def setup(client: commands.Bot):

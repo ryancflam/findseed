@@ -156,8 +156,8 @@ async def getImage(url, headers=None, params=None, timeout=None, verify=True):
     return BytesIO(res.content)
 
 
-async def sendImage(ctx, url: str, name: str="image.png"):
-    await ctx.send(file=File(await getImage(url), name))
+async def sendImage(ctx, url: str, name: str="image.png", message=None):
+    await ctx.send(message, file=File(await getImage(url), name))
 
 
 async def postRequest(url, data=None, headers=None, timeout=None, verify=True, json=None):

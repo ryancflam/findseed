@@ -675,6 +675,7 @@ class Utility(commands.Cog, name="Utility"):
         while inp.endswith("/"):
             inp = inp[:-1]
         try:
+            icon_url = "https://www.redditinc.com/assets/images/site/reddit-logo.png"
             if inp.casefold().startswith("r") and "/" in inp:
                 subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
                 if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) \
@@ -689,9 +690,9 @@ class Utility(commands.Cog, name="Utility"):
                             "NSFW" if subreddit.over18 else 0
                         ] if i
                     ]
-                    e = Embed(title="r/" + subreddit.display_name,
-                              description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" + \
+                    e = Embed(description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" + \
                                           f"https://old.reddit.com/r/{subreddit.display_name}))")
+                    e.set_author(icon_url=icon_url, name="r/" + subreddit.display_name)
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     e.set_footer(text=subreddit.public_description)
@@ -731,9 +732,9 @@ class Utility(commands.Cog, name="Utility"):
                         and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
                 else:
-                    e = Embed(title="u/" + redditor.name + (f" ({nickname})" if nickname else ""),
-                              description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
+                    e = Embed(description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
                                           f"https://old.reddit.com/user/{redditor.name}))")
+                    e.set_author(icon_url=icon_url, name="u/" + redditor.name + (f" ({nickname})" if nickname else ""))
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     if not suspended:

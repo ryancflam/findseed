@@ -19,6 +19,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         self.bugs = load(open(f"{ASSETS_PATH}/bugs.json", "r", encoding="utf8"))
         self.fish = load(open(f"{ASSETS_PATH}/fish.json", "r", encoding="utf8"))
         self.fossils = load(open(f"{ASSETS_PATH}/fossils.json", "r", encoding="utf8"))
+        self.personalities = load(open(f"{ASSETS_PATH}/personalities.json", "r", encoding="utf8"))
         self.sea = load(open(f"{ASSETS_PATH}/sea_creatures.json", "r", encoding="utf8"))
         self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
 
@@ -192,6 +193,25 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Sell Price", value="`{:,}`".format(fossildata['price']))
             e.add_field(name="Part Of", value=f"`{fossildata['part-of'].title()}`")
             e.set_image(url=fossildata["image_uri"])
+            e.set_thumbnail(url=AC_LOGO)
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="acpersonality", usage="<personality type>",
+                      aliases=["acp", "acnhpersonality", "acpersonalities", "acnhpersonalities"],
+                      description="Shows information about an Animal Crossing: New Horizons villager personality.")
+    async def acpersonality(self, ctx, *, personality):
+        personality = personality.casefold().replace(" ", "").replace("-", "").replace("_", "").replace("uchi", "sisterly") \
+                      .replace("bigsister", "sisterly").replace("snobby", "snooty").replace("grumpy", "cranky")
+        try:
+            personalitydata = self.findData(self.personalities, personality)
+            e = Embed(title=personalitydata["name"],
+                      description=personalitydata["desc"])
+            e.add_field(name="Gender", value=f"`{personalitydata['gender']}`")
+            e.add_field(name="Sleep Time", value=f"`{personalitydata['sleep-time']}`")
+            e.add_field(name="Total Villagers", value=f"`{personalitydata['total']}`")
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))

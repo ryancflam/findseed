@@ -3,7 +3,7 @@ from json import load
 from random import choice, randint, shuffle
 from time import time
 
-from discord import Embed, File, Member
+from discord import Embed, Member
 from discord.ext import commands
 
 from other_utils import funcs
@@ -81,7 +81,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",
-                      aliases=["pt", "mbti", "personality"])
+                      aliases=["pt", "mbti", "personality", "personalities", "16p", "16personalities"])
     async def personalitytest(self, ctx):
         await ctx.send("```Note: You are about to take a non-professional personality test with 88 questions. " + \
                        "The test should take around 15 to 30 minutes to complete. To select an answer, input " + \
@@ -265,11 +265,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 "https://files.gamebanana.com/img/ico/sprays/593404c44a588.gif",
                 "https://gifimage.net/wp-content/uploads/2017/11/fidget-spinner-gif-transparent-6.gif"
             ])
-            file = File(await funcs.getImage(url), "spinner.gif")
-            await ctx.send(
-                f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name} has spun a fidget spinner. " + \
-                "Let's see how long it lasts...** <:fidgetspinner:675314386784485376>", file=file
-            )
+            await funcs.sendImage(ctx, url, name="spinner.gif",
+                                  message=f"<:fidgetspinner:675314386784485376> **{ctx.author.name} has spun a fidget"+ \
+                                          " spinner. Let's see how long it lasts...** <:fidgetspinner:675314386784485376>")
             randomSeconds = randint(5, 180)
             await sleep(randomSeconds)
             await ctx.send(
