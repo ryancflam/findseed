@@ -72,12 +72,12 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e = Embed(colour=Colour.green())
         e.set_author(name="NEO and GAS Prices",
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.add_field(name="{}NEO Price".format('' if amount == 1 else str(amount) + ' '),
+        e.add_field(name="{}NEO".format("" if amount == 1 else str(amount) + " "),
                     value="`{:,} BTC | {:,} USD | {:,} GAS`".format(
                         round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
                     ), inline=False)
         e.add_field(name="NEO Market Cap", value="`{:,} USD (Rank #{:,})`".format(neomc, neorank))
-        e.add_field(name="{}GAS Price".format('' if gasamount == 1 else str(gasamount) + ' '),
+        e.add_field(name="{}GAS".format("" if gasamount == 1 else str(gasamount) + " "),
                     value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
                         round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
                     ), inline=False)

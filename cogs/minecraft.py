@@ -79,10 +79,11 @@ class Minecraft(commands.Cog, name="Minecraft"):
             foundTime = f"{funcs.timeDifferenceStr(time(), highestTime)}"
         e = Embed(
             title=f"{self.client.command_prefix}findseed",
-            description=f"{ctx.message.author.mention}'s seed is a **{eyes} eye**."
+            description=f"Requested by: {ctx.message.author.mention}"
         )
+        e.add_field(name="Your Eyes", value=f"`{eyes}`")
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
-        e.add_field(name="Most Eyes Found",
+        e.add_field(name="Most Eyes Found", inline=False,
                     value=f"`{highest} (last found {foundTime}{' ago' if not update else ''}" + \
                           f", found {'{:,}'.format(highestTotal)} time{'' if highestTotal == 1 else 's'})`")
         e.set_footer(text=f"The command has been called {'{:,}'.format(calls)} time{'' if calls == 1 else 's'}. !eyeodds")
