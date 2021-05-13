@@ -1,4 +1,3 @@
-from json import load
 from time import time
 
 import psutil
@@ -43,9 +42,7 @@ class General(commands.Cog, name="General"):
     async def botinfo(self, ctx):
         appinfo = await self.client.application_info()
         e = Embed(description=appinfo.description)
-        with open(f"{funcs.getPath()}/data/findseed.json", "r", encoding="utf-8") as f:
-            data = load(f)
-        f.close()
+        data = funcs.readJson("data/findseed.json")
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Library", value=f"`discord.py {__version__}`")

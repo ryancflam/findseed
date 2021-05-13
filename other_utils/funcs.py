@@ -1,19 +1,31 @@
 from datetime import datetime
 from io import BytesIO
-from json import load
+from json import dump, load
 from os import path
 
 from discord import Embed, File
 from httpx import AsyncClient, get
 
+
 def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
 
 
-def userNotBlacklisted(client, message):
-    with open(f"{getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
+def readJson(path):
+    with open(f"{getPath()}/{path}", "r", encoding="utf-8") as f:
         data = load(f)
     f.close()
+    return data
+
+
+def dumpJson(path, data):
+    with open(f"{getPath()}/{path}", "w") as f:
+        dump(data, f, sort_keys=True, indent=4)
+    f.close()
+
+
+def userNotBlacklisted(client, message):
+    data = readJson("data/blacklist.json")
     serverList = list(data["servers"])
     userList = list(data["users"])
     allowed = True

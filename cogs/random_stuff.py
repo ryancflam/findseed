@@ -1,5 +1,4 @@
 from asyncio import sleep, TimeoutError
-from json import load
 from random import choice, randint, shuffle
 from time import time
 
@@ -19,7 +18,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         self.activeSpinners = []
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
-        self.personalityTest = load(open(f"{funcs.getPath()}/assets/personality_test.json", "r", encoding="utf8"))
+        self.personalityTest = funcs.readJson("assets/personality_test.json")
+        self.trumpquotes = funcs.readJson("assets/trump_quotes.json")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
@@ -230,10 +230,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         elif len(something) > 100:
             e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
-            with open(f"{funcs.getPath()}/assets/trump_quotes.json", "r", encoding="utf-8") as f:
-                data = load(f)
-            f.close()
-            quotes = choice(data["messages"]["list"])
+            quotes = choice(self.trumpquotes["messages"]["list"])
             e = Embed(
                 title=f"What does Trump think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"

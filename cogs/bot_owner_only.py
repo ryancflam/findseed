@@ -3,7 +3,6 @@
 
 import ast
 from asyncio import TimeoutError
-from json import dump, load
 from os import system
 
 import discord
@@ -263,16 +262,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
-            with open(f"{funcs.getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
-                data = load(f)
-            f.close()
+            data = funcs.readJson("data/blacklist.json")
             serverList = list(data["servers"])
             if serverID not in serverList:
                 serverList.append(serverID)
                 data["servers"] = serverList
-                with open(f"{funcs.getPath()}/data/blacklist.json", "w") as f:
-                    dump(data, f, sort_keys=True, indent=4)
-                f.close()
+                funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.send("Added.")
             await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
@@ -290,16 +285,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 return await ctx.send(embed=funcs.errorEmbed(
                     None, "Are you trying to blacklist yourself, you dumb retard??!@?@?#!?"
                 ))
-            with open(f"{funcs.getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
-                data = load(f)
-            f.close()
+            data = funcs.readJson("data/blacklist.json")
             userList = list(data["users"])
             if userID not in userList:
                 userList.append(userID)
                 data["users"] = userList
-                with open(f"{funcs.getPath()}/data/blacklist.json", "w") as f:
-                    dump(data, f, sort_keys=True, indent=4)
-                f.close()
+                funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.send("Added.")
             await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
@@ -313,16 +304,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
-            with open(f"{funcs.getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
-                data = load(f)
-            f.close()
+            data = funcs.readJson("data/blacklist.json")
             serverList = list(data["servers"])
             if serverID in serverList:
                 serverList.remove(serverID)
                 data["servers"] = serverList
-                with open(f"{funcs.getPath()}/data/blacklist.json", "w") as f:
-                    dump(data, f, sort_keys=True, indent=4)
-                f.close()
+                funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.send("Removed.")
             await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
@@ -336,16 +323,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
-            with open(f"{funcs.getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
-                data = load(f)
-            f.close()
+            data = funcs.readJson("data/blacklist.json")
             userList = list(data["users"])
             if userID in userList:
                 userList.remove(userID)
                 data["users"] = userList
-                with open(f"{funcs.getPath()}/data/blacklist.json", "w") as f:
-                    dump(data, f, sort_keys=True, indent=4)
-                f.close()
+                funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.send("Removed.")
             await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
@@ -354,9 +337,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
     @commands.command(name="blacklist", description="Gets the blacklist.", aliases=["bl"])
     @commands.is_owner()
     async def blacklist(self, ctx):
-        with open(f"{funcs.getPath()}/data/blacklist.json", "r", encoding="utf-8") as f:
-            data = load(f)
-        f.close()
+        data = funcs.readJson("data/blacklist.json")
         serverList = list(data["servers"])
         userList = list(data["users"])
         await ctx.send(

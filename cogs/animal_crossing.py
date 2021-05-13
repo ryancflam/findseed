@@ -1,6 +1,5 @@
 from asyncio import TimeoutError
 from datetime import datetime
-from json import load
 from random import choice
 
 from discord import Embed
@@ -8,7 +7,7 @@ from discord.ext import commands
 
 from other_utils import funcs
 
-ASSETS_PATH = f"{funcs.getPath()}/assets/animal_crossing"
+ASSETS_PATH = "assets/animal_crossing/"
 AC_LOGO = "https://media.discordapp.net/attachments/771698457391136798/" + \
           "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
 
@@ -16,13 +15,13 @@ AC_LOGO = "https://media.discordapp.net/attachments/771698457391136798/" + \
 class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.art = load(open(f"{ASSETS_PATH}/art.json", "r", encoding="utf8"))
-        self.bugs = load(open(f"{ASSETS_PATH}/bugs.json", "r", encoding="utf8"))
-        self.fish = load(open(f"{ASSETS_PATH}/fish.json", "r", encoding="utf8"))
-        self.fossils = load(open(f"{ASSETS_PATH}/fossils.json", "r", encoding="utf8"))
-        self.personalities = load(open(f"{ASSETS_PATH}/personalities.json", "r", encoding="utf8"))
-        self.sea = load(open(f"{ASSETS_PATH}/sea_creatures.json", "r", encoding="utf8"))
-        self.villagers = load(open(f"{ASSETS_PATH}/villagers.json", "r", encoding="utf8"))
+        self.art = funcs.readJson(ASSETS_PATH + "art.json")
+        self.bugs = funcs.readJson(ASSETS_PATH + "bugs.json")
+        self.fish = funcs.readJson(ASSETS_PATH + "fish.json")
+        self.fossils = funcs.readJson(ASSETS_PATH + "fossils.json")
+        self.personalities = funcs.readJson(ASSETS_PATH + "personalities.json")
+        self.sea = funcs.readJson(ASSETS_PATH + "sea_creatures.json")
+        self.villagers = funcs.readJson(ASSETS_PATH + "villagers.json")
 
     @staticmethod
     def findData(data: dict, name: str):
@@ -268,7 +267,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acfossil", description="Shows information about an Animal Crossing: New Horizons fossil.",
-                      aliases=["acnhfossil"], usage="<fossil name>")
+                      aliases=["acnhfossil", "acfossils", "acnhfossils"], usage="<fossil name>")
     async def acfossil(self, ctx, *, fossil):
         try:
             fossildata = self.findData(self.fossils, fossil)

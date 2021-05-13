@@ -4,7 +4,7 @@
 import math
 from asyncio import TimeoutError
 from base64 import b64decode
-from json import dump, load, loads
+from json import loads
 from random import randint
 from time import time
 
@@ -54,9 +54,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                       aliases=["fs", "seed", "f", "s", "findseeds", "seeds"])
     async def findseed(self, ctx):
         eyes = self.randomEyes()
-        with open(f"{funcs.getPath()}/data/findseed.json", "r", encoding="utf-8") as f:
-            data = load(f)
-        f.close()
+        data = funcs.readJson("data/findseed.json")
         odds = eye_data.EYE_DATA[str(eyes)]["percent"]
         onein = eye_data.EYE_DATA[str(eyes)]["onein"]
         update = False
@@ -70,9 +68,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         highestTotal = data["highest"]["found"]
         data["calls"] += 1
         calls = data["calls"]
-        with open(f"{funcs.getPath()}/data/findseed.json", "w") as f:
-            dump(data, f, sort_keys=True, indent=4)
-        f.close()
+        funcs.dumpJson("data/findseed.json", data)
         file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
         foundTime = "just now"
         if not update:
@@ -106,9 +102,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def finddream(self, ctx):
         pearls, rods = 0, 0
         dpearls, drods = 262, 305
-        with open(f"{funcs.getPath()}/data/finddream.json", "r", encoding="utf-8") as f:
-            data = load(f)
-        f.close()
+        data = funcs.readJson("data/finddream.json")
         mostPearls = data["mostPearls"]
         mostRods = data["mostRods"]
         for _ in range(dpearls):
@@ -119,9 +113,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         data["mostRods"] = rods if rods >= mostRods else mostRods
         data["iteration"] += 1
         iters = data['iteration']
-        with open(f"{funcs.getPath()}/data/finddream.json", "w") as f:
-            dump(data, f, sort_keys=True, indent=4)
-        f.close()
+        funcs.dumpJson("data/finddream.json", data)
         e = Embed(
             title=f"{self.client.command_prefix}finddream",
             description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " + \
@@ -445,8 +437,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             res = await funcs.getRequest(
                 f"https://sessionserver.mojang.com/session/minecraft/profile/{str(data.json()['id'])}"
             )
-            data = b64decode(res.json()["properties"][0]["value"])
-            data = loads(data)
+            data = loads(b64decode(res.json()["properties"][0]["value"]))
             skin = data["textures"]["SKIN"]["url"]
             e = Embed(
                 title="Minecraft User",
