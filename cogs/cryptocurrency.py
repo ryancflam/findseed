@@ -274,9 +274,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                                 value="`{:,} {}`".format(data["low_24h"], fiat))
                     e.add_field(name="Trading Volume (24h)",
                                 value="`{:,} {}`".format(data["total_volume"], fiat))
-                    if data["fully_diluted_valuation"]:
+                    if totalSupply:
                         e.add_field(name="Fully Diluted Valuation",
-                                    value="`{:,} {}`".format(data["fully_diluted_valuation"], fiat))
+                                    value="`{:,} {}`".format(int(totalSupply * currentPrice), fiat))
                     e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC",
                                  icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" + \
                                           "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")
