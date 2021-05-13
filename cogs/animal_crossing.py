@@ -350,7 +350,10 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"])
             e.set_image(url=villagerdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
-            e.add_field(name="Personality", value="`{}`".format(f'{villagerdata["personality"]} ({villagerdata["subtype"]})'))
+            e.add_field(
+                name="Personality",
+                value="`{}`".format(f'{villagerdata["personality"].replace("Uchi", "Sisterly")} ({villagerdata["subtype"]})')
+            )
             e.add_field(name="Birthday", value=f"`{villagerdata['birthday-string']}`")
             e.add_field(name="Species", value=f"`{villagerdata['species']}`")
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")

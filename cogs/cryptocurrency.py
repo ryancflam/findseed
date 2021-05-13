@@ -268,6 +268,15 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                                 value=f"`{'None' if not percent1d else '{:,}%'.format(round(percent1d, 2))}`")
                     e.add_field(name="Price Change (7d)",
                                 value=f"`{'None' if not percent7d else '{:,}%'.format(round(percent7d, 2))}`")
+                    e.add_field(name="24h High",
+                                value="`{:,} {}`".format(data["high_24h"], fiat))
+                    e.add_field(name="24h Low",
+                                value="`{:,} {}`".format(data["low_24h"], fiat))
+                    e.add_field(name="Trading Volume (24h)",
+                                value="`{:,} {}`".format(data["total_volume"], fiat))
+                    if data["fully_diluted_valuation"]:
+                        e.add_field(name="Fully Diluted Valuation",
+                                    value="`{:,} {}`".format(data["fully_diluted_valuation"], fiat))
                     e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC",
                                  icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" + \
                                           "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")
@@ -372,7 +381,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             e.add_field(name="Minutes Between Blocks", value=f"`{blockchain['minutes_between_blocks']}`")
             e.add_field(name="Mining Difficulty", value="`{:,}`".format(blockchain['difficulty']))
             e.add_field(name="Hash Rate", value="`{:,} TH/s`".format(int(int(blockchain['hash_rate']) / 1000)))
-            e.add_field(name="Trade Volume (24h)", value="`{:,} BTC`".format(blockchain['trade_volume_btc']))
+            e.add_field(name="Trading Volume (24h)", value="`{:,} BTC`".format(blockchain['trade_volume_btc']))
             e.add_field(name="Total Transactions (24h)", value="`{:,}`".format(blockchain['n_tx']))
             e.add_field(name="Block Height", value="`{:,}`".format(height))
             e.add_field(name="Next Halving Height",
