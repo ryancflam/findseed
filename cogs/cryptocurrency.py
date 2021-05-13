@@ -41,7 +41,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         return value / 1000000000000000000
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="neo", description="Returns prices of NEO and GAS with GAS to NEO ratio.",
+    @commands.command(name="neo", description="Returns the prices and market capitalisations of NEO and GAS with GAS to NEO ratio.",
                       aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"], usage="[amount of NEO or GAS]")
     async def neo(self, ctx, amount="1"):
         try:
@@ -51,32 +51,37 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             amount, gasamount = 1, 1
         if amount < 1:
             return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be 1 or greater."))
-        res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "neo,gas"})
-        tickers = res.json()["tickers"]
+        res = await funcs.getRequest(COINGECKO_URL + "coins/markets", params={"vs_currency": "usd", "ids": "bitcoin,neo,gas"})
+        tickers = res.json()
+        btcprice = None
         neobtc, neousd, gasbtc, gasusd = None, None, None, None
-        neo, gas = False, False
+        neorank, gasrank, neomc, gasmc = None, None, None, None
         for ticker in tickers:
-            if ticker["base"] == "NEO" and ticker["target"] == "BTC":
-                neobtc = ticker["last"]
-                neousd = ticker["converted_last"]["usd"]
-                neo = True
-            if ticker["base"] == "GAS" and ticker["target"] == "BTC":
-                gasbtc = ticker["last"]
-                gasusd = ticker["converted_last"]["usd"]
-                gas = True
-            if neo and gas:
-                break
+            if ticker["symbol"] == "btc":
+                btcprice = ticker["current_price"]
+            if ticker["symbol"] == "neo":
+                neousd = ticker["current_price"]
+                neobtc = neousd / btcprice
+                neorank = ticker["market_cap_rank"]
+                neomc = ticker["market_cap"]
+            if ticker["symbol"] == "gas":
+                gasusd = ticker["current_price"]
+                gasbtc = gasusd / btcprice
+                gasrank = ticker["market_cap_rank"]
+                gasmc = ticker["market_cap"]
         e = Embed(colour=Colour.green())
         e.set_author(name="NEO and GAS Prices",
                      icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.add_field(name=f"{'' if amount == 1 else str(amount) + ' '}NEO",
+        e.add_field(name="{}NEO Price".format('' if amount == 1 else str(amount) + ' '),
                     value="`{:,} BTC | {:,} USD | {:,} GAS`".format(
                         round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
                     ), inline=False)
-        e.add_field(name=f"{'' if gasamount == 1 else str(gasamount) + ' '}GAS",
+        e.add_field(name="NEO Market Cap", value="`{:,} USD (Rank #{:,})`".format(neomc, neorank))
+        e.add_field(name="{}GAS Price".format('' if gasamount == 1 else str(gasamount) + ' '),
                     value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
                         round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
                     ), inline=False)
+        e.add_field(name="GAS Market Cap", value="`{:,} USD (Rank #{:,})`".format(gasmc, gasrank))
         e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
         await ctx.send(embed=e)
 

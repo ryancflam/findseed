@@ -7,21 +7,26 @@ from time import time
 from akinator import CantGoBackAnyFurther
 from akinator.async_aki import Akinator
 from discord import Colour, Embed, File
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from game_models.battleship import Battleship
 from game_models.bulls_and_cows import BullsAndCows
 from game_models.card_trick import CardTrick
 from game_models.hangman import Hangman
 from game_models.minesweeper import Minesweeper
+from game_models.tetris import Tetris
 from game_models.uno import Uno
 from other_utils import funcs
+
+TETRIS_REACTIONS = {"left": "◀️", "right": "▶️", "rotate": "🔄", "softDrop": "🔽", "hardDrop": "⏬"}
 
 
 class ChatGames(commands.Cog, name="Chat Games"):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.gameChannels = []
+        self.tetrisGames = {}
+        self.tetrisTick.start()
 
     async def checkGameInChannel(self, ctx):
         if ctx.channel.id in self.gameChannels:
@@ -36,7 +41,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
 
     @staticmethod
     async def sendTime(ctx, m, s):
-        await ctx.send(f"`Elapsed time: {m}m {s}s`")
+        await ctx.send("`Elapsed time: {:,}m {}s`".format(m, s))
 
     @commands.command(name="cleargamechannels", description="Resets the game channel list.",
                       aliases=["resetgamechannels", "rgc", "cgc"], hidden=True)
@@ -45,7 +50,90 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels = []
         await ctx.send(":ok_hand:")
 
-    async def unoDraw(self, user, drawn):
+    @tasks.loop(seconds=1.0)
+    async def tetrisTick(self):
+        for game in list(self.tetrisGames.values()):
+            await game.tick()
+
+    async def tetrisAwaitReaction(self, ctx, game):
+        while not game.getGameEnd():
+            try:
+                r, u = await self.client.wait_for(
+                    "reaction_add",
+                    check=lambda reaction, user: reaction.emoji in list(TETRIS_REACTIONS.values())
+                                                 and reaction.message == game.message and user != self.client.user,
+                    timeout=10
+                )
+            except TimeoutError:
+                continue
+            if game.getGameEnd():
+                return
+            await funcs.reactionRemove(r, u)
+            if u == ctx.author:
+                if r.emoji == TETRIS_REACTIONS["rotate"]:
+                    game.getCurrentBlock().rotate()
+                elif r.emoji == TETRIS_REACTIONS["left"]:
+                    game.getCurrentBlock().move(-1)
+                elif r.emoji == TETRIS_REACTIONS["right"]:
+                    game.getCurrentBlock().move(1)
+                elif r.emoji == TETRIS_REACTIONS["softDrop"]:
+                    game.getCurrentBlock().fall(manual=True)
+                elif r.emoji == TETRIS_REACTIONS["hardDrop"]:
+                    game.getCurrentBlock().drop()
+                await game.updateBoard()
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="tetris", description="Play Tetris.")
+    async def tetris(self, ctx):
+        if await self.checkGameInChannel(ctx):
+            return
+        await ctx.send(
+            "**Welcome to Tetris. Use the provided reactions to play, input `time` to see total elapsed time" + \
+            ", `bnw` to enable black-and-white mode, or `quit` to quit the game.**"
+        )
+        self.gameChannels.append(ctx.channel.id)
+        self.tetrisGames[ctx.channel] = Tetris()
+        game = self.tetrisGames[ctx.channel]
+        game.newBlock()
+        e = Embed(description=game.gameBoard())
+        e.set_footer(text=f"Called by: {ctx.author}")
+        e.set_author(name="Tetris")
+        e.set_thumbnail(url=f"{game.NEXT_BLOCK_IMAGES[game.getNextBlock().getBlockType()]}")
+        e.add_field(name="Lines", value="`0`")
+        e.add_field(name="Level", value="`0`")
+        e.add_field(name="Score", value="`0`")
+        msg = await ctx.send(embed=e)
+        game.message = msg
+        for reaction in list(TETRIS_REACTIONS.values()):
+            await msg.add_reaction(reaction)
+        self.client.loop.create_task(self.tetrisAwaitReaction(ctx, game))
+        while not game.getGameEnd():
+            try:
+                nmsg = await self.client.wait_for(
+                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=1
+                )
+            except TimeoutError:
+                continue
+            if nmsg.content.casefold() == "quit" or nmsg.content.casefold() == "exit" or nmsg.content.casefold() == "stop":
+                game.gameEnd()
+                await ctx.send(f"`{ctx.author.name} has left Tetris.`")
+                break
+            elif nmsg.content.casefold() == "time":
+                m, s = game.getTime()
+                await self.sendTime(ctx, m, s)
+            elif nmsg.content.casefold() == "bnw":
+                await ctx.send(f"`{'Enabled' if game.setBnw() else 'Disabled'} black-and-white mode.`")
+        lines, level, score = game.getLinesLevelScore()
+        await ctx.send(f"```Lines: {'{:,}'.format(lines)}\n\nLevel: {'{:,}'.format(level)}\n\n" + \
+                       f"Score: {'{:,}'.format(score)}\n\nThanks for playing, {ctx.author.name}!```")
+        m, s = game.getTime()
+        await self.sendTime(ctx, m, s)
+        self.gameChannels.remove(ctx.channel.id)
+        del self.tetrisGames[ctx.channel]
+        await game.updateBoard()
+
+    @staticmethod
+    async def unoDraw(user, drawn):
         if drawn is None:
             return False
         await user.send("**== Uno ==**\n\nYou have just drawn the following card(s): " + \
@@ -79,7 +167,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 )
                 if var.content.casefold() == "time":
                     m, s = game.getTime()
-                    await var.channel.send(f"`Elapsed time: {m}m {s}s`")
+                    await self.sendTime(var.channel, m, s)
                 elif var.content.casefold() == "hand" or var.content.casefold() == "h":
                     hand = game.getHand(user)
                     msg = f"`{', '.join(card for card in hand)}` ({len(hand)} left)"
@@ -550,7 +638,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
         await ctx.send(embed=e)
         self.gameChannels.remove(ctx.channel.id)
 
-    async def gameIdle(self, ctx, game, ms):
+    @staticmethod
+    async def gameIdle(ctx, game, ms):
         if ms:
             title = "Minesweeper"
             game.revealDots()

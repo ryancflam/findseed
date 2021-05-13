@@ -11,7 +11,7 @@
         "gender": "Male",
         "sleep-time": "3:30am - 9am",
         "total": 63,
-        "desc": "Cranky characters can seem quite bitter and out-of-touch with social trends, making them generally unpopular with the peppy villagers. They have the deepest voice of all the characters, and many of them appear to be glaring. They usually spend a small amount of their day in their houses, and most of the day out. They can seem self-centred at first glance, and often enjoy gossiping about lifestyles of other villagers, making them snobby as well as grouchy. They will act protective of the player when the player becomes friends with them and they will seem to disagree with most of the things that other villagers say."
+        "desc": "Cranky characters can seem quite bitter and out-of-touch with social trends, making them generally unpopular with peppy villagers. They have the deepest voice of all the characters, and many of them appear to be glaring. They usually spend a small amount of their day in their houses, and most of the day out. They can seem self-centred at first glance, and often enjoy gossiping about lifestyles of other villagers, making them snobby as well as grouchy. They will act protective of the player when the player becomes friends with them and they will seem to disagree with most of the things that other villagers say."
     },
     "lazy": {
         "name": "Lazy",
@@ -25,7 +25,7 @@
         "gender": "Male",
         "sleep-time": "2am - 7am",
         "total": 35,
-        "desc": "The least common male personality in the game, smug villagers are very polite, kind, and gentleman-like, and will easily get along with other villagers. They seem to be a mix between all personality types and are lively, kind, and positive, but may come off as conceited. They are portrayed as arrogant and egotistical, acting sophisticated and thinking highly of themselves, and will also occasionally flirt with the player."
+        "desc": "The least common male personality in the game, smug villagers are very polite, kind, and gentleman-like, and will easily get along with other villagers. They seem to be a mix between all personality types and are lively, kind, and positive, but may come off as conceited. They are portrayed as arrogant and egotistical, acting sophisticated and thinking highly of themselves, and will also occasionally flirt with the player. In the game, the first campsite visitor will always be a smug villager."
     },
     "normal": {
         "name": "Normal",

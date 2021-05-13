@@ -1,3 +1,4 @@
+from asyncio import TimeoutError
 from datetime import datetime
 from json import load
 from random import choice
@@ -73,6 +74,89 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " + \
                  f"{self.client.command_prefix}acsea for specific critter information."
         )
+        return e
+
+    async def furnitureLookup(self, ctx, ftype: str, name: str):
+        name = name.replace(" ", "_").replace("‘", "'").replace("’", "'")
+        try:
+            res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
+            data = res.json()
+            if len(data) > 1:
+                await ctx.send(f"`Please select a variant: {', '.join(str(var) for var in range(len(data)))}`")
+                try:
+                    pchoice = await self.client.wait_for(
+                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=20
+                    )
+                    variant = int(pchoice.content) if -1 < int(pchoice.content) < len(data) else 0
+                except (TimeoutError, ValueError):
+                    variant = 0
+            else:
+                variant = 0
+            tags = [
+                i for i in [
+                    "DIY" if data[variant]["isDIY"] else 0,
+                    "Catalogue" if data[variant]["isCatalog"] else 0,
+                    "Customisable Body" if data[variant]["canCustomizeBody"] else 0,
+                    "Customisable Pattern" if data[variant]["canCustomizePattern"] else 0,
+                    "Interactive" if data[variant]["isInteractive"] else 0,
+                    "Outdoor" if data[variant]["isOutdoor"] else 0
+                ] if i
+            ]
+            try:
+                if data[variant]["isDoorDeco"]:
+                    tags.append("Door Decoration")
+            except:
+                pass
+            e = Embed(title=data[variant]["name"]["name-USen"])
+            e.set_image(url=data[variant]["image_uri"])
+            e.set_thumbnail(url=AC_LOGO)
+            e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
+            e.add_field(name="Source", value=f"`{data[variant]['source']}`")
+            e.add_field(name="Size", value=f"`{data[variant]['size']}`")
+            e.add_field(name="Version Added", value=f"`{data[variant]['version']}`")
+            if tags:
+                e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
+            if data[variant]["variant"]:
+                e.add_field(name="Variant", value=f"`{data[variant]['variant']}`")
+            if data[variant]["body-title"]:
+                e.add_field(name="Body Title", value=f"`{data[variant]['body-title']}`")
+            if data[variant]["pattern"]:
+                e.add_field(name="Pattern", value=f"`{data[variant]['pattern']}`")
+            if data[variant]["pattern-title"]:
+                e.add_field(name="Pattern-Title", value=f"`{data[variant]['pattern-title']}`")
+            if data[variant]["kit-cost"]:
+                e.add_field(name="Kit Cost", value=f"`{data[variant]['kit-cost']}`")
+            if data[variant]["color-1"]:
+                e.add_field(name="Colour", value=f"`{data[variant]['color-1']}`")
+            if data[variant]["color-2"]:
+                e.add_field(name="Secondary Colour", value=f"`{data[variant]['color-2']}`")
+            if data[variant]["hha-concept-1"]:
+                e.add_field(
+                    name="HHA Concept", value="`{}`".format(data[variant]['hha-concept-1'].title().replace("'S", "'s"))
+                )
+            if data[variant]["hha-concept-2"]:
+                e.add_field(
+                    name="Secondary HHA Concept", value="`{}`".format(data[variant]['hha-concept-2'].title().replace("'S", "'s"))
+                )
+            if data[variant]["hha-series"]:
+                e.add_field(name="HHA Series", value="`{}`".format(data[variant]['hha-series'].title().replace("'S", "'s")))
+            if data[variant]["hha-set"]:
+                e.add_field(name="HHA Set", value="`{}`".format(data[variant]['hha-set'].title().replace("'S", "'s")))
+            try:
+                if data[variant]["speaker-type"]:
+                    e.add_field(name="Speaker Type", value=f"`{data[variant]['speaker-type']}`")
+            except:
+                pass
+            if data[variant]["lighting-type"]:
+                e.add_field(name="Lighting Type", value=f"`{data[variant]['lighting-type']}`")
+            if data[variant]["buy-price"]:
+                e.add_field(name="Buy Price", value="`{:,}`".format(data[variant]["buy-price"]))
+            e.add_field(name="Sell Price", value="`{:,}`".format(data[variant]["sell-price"]))
+        except Exception:
+            e = funcs.errorEmbed(
+                None, "Not found, please check your spelling. Furniture names are case sensitive." + \
+                      " (e.g. `acoustic guitar` or `Bunny Day arch`)"
+            )
         return e
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -261,15 +345,34 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"])
             e.set_image(url=villagerdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
-            e.add_field(name="Personality", value=f"`{villagerdata['personality']}`")
+            e.add_field(name="Personality", value="`{}`".format(f'{villagerdata["personality"]} ({villagerdata["subtype"]})'))
             e.add_field(name="Birthday", value=f"`{villagerdata['birthday-string']}`")
-            e.add_field(name="Species", value="`{}`".format(f'{villagerdata["species"]} ({villagerdata["subtype"]})'))
+            e.add_field(name="Species", value=f"`{villagerdata['species']}`")
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
             e.add_field(name="Hobby", value=f"`{villagerdata['hobby']}`")
             e.add_field(name="Initial Phrase", value='`"{}"`'.format(villagerdata["catch-phrase"]))
         except Exception as ex:
             e = funcs.errorEmbed(None, f"An error occurred - {ex}")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
+                      description="Shows information about an Animal Crossing: New Horizons houseware furniture item.")
+    async def achouseware(self, ctx, *, item):
+        await ctx.send(embed=(await self.furnitureLookup(ctx, "houseware", item)))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw", "acwall"],
+                      usage="<item name (case sensitive)>",
+                      description="Shows information about an Animal Crossing: New Horizons wallmounted furniture item.")
+    async def acwallmounted(self, ctx, *, item):
+        await ctx.send(embed=(await self.furnitureLookup(ctx, "wallmounted", item)))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
+                      description="Shows information about an Animal Crossing: New Horizons miscellaneous furniture item.")
+    async def acmisc(self, ctx, *, item):
+        await ctx.send(embed=(await self.furnitureLookup(ctx, "misc", item)))
 
 
 def setup(client: commands.Bot):

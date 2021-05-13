@@ -25,9 +25,9 @@ except ModuleNotFoundError:
 def generateJson(name, data: dict):
     file = f"{getPath()}/data/{name}.json"
     if not path.exists(file):
-        f = open(file, "w")
-        dump(data, f, sort_keys=True, indent=4)
-        f.close()
+        fobj = open(file, "w")
+        dump(data, fobj, sort_keys=True, indent=4)
+        fobj.close()
         print(f"Generated file: {name}.json")
 
 
