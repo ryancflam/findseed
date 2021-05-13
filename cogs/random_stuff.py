@@ -75,7 +75,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                         await otherParty.send(":telephone: The other party has hung up the phone.")
             _, m, s, _ = funcs.timeDifferenceStr(time(), startCall, noStr=True)
             self.phoneCallChannels.remove(ctx.channel)
-            return await ctx.send(f"`Elapsed time: {m}m {s}s`")
+            return await ctx.send(
+                "`Elapsed time: {:,} minute{} and {} second{}.`".format(m, "" if m == 1 else "s", s, "" if s == 1 else "s")
+            )
         self.phoneWaitingChannels.remove(ctx.channel)
         await ctx.send(":telephone: Seems like no one is answering; cancelling phone call.")
 
