@@ -201,7 +201,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     COINGECKO_URL + "coins/markets", params={
                         "ids": coinID,
                         "vs_currency": fiat,
-                        "price_change_percentage": "1h,24h,7d"
+                        "price_change_percentage": "1h,24h,7d,1y"
                     }
                 )
                 data = res.json()
@@ -226,6 +226,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 percent1h = data["price_change_percentage_1h_in_currency"] or 0
                 percent1d = data["price_change_percentage_24h_in_currency"] or 0
                 percent7d = data["price_change_percentage_7d_in_currency"] or 0
+                percent1y = data["price_change_percentage_1y_in_currency"] or 0
                 if chartData:
                     colour = Colour.red() if difference < 0 else Colour.green() if difference > 0 else Colour.light_grey()
                 else:
@@ -268,6 +269,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                                 value=f"`{'None' if not percent1d else '{:,}%'.format(round(percent1d, 2))}`")
                     e.add_field(name="Price Change (7d)",
                                 value=f"`{'None' if not percent7d else '{:,}%'.format(round(percent7d, 2))}`")
+                    e.add_field(name="Price Change (1y)",
+                                value=f"`{'None' if not percent1y else '{:,}%'.format(round(percent1y, 2))}`")
                     e.add_field(name="24h High",
                                 value="`{:,} {}`".format(data["high_24h"], fiat))
                     e.add_field(name="24h Low",

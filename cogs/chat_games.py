@@ -32,8 +32,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         if ctx.channel.id in self.gameChannels:
             await ctx.send(
                 embed=funcs.errorEmbed(
-                    None,
-                    "A game is already in progress in this channel, please be patient or use another channel!"
+                    None, "A game is already in progress in this channel, please be patient or use another channel!"
                 )
             )
             return True
@@ -41,7 +40,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
 
     @staticmethod
     async def sendTime(ctx, m, s):
-        await ctx.send("`Elapsed time: {:,}m {}s`".format(m, s))
+        await ctx.send("`Elapsed time: {:,} minute{} and {} second{}.`".format(m, "" if m == 1 else "s", s, "" if s == 1 else "s"))
 
     @commands.command(name="cleargamechannels", description="Resets the game channel list.",
                       aliases=["resetgamechannels", "rgc", "cgc"], hidden=True)
@@ -499,7 +498,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         attempts = 0
         guess = ""
         while guess != number:
-            await ctx.send(f"`Attempt {attempts+1} for {ctx.author.name}. Please guess a number between 1-10000.`")
+            await ctx.send("`Attempt {:,} for {}. Please guess a number between 1-10000.`".format(attempts + 1, ctx.author.name))
             try:
                 message = await self.client.wait_for(
                     "message", check=lambda msg: msg.author == ctx.author and msg.channel == ctx.channel, timeout=30
@@ -508,7 +507,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 await ctx.send(f"`{ctx.author.name} has left Guess the Number for idling too long.`")
                 break
             try:
-                guess = int(message.content)
+                guess = int(message.content.replace(" ", "").replace(",", ""))
                 if not 1 <= guess <= 10000:
                     await ctx.send(embed=funcs.errorEmbed(None, "Input must be 1-10000 inclusive."))
                 else:
@@ -528,8 +527,8 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     await self.sendTime(ctx, m, s)
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
-        await ctx.send(f"```The number was {number}.\n\nTotal attempts: {attempts}\n\n" + \
-                               f"Thanks for playing, {ctx.author.name}!```")
+        await ctx.send("```The number was {:,}.\n\nTotal attempts: {:,}\n\n".format(number, attempts) + \
+                       f"Thanks for playing, {ctx.author.name}!```")
         _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
         await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
@@ -540,12 +539,12 @@ class ChatGames(commands.Cog, name="Chat Games"):
         if await self.checkGameInChannel(ctx):
             return
         await ctx.send("**Welcome to Bulls and Cows. Input `help` for help, " + \
-                               "`time` to see total elapsed time, or `quit` to quit the game.**")
+                       "`time` to see total elapsed time, or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
         game = BullsAndCows()
         while not game.getStoppedBool():
-            await ctx.send(f"`Attempt {game.getAttempts()+1} for {ctx.author.name}. " + \
-                                   "Please guess a four-digit number with no duplicates.`")
+            await ctx.send("`Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
+                           "Please guess a four-digit number with no duplicates.`")
             try:
                 message = await self.client.wait_for(
                     "message", check=lambda msg: msg.author == ctx.author and msg.channel == ctx.channel, timeout=90
@@ -585,12 +584,13 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     continue
                 else:
                     await ctx.send(f"`Result: {bulls} bull{'' if bulls == 1 else 's'} and " + \
-                                           f"{cows} cow{'' if cows == 1 else 's'}." + \
-                                           f"{'' if bulls != 4 else ' You have found the number!'}`")
+                                   f"{cows} cow{'' if cows == 1 else 's'}." + \
+                                   f"{'' if bulls != 4 else ' You have found the number!'}`")
             except Exception as ex:
                 await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
-        await ctx.send(f"```The number was {game.getNumber()}.\n\nTotal attempts: {game.getAttempts()}\n\n" + \
-                               f"Thanks for playing, {ctx.author.name}!```")
+        n = game.getNumber()
+        await ctx.send("```The number was {}.\n\nTotal attempts: {:,}\n\n".format(n[:1] + "," + n[1:], game.getAttempts()) + \
+                       f"Thanks for playing, {ctx.author.name}!```")
         m, s = game.getTime()
         await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
@@ -601,7 +601,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         if await self.checkGameInChannel(ctx):
             return
         await ctx.send("**Welcome to the 21 Card Trick. " + \
-                               "Pick a card from one of the three piles and I will try to guess it.**")
+                       "Pick a card from one of the three piles and I will try to guess it.**")
         self.gameChannels.append(ctx.channel.id)
         game = CardTrick()
         cardSample = game.getSample()
@@ -610,7 +610,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             await ctx.send(f"```{game.showCards(p1, p2, p3)}```")
             while True:
                 await ctx.send(f"`Which pile is your card in, {ctx.author.name}? " + \
-                                       "Enter either 1, 2, or 3 to pick a pile, or 'quit' quit the game.`")
+                               "Enter either 1, 2, or 3 to pick a pile, or 'quit' quit the game.`")
                 try:
                     message = await self.client.wait_for(
                         "message", check=lambda msg: msg.author == ctx.author and msg.channel == ctx.channel, timeout=30
@@ -765,14 +765,16 @@ class ChatGames(commands.Cog, name="Chat Games"):
         game = Minesweeper()
         won = False
         while not game.getGameEnd():
-            await ctx.send(f"```Attempt {game.getAttempts() + 1} for {ctx.author.name}. " + \
-                                   f"Current board:\n\n{game.displayBoard()}```")
+            await ctx.send("```Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
+                           f"Current board:\n\n{game.displayBoard()}```")
             await self.gameOptions(ctx, game)
             won = game.winLose()
         await ctx.send(f"```Current board:\n\n{game.displayBoard()}```")
         m, s = game.getTime()
-        await ctx.send(f"```You have {'won' if won else 'lost'} Minesweeper!\n\nTotal attempts: {game.getAttempts()}" + \
-                               f"\n\nThanks for playing, {ctx.author.name}!```")
+        await ctx.send(
+            "```You have {} Minesweeper!\n\nTotal attempts: {:,}".format("won" if won else "lost", game.getAttempts()) + \
+            f"\n\nThanks for playing, {ctx.author.name}!```"
+        )
         await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
@@ -782,12 +784,12 @@ class ChatGames(commands.Cog, name="Chat Games"):
         if await self.checkGameInChannel(ctx):
             return
         await ctx.send("**Welcome to Battleship. Input `time` to see total elapsed time, " + \
-                               "or `quit` to quit the game.**")
+                       "or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
         game = Battleship()
         while game.getShipcount() > 0:
             await ctx.send(
-                f"```Attempt {game.getAttempts() + 1} for {ctx.author.name}. {game.displayBoard()}```"
+                "```Attempt {:,} for {}. {}```".format(game.getAttempts() + 1, ctx.author.name, game.displayBoard())
             )
             await ctx.send(
                 f"`{ctx.author.name} has {game.getShipcount()} ship{'' if game.getShipcount() == 1 else 's'} left to find.`"
@@ -811,7 +813,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
             await ctx.send(f"`{ctx.author.name} has {game.takeTurn(yy, xx)}.`")
         m, s = game.getTime()
         await ctx.send(f"```You have {'won' if game.getWonBool() else 'lost'} Battleship!\n\n" + \
-                               f"Total attempts: {game.getAttempts()}\n\nThanks for playing, {ctx.author.name}!```")
+                       "Total attempts: {:,}\n\nThanks for playing, {}!```".format(game.getAttempts(), ctx.author.name))
         await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
@@ -969,7 +971,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
                     except TimeoutError:
                         await ctx.send(f"`Inactivity; the correct answer was: {answerindex}) {correct}`")
                         await ctx.send(
-                            f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
+                            "`Game over! You got {:,} question{} right in a row.`".format(
+                                rightcount, "" if rightcount == 1 else "s"
+                            )
                         )
                         self.gameChannels.remove(ctx.channel.id)
                         _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
@@ -987,7 +991,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
                             else:
                                 await ctx.send(f"`Incorrect! The correct answer was: {answerindex}) {correct}`")
                                 await ctx.send(
-                                    f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
+                                    "`Game over! You got {:,} question{} right in a row.`".format(
+                                        rightcount, "" if rightcount == 1 else "s"
+                                    )
                                 )
                                 self.gameChannels.remove(ctx.channel.id)
                                 _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
@@ -1005,7 +1011,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
                                 f"The correct answer was: {answerindex}) {correct}`"
                             )
                             await ctx.send(
-                                f"`Game over! You got {rightcount} question{'' if rightcount == 1 else 's'} right in a row.`"
+                                "`Game over! You got {:,} question{} right in a row.`".format(
+                                    rightcount, "" if rightcount == 1 else "s"
+                                )
                             )
                             self.gameChannels.remove(ctx.channel.id)
                             _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)

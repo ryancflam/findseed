@@ -25,7 +25,7 @@ class BullsAndCows:
         return m, s
 
     def guess(self, value: str):
-        value = value.replace(" ", "")
+        value = value.replace(" ", "").replace(",", "")
         if value.casefold() == "quit" or value.casefold() == "exit" or value.casefold() == "stop":
             self.__stopped = True
             return 0, 0
