@@ -41,8 +41,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         return value / 1000000000000000000
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="neo", description="Returns the prices and market capitalisations of NEO and GAS with GAS to NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"], usage="[amount of NEO or GAS]")
+    @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS to NEO ratio.",
+                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"], usage="[amount of NEO or GAS]", name="neo")
     async def neo(self, ctx, amount="1"):
         try:
             gasamount = float(amount)

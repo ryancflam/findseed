@@ -1,3 +1,5 @@
+# Hidden category
+
 from asyncio import TimeoutError
 from datetime import datetime
 from random import choice
@@ -7,21 +9,19 @@ from discord.ext import commands
 
 from other_utils import funcs
 
-ASSETS_PATH = "assets/animal_crossing/"
-AC_LOGO = "https://media.discordapp.net/attachments/771698457391136798/" + \
-          "774269252232413204/dd98bnh-cdaa0e7e-c5f1-45f9-99fb-5a22d3c2974b.png"
+AC_LOGO = "https://i.imgur.com/kbWPgBd.png"
 
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.art = funcs.readJson(ASSETS_PATH + "art.json")
-        self.bugs = funcs.readJson(ASSETS_PATH + "bugs.json")
-        self.fish = funcs.readJson(ASSETS_PATH + "fish.json")
-        self.fossils = funcs.readJson(ASSETS_PATH + "fossils.json")
-        self.personalities = funcs.readJson(ASSETS_PATH + "personalities.json")
-        self.sea = funcs.readJson(ASSETS_PATH + "sea_creatures.json")
-        self.villagers = funcs.readJson(ASSETS_PATH + "villagers.json")
+        self.art = funcs.readJson("assets/animal_crossing/art.json")
+        self.bugs = funcs.readJson("assets/animal_crossing/bugs.json")
+        self.fish = funcs.readJson("assets/animal_crossing/fish.json")
+        self.fossils = funcs.readJson("assets/animal_crossing/fossils.json")
+        self.personalities = funcs.readJson("assets/animal_crossing/personalities.json")
+        self.sea = funcs.readJson("assets/animal_crossing/sea_creatures.json")
+        self.villagers = funcs.readJson("assets/animal_crossing/villagers.json")
 
     @staticmethod
     def findData(data: dict, name: str):
@@ -282,22 +282,28 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acpersonality", usage="<personality type>",
+    @commands.command(name="acpersonality", usage="[personality type]",
                       aliases=["acp", "acnhpersonality", "acpersonalities", "acnhpersonalities"],
                       description="Shows information about an Animal Crossing: New Horizons villager personality.")
-    async def acpersonality(self, ctx, *, personality):
+    async def acpersonality(self, ctx, *, personality: str=""):
         personality = personality.casefold().replace(" ", "").replace("-", "").replace("_", "").replace("uchi", "sisterly") \
                       .replace("bigsister", "sisterly").replace("snobby", "snooty").replace("grumpy", "cranky")
-        try:
-            personalitydata = self.findData(self.personalities, personality)
-            e = Embed(title=personalitydata["name"],
-                      description=personalitydata["desc"])
-            e.add_field(name="Gender", value=f"`{personalitydata['gender']}`")
-            e.add_field(name="Sleep Time", value=f"`{personalitydata['sleep-time']}`")
-            e.add_field(name="Total Villagers", value=f"`{personalitydata['total']}`")
+        if not personality:
+            e = Embed(title="Animal Crossing Personality Types",
+                      description="`cranky`, `jock`, `lazy`, `normal`, `peppy`, `sisterly`, `smug`, `snooty`")
+            e.set_footer(text=f"Use {self.client.command_prefix}acpersonality <personality type> for more information.")
             e.set_thumbnail(url=AC_LOGO)
-        except Exception as ex:
-            e = funcs.errorEmbed(None, str(ex))
+        else:
+            try:
+                personalitydata = self.findData(self.personalities, personality)
+                e = Embed(title=personalitydata["name"],
+                          description=personalitydata["desc"])
+                e.add_field(name="Gender", value=f"`{personalitydata['gender']}`")
+                e.add_field(name="Sleep Time", value=f"`{personalitydata['sleep-time']}`")
+                e.add_field(name="Total Villagers", value=f"`{personalitydata['total']}`")
+                e.set_thumbnail(url=AC_LOGO)
+            except Exception as ex:
+                e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)

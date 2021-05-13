@@ -1,3 +1,5 @@
+# Hidden category
+
 from random import choice, randint
 
 from discord import Embed, Colour

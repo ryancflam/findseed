@@ -1,3 +1,5 @@
+# Hidden category
+
 from discord.ext import commands
 
 from other_utils import funcs
