@@ -35,8 +35,6 @@ def generateFiles():
     if not path.exists(f"{getPath()}/data"):
         makedirs(f"{getPath()}/data")
         print("Generated directory: data")
-    generateJson("blacklist", {"servers": [], "users": []})
-    generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
     generateJson(
         "findseed", {
             "calls": 0,
@@ -47,6 +45,9 @@ def generateFiles():
             }
         }
     )
+    generateJson("blacklist", {"servers": [], "users": []})
+    generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
+    generateJson("unprompted_messages", {"servers": []})
 
 
 def botInstance():

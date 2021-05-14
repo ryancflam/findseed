@@ -110,7 +110,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="cryptovs", aliases=["cvs", "vs", "coinvs", "vscoin", "vscrypto", "vsc"],
+    @commands.command(name="cryptovs", aliases=["cvs", "vs", "coinvs", "vscoin", "vscrypto", "vsc", "cap", "coincap"],
                       description="Compares the prices of two cryptocurrencies if they had the same market capitalisation.",
                       usage="[coin symbol OR CoinGecko ID] [coin symbol OR CoinGecko ID]")
     async def cryptovs(self, ctx, coin1: str="eth", coin2: str="btc"):

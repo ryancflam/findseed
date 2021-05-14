@@ -588,8 +588,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                                    f"{'' if bulls != 4 else ' You have found the number!'}`")
             except Exception as ex:
                 await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
-        n = game.getNumber()
-        await ctx.send("```The number was {}.\n\nTotal attempts: {:,}\n\n".format(n[:1] + "," + n[1:], game.getAttempts()) + \
+        await ctx.send("```The number was {}.\n\nTotal attempts: {:,}\n\n".format(game.getNumber(sep=True), game.getAttempts()) + \
                        f"Thanks for playing, {ctx.author.name}!```")
         m, s = game.getTime()
         await self.sendTime(ctx, m, s)

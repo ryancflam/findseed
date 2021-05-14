@@ -142,10 +142,7 @@ def getTickers():
     res = get("https://api.coingecko.com/api/v3/coins/list")
     data = res.json()
     for i in data:
-        try:
-            _ = tickers[i["symbol"]]
-        except KeyError:
-            tickers[i["symbol"]] = i["id"]
+        tickers[i["symbol"]] = i["id"]
     return tickers
 
 

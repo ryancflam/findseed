@@ -11,8 +11,8 @@ class BullsAndCows:
         self.__number = "".join(map(str, sample(range(1, 10), 4)))
         self.__stopped = False
 
-    def getNumber(self):
-        return self.__number
+    def getNumber(self, sep=False):
+        return self.__number if not sep else self.__number[:1] + "," + self.__number[1:]
 
     def getAttempts(self):
         return self.__attempts

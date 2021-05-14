@@ -75,7 +75,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         )
         return e
 
-    async def furnitureLookup(self, ctx, ftype: str, name: str):
+    async def furnitureEmbed(self, ctx, ftype: str, name: str):
         name = name.replace(" ", "_").replace("‘", "'").replace("’", "'")
         try:
             res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
@@ -154,7 +154,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         except Exception:
             e = funcs.errorEmbed(
                 None, "Not found, please check your spelling. Furniture names are case sensitive." + \
-                      " (e.g. `acoustic guitar` or `Bunny Day arch`)"
+                      " (e.g. `acoustic guitar` or `Bunny Day arch`)\n\nOr is this even the right category? " + \
+                      f"(houseware, wallmounted, misc)"
             )
         return e
 
@@ -367,20 +368,20 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons houseware furniture item.")
     async def achouseware(self, ctx, *, item):
-        await ctx.send(embed=(await self.furnitureLookup(ctx, "houseware", item)))
+        await ctx.send(embed=await self.furnitureEmbed(ctx, "houseware", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw", "acwall"],
                       usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons wallmounted furniture item.")
     async def acwallmounted(self, ctx, *, item):
-        await ctx.send(embed=(await self.furnitureLookup(ctx, "wallmounted", item)))
+        await ctx.send(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons miscellaneous furniture item.")
     async def acmisc(self, ctx, *, item):
-        await ctx.send(embed=(await self.furnitureLookup(ctx, "misc", item)))
+        await ctx.send(embed=await self.furnitureEmbed(ctx, "misc", item))
 
 
 def setup(client: commands.Bot):
