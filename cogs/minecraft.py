@@ -1,5 +1,7 @@
 # Credit - https://github.com/Sharpieman20/Sharpies-Speedrunning-Tools
 # For blindtravel, doubletravel, educatedtravel, safeblind, triangulation
+# Credit - https://github.com/FourGoesFast/PerfectTravelBot
+# For perfecttravel, divinetravel
 
 import math
 from asyncio import TimeoutError
@@ -18,8 +20,79 @@ BARTER_LIMIT = 896
 
 
 class Minecraft(commands.Cog, name="Minecraft"):
+    DIVINE_TRAVEL = {
+        "fossil0": "s1: 251, 50 | s2: -169, 192 | s3: -82, -242",
+        "fossil1": "s1: 213, 142 | s2: -230, 113 | s3: 17, -255",
+        "fossil2": "s1: 142, 213 | s2: -255, 17 | s3: 113, -230",
+        "fossil3": "s1: 50, 251 | s2: -242, -82 | s3: 192, -169",
+        "fossil4": "s1: -50, 251 | s2: -192, -169 | s3: 242, -82",
+        "fossil5": "s1: -142, 213 | s2: -113, -230 | s3: 255, 17",
+        "fossil6": "s1: -213, 142 | s2: -17, -255 | s3: 230, 113",
+        "fossil7": "s1: -251, 50 | s2: 82, -242 | s3: 169, 192",
+        "fossil8": "s1: -251, -50 | s2: 169, -192 | s3: 82, 242",
+        "fossil9": "s1: -213, -142 | s2: 230, -113 | s3: -17, 255",
+        "fossil10": "s1: -142, -213 | s2: 255, -17 | s3: -113, 230",
+        "fossil11": "s1: -50, -251 | s2: 242, 82 | s3: -192, 169",
+        "fossil12": "s1: 50, -251 | s2: 192, 169 | s3: -242, 82",
+        "fossil13": "s1: 142, -213 | s2: 113, 230 | s3: -255, -17",
+        "fossil14": "s1: 213, -142 | s2: 17, 255 | s3: -230, -113",
+        "fossil15": "s1: 251, -50 | s2: -82, 242 | s3: -169, -192",
+        "animal": "s1: 243, 79 | s2: -190, 171 | s3: -53, 250",
+        "animal0": "s1: 205, 67",
+        "animal1": "s1: 282, 91",
+        "turtle0": "s1: 186, 61",
+        "turtle1": "s1: 224, 73",
+        "turtle2": "s1: 262, 85",
+        "turtle3": "s1: 301, 98",
+        "tundra": "s1: 250, 56 | s2: -173, 188 | s3: -77, -244",
+        "tundra0": "s1: 211, 47",
+        "tundra1": "s1: 289, 65",
+        "ravine": "s1: 255, 16 | s2: -142, 213 | s3: -114, -229",
+        "aircave": "s1: 231, 11 | s2: -212, 144 | s3: -19, -255",
+        "watercave": "s1: 250, 53 | s2: -171, 190 | s3: -79, -243",
+        "bigportal": "s1: 253, 40 | s2: -161, 199 | s3: -92, -239",
+        "bigportal0": "s1: 194, 31",
+        "bigportal1": "s1: 233, 37",
+        "bigportal2": "s1: 273, 43",
+        "bigportal3": "s1: 312, 49",
+        "nethercave": "s1: 207, 150 | s2: -234, 104 | s3: 27, -255",
+        "ttree0": "s1: 138, -298",
+        "ttree1": "s1: 75, -162",
+        "ttree2": "s1: 79, -171",
+        "ttree3": "s1: 83, -180",
+        "ttree4": "s1: 87, -189",
+        "ttree5": "s1: 92, -198",
+        "ttree6": "s1: 96, -207",
+        "ttree7": "s1: 100, -216",
+        "ttree8": "s1: 104, -225",
+        "ttree9": "s1: 108, -235",
+        "ttree10": "s1: 113, -244",
+        "ttree11": "s1: 117, -253",
+        "ttree12": "s1: 121, -262",
+        "ttree13": "s1: 125, -271",
+        "ttree14": "s1: 129, -280",
+        "ttree15": "s1: 134, -289",
+        "ptree0": "s1: 82, -290",
+        "ptree1": "s1: 85, -299",
+        "ptree2": "s1: 88, -309",
+        "ptree3": "s1: 90, -319",
+        "ptree4": "s1: 49, -174",
+        "ptree5": "s1: 52, -184",
+        "ptree6": "s1: 55, -194",
+        "ptree7": "s1: 58, -203",
+        "ptree8": "s1: 60, -213",
+        "ptree9": "s1: 63, -222",
+        "ptree10": "s1: 66, -232",
+        "ptree11": "s1: 69, -242",
+        "ptree12": "s1: 71, -251",
+        "ptree13": "s1: 73, -261",
+        "ptree14": "s1: 77, -271",
+        "ptree15": "s1: 79, -280"
+    }
+
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.perfecttravel = funcs.readJson("assets/perfect_travel.json")
 
     @staticmethod
     def randomEyes():
@@ -156,7 +229,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                       "ether. This command is for versions 1.13+ and may " + \
                                                       "not be 100% accurate. This command may not be used" + \
                                                       " in a real speedrun.",
-                      aliases=["bt", "blind"], usage="<F3+C data>")
+                      aliases=["bt", "blind", "blindtrav"], usage="<F3+C data>", hidden=True)
     async def blindtravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -189,7 +262,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                          "is command is for versions 1.13+ and may not be" + \
                                                          " 100% accurate. This command may not be used in" + \
                                                          " a real speedrun.",
-                      aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
+                      aliases=["et", "educated", "nethertravel"], usage="<F3+C data>", hidden=True)
     async def educatedtravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -222,7 +295,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        "This command is for versions 1.13+ and may not be" + \
                                                        " 100% accurate. This command may not be used in a " + \
                                                        "real speedrun.",
-                      aliases=["double"], usage="<F3+C data>")
+                      aliases=["double"], usage="<F3+C data>", hidden=True)
     async def doubletravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -254,7 +327,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                     "tes in the Nether. This command is for versions 1.13" + \
                                                     "+ and may not be 100% accurate. This command may not" + \
                                                     " be used in a real speedrun.",
-                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
+                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>", hidden=True)
     async def safeblind(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -276,6 +349,48 @@ class Minecraft(commands.Cog, name="Minecraft"):
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="perfecttravel", description="A Minecraft: Java Edition speedrunning tool that att" + \
+                                                        "empts to take you directly to the stronghold portal " + \
+                                                        "room with the use of two Nether portals and F3 data." + \
+                                                        " To use this command, in the game, leave your first " + \
+                                                        "portal, find a chunk intersection and stand on the c" + \
+                                                        "hunk coordinate '0, 0' right in the centre, press F3" + \
+                                                        "+C, pause, come over to Discord, paste your clipboar" + \
+                                                        "d as an argument for the command, go back to the Net" + \
+                                                        "her, and then build your second portal at the sugges" + \
+                                                        "ted coordinates in the Nether. This command is for v" + \
+                                                        "ersions 1.13+ and may not be 100% accurate. This com" + \
+                                                        "mand may not be used in a real speedrun.",
+                      aliases=["perfectt", "perfect", "ptravel", "ptrav"], usage="<F3+C data>", hidden=True)
+    async def perfecttravel(self, ctx, *, f3c):
+        await ctx.send("**Note:** This command, along with other " + \
+                       "speedrunning calculators, may not be used in a real speedrun.")
+        try:
+            nx, nz = None, None
+            x, z, f = self.f3cProcessing(f3c)
+            if f > 180:
+                f -= 360
+            if f < -180:
+                f += 360
+            try:
+                targetchunk = self.perfecttravel[str(round(f, 2))][0]
+                targetchunkx, targetchunkz = targetchunk.split(" ")
+                nx = (int(x / 16) + (0 if x > 0 else -1) + int(targetchunkx)) * 2
+                nz = (int(z / 16) + (0 if z > 0 else -1) + int(targetchunkz)) * 2
+            except:
+                targetchunk = ""
+            if targetchunk:
+                await ctx.send(
+                    f"{ctx.author.mention} Build your second portal at: **" + \
+                    f"{round(nx + (1 if nx < 0 else 0))}, 30, {round(nz + (1 if nz < 0 else 0))}** " + \
+                    "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
+                )
+            else:
+                await ctx.send(f"{ctx.author.mention} Cannot find ideal coordinates...")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A Minecraft: Java Edition speedrunning tool tha" + \
                                                         "t attempts to locate the stronghold using both " + \
                                                         'the "8, 8" rule and triangulation. To use this ' + \
@@ -293,7 +408,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                         " and may not be 100% accurate. This command may" + \
                                                         " not be used in a real speedrun.",
                       aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
-                      usage="<F3+C data>")
+                      usage="<F3+C data>", hidden=True)
     async def triangulation(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -506,14 +621,24 @@ class Minecraft(commands.Cog, name="Minecraft"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="divinetravel", description="Brings up a Minecraft divine travel chart.",
-                      aliases=["dt", "divine", "div", "dv"])
-    async def divinetravel(self, ctx):
-        url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
-        await funcs.sendImage(
-            ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
-                              "841792714822909972/divine_travel_stuff_.pdf" + \
-                              "\n\nCredit:\n<https://twitter.com/olive_was_here>\n<https://twitter.com/beljelb>"
-        )
+                      aliases=["dt", "divine", "div", "dv"], usage="[option]")
+    async def divinetravel(self, ctx, *, option: str=""):
+        if option:
+            try:
+                await ctx.send(f"`{self.DIVINE_TRAVEL[option.casefold().replace(' ', '')]}`")
+            except KeyError:
+                await ctx.send(
+                    embed=funcs.errorEmbed(
+                        "Invalid option!", "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.DIVINE_TRAVEL.keys()))
+                    )
+                )
+        else:
+            url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
+            await funcs.sendImage(
+                ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
+                                  "841792714822909972/divine_travel_stuff_.pdf" + \
+                                  "\n\nCredit:\n<https://twitter.com/olive_was_here>\n<https://twitter.com/beljelb>"
+            )
 
 
 def setup(client: commands.Bot):

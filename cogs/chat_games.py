@@ -837,7 +837,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 return await ctx.send(f"`{ctx.author.name} has feft Rock Paper Scissors for idling too long.`")
             if msg.content.casefold().startswith(("r", "p", "s")):
                 answer = "Rock" if msg.content.casefold().startswith("r") else "Paper" \
-                       if msg.content.casefold().startswith("p") else "Scissors"
+                    if msg.content.casefold().startswith("p") else "Scissors"
             else:
                 await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
                 continue
