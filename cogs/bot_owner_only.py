@@ -59,8 +59,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 self.bdReminder = 0
                 content = msg.content
                 prefix = self.client.command_prefix
-                if content.casefold().startswith("!q") or content.casefold().startswith(f"{prefix}bd") \
-                        or content.casefold().startswith(f"{prefix}botdisguise"):
+                if content.casefold().startswith(("!q", f"{prefix}bd", f"{prefix}botdisguise")):
                     await ctx.send("Exiting bot disguise mode.")
                     self.disableBotDisguise()
             except TimeoutError:
@@ -83,7 +82,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=30
             )
             content = msg.content
-            if content.casefold().startswith("c") or content.startswith(self.client.command_prefix):
+            if content.casefold().startswith(("c", self.client.command_prefix)):
                 return await ctx.send("Cancelling.")
             channelID = int(content)
             self.destChannel = self.client.get_channel(channelID)
@@ -103,8 +102,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                     )
                 except TimeoutError:
                     continue
-                if not msg.content.casefold().startswith("!q") \
-                        and not msg.content.startswith(self.client.command_prefix):
+                if not msg.content.casefold().startswith(("!q", self.client.command_prefix)):
                     try:
                         await self.destChannel.send(f"{msg.content}" + \
                                                     f"{msg.attachments[0].url if msg.attachments else ''}")

@@ -27,10 +27,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         self.tickers = funcs.getTickers()
 
     def getCoinGeckoID(self, coin):
-        coin = coin.casefold()
-        joke = "neo" if coin == "neo" or coin.startswith("noeo") or coin.startswith("ronneo") or coin.startswith("neoo") \
-               or coin.startswith("n*") or coin.startswith("neoe") or coin.startswith("noee") or coin.startswith("ronnoe") \
-               else coin
+        joke = "neo" if coin.casefold() == "neo" \
+               or coin.casefold().startswith(("noeo", "ronneo", "neoo", "n*", "neoe", "noee", "ronnoe")) else coin
         try:
             return self.tickers[joke]
         except KeyError:
@@ -174,17 +172,17 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 arg = arg.casefold()
                 if arg == "d" or arg.startswith("1d"):
                     days = "1"
-                elif arg == "w" or arg.startswith("1w") or arg.startswith("7d"):
+                elif arg == "w" or arg.startswith(("1w", "7d")):
                     days = "7"
-                elif arg.startswith("2w") or arg.startswith("14d"):
+                elif arg.startswith(("2w", "14d")):
                     days = "14"
                 elif arg == "m" or arg.startswith("30d"):
                     days = "30"
-                elif arg.startswith("3m") or arg.startswith("90d"):
+                elif arg.startswith(("3m", "90d")):
                     days = "90"
-                elif arg.startswith("6m") or arg.startswith("180d"):
+                elif arg.startswith(("6m", "180d")):
                     days = "180"
-                elif arg == "y" or arg.startswith("365d") or arg.startswith("12m") or arg.startswith("1y"):
+                elif arg == "y" or arg.startswith(("365d", "12m", "1y")):
                     days = "365"
                 elif arg.startswith("max"):
                     days = "max"

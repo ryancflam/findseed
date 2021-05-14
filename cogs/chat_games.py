@@ -288,8 +288,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                             if len(game.getPlayerList()) < 2:
                                 await ctx.send("**Not enough players for Uno; stopping current game.**")
                             break
-                        elif decision.casefold().startswith("w ") or decision.casefold() == "w" \
-                                or decision.casefold().startswith("wild"):
+                        elif decision.casefold().startswith(("w ", "wild")) or decision.casefold() == "w":
                             await waitForInput.channel.send("`What colour would you like to use? " + \
                                                             "Please say the first letter of your preferred colour.`")
                             try:
@@ -303,8 +302,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                             colour = waitForColour.content
                             drawn, affectedPlayer, lastCard = game.playWildCard(colour, "+4" in decision)
                             await ctx.send(f"`{waitForInput.author.name} has played a wild card.`")
-                        elif not decision.casefold().startswith("b") and not decision.casefold().startswith("g") \
-                                and not decision.casefold().startswith("r") and not decision.casefold().startswith("y"):
+                        elif not decision.casefold().startswith(("b", "g", "r", "y")):
                             break
                         else:
                             drawn, affectedPlayer, lastCard = game.playColouredCard(decision)
@@ -837,10 +835,9 @@ class ChatGames(commands.Cog, name="Chat Games"):
             except TimeoutError:
                 self.gameChannels.remove(ctx.channel.id)
                 return await ctx.send(f"`{ctx.author.name} has feft Rock Paper Scissors for idling too long.`")
-            if msg.content.casefold().startswith("r") or msg.content.casefold().startswith("p") \
-                    or msg.content.casefold().startswith("s"):
+            if msg.content.casefold().startswith(("r", "p", "s")):
                 answer = "Rock" if msg.content.casefold().startswith("r") else "Paper" \
-                    if msg.content.casefold().startswith("p") else "Scissors"
+                       if msg.content.casefold().startswith("p") else "Scissors"
             else:
                 await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
                 continue

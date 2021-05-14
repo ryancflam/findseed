@@ -73,17 +73,14 @@ class Utility(commands.Cog, name="Utility"):
             if searchtype == "":
                 total = data["world_total"]
             else:
-                if searchtype.casefold() == "us" or searchtype.casefold().startswith("united states") \
-                        or searchtype.casefold().startswith("america"):
+                if searchtype.casefold() == "us" or searchtype.casefold().startswith(("united states", "america")):
                     searchtype = "usa"
-                elif searchtype.casefold().startswith("united kingdom") or searchtype.casefold().startswith("great britain") \
-                        or searchtype.casefold().startswith("britain") or searchtype.casefold().startswith("england") \
+                elif searchtype.casefold().startswith(("united kingdom", "great britain", "britain", "england")) \
                         or searchtype.casefold() == "gb":
                     searchtype = "uk"
                 elif searchtype.casefold().startswith("hk"):
                     searchtype = "hong kong"
-                if searchtype.casefold().startswith("korea") or searchtype.casefold().startswith("south korea") \
-                        or searchtype.casefold().startswith("sk"):
+                if searchtype.casefold().startswith(("korea", "south korea", "sk")):
                     searchtype = "S. Korea"
                 for i in total:
                     if i["country_name"].casefold().replace(".", "") == searchtype.casefold().replace(".", ""):
