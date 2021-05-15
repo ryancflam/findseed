@@ -47,6 +47,7 @@ def generateFiles():
     )
     generateJson("blacklist", {"servers": [], "users": []})
     generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
+    generateJson("unprompted_bots", {"ids": []})
     generateJson("unprompted_messages", {"servers": []})
 
 

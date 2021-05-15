@@ -117,7 +117,7 @@ class Tetris:
         for row in self.__board:
             lineClear = True
             for digit in row:
-                if digit == 0:
+                if not digit:
                     lineClear = False
             if lineClear:
                 lines += 1

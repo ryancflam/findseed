@@ -111,7 +111,7 @@ class Minesweeper:
         if self.__grid[yy][xx] > 0:
             self.__dispboard[yy][xx] = str(self.__grid[yy][xx])
             return
-        if self.__grid[yy][xx] == 0:
+        if not self.__grid[yy][xx]:
             self.__dispboard[yy][xx] = " "
             if xx > 0:
                 if self.__grid[yy][xx - 1] >= 0:

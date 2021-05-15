@@ -900,7 +900,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                         await ctx.send(f"```{game.hangmanPic()}```")
                 except Exception as ex:
                     await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
-        if game.getLives() == 0:
+        if not game.getLives():
             await ctx.send(f"`{ctx.author.name} has lost Hangman. Their word was {game.getWord()}.`")
         else:
             lives = game.getLives()

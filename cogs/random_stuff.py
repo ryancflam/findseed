@@ -43,7 +43,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 await sleep(0.25)
                 sleepTime += 1
         if len(self.phoneWaitingChannels) == 2:
-            otherParty = self.phoneWaitingChannels[1 if self.phoneWaitingChannels.index(ctx.channel) == 0 else 0]
+            otherParty = self.phoneWaitingChannels[1 if not self.phoneWaitingChannels.index(ctx.channel) else 0]
             await sleep(1)
             self.phoneWaitingChannels.remove(ctx.channel)
             self.phoneCallChannels.append(ctx.channel)
@@ -144,7 +144,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                     or userInput.casefold() == "leave":
                 return await ctx.send(f"`{ctx.author.name} has left the personality test.`")
             if userInput.casefold() == "a" and choice == 1 \
-                    or userInput.casefold() == "b" and choice == 0:
+                    or userInput.casefold() == "b" and not choice:
                 if any(res[x]["title"].startswith(y) for y in ei):
                     e += 1
                 elif any(res[x]["title"].startswith(y) for y in sn):
@@ -154,7 +154,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 else:
                     j += 1
             elif userInput.casefold() == "b" and choice == 1 \
-                    or userInput.casefold() == "a" and choice == 0:
+                    or userInput.casefold() == "a" and not choice:
                 if any(res[x]["title"].startswith(y) for y in ei):
                     i += 1
                 elif any(res[x]["title"].startswith(y) for y in sn):

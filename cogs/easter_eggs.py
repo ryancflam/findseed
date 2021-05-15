@@ -144,7 +144,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="mlp", description="The worst thing ever in existence.")
     async def mlp(self, ctx):
-        if randint(0, 1) == 0:
+        if not randint(0, 1):
             await ctx.send(
                 "That indefinably fallacious, thrice damned, abhorrent primitive, " + \
                 "superbly and imperfectly obnoxious and ironically audience " + \
@@ -385,12 +385,12 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             firstImage = "https://media.discordapp.net/attachments/762520408356028427/774253519636922378/waaw.png"
             secondImage = "https://media.discordapp.net/attachments/769899860253736990/774253213565583360/deepfry.png"
             e = Embed(
-                title=f":no_entry: {firstTitle if i == 0 else secondTitle}",
+                title=f":no_entry: {firstTitle if not i else secondTitle}",
                 description="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕",
                 colour=Colour.red()
             )
-            e.set_image(url=f"{firstImage if i == 0 else secondImage}")
-            if i == 0:
+            e.set_image(url=f"{firstImage if not i else secondImage}")
+            if not i:
                 e.add_field(
                     name="?̵͓̺̯̯̺̈́̆͊̑̈́̇̋̂̊̍͑̅̂̄͘?̴̢̡̙̮̘̫̥̫̮͚̣͚̈́́̇̑̓̓̀̊͜?̵͈̘̙͕̜̼̞̈́͑̅͐́͒̄̿͊̋͆̚?̸̢̛̟͇̯̥̟̦͔̬̐̾̿̍̂̐̐̕",
                     value="```Y̓ͫ̚o̓̌̓u̶͎͂ ̶͐̔h̵͍͌a͛̎̄tͫ̆ͤẽ͇͟ ̧̅̌ḧ͇́͞ú̂̀ḿͭ̌āͨͨñ̜͟s̽͗̇,̔͛͝" + \

@@ -358,6 +358,44 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
+    @commands.command(name="addunpromptedbot", description="Adds a Discord bot to the list of allowed unprompted bots.",
+                      aliases=["aub"], usage="<bot user ID>")
+    @commands.is_owner()
+    async def addunpromptedbot(self, ctx, *, userID=None):
+        if not userID:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+        try:
+            userID = int(userID)
+            data = funcs.readJson("data/unprompted_bots.json")
+            userList = list(data["ids"])
+            if userID not in userList:
+                userList.append(userID)
+                data["ids"] = userList
+                funcs.dumpJson("data/unprompted_bots.json", data)
+                return await ctx.send("Added.")
+            await ctx.send(embed=funcs.errorEmbed(None, "Already in unprompted bots list."))
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+
+    @commands.command(name="removeunpromptedbot", description="Removes a Discord bot from the list of allowed unprompted bots.",
+                      aliases=["rub"], usage="<bot user ID>")
+    @commands.is_owner()
+    async def removeunpromptedbot(self, ctx, *, userID=None):
+        if not userID:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+        try:
+            userID = int(userID)
+            data = funcs.readJson("data/unprompted_bots.json")
+            userList = list(data["ids"])
+            if userID in userList:
+                userList.remove(userID)
+                data["ids"] = userList
+                funcs.dumpJson("data/unprompted_bots.json", data)
+                return await ctx.send("Removed.")
+            await ctx.send(embed=funcs.errorEmbed(None, "Not in unprompted bots list."))
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+
 
 def setup(client: commands.Bot):
     client.add_cog(BotOwnerOnly(client))

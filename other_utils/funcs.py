@@ -41,7 +41,7 @@ def userNotBlacklisted(client, message):
 
 
 def sign(value):
-    return -1 if value < 0 else 0 if value == 0 else 1
+    return -1 if value < 0 else 0 if not value else 1
 
 
 def errorEmbed(error, message):

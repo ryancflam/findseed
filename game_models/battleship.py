@@ -41,7 +41,7 @@ class Battleship:
                         self.__board[rand1][rand2] = self.__shipcode[i]
                     else:
                         problem = True
-                    if direction == 0:
+                    if not direction:
                         rand1 += 1
                     else:
                         rand2 += 1
@@ -105,31 +105,31 @@ class Battleship:
             self.__totalx -= 1
             if self.__board[row][col] == "B":
                 self.__battleship -= 1
-                if self.__battleship == 0:
+                if not self.__battleship:
                     self.__ships -= 1
                     msg = "sunk the Battleship"
             if self.__board[row][col] == "S":
                 self.__submarine -= 1
-                if self.__submarine == 0:
+                if not self.__submarine:
                     self.__ships -= 1
                     msg = "sunk the Submarine"
             if self.__board[row][col] == "C":
                 self.__cruiser -= 1
-                if self.__cruiser == 0:
+                if not self.__cruiser:
                     self.__ships -= 1
                     msg = "sunk the Cruiser"
             if self.__board[row][col] == "D":
                 self.__destroyer -= 1
-                if self.__destroyer == 0:
+                if not self.__destroyer:
                     self.__ships -= 1
                     msg = "sunk the Destroyer"
             if self.__board[row][col] == "A":
                 self.__carrier -= 1
-                if self.__carrier == 0:
+                if not self.__carrier:
                     self.__ships -= 1
                     msg = "sunk the Aircraft Carrier"
             self.__board[row][col] = "X"
-            if self.__totalx == 0:
+            if not self.__totalx:
                 self.__gameWon = True
         self.__attempts += 1
         return msg

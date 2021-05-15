@@ -640,7 +640,7 @@ class Utility(commands.Cog, name="Utility"):
             res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params={"term": term})
             data = res.json()
             terms = data["list"]
-            if len(terms) == 0:
+            if not terms:
                 e = funcs.errorEmbed(None, "Unknown term.")
             else:
                 example = terms[0]["example"].replace("[", "").replace("]", "")

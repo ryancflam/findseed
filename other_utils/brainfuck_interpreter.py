@@ -18,7 +18,7 @@ class BrainfuckInterpreter:
                 count += 1
             elif command == "]":
                 count -= 1
-            if count == 0:
+            if not count:
                 return index
             index += 1
 
@@ -37,7 +37,7 @@ class BrainfuckInterpreter:
         elif instruction == ",":
             self.__cells.set(self.__input.read(1))
         elif instruction == "[":
-            if self.__cells.get() == 0:
+            if not self.__cells.get():
                 try:
                     loopEnd = self.__lookForward()
                 except ValueError:

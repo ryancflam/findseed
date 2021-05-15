@@ -5,14 +5,6 @@ from discord.ext import commands
 
 from other_utils import funcs
 
-ALLOWED_BOTS = [
-    479937255868465156,
-    492970622587109380,
-    597028739616079893,
-    771403225840222238,
-    771696725173469204
-]
-
 
 class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
     def __init__(self, client: commands.Bot):
@@ -22,7 +14,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
     async def on_message(self, message):
         if message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"] \
                 and funcs.userNotBlacklisted(self.client, message) \
-                and (not message.author.bot or (message.author.id in ALLOWED_BOTS and message.author.id != self.client.user.id)):
+                and (not message.author.bot or (message.author.id in funcs.readJson("data/unprompted_bots.json")["ids"]
+                                                and message.author.id != self.client.user.id)):
             originalmsg = message.content
             lowercase = originalmsg.casefold()
             if self.client.user in message.mentions and not (await self.client.get_context(message)).valid:

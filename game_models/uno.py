@@ -83,13 +83,13 @@ class Uno:
                 _ = self.__dealOne(handsObject)
 
     def __dealOne(self, handsObject):
-        if len(self.__deck) == 0:
+        if not self.__deck:
             discard = self.__discardPile[-1]
             self.__discardPile.pop()
             self.__deck = self.__discardPile.copy()
             shuffle(self.__deck)
             self.__discardPile = [discard]
-            if len(self.__deck) == 0:
+            if not self.__deck:
                 return None
         card = self.__deck[randint(0, len(self.__deck) - 1)]
         handsObject.addCard(card)
@@ -127,7 +127,7 @@ class Uno:
         return len(self.__playerHands[self.__currentIndex].retrieveList()) == 1
 
     def __checkIfNoCardsLeft(self):
-        if len(self.__playerHands[self.__currentIndex].retrieveList()) == 0:
+        if not self.__playerHands[self.__currentIndex].retrieveList():
             if not self.__winner:
                 self.__winner = self.__playerList[self.__currentIndex]
             elif not self.__secondPlace:
