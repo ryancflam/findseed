@@ -1,8 +1,17 @@
 from random import choice, randint
+from re import sub
 
 from discord.ext import commands
 
 from other_utils import funcs
+
+ALLOWED_BOTS = [
+    479937255868465156,
+    492970622587109380,
+    597028739616079893,
+    771696725173469204,
+    771403225840222238
+]
 
 
 class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
@@ -12,10 +21,27 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"] \
-                and funcs.userNotBlacklisted(self.client, message) and not message.author.bot:
+                and funcs.userNotBlacklisted(self.client, message) \
+                and (not message.author.bot or message.author.id in ALLOWED_BOTS):
             originalmsg = message.content
             lowercase = originalmsg.casefold()
-            if lowercase.startswith(("im ", "i'm ", "i‘m ", "i’m ", "i am ")):
+            if self.client.user in message.mentions and not (await self.client.get_context(message)).valid:
+                await message.channel.trigger_typing()
+                msg = sub("<@!?" + str(self.client.user.id) + ">", "", message.content).strip()
+                params = {
+                    "botid": "b8d616e35e36e881",
+                    "custid": message.author.id,
+                    "input": msg or "Hi",
+                    "format": "json"
+                }
+                res = await funcs.getRequest("https://www.pandorabots.com/pandora/talk-xml", params=params)
+                data = res.json()
+                text = choice(["I do not understand.", "Please say that again.", "What was that?", "Ok."]) \
+                    if data["status"] == 4 else data["that"].replace("A.L.I.C.E", self.client.user.name).replace(
+                    "ALICE", self.client.user.name).replace("<br>", "").replace("&quot;", '"').replace("&lt;",
+                    "<").replace("&gt;", ">").replace("&amp;", "&")
+                await message.channel.send(f"{message.author.mention} {text}")
+            elif lowercase.startswith(("im ", "i'm ", "i‘m ", "i’m ", "i am ")):
                 if lowercase.startswith("im "):
                     im = originalmsg[3:]
                 elif lowercase.startswith(("i'm ", "i’m ", "i‘m ")):
@@ -26,9 +52,9 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
                     await message.channel.send(f"No you're not, you're {message.author.name}.")
                 else:
                     await message.channel.send(f"Hi {im}, I'm {self.client.user.name}!")
-            if "netvigator" in lowercase:
+            elif "netvigator" in lowercase:
                 await message.channel.send("notvogotor")
-            if lowercase == "h":
+            elif lowercase == "h":
                 if not randint(0, 9):
                     await funcs.sendImage(
                         message.channel, "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
@@ -36,20 +62,20 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
                     )
                 else:
                     await message.channel.send("h")
-            if lowercase == "f":
+            elif lowercase == "f":
                 if not randint(0, 9):
                     await funcs.sendImage(
                         message.channel, "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
                     )
                 else:
                     await message.channel.send("f")
-            if "gordon ramsay" in lowercase:
+            elif "gordon ramsay" in lowercase:
                 await message.channel.send("https://i.imgur.com/XezjUCZ.gifv")
-            if "hkeaa" in lowercase:
+            elif "hkeaa" in lowercase:
                 await funcs.sendImage(
                     message.channel, "https://cdn.discordapp.com/attachments/659771291858894849/663420485438275594/HKEAA_DENIED.png"
                 )
-            if lowercase.startswith("hmmm"):
+            elif lowercase.startswith("hmmm"):
                 if all(m in "m" for m in lowercase.split("hmm", 1)[1].replace(" ", "")):
                     await funcs.sendImage(
                         message.channel, choice(
@@ -64,7 +90,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
                         ), name="hmmm.gif"
                     )
 
-    @commands.command(name="umenable", description="Enables unprompted messages for your server.", aliases=["ume"])
+    @commands.command(name="umenable", description="Enables unprompted messages for your server.",
+                      aliases=["ume", "eum", "enableum"])
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def umenable(self, ctx):
@@ -77,7 +104,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
             return await ctx.send("`Enabled unprompted messages for this server.`")
         await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
 
-    @commands.command(name="umdisable", description="Disables unprompted messages for your server.", aliases=["umd"])
+    @commands.command(name="umdisable", description="Disables unprompted messages for your server.",
+                      aliases=["umd", "dum", "disableum"])
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def umdisable(self, ctx):

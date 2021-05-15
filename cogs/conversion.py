@@ -3,12 +3,70 @@ import hashlib
 from discord import Embed
 from discord.ext import commands
 
-from assets import morse_data
 from other_utils import funcs
 from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
 class Conversion(commands.Cog, name="Conversion"):
+    MORSE = {
+        "A": ".-",
+        "B": "-...",
+        "C": "-.-.",
+        "D": "-..",
+        "E": ".",
+        "F": "..-.",
+        "G": "--.",
+        "H": "....",
+        "I": "..",
+        "J": ".---",
+        "K": "-.-",
+        "L": ".-..",
+        "M": "--",
+        "N": "-.",
+        "O": "---",
+        "P": ".--.",
+        "Q": "--.-",
+        "R": ".-.",
+        "S": "...",
+        "T": "-",
+        "U": "..-",
+        "V": "...-",
+        "W": ".--",
+        "X": "-..-",
+        "Y": "-.--",
+        "Z": "--..",
+        "0": "-----",
+        "1": ".----",
+        "2": "..---",
+        "3": "...--",
+        "4": "....-",
+        "5": ".....",
+        "6": "-....",
+        "7": "--...",
+        "8": "---..",
+        "9": "----.",
+        " ": "/",
+        ".": ".-.-.-",
+        ",": "--..--",
+        ":": "---...",
+        "?": "..--..",
+        '"':".-..-.",
+        "'": ".----.",
+        "-": "-....-",
+        "/": "-..-.",
+        "@": ".--.-.",
+        "=": "-...-",
+        "(": "-.--.",
+        ")": "-.--.-",
+        "+": ".-.-.",
+        "&": ".-...",
+        ";": "-.-.-.",
+        "_": "..--.-",
+        "$": "...-..-",
+        "¿": "..-.-",
+        "¡": "--...-"
+    }
+
     def __init__(self, client: commands.Bot):
         self.client = client
 
@@ -121,7 +179,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 output = ""
                 for char in text:
                     try:
-                        output += morse_data.MORSE[char.upper()] + " "
+                        output += self.MORSE[char.upper()] + " "
                     except:
                         continue
                 output = output[:-1]
@@ -159,7 +217,7 @@ class Conversion(commands.Cog, name="Conversion"):
                         if spaces == 2:
                             output += " "
                         else:
-                            output += list(morse_data.MORSE.keys())[list(morse_data.MORSE.values()).index(ctext)]
+                            output += list(self.MORSE.keys())[list(self.MORSE.values()).index(ctext)]
                             ctext = ""
                 e = Embed(
                     title="Text to Morse Code",

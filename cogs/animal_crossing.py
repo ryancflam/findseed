@@ -50,7 +50,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     def crittersListEmbed(self, month, mode: int=0):
         e = Embed(
-            title=f"Critters {'Arriving in' if mode == 0 else 'Leaving After'} {funcs.monthNumberToName(month)}"
+            title=f"Critters {'Arriving in' if not mode else 'Leaving After'} {funcs.monthNumberToName(month)}"
         ).set_thumbnail(url=AC_LOGO)
         nbugs, sbugs = self.addCritter(self.bugs, month, mode)
         nfish, sfish = self.addCritter(self.fish, month, mode)

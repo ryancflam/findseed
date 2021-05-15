@@ -1,7 +1,7 @@
 # Credit - https://github.com/Sharpieman20/Sharpies-Speedrunning-Tools
 # For blindtravel, doubletravel, educatedtravel, safeblind, triangulation
 # Credit - https://github.com/FourGoesFast/PerfectTravelBot
-# For perfecttravel, divinetravel
+# For divinetravel, perfecttravel
 
 import math
 from asyncio import TimeoutError
@@ -13,7 +13,6 @@ from time import time
 from discord import Colour, Embed, File
 from discord.ext import commands
 
-from assets import eye_data
 from other_utils import funcs
 
 BARTER_LIMIT = 896
@@ -89,6 +88,60 @@ class Minecraft(commands.Cog, name="Minecraft"):
         "ptree14": "s1: 77, -271",
         "ptree15": "s1: 79, -280"
     }
+    EYE_DATA = {
+        "0": {
+            "percent": "28.24",
+            "onein": "3.54"
+        },
+        "1": {
+            "percent": "37.66",
+            "onein": "2.66"
+        },
+        "10": {
+            "percent": "0.0000005",
+            "onein": "187,055,743"
+        },
+        "11": {
+            "percent": "0.00000001",
+            "onein": "9,259,259,259"
+        },
+        "12": {
+            "percent": "0.0000000001",
+            "onein": "1,000,000,000,000"
+        },
+        "2": {
+            "percent": "23.01",
+            "onein": "4.35"
+        },
+        "3": {
+            "percent": "8.52",
+            "onein": "11.7"
+        },
+        "4": {
+            "percent": "2.13",
+            "onein": "46.9"
+        },
+        "5": {
+            "percent": "0.38",
+            "onein": "264"
+        },
+        "6": {
+            "percent": "0.05",
+            "onein": "2,036"
+        },
+        "7": {
+            "percent": "0.005",
+            "onein": "21,381"
+        },
+        "8": {
+            "percent": "0.0003",
+            "onein": "307,882"
+        },
+        "9": {
+            "percent": "0.00002",
+            "onein": "6,235,191"
+        }
+    }
 
     def __init__(self, client: commands.Bot):
         self.client = client
@@ -128,8 +181,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def findseed(self, ctx):
         eyes = self.randomEyes()
         data = funcs.readJson("data/findseed.json")
-        odds = eye_data.EYE_DATA[str(eyes)]["percent"]
-        onein = eye_data.EYE_DATA[str(eyes)]["onein"]
+        odds = self.EYE_DATA[str(eyes)]["percent"]
+        onein = self.EYE_DATA[str(eyes)]["onein"]
         update = False
         if eyes >= data["highest"]["number"]:
             data["highest"]["found"] -= data["highest"]["found"] - 1 if eyes > data["highest"]["number"] else -1
@@ -165,8 +218,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def eyeodds(self, ctx):
         msg = ""
         for i in range(13):
-            odds = eye_data.EYE_DATA[str(i)]["percent"]
-            msg += f"{i} eye - `{odds}% (1 in {eye_data.EYE_DATA[str(i)]['onein']})`\n"
+            odds = self.EYE_DATA[str(i)]["percent"]
+            msg += f"{i} eye - `{odds}% (1 in {self.EYE_DATA[str(i)]['onein']})`\n"
         await ctx.send(msg)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -354,37 +407,50 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                         "room with the use of two Nether portals and F3 data." + \
                                                         " To use this command, in the game, leave your first " + \
                                                         "portal, find a chunk intersection and stand on the c" + \
-                                                        "hunk coordinate '0, 0' right in the centre, press F3" + \
+                                                        'hunk coordinate "0, 0" right in the centre, press F3' + \
                                                         "+C, pause, come over to Discord, paste your clipboar" + \
                                                         "d as an argument for the command, go back to the Net" + \
                                                         "her, and then build your second portal at the sugges" + \
                                                         "ted coordinates in the Nether. This command is for v" + \
                                                         "ersions 1.13+ and may not be 100% accurate. This com" + \
-                                                        "mand may not be used in a real speedrun.",
-                      aliases=["perfectt", "perfect", "ptravel", "ptrav"], usage="<F3+C data>", hidden=True)
+                                                        "mand may not be used in a real speedrun if calculation is enabled.",
+                      aliases=["perfectt", "perfect", "ptravel", "ptrav", "ptr"], usage='<F3+C data> ["calc"]\n\n' + \
+                      'Note: Add "calc" at the end if you do not want to manually calculate the portal coordinates yourself.')
     async def perfecttravel(self, ctx, *, f3c):
-        await ctx.send("**Note:** This command, along with other " + \
-                       "speedrunning calculators, may not be used in a real speedrun.")
+        calc = True if f3c.casefold().split()[-1] == "calc" else False
         try:
-            nx, nz = None, None
+            nx, nz, px, pz = None, None, None, None
             x, z, f = self.f3cProcessing(f3c)
             if f > 180:
                 f -= 360
             if f < -180:
                 f += 360
+            targetchunk = self.perfecttravel[str(round(f, 2))][0]
+            if calc:
+                await ctx.send("**Note:** Second Nether portal coordinates are calculated for you. " + \
+                               "Your run is now most likely invalid.")
+            else:
+                await ctx.send("**Note:** Although no calculations are done, you may still risk invalidating your run.")
             try:
-                targetchunk = self.perfecttravel[str(round(f, 2))][0]
                 targetchunkx, targetchunkz = targetchunk.split(" ")
-                nx = (int(x / 16) + (0 if x > 0 else -1) + int(targetchunkx)) * 2
-                nz = (int(z / 16) + (0 if z > 0 else -1) + int(targetchunkz)) * 2
+                px, pz = int(x / 16) + (0 if x > 0 else -1), int(z / 16) + (0 if z > 0 else -1)
+                nx = ((px + int(targetchunkx)) * 2) if calc else targetchunkx
+                nz = ((pz + int(targetchunkz)) * 2) if calc else targetchunkz
             except:
                 targetchunk = ""
             if targetchunk:
-                await ctx.send(
-                    f"{ctx.author.mention} Build your second portal at: **" + \
-                    f"{round(nx + (1 if nx < 0 else 0))}, 30, {round(nz + (1 if nz < 0 else 0))}** " + \
-                    "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
-                )
+                if calc:
+                    await ctx.send(
+                        f"{ctx.author.mention} Build your second portal at: **" + \
+                        f"{round(nx + (1 if nx < 0 else 0))}, 30, {round(nz + (1 if nz < 0 else 0))}** " + \
+                        "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
+                    )
+                else:
+                    await ctx.send(
+                        f"{ctx.author.mention} Offset: **{nx}, {nz}**\n\nYour current chunk for reference: **" + \
+                        f"{px}, {pz}**" + \
+                        "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
+                    )
             else:
                 await ctx.send(f"{ctx.author.mention} Cannot find ideal coordinates...")
         except Exception as ex:
@@ -629,7 +695,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
             except KeyError:
                 await ctx.send(
                     embed=funcs.errorEmbed(
-                        "Invalid option!", "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.DIVINE_TRAVEL.keys()))
+                        "Invalid option!",
+                        "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.DIVINE_TRAVEL.keys()))
                     )
                 )
         else:
