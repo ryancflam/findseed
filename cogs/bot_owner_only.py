@@ -396,6 +396,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
 
+    @commands.command(name="unpromptedbots", description="Gets the list of unprompted bots.", aliases=["ub"])
+    @commands.is_owner()
+    async def unpromptedbots(self, ctx):
+        userList = list(funcs.readJson("data/unprompted_bots.json")["ids"])
+        await ctx.send(
+            f"```Allowed unprompted bots: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
+        )
+
 
 def setup(client: commands.Bot):
     client.add_cog(BotOwnerOnly(client))

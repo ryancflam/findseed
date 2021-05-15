@@ -28,6 +28,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
                 ])
             else:
                 quotes = choice([
+                    "'s OP perms should be rmeoved for being so corrupt.",
                     " is the Flaw",
                     " is still making UMS songs about me, with of course a MLP reference",
                     " is flawed",
