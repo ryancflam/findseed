@@ -9,8 +9,8 @@ ALLOWED_BOTS = [
     479937255868465156,
     492970622587109380,
     597028739616079893,
-    771696725173469204,
-    771403225840222238
+    771403225840222238,
+    771696725173469204
 ]
 
 
@@ -41,54 +41,55 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
                     "ALICE", self.client.user.name).replace("<br>", "").replace("&quot;", '"').replace("&lt;",
                     "<").replace("&gt;", ">").replace("&amp;", "&")
                 await message.channel.send(f"{message.author.mention} {text}")
-            elif lowercase.startswith(("im ", "i'm ", "i‘m ", "i’m ", "i am ")):
-                if lowercase.startswith("im "):
-                    im = originalmsg[3:]
-                elif lowercase.startswith(("i'm ", "i’m ", "i‘m ")):
-                    im = originalmsg[4:]
-                else:
-                    im = originalmsg[5:]
-                if im.casefold() == self.client.user.name:
-                    await message.channel.send(f"No you're not, you're {message.author.name}.")
-                else:
-                    await message.channel.send(f"Hi {im}, I'm {self.client.user.name}!")
-            elif "netvigator" in lowercase:
-                await message.channel.send("notvogotor")
-            elif lowercase == "h":
-                if not randint(0, 9):
+            elif not message.author.bot:
+                if lowercase.startswith(("im ", "i'm ", "i‘m ", "i’m ", "i am ")):
+                    if lowercase.startswith("im "):
+                        im = originalmsg[3:]
+                    elif lowercase.startswith(("i'm ", "i’m ", "i‘m ")):
+                        im = originalmsg[4:]
+                    else:
+                        im = originalmsg[5:]
+                    if im.casefold() == self.client.user.name:
+                        await message.channel.send(f"No you're not, you're {message.author.name}.")
+                    else:
+                        await message.channel.send(f"Hi {im}, I'm {self.client.user.name}!")
+                elif "netvigator" in lowercase:
+                    await message.channel.send("notvogotor")
+                elif lowercase == "h":
+                    if not randint(0, 9):
+                        await funcs.sendImage(
+                            message.channel, "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
+                            name="h.gif"
+                        )
+                    else:
+                        await message.channel.send("h")
+                elif lowercase == "f":
+                    if not randint(0, 9):
+                        await funcs.sendImage(
+                            message.channel, "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
+                        )
+                    else:
+                        await message.channel.send("f")
+                elif "gordon ramsay" in lowercase:
+                    await message.channel.send("https://i.imgur.com/XezjUCZ.gifv")
+                elif "hkeaa" in lowercase:
                     await funcs.sendImage(
-                        message.channel, "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
-                        name="h.gif"
+                        message.channel, "https://cdn.discordapp.com/attachments/659771291858894849/663420485438275594/HKEAA_DENIED.png"
                     )
-                else:
-                    await message.channel.send("h")
-            elif lowercase == "f":
-                if not randint(0, 9):
-                    await funcs.sendImage(
-                        message.channel, "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
-                    )
-                else:
-                    await message.channel.send("f")
-            elif "gordon ramsay" in lowercase:
-                await message.channel.send("https://i.imgur.com/XezjUCZ.gifv")
-            elif "hkeaa" in lowercase:
-                await funcs.sendImage(
-                    message.channel, "https://cdn.discordapp.com/attachments/659771291858894849/663420485438275594/HKEAA_DENIED.png"
-                )
-            elif lowercase.startswith("hmmm"):
-                if all(m in "m" for m in lowercase.split("hmm", 1)[1].replace(" ", "")):
-                    await funcs.sendImage(
-                        message.channel, choice(
-                            [
-                                "https://media.giphy.com/media/8lQyyys3SGBoUUxrUp/giphy.gif",
-                                "https://i.redd.it/qz6eknd73qvy.gif",
-                                "https://i.imgur.com/zXAA3CV.gif",
-                                "https://i.imgur.com/ZU014ft.gif",
-                                "https://i.imgur.com/o7EsvoS.gif",
-                                "https://i.imgur.com/8DxmZY6.gif"
-                            ]
-                        ), name="hmmm.gif"
-                    )
+                elif lowercase.startswith("hmmm"):
+                    if all(m in "m" for m in lowercase.split("hmm", 1)[1].replace(" ", "")):
+                        await funcs.sendImage(
+                            message.channel, choice(
+                                [
+                                    "https://media.giphy.com/media/8lQyyys3SGBoUUxrUp/giphy.gif",
+                                    "https://i.redd.it/qz6eknd73qvy.gif",
+                                    "https://i.imgur.com/zXAA3CV.gif",
+                                    "https://i.imgur.com/ZU014ft.gif",
+                                    "https://i.imgur.com/o7EsvoS.gif",
+                                    "https://i.imgur.com/8DxmZY6.gif"
+                                ]
+                            ), name="hmmm.gif"
+                        )
 
     @commands.command(name="umenable", description="Enables unprompted messages for your server.",
                       aliases=["ume", "eum", "enableum"])
