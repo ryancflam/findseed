@@ -40,7 +40,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS to NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n"], usage="[amount of NEO or GAS]", name="neo")
+                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n", "n**"], usage="[amount of NEO or GAS]", name="neo")
     async def neo(self, ctx, amount="1"):
         try:
             gasamount = float(amount)

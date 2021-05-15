@@ -322,9 +322,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         second = second or f"<@!{ctx.author.id}>"
         try:
-            newlist = [first, second]
+            newlist = sorted([first, second])
             sentence = ""
-            for i in sorted(newlist):
+            for i in newlist:
                 sentence += str(i) + " loves "
             sentence = sentence[:-7]
             sentence = sentence.replace(" ", "").casefold()
@@ -347,7 +347,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             if int(intermediate) < 20:
                 emoji = "...** :broken_heart:"
             await ctx.send("The love percentage between " + \
-                           f"**{first}** and **{second}** is **{intermediate}%{emoji}")
+                           f"**{newlist[0]}** and **{newlist[1]}** is **{intermediate}%{emoji}")
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 
