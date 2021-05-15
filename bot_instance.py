@@ -1,29 +1,82 @@
 import asyncio
-from os import listdir
+from json import dump
+from os import listdir, makedirs, path
+from sys import exit
+from time import time
 
 from discord import Activity, Intents
-from discord.ext import commands
+from discord.ext.commands import Bot
 
-from other_utils.funcs import userNotBlacklisted, getRequest
+from other_utils.funcs import userNotBlacklisted, getPath, getRequest
+
+PATH = getPath()
+
+try:
+    import config
+except ModuleNotFoundError:
+    f = open(f"{PATH}/config.py", "w")
+    if path.exists(f"{PATH}/config.py.template"):
+        template = open(f"{PATH}/config.py.template", "r")
+        f.write(template.read())
+        template.close()
+    f.close()
+    print("Generated file: config.py [please modify before using]")
+    exit()
 
 
-class Bot(commands.Bot):
-    def __init__(self, loop: asyncio.AbstractEventLoop, prefix: str, **args):
+class BotInstance(Bot):
+    def __init__(self, loop: asyncio.AbstractEventLoop):
         super().__init__(
-            command_prefix=prefix,
+            command_prefix="b" * (not config.production) + config.prefix,
             intents=Intents.all(),
             case_insensitive=True
         )
         self.__loop = loop
-        self.__path = args.get("path")
-        self.__token = args.get("token")
-        self.__activityName = args.get("activity")["name"]
-        self.__activityType = args.get("activity")["type"]
-        self.__status = args.get("activity")["status"]
+        self.__token = config.botToken
+        self.__activityName = config.activityName
+        self.__activityType = config.activityType
+        self.__status = config.status
         self.remove_command("help")
+        self.generateFiles()
+
+    @staticmethod
+    def generateJson(name, data: dict):
+        file = f"{PATH}/data/{name}.json"
+        if not path.exists(file):
+            fobj = open(file, "w")
+            dump(data, fobj, sort_keys=True, indent=4)
+            fobj.close()
+            print(f"Generated file: {name}.json")
+
+    def generateFiles(self):
+        if not path.exists(f"{PATH}/data"):
+            makedirs(f"{PATH}/data")
+            print("Generated directory: data")
+        self.generateJson(
+            "findseed",
+            {
+                "calls": 0,
+                "highest": {
+                    "found": 0,
+                    "number": 0,
+                    "time": int(time())
+                }
+            }
+        )
+        self.generateJson(
+            "finddream",
+            {
+                "iteration": 0,
+                "mostPearls": 0,
+                "mostRods": 0
+            }
+        )
+        self.generateJson("blacklist", {"servers": [], "users": []})
+        self.generateJson("unprompted_bots", {"ids": []})
+        self.generateJson("unprompted_messages", {"servers": []})
 
     def startup(self):
-        for cog in listdir(f"{self.__path}/cogs"):
+        for cog in listdir(f"{PATH}/cogs"):
             if cog.endswith(".py"):
                 self.load_extension(f"cogs.{cog[:-3]}")
                 print(f"Loaded cog: {cog[:-3]}")

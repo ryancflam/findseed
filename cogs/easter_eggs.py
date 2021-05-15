@@ -294,6 +294,12 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
         await funcs.sendImage(ctx, url)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="ronneo", description="Ronneo.", aliases=["ronnoe"])
+    async def ronneo(self, ctx):
+        url = "https://media.discordapp.net/attachments/823452078814396416/823677040531734528/PicsArt_03-21-10.07.09.jpg"
+        await funcs.sendImage(ctx, url)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="xmurry", description="...")
     async def xmurry(self, ctx):
         url = "https://media.discordapp.net/attachments/780837667632971786/783005790742249472/2018-04-19_5.png"

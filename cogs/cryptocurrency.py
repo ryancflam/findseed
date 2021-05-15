@@ -40,7 +40,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS to NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "ronneo", "n30", "n", "n**"], usage="[amount of NEO or GAS]", name="neo")
+                      aliases=["n3", "n3o", "noe", "n30", "n", "n**"], usage="[amount of NEO or GAS]", name="neo")
     async def neo(self, ctx, amount="1"):
         try:
             gasamount = float(amount)
@@ -48,7 +48,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         except ValueError:
             amount, gasamount = 1, 1
         if amount < 1:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be 1 or greater."))
+            amount, gasamount = 1, 1
         res = await funcs.getRequest(COINGECKO_URL + "coins/markets", params={"vs_currency": "usd", "ids": "bitcoin,neo,gas"})
         tickers = res.json()
         btcprice = None
@@ -92,7 +92,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         except ValueError:
             amount = 1
         if amount < 1:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be 1 or greater."))
+            amount = 1
         hodl, governance = GAS_HODL * amount, GAS_GOVN * amount
         res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "gas"})
         gasusd = res.json()["tickers"][0]["converted_last"]["usd"]
