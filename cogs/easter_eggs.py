@@ -1,8 +1,9 @@
 # Hidden category
 
 from random import choice, randint
+from re import sub
 
-from discord import Embed, Colour
+from discord import Colour, Embed
 from discord.ext import commands
 
 from other_utils import funcs
@@ -12,7 +13,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="neothinks", description="What Neo thinks about something or someone.",
                       aliases=["nt", "plsneo", "neosays", "neot"], usage="<input>")
     async def neothinks(self, ctx, *, something: str=""):
@@ -21,31 +22,65 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
         elif len(something) > 100:
             e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
-            if "neo" in something.casefold():
+            quotes = choice([
+                "'s OP perms should be rmeoved for being so corrupt.",
+                " is the Flaw",
+                " is still making UMS songs about me, with of course a MLP reference",
+                " is flawed",
+                " ruined the court session",
+                " is the abomination of Zion and the incarnation of the Flaw",
+                " came around and forced Clorox to ban me",
+                " doesn't know what the Flaw is",
+                " is doing the same thing I was banned for. Why are my punishers committing the same crimes?",
+                " must be deported from Zion",
+                " was brainwashed by MLP",
+                " is an absolute injustice and is deliberately opposing the truth and right side",
+                "? LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL",
+                " delivers flawed messages to children and adults",
+                " is a threat to the goal of Zion, which is to make the uncommon common",
+                " first discovered the Flaw by looking at himself",
+                " is a liar hiding his potential",
+                " is a brony",
+                "'s punishments are foul play.",
+                " cannot deal with issues in a mature way",
+                " disgusts me more than drinking juice after brushing my teeth for 2 minutes",
+                " is a stupid clopper",
+                " is the antichrist",
+                " should think before starting polls to ban people",
+                " is a fucking clown",
+                " has his discipline up his own ass and he can't even see it",
+                " can't discern the difference between a joke and harassment",
+                " would elect my balls as president if the majority voted for them",
+                " needs to stick his favouritism up his ass",
+                " is more biased than a magnet",
+                " is wasting my time",
+                " is literally a scum ass",
+                "'s mind is singular, really he is just an imbecile that follows whatever the random guy says.",
+                " is worse than having leukemia",
+                "? There is nothing to know about that guy except that he is the average internet moron.",
+                " walking this world makes me not want to get up in the morning.",
+                " is a lost cause who blindly follows the mass",
+                "? fucking goddamnit ass shit fuck",
+                "? Oh goddamnit my balls"
+            ])
+            if "neo" in sub(r"[^a-zA-Z]+", "", "".join(dict.fromkeys(something.casefold()))):
+                selfroast = True
                 quotes = choice([
-                    " hold up... Stick it up yours you flawed brony",
-                    " wait hang on..."
+                    "Stick it up yours you flawed brony.",
+                    "Wait hang on...",
+                    "What? Are you brainwashed by MLP or are you just naturally stupid?",
+                    "Huh? Do you have a brain?",
+                    ctx.author.name + quotes
+                ])
+            elif "n*" in sub(r"[^a-zA-Z*]+", "", "".join(dict.fromkeys(something.casefold()))):
+                selfroast = True
+                quotes = choice([
+                    "Stop joking about me you utter moron",
+                    "C*******",
+                    "Yeah. Funny. Keep laughing you brainwashed brony."
                 ])
             else:
-                quotes = choice([
-                    "'s OP perms should be rmeoved for being so corrupt.",
-                    " is the Flaw",
-                    " is still making UMS songs about me, with of course a MLP reference",
-                    " is flawed",
-                    " ruined the court session",
-                    " is the abomination of Zion and the incarnation of the Flaw",
-                    " came around and forced Clorox to ban me",
-                    " doesn't know what the Flaw is",
-                    " is doing the same thing I was banned for. Why are my punishers committing the same crimes?",
-                    " must be deported from Zion",
-                    " was brainwashed by MLP",
-                    " is an absolute injustice and is deliberately opposing the truth and right side",
-                    "? LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL",
-                    " delivers flawed messages to children and adults",
-                    " is a threat to the goal of Zion, which is to make the uncommon common",
-                    " first discovered the Flaw by looking at himself",
-                    " is a liar hiding his potential"
-                ])
+                selfroast = False
             thumbnail = choice([
                 "https://media.discordapp.net/attachments/769899860253736990/772818443585191936/unknown.png",
                 "https://media.discordapp.net/attachments/769899860253736990/773133850108624916/2019-02-24.png"
@@ -54,11 +89,11 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
                 title=f"What does Neo think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
             )
-            e.add_field(name=f"Neo Thinks", value=f"```{something}{quotes}```")
+            e.add_field(name=f"Neo Thinks", value=f"```{something if not selfroast else ''}{quotes}```")
             e.set_thumbnail(url=thumbnail)
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="audiblethinks", description="What Audible thinks about something or someone.",
                       aliases=["at", "plsaudible", "audiblesays", "audible", "audiblet"], usage="<input>")
     async def audiblethinks(self, ctx, *, something: str=""):
@@ -67,59 +102,71 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
         elif len(something) > 100:
             e = funcs.errorEmbed(None, "Please enter 100 characters or less.")
         else:
-            if "audible" in something.casefold():
+            quotes = choice([
+                " is a disgusting vice",
+                " is a socialite",
+                " implies a complete misunderstanding and misinterpretation of my philosophy",
+                " is a true fad",
+                " is a pseudo-gestalt thinker with his head so far lost in the clouds he can't see reality.",
+                " are immersed in their holistic vagueries",
+                " is worse than thinking that cooperation and teamwork somehow magically outperform an individual's" + \
+                ' competence and intellect by "creating" ' + "genius with average people's synergy.",
+                " socializes so much that he has mental health concerns.",
+                " did absloutely **** all to resolve the pandemic and did close to nothing to prepare" + \
+                " themselves to it and let alone did they do anything to functionally resolve problems.",
+                "'s utter contradictory mindset is the biggest problem and cruelty that has ever endorsed the human race",
+                " is a cancerous remnant of a scar of weakness we call sociability, a scar that remained from " + \
+                "the days in which individuals needed others to survive, a scar inherited from the bygone days in " + \
+                "which we had smaller brains.",
+                " is the epitome of unadaptability: it is conservative, change resistant and irrational.",
+                " won't accept that smart working and learning is the future",
+                " is not ready to live with the freedom and responsibility of being an individual.",
+                " shouldn't just forget, rationalize, or justify his limitations.",
+                " misses the point that science is both an individual and cooperative effort at different times",
+                " ignores that natural selection doesn't necessarily favour the culture of empathy, team players, social and " + \
+                "altruistic people, ignoring the fact there are other fundamental traits and other strategies that are selected.",
+                " urges people to self-suppress their own skills in the place of the skills of others.",
+                " shouldn't hire MLP and Disney writers to write its articles",
+                " is like pressing a fork on a plate right next your ear except that you're also being physically " + \
+                "tortured in the process.",
+                " should be against human rights",
+                " teaches you to be a collaborative socialite born to loathe solitude and allow an a** mark to define you.",
+                " should just be transported to their idealized MLP social nirvana and be done with their idiocies.",
+                "? I have to vomit.",
+                "'s content is made for a mass society who obviously likes being told their pro-social and " + \
+                "interdependent properties of mass delusion and incompetence are what makes them strong",
+                " has basic knowledge about humanity, but understands nothing about the human.",
+                " should be sealed in the depths of the Atlantic ocean.",
+                " makes everyone's eyes melt and also causes you to become deaf.",
+                " and collaborative learning are a reactionary movement to the great individual empowerment created" + \
+                " by the availability of 21st century technology. We are using 21st century tech with 20th century markets.",
+                "'s fixation with collaboration, social skills and synergy is getting annoying and increasingly " + \
+                "hard to bear.",
+                " is simply highlighting the paradigm of the majority, as we got obsessed with statistics and averages" + \
+                ", we see them as undeniable evidence that the other way is wrong.",
+                " is a highly abused term in language by making such word apply to as much things as possible, " + \
+                "ending up with an unfalsifiable logical absolute that borders on ontology.",
+                " gives me a thrice damned headache"
+            ])
+            if "audible" in sub(r"[^a-zA-Z]+", "", "".join(dict.fromkeys(something.casefold()))):
+                selfroast = True
                 quotes = choice([
-                    " wait... I'm not gonna roast myself you socialite.",
-                    "... Alright, we need to talk."
+                    "I'm not gonna roast myself you socialite.",
+                    "Alright, we need to talk.",
+                    "Excuse me?",
+                    "You did absolutely **** all to resolve the pandemic, you did close to nothing to " + \
+                    "prepare yourself for it, and let alone did you do anything to functionally reso" + \
+                    "lve problems. You are oppressing our individual liberties because of the shortcom" + \
+                    "ings of your institutions. You are stifling your economy and, as a consequence, o" + \
+                    "ur income because of your vices. And last but not least, you seem to be absolutel" + \
+                    "y stuck into a self-repetitive loop of making the same idiotic mistakes over and over again.",
+                    "YOU! YOU TRIPLE GREASY WALKING SECOND DINING COURSE, YOU'RE JUST A PHONY! YOU'RE A GIANT, MORALIST" + \
+                    " PHONY WHO CAN'T TAKE CARE OF ANYONE, ESPECIALLY HIMSELF! YOU HAVE YOUR OWN DISCIPLINE UP YOUR OWN" + \
+                    " ARSE AND YOU DON'T EVEN SEE IT!",
+                    ctx.author.name + quotes
                 ])
             else:
-                dq = '"'
-                quotes = choice([
-                    " is a disgusting vice",
-                    " is a socialite",
-                    " implies a complete misunderstanding and misinterpretation of my philosophy",
-                    " is a true fad",
-                    " is a pseudo-gestalt thinker with his head so far lost in the clouds he can't see reality.",
-                    " are immersed in their holistic vagueries",
-                    " is worse than thinking that cooperation and teamwork somehow magically outperform an individual's" + \
-                    f" competence and intellect by {dq}creating{dq} genius with average people's synergy.",
-                    " socializes so much that he has mental health concerns.",
-                    " did absloutely **** all to resolve the pandemic and did close to nothing to prepare" + \
-                    " themselves to it and let alone did they do anything to functionally resolve problems.",
-                    "'s utter contradictory mindset is the biggest problem and cruelty that has ever endorsed the human race",
-                    " is a cancerous remnant of a scar of weakness we call sociability, a scar that remained from " + \
-                    "the days in which individuals needed others to survive, a scar inherited from the bygone days in " + \
-                    "which we had smaller brains.",
-                    " is the epitome of unadaptability: it is conservative, change resistant and irrational.",
-                    " won't accept that smart working and learning is the future",
-                    " is not ready to live with the freedom and responsibility of being an individual.",
-                    " shouldn't just forget, rationalize, or justify his limitations.",
-                    " misses the point that science is both an individual and cooperative effort at different times",
-                    " ignores that natural selection favors the culture of empathy, team players, social and altruistic " + \
-                    "people, ignoring the fact there are other fundamental traits and other strategies that are selected.",
-                    " urges people to self-suppress their own skills in the place of the skills of others.",
-                    " shouldn't hire MLP and Disney writers to write its articles",
-                    " is like pressing a fork on a plate right next your ear except that you're also being physically " + \
-                    "tortured in the process.",
-                    " should be against human rights",
-                    " teaches you to be a collaborative socialite born to loathe solitude and allow an a** mark to define you.",
-                    " should just be transported to their idealized MLP social nirvana and be done with their idiocies.",
-                    "? I have to vomit.",
-                    "'s content is made for a mass society who obviously likes being told their pro-social and " + \
-                    "interdependent properties of mass delusion and incompetence are what makes them strong",
-                    " has basic knowledge about humanity, but understands nothing about the human.",
-                    " should be sealed in the depths of the Atlantic ocean.",
-                    " makes everyone's eyes melt and also causes you to become deaf.",
-                    " and collaborative learning are a reactionary movement to the great individual empowerment created" + \
-                    " by the availability of 21st century technology. We are using 21st century tech with 20th century markets.",
-                    "'s fixation with collaboration, social skills and synergy is getting annoying and increasingly " + \
-                    "hard to bear.",
-                    " is simply highlighting the paradigm of the majority, as we got obsessed with statistics and averages" + \
-                    ", we see them as undeniable evidence that the other way is wrong.",
-                    " is a highly abused term in language by making such word apply to as much things as possible, " + \
-                    "ending up with an unfalsifiable logical absolute that borders on ontology.",
-                    " gives me a thrice damned headache"
-                ])
+                selfroast = False
             thumbnail = choice([
                 "https://media.discordapp.net/attachments/769899860253736990/773118827293704192/PicsArt_11-03-10.37.49.jpg",
                 "https://media.discordapp.net/attachments/766326653538271232/772817547074601000/unknown.png",
@@ -129,7 +176,7 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
                 title=f"What does Audible think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
             )
-            e.add_field(name=f"Audible Thinks", value=f"```{something}{quotes}```")
+            e.add_field(name=f"Audible Thinks", value=f"```{something if not selfroast else ''}{quotes}```")
             e.set_thumbnail(url=thumbnail)
         await ctx.send(embed=e)
 
