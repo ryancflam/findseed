@@ -22,7 +22,7 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
     async def on_message(self, message):
         if message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"] \
                 and funcs.userNotBlacklisted(self.client, message) \
-                and (not message.author.bot or message.author.id in ALLOWED_BOTS):
+                and (not message.author.bot or (message.author.id in ALLOWED_BOTS and message.author.id != self.client.user.id)):
             originalmsg = message.content
             lowercase = originalmsg.casefold()
             if self.client.user in message.mentions and not (await self.client.get_context(message)).valid:
@@ -37,9 +37,9 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
                 res = await funcs.getRequest("https://www.pandorabots.com/pandora/talk-xml", params=params)
                 data = res.json()
                 text = choice(["I do not understand.", "Please say that again.", "What was that?", "Ok."]) \
-                    if data["status"] == 4 else data["that"].replace("A.L.I.C.E", self.client.user.name).replace(
-                    "ALICE", self.client.user.name).replace("<br>", "").replace("&quot;", '"').replace("&lt;",
-                    "<").replace("&gt;", ">").replace("&amp;", "&")
+                    if data["status"] == 4 else data["that"].replace("A.L.I.C.E", self.client.user.name) \
+                    .replace("ALICE", self.client.user.name).replace("<br>", "").replace("&quot;", '"') \
+                    .replace("&lt;","<").replace("&gt;", ">").replace("&amp;", "&")
                 await message.channel.send(f"{message.author.mention} {text}")
             elif not message.author.bot:
                 if lowercase.startswith(("im ", "i'm ", "i‘m ", "i’m ", "i am ")):

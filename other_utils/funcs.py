@@ -146,6 +146,11 @@ def getTickers():
     return tickers
 
 
+async def readTxt(message):
+    attachment = await message.attachments[0].read()
+    return attachment.decode("utf-8")
+
+
 async def reactionRemove(reaction, user):
     try:
         await reaction.remove(user)

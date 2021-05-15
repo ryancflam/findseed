@@ -282,19 +282,52 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 return
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="lovecalc", description="Calculates the love percentage between two users.",
-                      aliases=["love", "lovecalculator", "lc"], usage="<@mention> [@mention]")
-    async def lovecalc(self, ctx, first: Member=None, second: Member=None):
-        if first is None:
+    @commands.command(name="iq", description="Calculates your IQ. This is a joke command.", usage="[@mention]")
+    async def iq(self, ctx, mention: Member=None):
+        if not mention:
+            mention = ctx.author
+        iqres = randint(1, 200)
+        if iqres < 80:
+            msg = [
+                "wow ur dum lololol",
+                "STOOOPIDDDDDD",
+                "U ARE AN IDIOT HAHAHAHAHAHAHAHAHA",
+                "lmao dumbass",
+                "what's 9+10?"
+            ]
+        elif iqres > 120:
+            msg = [
+                "k cool ur smart",
+                "wow you got the smarts!!",
+                "Intellectual.",
+                "Harvard wants to know your location",
+                "you like the NAWLEJ?",
+                "Audible approves"
+            ]
+        else:
+            msg = [
+                "Nothing special whatsoever...",
+                "ehhhh okay",
+                "ur average",
+                "yeah you are average-brained, absolutely nothing out of the ordinary",
+                "lame"
+            ]
+        await ctx.send(f"{mention.mention}'s IQ score is **{iqres}**.\n\n{choice(msg)}")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="lovecalc", description="Calculates the love percentage between two things or users.",
+                      aliases=["love", "lovecalculator", "lc"], usage="<input> [input]")
+    async def lovecalc(self, ctx, first: str="", second: str=""):
+        if not first:
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        second = second or ctx.author
+        second = second or f"<@!{ctx.author.id}>"
         try:
-            newlist = [first.id, second.id]
+            newlist = [first, second]
             sentence = ""
             for i in sorted(newlist):
                 sentence += str(i) + " loves "
             sentence = sentence[:-7]
-            sentence = sentence.replace(" ", "").lower()
+            sentence = sentence.replace(" ", "").casefold()
             intermediate = ""
             while len(sentence):
                 intermediate += str(sentence.count(sentence[0]))
@@ -302,7 +335,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             while int(intermediate) > 100:
                 tmp = ""
                 for i in range(0, int(len(intermediate) / 2)):
-                    tmp += str(int(intermediate[i]) + int(intermediate[(i+1) * -1]))
+                    tmp += str(int(intermediate[i]) + int(intermediate[(i + 1) * -1]))
                 if len(intermediate) % 2 > 0:
                     tmp += intermediate[int(len(intermediate) % 2)]
                 intermediate = tmp
@@ -314,7 +347,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             if int(intermediate) < 20:
                 emoji = "...** :broken_heart:"
             await ctx.send("The love percentage between " + \
-                           f"**{first.name}** and **{second.name}** is **{intermediate}%{emoji}")
+                           f"**{first}** and **{second}** is **{intermediate}%{emoji}")
         except Exception:
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 

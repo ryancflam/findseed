@@ -97,33 +97,33 @@ class Utility(commands.Cog, name="Utility"):
                 e.add_field(name="Country", value=f"`{total['country_name']}`")
                 e.add_field(name="Total Cases", value=f"`{total['cases']}`")
                 e.add_field(name="Total Deaths", value=f"`{total['deaths']}" + \
-                                                       "\n({}%)`".format(round(int(total['deaths'].replace(',',
-                                                           '').replace('N/A', '0')) / int(total['cases'].replace(',',
-                                                           '').replace('N/A', '0')) * 100, 2)))
+                                                       "\n({}%)`".format(round(int(total['deaths']
+                                                           .replace(',', '').replace('N/A', '0')) / int(total['cases']
+                                                           .replace(',', '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" + \
-                                                          "\n({}%)`".format(round(int(total['total_recovered'].replace(',',
-                                                              '').replace('N/A', '0')) / int(total['cases'].replace(',',
-                                                              '').replace('N/A', '0')) * 100, 2)))
+                                                          "\n({}%)`".format(round(int(total['total_recovered']
+                                                              .replace(',', '').replace('N/A', '0')) / int(total['cases']
+                                                              .replace(',', '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Active Cases", value=f"`{total['active_cases']}" + \
-                                                       "\n({}%)`".format(round(int(total['active_cases'].replace(',',
-                                                           '').replace('N/A', '0')) / int(total['cases'].replace(',',
-                                                           '').replace('N/A', '0')) * 100, 2)))
+                                                       "\n({}%)`".format(round(int(total['active_cases']
+                                                           .replace(',', '').replace('N/A', '0')) / int(total['cases']
+                                                           .replace(',', '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Critical Cases", value=f"`{total['serious_critical']}`")
                 e.add_field(name="Total Tests", value=f"`{total['total_tests']}`")
             else:
                 e.add_field(name="Total Cases", value=f"`{total['total_cases']}`")
                 e.add_field(name="Total Deaths", value=f"`{total['total_deaths']}" + \
-                                                       "\n({}%)`".format(round(int(total['total_deaths'].replace(',',
-                                                           '').replace('N/A', '0')) / int(total['total_cases'].replace(',',
-                                                           '').replace('N/A', '0')) * 100, 2)))
+                                                       "\n({}%)`".format(round(int(total['total_deaths']
+                                                           .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
+                                                           .replace(',', '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" + \
-                                                          "\n({}%)`".format(round(int(total['total_recovered'].replace(',',
-                                                              '').replace('N/A', '0')) / int(total['total_cases'].replace(',',
-                                                              '').replace('N/A', '0')) * 100, 2)))
+                                                          "\n({}%)`".format(round(int(total['total_recovered']
+                                                              .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
+                                                              .replace(',', '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Active Cases", value=f"`{total['active_cases']}" + \
-                                                       "\n({}%)`".format(round(int(total['active_cases'].replace(',',
-                                                           '').replace('N/A', '0')) / int(total['total_cases'].replace(',',
-                                                           '').replace('N/A', '0')) * 100, 2)))
+                                                       "\n({}%)`".format(round(int(total['active_cases']
+                                                           .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
+                                                           .replace(',', '').replace('N/A', '0')) * 100, 2)))
             e.add_field(name="New Cases Today", value=f"`{total['new_cases']}`")
             e.add_field(name="New Deaths Today", value=f"`{total['new_deaths']}`")
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
@@ -457,7 +457,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],
-                      usage="<image URL/attachment>")
+                      usage="<image URL OR image attachment>")
     async def qrread(self, ctx):
         await ctx.send("Reading image. Please wait... " + \
                        "(URL embeds take longer to process than image attachments)")
@@ -512,9 +512,7 @@ class Utility(commands.Cog, name="Utility"):
             content = option.content
             try:
                 if option.attachments:
-                    attachment = option.attachments[0]
-                    decoded = await attachment.read()
-                    content = decoded.decode("utf-8")
+                    content = await funcs.readTxt(option)
                 code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
                 if code == "quit":
                     return await ctx.send("Cancelling compilation...")
@@ -548,7 +546,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="dictionary", description="Returns the definition(s) of a word.",
-                      aliases=["dict", "word", "def", "definition", "meaning"],
+                      aliases=["dict", "def", "definition", "meaning", "define"],
                       usage="<word> [language code]")
     async def dictionary(self, ctx, word="", lang="en"):
         if word == "":
@@ -651,7 +649,7 @@ class Utility(commands.Cog, name="Utility"):
                 word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
                 e = Embed(description=permalink)
                 e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                 "669142387330777115/urban-dictionary-android.png")
+                                                        "669142387330777115/urban-dictionary-android.png")
                 e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                 if example:
                     e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
@@ -830,6 +828,23 @@ class Utility(commands.Cog, name="Utility"):
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="wordcount", description="Counts the number of words and characters in an input.",
+                      aliases=["lettercount", "countletter", "countchar", "countletters", "char", "chars", "letters",
+                               "charcount", "wc", "countword", "word", "words", "countwords", "letter"],
+                      usage="<input OR .txt attachment>")
+    async def wordcount(self, ctx, *, inp=""):
+        if not inp and not ctx.message.attachments:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+        if ctx.message.attachments:
+            try:
+                inp = await funcs.readTxt(ctx.message)
+            except:
+                inp = inp
+        if not inp:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+        await ctx.send("Characters: **{:,}**\nWords: **{:,}**".format(len(inp), len(inp.split())))
 
 
 def setup(client: commands.Bot):

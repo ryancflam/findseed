@@ -193,31 +193,31 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         if cog == "":
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
-            self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
             print(f"Reloaded cog: {cog}")
             await ctx.send(":ok_hand:")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="loadcog", description="Loads a cog.", usage=["<cog name>"])
+    @commands.command(name="loadcog", description="Loads a cog.", usage=["<cog name>"], aliases=["enablecog"])
     @commands.is_owner()
     async def loadcog(self, ctx, *, cog: str=""):
         if cog == "":
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
-            self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
             print(f"Loaded cog: {cog}")
             await ctx.send(":ok_hand:")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="unloadcog", description="Unloads a cog.", usage=["<cog name>"])
+    @commands.command(name="unloadcog", description="Unloads a cog.", usage=["<cog name>"], aliases=["disablecog"])
     @commands.is_owner()
     async def unloadcog(self, ctx, *, cog: str=""):
         if cog == "":
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
-            self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_')}")
+            self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
             print(f"Unloaded cog: {cog}")
             await ctx.send(":ok_hand:")
         except Exception as ex:
