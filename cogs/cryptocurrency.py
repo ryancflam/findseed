@@ -48,7 +48,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         except ValueError:
             amount, gasamount = 1, 1
         if amount < 1:
-            amount, gasamount = 1, 1
+            amount = 1
+        if gasamount <= 0:
+            gasamount = 1
         res = await funcs.getRequest(COINGECKO_URL + "coins/markets", params={"vs_currency": "usd", "ids": "bitcoin,neo,gas"})
         tickers = res.json()
         btcprice = None

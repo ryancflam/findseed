@@ -63,10 +63,13 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
                 "? fucking goddamnit ass shit fuck",
                 "? Oh goddamnit my balls"
             ])
-            if "neo" in sub(r"[^a-zA-Z]+", "", "".join(dict.fromkeys(something.casefold()))):
+            sample = sub(r"[^a-zA-Z]+", "", something.casefold())
+            norepeats = "".join(dict.fromkeys(sample))
+            if "neo" in norepeats:
                 selfroast = True
                 quotes = choice([
                     "Stick it up yours you flawed brony.",
+                    "Oh, you mean the cryptocurrency? Yeah, I'm a fan.",
                     "Wait hang on...",
                     "What? Are you brainwashed by MLP or are you just naturally stupid?",
                     "Huh? Do you have a brain?",
@@ -79,6 +82,19 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
                     "C*******",
                     "Yeah. Funny. Keep laughing you brainwashed brony."
                 ])
+            elif norepeats == "al" or norepeats == "ali" or "alessio" in sample or "alia" in sample:
+                selfroast = True
+                quotes = choice([
+                    "Al was cured from the flaw",
+                    "Al is my dream",
+                    "Al got my full support",
+                    "Al is NOT a " + choice(["brony", "clopper"]),
+                    "Al is not a brony, unlike those UCC critters",
+                    "Al is an awesome guy"
+                ])
+            elif "weirdal" in norepeats:
+                selfroast = True
+                quotes = "That guy is a joke, no one can rip off Al"
             else:
                 selfroast = False
             thumbnail = choice([

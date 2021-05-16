@@ -1,4 +1,4 @@
-production = False # automatically puts "b" in front of prefix if True
+production = False # automatically puts "b" in front of prefix if False
 botToken = ""
 prefix = "!"
 activityName = "" # put "bitcoin" for auto Bitcoin prices
