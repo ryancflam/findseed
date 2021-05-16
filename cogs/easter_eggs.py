@@ -65,6 +65,10 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             ])
             sample = sub(r"[^a-zA-Z]+", "", something.casefold())
             norepeats = "".join(dict.fromkeys(sample))
+            thumbnail = choice([
+                "https://media.discordapp.net/attachments/762520408356028427/774253519636922378/waaw.png",
+                "https://media.discordapp.net/attachments/782506254123794443/843420716564348978/deepfry.png"
+            ])
             if "neo" in norepeats:
                 selfroast = True
                 quotes = choice([
@@ -95,12 +99,27 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             elif "weirdal" in norepeats:
                 selfroast = True
                 quotes = "That guy is a joke, no one can rip off Al"
+            elif "zion" in norepeats:
+                selfroast = True
+                quotes = choice([
+                    "May the Star be with you.",
+                    "The uncommon made common."
+                ])
+            elif "delphox" in norepeats:
+                selfroast = True
+                quotes = "Imagine trolling someone and calling it joking even if the victim doesn't find it funny whatsoever." + \
+                         " Imagine labelling said victim a sociopath for simply standing up to you and your trolling AND" + \
+                         " punishing him for it thinking you're the good guy who saved the day. Imagine saying you've learnt" + \
+                         " from your mistakes but you still continue trolling after two years to the point where your victims " + \
+                         "start feeling suicidal. Then I am the bad guy. But hey, at least sociopaths know they're manipulatin" + \
+                         "g others."
+                thumbnail = "https://media.discordapp.net/attachments/782506254123794443/843420716564348978/deepfry.png"
             else:
+                thumbnail = choice([
+                    "https://media.discordapp.net/attachments/769899860253736990/772818443585191936/unknown.png",
+                    "https://media.discordapp.net/attachments/769899860253736990/773133850108624916/2019-02-24.png"
+                ])
                 selfroast = False
-            thumbnail = choice([
-                "https://media.discordapp.net/attachments/769899860253736990/772818443585191936/unknown.png",
-                "https://media.discordapp.net/attachments/769899860253736990/773133850108624916/2019-02-24.png"
-            ])
             e = Embed(
                 title=f"What does Neo think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
@@ -166,6 +185,10 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
             ])
             if "audible" in sub(r"[^a-zA-Z]+", "", "".join(dict.fromkeys(something.casefold()))):
                 selfroast = True
+                thumbnail = choice([
+                    "https://media.discordapp.net/attachments/769899860253736990/774253213565583360/deepfry.png",
+                    "https://media.discordapp.net/attachments/782506254123794443/843420155224260618/magik.png"
+                ])
                 quotes = choice([
                     "I'm not gonna roast myself you socialite.",
                     "Alright, we need to talk.",
@@ -183,11 +206,11 @@ class EasterEggs(commands.Cog, name="Easter Eggs", command_attrs=dict(hidden=Tru
                 ])
             else:
                 selfroast = False
-            thumbnail = choice([
-                "https://media.discordapp.net/attachments/769899860253736990/773118827293704192/PicsArt_11-03-10.37.49.jpg",
-                "https://media.discordapp.net/attachments/766326653538271232/772817547074601000/unknown.png",
-                "https://media.discordapp.net/attachments/769899860253736990/773121703009714176/Screenshot_20201103_104927.jpg"
-            ])
+                thumbnail = choice([
+                    "https://media.discordapp.net/attachments/769899860253736990/773118827293704192/PicsArt_11-03-10.37.49.jpg",
+                    "https://media.discordapp.net/attachments/766326653538271232/772817547074601000/unknown.png",
+                    "https://media.discordapp.net/attachments/769899860253736990/773121703009714176/Screenshot_20201103_104927.jpg"
+                ])
             e = Embed(
                 title=f"What does Audible think of {something}?",
                 description=f"Requested by: {ctx.message.author.mention}"
