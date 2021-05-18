@@ -106,7 +106,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                     tags.append("Door Decoration")
             except:
                 pass
-            e = Embed(title=data[variant]["name"]["name-USen"])
+            e = Embed(title="Furniture - " + data[variant]["name"]["name-USen"])
             e.set_image(url=data[variant]["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
             e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
@@ -302,6 +302,9 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 e.add_field(name="Gender", value=f"`{personalitydata['gender']}`")
                 e.add_field(name="Sleep Time", value=f"`{personalitydata['sleep-time']}`")
                 e.add_field(name="Total Villagers", value=f"`{personalitydata['total']}`")
+                e.add_field(name="Get Along With", value=", ".join(f"`{i}`" for i in personalitydata["get-along-with"]))
+                if personalitydata["fight-with"]:
+                    e.add_field(name="Fight With", value=", ".join(f"`{i}`" for i in personalitydata["fight-with"]))
                 e.set_thumbnail(url=AC_LOGO)
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))

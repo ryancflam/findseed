@@ -1,3 +1,5 @@
+# Hidden category
+
 from random import choice, randint
 from re import sub
 
@@ -6,7 +8,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
+class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 
@@ -83,34 +85,6 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages"):
                                 ]
                             ), name="hmmm.gif"
                         )
-
-    @commands.command(name="umenable", description="Enables unprompted messages for your server.",
-                      aliases=["ume", "eum", "enableum"])
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def umenable(self, ctx):
-        data = funcs.readJson("data/unprompted_messages.json")
-        serverList = list(data["servers"])
-        if ctx.guild.id not in serverList:
-            serverList.append(ctx.guild.id)
-            data["servers"] = serverList
-            funcs.dumpJson("data/unprompted_messages.json", data)
-            return await ctx.send("`Enabled unprompted messages for this server.`")
-        await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
-
-    @commands.command(name="umdisable", description="Disables unprompted messages for your server.",
-                      aliases=["umd", "dum", "disableum"])
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def umdisable(self, ctx):
-        data = funcs.readJson("data/unprompted_messages.json")
-        serverList = list(data["servers"])
-        if ctx.guild.id in serverList:
-            serverList.remove(ctx.guild.id)
-            data["servers"] = serverList
-            funcs.dumpJson("data/unprompted_messages.json", data)
-            return await ctx.send("`Disabled unprompted messages for this server.`")
-        await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
 
 
 def setup(client: commands.Bot):
