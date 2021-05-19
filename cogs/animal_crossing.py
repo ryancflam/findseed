@@ -26,7 +26,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     @staticmethod
     def findData(data: dict, name: str):
         try:
-            return data[name.casefold().replace(" ", "_").replace("'", "").replace("‘", "").replace("’", "")]
+            return data[name.casefold().replace(" ", "_").replace("'", "").replace("‘", "")
+                        .replace("’", "").replace("rock_head", "rock-head")]
         except KeyError:
             raise Exception("Not found, please check your spelling.")
 
@@ -106,7 +107,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                     tags.append("Door Decoration")
             except:
                 pass
-            e = Embed(title="Furniture - " + data[variant]["name"]["name-USen"])
+            e = Embed(title=data[variant]["name"]["name-USen"])
             e.set_image(url=data[variant]["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
             e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
@@ -188,7 +189,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       aliases=["art", "acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="<artwork name>")
     async def acart(self, ctx, *, art):
         try:
-            artdata = self.findData(self.art, art)
+            artdata = self.findData(self.art, art.replace("(", "").replace(")", ""))
             e = Embed(title=artdata["name"]["name-USen"].title(), description=artdata["museum-desc"])
             e.add_field(name="Has Fake", value=f"`{str(artdata['hasFake'])}`")
             e.add_field(name="Buy Price", value="`{:,}`".format(artdata['buy-price']))
