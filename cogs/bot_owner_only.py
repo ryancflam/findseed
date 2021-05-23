@@ -408,7 +408,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                       aliases=["terminal", "execute", "ex"])
     @commands.is_owner()
     async def exec(self, ctx, *, cmd):
-        print(funcs.getPath())
+        await ctx.send(funcs.getPath())
         try:
             e = discord.Embed(description=f"```xl\n{popen(cmd).read()}```")
         except Exception as ex:
