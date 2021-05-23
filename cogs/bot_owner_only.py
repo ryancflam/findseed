@@ -413,10 +413,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         try:
             output = check_output(cmds).decode("unicode_escape")
         except CalledProcessError as err:
-            output = err.output.decode("unicode_escape")
-            e = funcs.errorEmbed(None, f"```{output}```")
+            e = funcs.errorEmbed(None, err.output.decode("unicode_escape"))
         else:
-            e = discord.Embed(description=f"```xl\n{output}```")
+            e = discord.Embed(description="```xl\n{}```".format(output))
         await ctx.send(embed=e)
 
 
