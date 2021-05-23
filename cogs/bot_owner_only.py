@@ -4,7 +4,7 @@
 
 import ast
 from asyncio import TimeoutError
-from os import popen, system
+from os import popen
 
 import discord
 from discord.ext import commands
@@ -156,18 +156,17 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                                            and m.content.casefold() == "yes",
                 timeout=10
             )
-            gitpull = "cd /root/findseed && git pull && "
+            gitpull = f"cd {funcs.getPath()} && git pull && "
         except TimeoutError:
             await ctx.send("Not git-pulling. Commencing restart...")
         else:
             await ctx.send("Git-pulling. Commencing restart...")
-        system(f"{gitpull}sudo reboot")
+        await ctx.send(embed=discord.Embed(description="```xl\n{}```".format(popen(f"{gitpull}sudo reboot").read())))
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
     @commands.is_owner()
     async def gitpull(self, ctx):
-        system("cd findseed && git pull")
-        await ctx.send(":ok_hand:")
+        await ctx.send(embed=discord.Embed(description="```xl\n{}```".format(popen(f"cd {funcs.getPath()} && git pull").read())))
 
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
     @commands.is_owner()
@@ -405,10 +404,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         )
 
     @commands.command(name="exec", description="Executes terminal commands. Proceed with caution.",
-                      aliases=["terminal", "execute", "ex"])
+                      aliases=["terminal", "execute", "ex"], usage="<input>")
     @commands.is_owner()
     async def exec(self, ctx, *, cmd):
-        await ctx.send(funcs.getPath())
         try:
             e = discord.Embed(description=f"```xl\n{popen(cmd).read()}```")
         except Exception as ex:
