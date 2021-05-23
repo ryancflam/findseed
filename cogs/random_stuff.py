@@ -25,7 +25,8 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     def RGB(value):
         if value is not None:
             try:
-                return int(value) if 0 <= int(value) <= 255 else randint(0, 255)
+                value = int(str(value).replace(",", ""))
+                return value if 0 <= value <= 255 else randint(0, 255)
             except ValueError:
                 return randint(0, 255)
         else:
@@ -526,9 +527,10 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         g = self.RGB(g)
         b = self.RGB(b)
         colour = "%02x%02x%02x" % (r, g, b)
-        colourint = int(colour, 16)
-        e = Embed(colour=Colour(16777214 if colourint == 16777215 else colourint), title="#" + colour.casefold())
+        e = Embed(colour=Colour(int(colour, 16)), title="#" + colour.casefold(),
+                  description=f"Requested by: {ctx.author.mention}")
         e.add_field(name="RGB", value=f"`{r}, {g}, {b}`")
+        e.set_image(url=f"https://www.colorhexa.com/{colour}.png")
         await ctx.send(embed=e)
 
 
