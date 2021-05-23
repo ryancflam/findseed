@@ -4,7 +4,7 @@
 
 import ast
 from asyncio import TimeoutError
-from os import popen
+from subprocess import PIPE, Popen, STDOUT
 
 import discord
 from discord.ext import commands
@@ -161,12 +161,16 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             await ctx.send("Not git-pulling. Commencing restart...")
         else:
             await ctx.send("Git-pulling. Commencing restart...")
-        await ctx.send(embed=discord.Embed(description="```xl\n{}```".format(popen(f"{gitpull}sudo reboot").read())))
+        obj = Popen(f"{gitpull}sudo reboot", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
+        obj.kill()
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
     @commands.is_owner()
     async def gitpull(self, ctx):
-        await ctx.send(embed=discord.Embed(description="```xl\n{}```".format(popen(f"cd {funcs.getPath()} && git pull").read())))
+        obj = Popen(f"cd {funcs.getPath()} && git pull", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
+        obj.kill()
 
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
     @commands.is_owner()
@@ -408,7 +412,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
     @commands.is_owner()
     async def exec(self, ctx, *, cmd):
         try:
-            e = discord.Embed(description=f"```xl\n{popen(cmd).read()}```")
+            obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+            e = discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8")))
+            obj.kill()
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
