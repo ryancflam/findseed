@@ -2,7 +2,7 @@ from asyncio import sleep, TimeoutError
 from random import choice, randint, shuffle
 from time import time
 
-from discord import Embed, Member
+from discord import Colour, Embed, Member
 from discord.ext import commands
 
 from other_utils import funcs
@@ -20,6 +20,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         self.phoneCallChannels = []
         self.personalityTest = funcs.readJson("assets/personality_test.json")
         self.trumpquotes = funcs.readJson("assets/trump_quotes.json")
+
+    @staticmethod
+    def RGB(value):
+        if value is not None:
+            try:
+                return int(value) if 0 <= int(value) <= 255 else randint(0, 255)
+            except ValueError:
+                return randint(0, 255)
+        else:
+            return randint(0, 255)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
@@ -481,7 +491,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="number", usage="[range up to {:,}] [starting point (0 OR 1)]".format(RN_RANGE),
+    @commands.command(name="number", usage="[range up to {:,}] [starting number]".format(RN_RANGE),
                       aliases=["rn", "numbers", "randomnumber", "rng"], description="Generates a random number.")
     async def number(self, ctx, rnrange: str=str(RN_RANGE), start: str= "1"):
         try:
@@ -491,12 +501,35 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         except ValueError:
             rnrange = RN_RANGE
         try:
-            start = 1 if int(start) > 0 else 0
+            start = 1 if int(start) >= rnrange else int(start)
         except ValueError:
             start = 1
         await ctx.send("```{:,} (Range: {:,} to {:,})\n\nRequested by: {}```".format(
             randint(start, rnrange), start, rnrange, ctx.author
         ))
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="colour", usage="[colour hex OR R value] [G value] [B value]", description="Generates a random colour.",
+                      aliases=["color", "randomcolor", "randomcolour", "colors", "colours", "rgb"])
+    async def colour(self, ctx, r=None, g=None, b=None):
+        if r:
+            colour = r[(1 if len(r) == 7 else 2 if r.casefold().startswith("0x") else 0):]
+            if len(colour) == 6:
+                try:
+                    r, g, b = (int(colour[i:i + 2], 16) for i in (0, 2, 4))
+                except ValueError:
+                    r = self.RGB(r)
+            else:
+                r = self.RGB(r)
+        else:
+            r = self.RGB(r)
+        g = self.RGB(g)
+        b = self.RGB(b)
+        colour = "%02x%02x%02x" % (r, g, b)
+        colourint = int(colour, 16)
+        e = Embed(colour=Colour(16777214 if colourint == 16777215 else colourint), title="#" + colour.casefold())
+        e.add_field(name="RGB", value=f"`{r}, {g}, {b}`")
+        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):

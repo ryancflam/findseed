@@ -33,7 +33,7 @@ class BitcoinAddress:
         base, minlen = int(base), int(minlen)
         codestr = HEX_DIGITS if base == 16 else ALPHABET.decode("utf-8")
         bytesres = bytes()
-        while val > 0:
+        while val:
             curcode = codestr[val % base]
             bytesres = bytes([ord(curcode)]) + bytesres
             val //= base
@@ -52,7 +52,7 @@ class BitcoinAddress:
         result = 0
         if base == 16:
             string = string.casefold()
-        while len(string) > 0:
+        while string:
             result = result * base + (
                 string[0]
                 if base == 256
