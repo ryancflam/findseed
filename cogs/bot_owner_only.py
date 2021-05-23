@@ -1,10 +1,9 @@
-# Hidden category
-# Credit - https://gist.github.com/nitros12/2c3c265813121492655bc95aa54da6b9
-# For eval
-
-import ast
 from asyncio import TimeoutError
+from contextlib import redirect_stdout
+from io import StringIO
+from platform import system
 from subprocess import PIPE, Popen, STDOUT
+from textwrap import indent
 
 import discord
 from discord.ext import commands
@@ -19,16 +18,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         self.destChannel = None
         self.originChannel = None
         self.bdReminder = 0
-
-    def insertReturns(self, body):
-        if isinstance(body[-1], ast.Expr):
-            body[-1] = ast.Return(body[-1].value)
-            ast.fix_missing_locations(body[-1])
-        if isinstance(body[-1], ast.If):
-            self.insertReturns(body[-1].body)
-            self.insertReturns(body[-1].orelse)
-        if isinstance(body[-1], ast.With):
-            self.insertReturns(body[-1].body)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -161,14 +150,20 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             await ctx.send("Not git-pulling. Commencing restart...")
         else:
             await ctx.send("Git-pulling. Commencing restart...")
-        obj = Popen(f"{gitpull}sudo reboot", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        obj = Popen(
+            f"{gitpull}sudo reboot", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
+            close_fds=False if system() == "Windows" else True
+        )
         await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
         obj.kill()
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
     @commands.is_owner()
     async def gitpull(self, ctx):
-        obj = Popen(f"cd {funcs.getPath()} && git pull", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        obj = Popen(
+            f"cd {funcs.getPath()} && git pull", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
+            close_fds=False if system() == "Windows" else True
+        )
         await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
         obj.kill()
 
@@ -229,31 +224,27 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate"], usage="<code>")
     @commands.is_owner()
-    async def eval(self, ctx, *, code: str=""):
-        if code == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
-        else:
-            try:
-                fnName = "_eval_expr"
-                code = code.strip("` ")
-                code = "\n".join(f"    {i}" for i in code.splitlines())
-                body = f"async def {fnName}():\n{code}"
-                parsed = ast.parse(body)
-                body = parsed.body[0].body
-                self.insertReturns(body)
-                env = {
-                    "bot": ctx.bot,
-                    "discord": discord,
-                    "commands": commands,
-                    "ctx": ctx,
-                    "__import__": __import__,
-                    "funcs": funcs
-                }
-                exec(compile(parsed, filename="<ast>", mode="exec"), env)
-                res = (await eval(f"{fnName}()", env))
-                e = discord.Embed(description=f"```\n{str(res)}```")
-            except Exception:
-                e = funcs.errorEmbed(None, "Error processing input.")
+    async def eval(self, ctx, *, code):
+        code = "\n".join(code.split("\n")[1:][:-3]) if code.startswith("```") and code.endswith("```") else code
+        localvars = {
+            "discord": discord,
+            "commands": commands,
+            "ctx": ctx,
+            "__import__": __import__,
+            "funcs": funcs,
+            "client": self.client
+        }
+        stdout = StringIO()
+        try:
+            with redirect_stdout(stdout):
+                exec(f"async def func():\n{indent(code, '    ')}", localvars)
+                obj = await localvars["func"]()
+                result = f"{stdout.getvalue()}"
+                e = discord.Embed(description=funcs.formatting(str(result)))
+                if obj:
+                    e.add_field(name="Returned", value=funcs.formatting(str(obj)))
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.command(name="blacklistserver", description="Blacklists a server.",
@@ -412,7 +403,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
     @commands.is_owner()
     async def exec(self, ctx, *, cmd):
         try:
-            obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+            obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
             e = discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8")))
             obj.kill()
         except Exception as ex:
