@@ -5,6 +5,7 @@
 import ast
 from asyncio import TimeoutError
 from os import system
+from subprocess import check_output, CalledProcessError
 
 import discord
 from discord.ext import commands
@@ -403,6 +404,20 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         await ctx.send(
             f"```Allowed unprompted bots: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
+
+    @commands.command(name="exec", description="Executes terminal commands. Proceed with caution.",
+                      aliases=["terminal", "execute"])
+    @commands.is_owner()
+    async def exec(self, ctx, *, cmd):
+        cmds = cmd.split(" ")
+        try:
+            output = check_output(cmds).decode("unicode_escape")
+        except CalledProcessError as err:
+            output = err.output.decode("unicode_escape")
+            e = funcs.errorEmbed(None, f"```{output}```")
+        else:
+            e = discord.Embed(description=f"```xl\n{output}```")
+        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):

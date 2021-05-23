@@ -1,7 +1,7 @@
 akinator.py[async]==4.0.1
 asyncpraw==7.2.0
 beautifulsoup4==4.9.3
-discord.py==1.5.1
+discord.py==1.7.2
 googletrans==3.0.0
 httpx==0.13.3
 lxml==4.6.2
