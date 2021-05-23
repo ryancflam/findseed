@@ -4,8 +4,7 @@
 
 import ast
 from asyncio import TimeoutError
-from os import system
-from subprocess import CalledProcessError, PIPE, run
+from os import popen, system
 
 import discord
 from discord.ext import commands
@@ -409,10 +408,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                       aliases=["terminal", "execute", "ex"])
     @commands.is_owner()
     async def exec(self, ctx, *, cmd):
+        print(funcs.getPath())
         try:
-            e = discord.Embed(description=f"```xl\n{run(cmd.split(' '), stdout=PIPE, stderr=PIPE).stdout.decode()}```")
-        except CalledProcessError as err:
-            e = funcs.errorEmbed(None, err.output.decode("unicode_escape"))
+            e = discord.Embed(description=f"```xl\n{popen(cmd).read()}```")
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
