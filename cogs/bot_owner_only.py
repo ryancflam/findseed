@@ -406,7 +406,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         )
 
     @commands.command(name="exec", description="Executes terminal commands. Proceed with caution.",
-                      aliases=["terminal", "execute"])
+                      aliases=["terminal", "execute", "ex"])
     @commands.is_owner()
     async def exec(self, ctx, *, cmd):
         try:
