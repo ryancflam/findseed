@@ -4,7 +4,6 @@ prefix = "!"
 activityName = "" # put "bitcoin" for auto Bitcoin prices
 activityType = 0
 status = "online"
-creationDate = ""
 owmKey = "" # https://openweathermap.org/api
 fixerKey = "" # https://fixer.io/signup/free
 rapidApiKey = "" # https://docs.rapidapi.com/docs/keys

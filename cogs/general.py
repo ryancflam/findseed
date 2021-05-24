@@ -4,7 +4,6 @@ import psutil
 from discord import __version__, Embed
 from discord.ext import commands
 
-import config
 from other_utils import funcs
 
 
@@ -43,10 +42,11 @@ class General(commands.Cog, name="General"):
         appinfo = await self.client.application_info()
         e = Embed(description=appinfo.description)
         data = funcs.readJson("data/findseed.json")
+        dt = self.client.user.created_at
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Library", value=f"`discord.py {__version__}`")
-        e.add_field(name="Creation Date", value=f"`{config.creationDate}`")
+        e.add_field(name="Creation Date", value="`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
         e.add_field(name="Server Count", value="`{:,}`".format(len(self.client.guilds)))
         e.add_field(name="User Count", value="`{:,}`".format(len(set([i for i in self.client.users if not i.bot]))))
         e.add_field(name="!findseed Calls", value="`{:,}`".format(data['calls']))

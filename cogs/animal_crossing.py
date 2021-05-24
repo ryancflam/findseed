@@ -50,30 +50,41 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         return sorted(north), sorted(south)
 
     def crittersListEmbed(self, month, mode: int=0):
-        e = Embed(
-            title=f"Critters {'Arriving in' if not mode else 'Leaving After'} {funcs.monthNumberToName(month)}"
-        ).set_thumbnail(url=AC_LOGO)
-        nbugs, sbugs = self.addCritter(self.bugs, month, mode)
-        nfish, sfish = self.addCritter(self.fish, month, mode)
-        nsea, ssea = self.addCritter(self.sea, month, mode)
-        if nbugs:
-            e.add_field(name="Bugs (Northern)", value=", ".join(f"`{bug}`" for bug in nbugs))
-        if nfish:
-            e.add_field(name="Fish (Northern)", value=", ".join(f"`{fish}`" for fish in nfish))
-        if nsea:
-            e.add_field(name="Sea Creatures (Northern)", value=", ".join(f"`{sea}`" for sea in nsea))
-        if sbugs:
-            e.add_field(name="Bugs (Southern)", value=", ".join(f"`{bug}`" for bug in sbugs))
-        if sfish:
-            e.add_field(name="Fish (Southern)", value=", ".join(f"`{fish}`" for fish in sfish))
-        if ssea:
-            e.add_field(name="Sea Creatures (Southern)", value=", ".join(f"`{sea}`" for sea in ssea))
-        if not nbugs and not nfish and not nsea and not sbugs and not sfish and not ssea:
-            e = funcs.errorEmbed(None, "Invalid month.")
-        e.set_footer(
-            text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " + \
-                 f"{self.client.command_prefix}acsea for specific critter information."
-        )
+        month = month or str(datetime.now().month)
+        try:
+            _ = int(month)
+        except ValueError:
+            try:
+                month = funcs.monthNameToNumber(month)
+            except Exception as ex:
+                return funcs.errorEmbed(None, str(ex))
+        try:
+            e = Embed(
+                title=f"Critters {'Arriving in' if not mode else 'Leaving After'} {funcs.monthNumberToName(month)}"
+            ).set_thumbnail(url=AC_LOGO)
+            nbugs, sbugs = self.addCritter(self.bugs, month, mode)
+            nfish, sfish = self.addCritter(self.fish, month, mode)
+            nsea, ssea = self.addCritter(self.sea, month, mode)
+            if nbugs:
+                e.add_field(name="Bugs (Northern)", value=", ".join(f"`{bug}`" for bug in nbugs))
+            if nfish:
+                e.add_field(name="Fish (Northern)", value=", ".join(f"`{fish}`" for fish in nfish))
+            if nsea:
+                e.add_field(name="Sea Creatures (Northern)", value=", ".join(f"`{sea}`" for sea in nsea))
+            if sbugs:
+                e.add_field(name="Bugs (Southern)", value=", ".join(f"`{bug}`" for bug in sbugs))
+            if sfish:
+                e.add_field(name="Fish (Southern)", value=", ".join(f"`{fish}`" for fish in sfish))
+            if ssea:
+                e.add_field(name="Sea Creatures (Southern)", value=", ".join(f"`{sea}`" for sea in ssea))
+            if not nbugs and not nfish and not nsea and not sbugs and not sfish and not ssea:
+                e = funcs.errorEmbed(None, "Invalid month.")
+            e.set_footer(
+                text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " + \
+                     f"{self.client.command_prefix}acsea for specific critter information."
+            )
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         return e
 
     async def furnitureEmbed(self, ctx, ftype: str, name: str):
@@ -165,11 +176,6 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                                                 "particular month in Animal Crossing: New Horizons.",
                       aliases=["acn", "acarriving", "acarrive"], usage="[month]")
     async def acnew(self, ctx, month=""):
-        month = month or str(datetime.now().month)
-        try:
-            _ = int(month)
-        except ValueError:
-            month = funcs.monthNameToNumber(month)
         await ctx.send(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -177,11 +183,6 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                                                     "particular month in Animal Crossing: New Horizons.",
                       aliases=["acl", "acleave"], usage="[month]")
     async def acleaving(self, ctx, month=""):
-        month = month or str(datetime.now().month)
-        try:
-            _ = int(month)
-        except ValueError:
-            month = funcs.monthNameToNumber(month)
         await ctx.send(embed=self.crittersListEmbed(month, mode=-1))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
