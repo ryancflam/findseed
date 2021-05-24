@@ -846,6 +846,58 @@ class Utility(commands.Cog, name="Utility"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         await ctx.send("Characters: **{:,}**\nWords: **{:,}**".format(len(inp), len(inp.split())))
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="country", description="Shows information about a country.",
+                      aliases=["location", "loc", "countries", "place"], usage="<country name OR code>")
+    async def country(self, ctx, *, country):
+        try:
+            try:
+                res = await funcs.getRequest("https://restcountries.eu/rest/v2/name/" + country.casefold().replace("_", ""))
+                data = res.json()
+                if len(data) > 1:
+                    await ctx.send(
+                        "`Please select a number: " + \
+                        f"{', '.join(str(var) + ' (' + data[var]['name'] + ')' for var in range(len(data)))}`"
+                    )
+                    try:
+                        pchoice = await self.client.wait_for(
+                            "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=20
+                        )
+                        pchoice = int(pchoice.content) if -1 < int(pchoice.content) < len(data) else 0
+                    except (TimeoutError, ValueError):
+                        pchoice = 0
+                else:
+                    pchoice = 0
+                data = data[pchoice]
+            except Exception:
+                res = await funcs.getRequest("https://restcountries.eu/rest/v2/alpha/" + country.casefold().replace("_", ""))
+                data = res.json()
+            lat = data['latlng'][0]
+            long = data['latlng'][1]
+            e = Embed(title=f"{data['name']} ({data['alpha3Code']})")
+            e.set_thumbnail(url=f"https://www.countryflags.io/{data['alpha2Code']}/flat/64.png")
+            e.add_field(name="Native Name", value=f"`{data['nativeName']}`")
+            e.add_field(name="Population", value="`{:,}`".format(data["population"]))
+            e.add_field(name="Demonym", value=f"`{data['demonym']}`")
+            e.add_field(
+                name="Local Currency", value=", ".join(f"`{c['name']} ({c['code']} {c['symbol']})`" for c in data["currencies"])
+            )
+            e.add_field(name="Gini Coefficient", value="`{:,}`".format(round(data["gini"] / 100, 3)))
+            e.add_field(name="Capital", value=f"`{data['capital']}`")
+            e.add_field(
+                name="Coordinates",
+                value=f"`{str(round(lat, 2)).replace('-', '')}° {'N' if lat > 0 else 'S'}, " + \
+                      f"{str(round(long, 2)).replace('-', '')}° {'E' if long > 0 else 'W'}`"
+            )
+            e.add_field(name="Region", value=f"`{data['region']} ({data['subregion']})`")
+            e.add_field(name="Area", value="`{:,} km² / {:,} mi²`".format(int(data["area"]), int(data["area"] * 0.386102159)))
+            e.add_field(name="Calling Code", value=", ".join(f"`+{code}`" for code in data["callingCodes"]))
+            e.add_field(name="Top Level Domain", value=", ".join(f"`{dom}`" for dom in data["topLevelDomain"]))
+            e.add_field(name="Time Zones", value=", ".join(f"`{tz}`" for tz in data["timezones"]))
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid search or server error.")
+        await ctx.send(embed=e)
+
 
 def setup(client: commands.Bot):
     client.add_cog(Utility(client))

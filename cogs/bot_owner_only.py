@@ -102,7 +102,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except ValueError:
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
 
-    @commands.command(name="code", description="Returns statistics about the bot source code.", aliases=["sloc", "loc"])
+    @commands.command(name="code", description="Returns statistics about the bot source code.", aliases=["sloc"])
     @commands.is_owner()
     async def code(self, ctx):
         await ctx.send("Getting repository code statistics. Please wait...")
