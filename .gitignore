@@ -1,6 +1,7 @@
 requirementsgen.bat
 config.py
 cogs/testcog.py
+cogs/easter_eggs.py
 data/*
 !data/.gitkeep
 .idea/
