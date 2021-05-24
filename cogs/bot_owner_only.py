@@ -242,7 +242,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                 result = f"{stdout.getvalue()}"
                 e = discord.Embed(description=funcs.formatting(str(result)))
                 if obj:
-                    e.add_field(name="Returned", value=funcs.formatting(str(obj)))
+                    e.add_field(name="Returned", value=funcs.formatting(str(obj), limit=1024))
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)

@@ -49,7 +49,7 @@ def errorEmbed(error, message):
 
 
 def formatting(text, limit: int=2048):
-    output = "```\n" + text[:limit - 6] + "```"
+    output = "```\n" + text[:limit - 7] + "```"
     if output == "``````":
         raise Exception
     return output
