@@ -882,7 +882,8 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(
                 name="Local Currency", value=", ".join(f"`{c['name']} ({c['code']} {c['symbol']})`" for c in data["currencies"])
             )
-            e.add_field(name="Gini Coefficient", value="`{:,}`".format(round(data["gini"] / 100, 3)))
+            if data["gini"]:
+                e.add_field(name="Gini Coefficient", value="`{:,}`".format(round(data["gini"] / 100, 3)))
             e.add_field(name="Capital", value=f"`{data['capital']}`")
             e.add_field(
                 name="Coordinates",
