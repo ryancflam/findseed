@@ -33,10 +33,10 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         else:
             return randint(0, 255)
 
-    @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text>",
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
                       description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
-                                  "Translation may sometimes fail.",
+                                  "Translation may sometimes fail due to rate limit.",
                       aliases=["lc", "lj", "lk", "literaljapanese", "literalkorean"])
     async def literalhanzi(self, ctx, *, inp):
         res = ""
@@ -50,9 +50,10 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="literalenglish", aliases=["le"], usage="<English text>",
-                      description="Literally translates English words to Chinese one by one. Translation may sometimes fail.")
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="literalenglish", aliases=["le"], usage="<English text (10 words or less)>",
+                      description="Literally translates English words to Chinese one by one. " + \
+                                  "Translation may sometimes fail due to rate limit.")
     async def literalenglish(self, ctx, *, inp):
         res = ""
         try:

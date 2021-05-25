@@ -264,7 +264,7 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Unknown location or server error.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 15, commands.BucketType.user)
     @commands.command(name="translate", description="Translates text to a different language. Translation may sometimes fail.",
                       aliases=["t", "translator", "trans", "tr", "translation"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text):
