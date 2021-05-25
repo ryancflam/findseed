@@ -4,6 +4,7 @@ from time import time
 
 from discord import Colour, Embed, Member
 from discord.ext import commands
+from googletrans import Translator
 
 from other_utils import funcs
 from other_utils.playing_cards import PlayingCards
@@ -31,6 +32,36 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                 return randint(0, 255)
         else:
             return randint(0, 255)
+
+    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.command(name="literalkanji", aliases=["lc", "kanji", "lk", "literalchinese"], usage="<kanji text>",
+                      description="Literally translates kanji characters to English one by one. Translation may sometimes fail.")
+    async def literalkanji(self, ctx, *, inp):
+        res = ""
+        try:
+            inplist = list(inp.replace(" ", ""))[:50]
+            output = Translator().translate(inplist, dest="en")
+            for t in output:
+                res += f"{t.text} "
+            e = Embed(title="Literal Kanji", description=funcs.formatting(res))
+        except Exception:
+            e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.command(name="literalenglish", aliases=["le"], usage="<English text>",
+                      description="Literally translates English words to Chinese one by one. Translation may sometimes fail.")
+    async def literalenglish(self, ctx, *, inp):
+        res = ""
+        try:
+            inplist = inp.split()[:50]
+            output = Translator().translate(inplist, dest="zh-tw")
+            for t in output:
+                res += t.text
+            e = Embed(title="Literal English", description=funcs.formatting(res))
+        except Exception:
+            e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
@@ -327,7 +358,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="lovecalc", description="Calculates the love percentage between two things or users.",
-                      aliases=["love", "lovecalculator", "lc"], usage="<input> [input]")
+                      aliases=["love", "lovecalculator", "calclove"], usage="<input> [input]")
     async def lovecalc(self, ctx, first: str="", second: str=""):
         if not first:
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))

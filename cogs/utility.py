@@ -1,7 +1,7 @@
 from asyncio import sleep, TimeoutError
 from datetime import datetime
 from json import dumps
-from random import choice
+from random import choice, randint
 from time import time
 from urllib.parse import quote
 
@@ -264,26 +264,22 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Unknown location or server error.")
         await ctx.send(embed=e)
 
-    # Partially not working
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="translate", description="Translates text to a different language.", hidden=True,
+    @commands.command(name="translate", description="Translates text to a different language. Translation may sometimes fail.",
                       aliases=["t", "translator", "trans", "tr"], usage="<language code to translate to> <input>")
-    async def translate(self, ctx, dest=None, *, text: str=""):
-        if not dest:
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
-        else:
-            try:
-                if dest.casefold() not in constants.LANGUAGES.keys():
-                    e = funcs.errorEmbed(
-                        "Invalid language code!",
-                        f"See [this](https://github.com/ssut/py-googletrans/blob/master/googletrans/constants.py)" + \
-                        " for a list of language codes. (Scroll down for `LANGUAGES`)"
-                    )
-                else:
-                    output = Translator().translate(text.casefold(), dest=dest.casefold()).text
-                    e = Embed(title="Translate", description=funcs.formatting(output))
-            except Exception:
-                e = funcs.errorEmbed(None, "An error occurred. Invalid input?")
+    async def translate(self, ctx, dest=None, *, text):
+        try:
+            if dest.casefold() not in constants.LANGUAGES.keys():
+                e = funcs.errorEmbed(
+                    "Invalid language code!",
+                    f"See [this](https://github.com/ssut/py-googletrans/blob/master/googletrans/constants.py)" + \
+                    " for a list of language codes. (Scroll down for `LANGUAGES`)"
+                )
+            else:
+                output = Translator().translate(text.casefold(), dest=dest.casefold()).text
+                e = Embed(title="Translate", description=funcs.formatting(output))
+        except Exception:
+            e = funcs.errorEmbed(None, "An error occurred. Invalid input?")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -376,83 +372,75 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
                       aliases=["lyric"], usage="<song keywords>")
-    async def lyrics(self, ctx, *, keywords: str=""):
-        if keywords == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
-            await ctx.send(embed=e)
-        else:
-            try:
-                await ctx.send("Getting lyrics. Please wait...")
-                url = "https://some-random-api.ml/lyrics"
-                res = await funcs.getRequest(url, params={"title": keywords})
-                data = res.json()
-                thumbnail = data["thumbnail"]["genius"]
-                link = data["links"]["genius"]
-                originallyric = data["lyrics"].replace("*", "\*").replace("_", "\_")
-                lyric2 = originallyric[:2048]
-                title = data["title"].replace("*", "\*").replace("_", "\_")
-                author = data["author"].replace("*", "\*").replace("_", "\_")
-                e = Embed(description=lyric2, title=f"{author} - {title}")
-                e.set_thumbnail(url=thumbnail)
-                e.add_field(name="Genius Link", value=link)
-                page = 1
-                allpages = (len(originallyric) - 1) // 2048 + 1
-                e.set_footer(text=f"Page {page} of {allpages}")
-                msg = await ctx.send(embed=e)
-                if originallyric != lyric2:
-                    await msg.add_reaction("⏮")
-                    await msg.add_reaction("⏭")
-                    while True:
+    async def lyrics(self, ctx, *, keywords):
+        try:
+            await ctx.send("Getting lyrics. Please wait...")
+            url = "https://some-random-api.ml/lyrics"
+            res = await funcs.getRequest(url, params={"title": keywords})
+            data = res.json()
+            thumbnail = data["thumbnail"]["genius"]
+            link = data["links"]["genius"]
+            originallyric = data["lyrics"].replace("*", "\*").replace("_", "\_")
+            lyric2 = originallyric[:2048]
+            title = data["title"].replace("*", "\*").replace("_", "\_")
+            author = data["author"].replace("*", "\*").replace("_", "\_")
+            e = Embed(description=lyric2, title=f"{author} - {title}")
+            e.set_thumbnail(url=thumbnail)
+            e.add_field(name="Genius Link", value=link)
+            page = 1
+            allpages = (len(originallyric) - 1) // 2048 + 1
+            e.set_footer(text=f"Page {page} of {allpages}")
+            msg = await ctx.send(embed=e)
+            if originallyric != lyric2:
+                await msg.add_reaction("⏮")
+                await msg.add_reaction("⏭")
+                while True:
+                    try:
+                        reaction, user = await self.client.wait_for(
+                            "reaction_add",
+                            check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(
+                                reaction.emoji
+                            ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
+                        )
+                    except TimeoutError:
                         try:
-                            reaction, user = await self.client.wait_for(
-                                "reaction_add",
-                                check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(
-                                    reaction.emoji
-                                ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
-                            )
-                        except TimeoutError:
-                            try:
-                                await msg.clear_reactions()
-                            except:
-                                pass
-                            return
-                        success = False
-                        if str(reaction.emoji) == "⏭":
-                            await funcs.reactionRemove(reaction, user)
-                            if page < allpages:
-                                page += 1
-                                success = True
-                        else:
-                            await funcs.reactionRemove(reaction, user)
-                            if page > 1:
-                                page -= 1
-                                success = True
-                        if success:
-                            start = 2048 * (page - 1)
-                            limit = start + 2048
-                            newlyric = originallyric[start:limit]
-                            edited = Embed(description=newlyric, title=f"{author} - {title}")
-                            edited.set_thumbnail(url=thumbnail)
-                            edited.add_field(name="Genius Link", value=link)
-                            edited.set_footer(text=f"Page {page} of {allpages}")
-                            await msg.edit(embed=edited)
-            except Exception:
-                e = funcs.errorEmbed(None, "Invalid keywords or server error.")
-                await ctx.send(embed=e)
+                            await msg.clear_reactions()
+                        except:
+                            pass
+                        return
+                    success = False
+                    if str(reaction.emoji) == "⏭":
+                        await funcs.reactionRemove(reaction, user)
+                        if page < allpages:
+                            page += 1
+                            success = True
+                    else:
+                        await funcs.reactionRemove(reaction, user)
+                        if page > 1:
+                            page -= 1
+                            success = True
+                    if success:
+                        start = 2048 * (page - 1)
+                        limit = start + 2048
+                        newlyric = originallyric[start:limit]
+                        edited = Embed(description=newlyric, title=f"{author} - {title}")
+                        edited.set_thumbnail(url=thumbnail)
+                        edited.add_field(name="Genius Link", value=link)
+                        edited.set_footer(text=f"Page {page} of {allpages}")
+                        await msg.edit(embed=edited)
+        except Exception:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr"],
                       usage="<input>")
-    async def qrgen(self, ctx, *, text: str=""):
-        if text == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
-        else:
-            try:
-                e = Embed(title="QR Code").set_image(
-                    url=f"http://api.qrserver.com/v1/create-qr-code/?data={quote(text)}&margin=25"
-                )
-            except Exception:
-                e = funcs.errorEmbed(None, "Invalid input or server error?")
+    async def qrgen(self, ctx, *, text):
+        try:
+            e = Embed(title="QR Code").set_image(
+                url=f"http://api.qrserver.com/v1/create-qr-code/?data={quote(text)}&margin=25"
+            )
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid input or server error?")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -643,10 +631,11 @@ class Utility(commands.Cog, name="Utility"):
             if not terms:
                 e = funcs.errorEmbed(None, "Unknown term.")
             else:
-                example = terms[0]["example"].replace("[", "").replace("]", "")
-                definition = terms[0]["definition"].replace("[", "").replace("]", "")
-                permalink = terms[0]["permalink"]
-                word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
+                rdm = randint(0, len(terms) - 1)
+                example = terms[rdm]["example"].replace("[", "").replace("]", "")
+                definition = terms[rdm]["definition"].replace("[", "").replace("]", "")
+                permalink = terms[rdm]["permalink"]
+                word = terms[rdm]["word"].replace("*", "\*").replace("_", "\_")
                 e = Embed(description=permalink)
                 e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                         "669142387330777115/urban-dictionary-android.png")
@@ -654,9 +643,9 @@ class Utility(commands.Cog, name="Utility"):
                 if example:
                     e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
                 e.set_footer(
-                    text=f"Submitted by {terms[0]['author']} | Approval rate: " + \
-                         f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                         f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎)"
+                    text=f"Submitted by {terms[rdm]['author']} | Approval rate: " + \
+                         f"{round(terms[rdm]['thumbs_up'] / (terms[rdm]['thumbs_up'] + terms[rdm]['thumbs_down']) * 100, 2)}" + \
+                         f"% ({terms[rdm]['thumbs_up']} 👍 - {terms[rdm]['thumbs_down']} 👎)"
                 )
         await ctx.send(embed=e)
 
