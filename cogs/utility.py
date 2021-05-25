@@ -124,6 +124,7 @@ class Utility(commands.Cog, name="Utility"):
                                                        "\n({}%)`".format(round(int(total['active_cases']
                                                            .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
                                                            .replace(',', '').replace('N/A', '0')) * 100, 2)))
+                e.add_field(name="Critical Cases", value=f"`{total['serious_critical']}`")
             e.add_field(name="New Cases Today", value=f"`{total['new_cases']}`")
             e.add_field(name="New Deaths Today", value=f"`{total['new_deaths']}`")
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
@@ -265,7 +266,8 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 15, commands.BucketType.user)
-    @commands.command(name="translate", description="Translates text to a different language. Translation may sometimes fail.",
+    @commands.command(name="translate", description="Translates text to a different language. " + \
+                                                    "Translation may sometimes fail due to rate limit.",
                       aliases=["t", "translator", "trans", "tr", "translation"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text):
         try:
@@ -884,6 +886,7 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(name="Calling Code", value=", ".join(f"`+{code}`" for code in data["callingCodes"]))
             e.add_field(name="Top Level Domain", value=", ".join(f"`{dom}`" for dom in data["topLevelDomain"]))
             e.add_field(name="Time Zones", value=", ".join(f"`{tz}`" for tz in data["timezones"]))
+            e.set_footer(text="Note: The data provided may not be 100% accurate.")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid search or server error.")
         await ctx.send(embed=e)
