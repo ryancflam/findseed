@@ -883,15 +883,15 @@ class Utility(commands.Cog, name="Utility"):
                 name="Local Currency", value=", ".join(f"`{c['name']} ({c['code']} {c['symbol']})`" for c in data["currencies"])
             )
             if data["gini"]:
-                e.add_field(name="Gini Coefficient", value="`{:,}`".format(round(data["gini"] / 100, 3)))
+                e.add_field(name="Gini Coefficient", value=f"`{round(data['gini'] / 100, 3)}`")
             e.add_field(name="Capital", value=f"`{data['capital']}`")
             e.add_field(
                 name="Coordinates",
-                value=f"`{str(round(lat, 2)).replace('-', '')}° {'N' if lat > 0 else 'S'}, " + \
-                      f"{str(round(long, 2)).replace('-', '')}° {'E' if long > 0 else 'W'}`"
+                value=f"`{str(round(lat, 2)).replace('-', '')}°{'N' if lat > 0 else 'S'}, " + \
+                      f"{str(round(long, 2)).replace('-', '')}°{'E' if long > 0 else 'W'}`"
             )
             e.add_field(name="Region", value=f"`{data['region']} ({data['subregion']})`")
-            e.add_field(name="Area", value="`{:,} km² / {:,} mi²`".format(int(data["area"]), int(data["area"] * 0.386102159)))
+            e.add_field(name="Land Area", value="`{:,} km² / {:,} mi²`".format(int(data["area"]), int(data["area"] * 0.386102159)))
             e.add_field(name="Calling Code", value=", ".join(f"`+{code}`" for code in data["callingCodes"]))
             e.add_field(name="Top Level Domain", value=", ".join(f"`{dom}`" for dom in data["topLevelDomain"]))
             e.add_field(name="Time Zones", value=", ".join(f"`{tz}`" for tz in data["timezones"]))
