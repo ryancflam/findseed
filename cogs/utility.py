@@ -266,7 +266,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="translate", description="Translates text to a different language. Translation may sometimes fail.",
-                      aliases=["t", "translator", "trans", "tr"], usage="<language code to translate to> <input>")
+                      aliases=["t", "translator", "trans", "tr", "translation"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text):
         try:
             if dest.casefold() not in constants.LANGUAGES.keys():
@@ -277,7 +277,7 @@ class Utility(commands.Cog, name="Utility"):
                 )
             else:
                 output = Translator().translate(text.casefold(), dest=dest.casefold()).text
-                e = Embed(title="Translate", description=funcs.formatting(output))
+                e = Embed(title="Translation", description=funcs.formatting(output))
         except Exception:
             e = funcs.errorEmbed(None, "An error occurred. Invalid input?")
         await ctx.send(embed=e)

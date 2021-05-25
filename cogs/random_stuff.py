@@ -34,16 +34,18 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             return randint(0, 255)
 
     @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="literalkanji", aliases=["lc", "kanji", "lk", "literalchinese"], usage="<kanji text>",
-                      description="Literally translates kanji characters to English one by one. Translation may sometimes fail.")
-    async def literalkanji(self, ctx, *, inp):
+    @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text>",
+                      description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
+                                  "Translation may sometimes fail.",
+                      aliases=["lc", "lj", "lk", "literaljapanese", "literalkorean"])
+    async def literalhanzi(self, ctx, *, inp):
         res = ""
         try:
-            inplist = list(inp.replace(" ", ""))[:50]
+            inplist = list(inp.replace(" ", ""))[:10]
             output = Translator().translate(inplist, dest="en")
             for t in output:
                 res += f"{t.text} "
-            e = Embed(title="Literal Kanji", description=funcs.formatting(res))
+            e = Embed(title="Literal Chinese", description=funcs.formatting(res))
         except Exception:
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
         await ctx.send(embed=e)
@@ -54,7 +56,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     async def literalenglish(self, ctx, *, inp):
         res = ""
         try:
-            inplist = inp.split()[:50]
+            inplist = inp.split()[:10]
             output = Translator().translate(inplist, dest="zh-tw")
             for t in output:
                 res += t.text
