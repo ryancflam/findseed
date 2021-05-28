@@ -93,7 +93,11 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
             data = res.json()
             if len(data) > 1:
-                await ctx.send(f"`Please select a variant: {', '.join(str(var) for var in range(len(data)))}`")
+                await ctx.send(
+                    "`Please select a number: {}`".format(
+                        ", ".join(f"{str(var)} ({data[var]['variant']})" for var in range(len(data)))
+                    )
+                )
                 try:
                     pchoice = await self.client.wait_for(
                         "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=20

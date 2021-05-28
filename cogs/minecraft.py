@@ -624,14 +624,16 @@ class Minecraft(commands.Cog, name="Minecraft"):
     async def divinetravel(self, ctx, *, option: str=""):
         if option:
             try:
-                await ctx.send(f"`{self.divinetravel[option.casefold().replace(' ', '')]}`")
+                res = self.divinetravel[option.casefold().replace(" ", "")].split(" | ")
+                e = Embed(title="Divine Travel: " + option.casefold().replace(" ", ""))
+                for i in range(len(res)):
+                    e.add_field(name=f"Stronghold {str(i + 1)}", value=f"`{res[i].split(': ')[1]}`")
             except KeyError:
-                await ctx.send(
-                    embed=funcs.errorEmbed(
+                e = funcs.errorEmbed(
                         "Invalid option!",
                         "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.divinetravel.keys()))
-                    )
                 )
+            await ctx.send(embed=e)
         else:
             url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
             await funcs.sendImage(
