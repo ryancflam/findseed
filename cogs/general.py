@@ -85,8 +85,10 @@ class General(commands.Cog, name="General"):
                 if value:
                     e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
         else:
-            if self.client.get_command(cmd[0].replace(prefix, "")):
+            try:
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
+                if command.hidden:
+                    raise Exception()
                 name = command.name
                 usage = command.usage
                 aliases = sorted(command.aliases)
@@ -98,7 +100,7 @@ class General(commands.Cog, name="General"):
                     e.add_field(
                         name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
                     )
-            else:
+            except Exception:
                 e = funcs.errorEmbed(None, "Unknown command.")
         await ctx.send(embed=e)
 

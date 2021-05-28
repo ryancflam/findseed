@@ -30,8 +30,10 @@ class Errors(commands.Cog, name="Errors", command_attrs=dict(hidden=True)):
             )
         elif isinstance(error, commands.UserInputError):
             await ctx.send(
-                embed=funcs.errorEmbed("Invalid arguments!", "Correct usage: " + \
-                                       f"`{self.client.command_prefix}{ctx.command.name} {ctx.command.usage}`")
+                embed=funcs.errorEmbed(
+                    "Invalid arguments!", "Correct usage: " + \
+                    f"`{self.client.command_prefix}{ctx.command.name} {ctx.command.usage}`"
+                ).set_footer(text="Command usage: <> = Required; [] = Optional")
             )
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send(
