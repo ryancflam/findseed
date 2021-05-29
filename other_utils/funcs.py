@@ -11,15 +11,15 @@ def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
 
 
-def readJson(path):
-    with open(f"{getPath()}/{path}", "r", encoding="utf-8") as f:
+def readJson(pathstr):
+    with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
         data = load(f)
     f.close()
     return data
 
 
-def dumpJson(path, data):
-    with open(f"{getPath()}/{path}", "w") as f:
+def dumpJson(pathstr, data):
+    with open(f"{getPath()}/{pathstr}", "w") as f:
         dump(data, f, sort_keys=True, indent=4)
     f.close()
 
@@ -111,11 +111,11 @@ def celsiusToFahrenheit(value):
     return value * 9 / 5 + 32
 
 
-def timeStrToDatetime(date: str):
-    dateFilter = date.split(".")
+def timeStrToDatetime(datestr: str):
+    dateFilter = datestr.split(".")
     if len(dateFilter) > 1:
-        date = dateFilter[0] + "Z"
-    dateObj = datetime.strptime(date.replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+        datestr = dateFilter[0] + "Z"
+    dateObj = datetime.strptime(datestr.replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
     return f"{dateObj.date()} {dateObj.time()}"
 
 

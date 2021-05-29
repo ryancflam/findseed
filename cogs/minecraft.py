@@ -639,7 +639,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
             await funcs.sendImage(
                 ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
                                   "841792714822909972/divine_travel_stuff_.pdf" + \
-                                  "\n\nCredit:\n<https://twitter.com/olive_was_here>\n<https://twitter.com/beljelb>"
+                                  "\n\nMore info:\n<https://www.youtube.com/watch?v=IKo-jrZSgWU>\n<https://www.youtube.com" + \
+                                  "/watch?v=SXem01c44-I>\n\nCredit:\n<https://twitter.com/olive_was_here>" + \
+                                  "\n<https://twitter.com/beljelb>"
             )
 
 
