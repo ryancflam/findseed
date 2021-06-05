@@ -175,21 +175,21 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             )
         return e
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
                                                 "particular month in Animal Crossing: New Horizons.",
                       aliases=["acn", "acarriving", "acarrive"], usage="[month]")
     async def acnew(self, ctx, month=""):
         await ctx.send(embed=self.crittersListEmbed(month))
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
                                                     "particular month in Animal Crossing: New Horizons.",
                       aliases=["acl", "acleave"], usage="[month]")
     async def acleaving(self, ctx, month=""):
         await ctx.send(embed=self.crittersListEmbed(month, mode=-1))
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
                       aliases=["art", "acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="<artwork name>")
     async def acart(self, ctx, *, art):
@@ -205,7 +205,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acbug", description="Shows information about an Animal Crossing: New Horizons bug.",
                       aliases=["bug", "acnhbug", "acb"], usage="<bug name>")
     async def acbug(self, ctx, *, bug):
@@ -239,7 +239,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acfish", description="Shows information about an Animal Crossing: New Horizons fish.",
                       aliases=["fish", "acnhfish", "acf"], usage="<fish name>")
     async def acfish(self, ctx, *, fish):
@@ -272,7 +272,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acfossil", description="Shows information about an Animal Crossing: New Horizons fossil.",
                       aliases=["acnhfossil", "acfossils", "acnhfossils"], usage="<fossil name>")
     async def acfossil(self, ctx, *, fossil):
@@ -288,7 +288,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acpersonality", usage="[personality type]",
                       aliases=["acp", "acnhpersonality", "acpersonalities", "acnhpersonalities"],
                       description="Shows information about an Animal Crossing: New Horizons villager personality.")
@@ -316,7 +316,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acsea", description="Shows information about an Animal Crossing: New Horizons sea creature.",
                       aliases=["sea", "acnhsea", "sc", "acsc", "acnhsc", "acs"], usage="<sea creature name>")
     async def acsea(self, ctx, *, sea):
@@ -342,7 +342,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvillager", description="Shows information about an Animal Crossing: New Horizons villager.",
                       aliases=["villager", "acnhvillager", "acv", "vil", "acvil", "acnhvil"], usage="<villager name>")
     async def acvillager(self, ctx, *, villager):
