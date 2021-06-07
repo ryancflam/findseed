@@ -891,6 +891,12 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Invalid search or server error.")
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="normalbodytemp", description="Shows the normal body temperature range chart.",
+                      aliases=["bodytemp", "nbt"])
+    async def normalbodytemp(self, ctx):
+        await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
+
 
 def setup(client: commands.Bot):
     client.add_cog(Utility(client))

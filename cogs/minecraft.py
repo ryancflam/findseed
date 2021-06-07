@@ -506,15 +506,17 @@ class Minecraft(commands.Cog, name="Minecraft"):
             e.set_author(name="Minecraft Speedrun World Records - Solo Any% Glitchless",
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103816761114624/mc.png")
             urls = [
-                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=gq7zo9p1",
-                "mkeyl926?var-r8rg67rn=klrzpjo1&var-wl33kewl=21go6e6q",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=gq7zo9p1",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=21go6e6q",
-                "mkeyl926?var-r8rg67rn=21d4zvp1&var-wl33kewl=4qye4731"
+                "klrzpjo1&var-wl33kewl=gq7zo9p1",
+                "klrzpjo1&var-wl33kewl=21go6e6q",
+                "klrzpjo1&var-wl33kewl=4qye4731",
+                "21d4zvp1&var-wl33kewl=gq7zo9p1",
+                "21d4zvp1&var-wl33kewl=21go6e6q",
+                "21d4zvp1&var-wl33kewl=4qye4731"
             ]
             categories = [
                 "Set Seed Glitchless (Pre-1.9)",
-                "Set Seed Glitchless (1.9+)",
+                "Set Seed Glitchless (1.9-1.15)",
+                "Set Seed Glitchless (1.16+)",
                 "Random Seed Glitchless (Pre-1.9)",
                 "Random Seed Glitchless (1.9-1.15)",
                 "Random Seed Glitchless (1.16+)"
@@ -522,7 +524,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
             count = 0
             for category in urls:
                 res = await funcs.getRequest(
-                    "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/" + category
+                    "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=" + category
                 )
                 wrdata = res.json()["data"]["runs"][0]["run"]
                 igt = wrdata["times"]["ingame_t"]
