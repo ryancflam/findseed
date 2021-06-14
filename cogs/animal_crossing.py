@@ -21,6 +21,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         self.fossils = funcs.readJson("assets/animal_crossing/fossils.json")
         self.personalities = funcs.readJson("assets/animal_crossing/personalities.json")
         self.sea = funcs.readJson("assets/animal_crossing/sea_creatures.json")
+        self.species = funcs.readJson("assets/animal_crossing/species.json")
         self.villagers = funcs.readJson("assets/animal_crossing/villagers.json")
 
     @staticmethod
@@ -369,8 +370,29 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
             e.add_field(name="Hobby", value=f"`{villagerdata['hobby']}`")
             e.add_field(name="Initial Phrase", value='`"{}"`'.format(villagerdata["catch-phrase"]))
+            prob = len(list(self.species.keys())) * self.species[villagerdata["species"]]
+            e.add_field(inline=False, name="NMT Probability", value="`1 in {:,}`".format(prob))
         except Exception as ex:
             e = funcs.errorEmbed(None, f"An error occurred - {ex}")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="acspecies", description="Shows information about an Animal Crossing: New Horizons villager species.",
+                      aliases=["species"])
+    async def acspecies(self, ctx, *, species):
+        try:
+            species = species.replace(" ", "").title()
+            value = self.species[species]
+            e = Embed(title=species)
+            e.set_thumbnail(url=AC_LOGO)
+            e.add_field(name="Total Villagers", value=f"`{value}`")
+            prob = len(list(self.species.keys())) * value
+            e.add_field(inline=False, name="Villager NMT Probability", value="`1 in {:,}`".format(prob))
+        except KeyError:
+            e = funcs.errorEmbed(
+                    "Invalid option!",
+                    "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.species.keys()))
+            )
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
