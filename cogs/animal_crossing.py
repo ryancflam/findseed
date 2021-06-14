@@ -379,7 +379,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acspecies", description="Shows information about an Animal Crossing: New Horizons villager species.",
                       aliases=["species"])
-    async def acspecies(self, ctx, *, species):
+    async def acspecies(self, ctx, *, species: str=""):
         try:
             species = species.replace(" ", "").title()
             value = self.species[species]
