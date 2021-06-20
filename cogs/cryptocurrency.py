@@ -314,7 +314,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             )
         await ctx.send(embed=e, file=image)
         if path.exists(f"{funcs.getPath()}/temp/{imgName}"):
-            print(1)
             remove(f"{funcs.getPath()}/temp/{imgName}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)

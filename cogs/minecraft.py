@@ -215,7 +215,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
         )
         goodluckonein = 10
         gravel = randint(0, goodluckonein - 1)
-        print(gravel)
         e.add_field(name="Result", value=f"`{'Gravel' if gravel else 'Flint'}{'...' if gravel else '!'}`")
         e.set_thumbnail(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png")
         e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png" if gravel else
@@ -233,7 +232,6 @@ class Minecraft(commands.Cog, name="Minecraft"):
         )
         goodluckonein = 2
         rod = randint(0, goodluckonein - 1)
-        print(rod)
         e.add_field(name="Result", value=f"`{'Rod' if rod else 'No Rod'} Drop{'!' if rod else '...'}`")
         e.set_thumbnail(url="https://media.discordapp.net/attachments/771698457391136798/856213640809414666/blaze.png")
         e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856213641020178472/rod.png" if rod else
