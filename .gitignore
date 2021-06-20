@@ -3,6 +3,7 @@ config.py
 cogs/testcog.py
 cogs/easter_eggs.py
 data/*
+temp/*
 !data/.gitkeep
 .idea/
 */__pycache__

@@ -108,7 +108,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
         return self.coordsDist(coords1[0] - coords2[0], coords1[1] - coords2[1])
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="findseed", description="Everyone's favourite command.",
+    @commands.command(name="findseed", description="Everyone's favourite command. Test your luck using this command!",
                       aliases=["fs", "seed", "f", "s", "findseeds", "seeds"])
     async def findseed(self, ctx):
         eyes = self.randomEyes()
@@ -155,7 +155,8 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(msg)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="finddream", description="Can you get Dream's Minecraft speedrunning 'luck'?",
+    @commands.command(name="finddream", description="Can you get Dream's Minecraft speedrunning 'luck'? " + \
+                                                    "Test your luck using this command!",
                       aliases=["dl", "dream", "dreamsimulator", "d", "dreamsim", "dreamluck", "fd"])
     async def finddream(self, ctx):
         pearls, rods = 0, 0
@@ -184,6 +185,60 @@ class Minecraft(commands.Cog, name="Minecraft"):
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="findcleric", description="Will you get the ender pearl trade from the cleric, " + \
+                                                     "or will you get one-thirded? Test your luck using this command!",
+                      aliases=["cleric", "stupidvillager"])
+    async def findcleric(self, ctx):
+        e = Embed(
+            title=f"{self.client.command_prefix}findcleric",
+            description=f"Requested by: {ctx.message.author.mention}"
+        )
+        badluckonein = 3
+        pearl = randint(0, badluckonein - 1)
+        e.add_field(name="Result", value=f"`{'Pearl' if pearl else 'Bottle'} Trade{'!' if pearl else '...'}`")
+        e.set_thumbnail(url="https://media.discordapp.net/attachments/771404776410972161/856203578615529532/cleric.png")
+        e.set_image(url="https://media.discordapp.net/attachments/771404776410972161/856203574337601536/pearl.png" if pearl else
+                        "https://media.discordapp.net/attachments/771404776410972161/856203573113520138/bottle.png")
+        e.set_footer(text=f"Odds: {str(badluckonein - 1) if pearl else '1'}/{str(badluckonein)}")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="findgravel", description="Will you get flint from gravel? Test your luck using this command!",
+                      aliases=["gravel", "flint", "findflint"])
+    async def findgravel(self, ctx):
+        e = Embed(
+            title=f"{self.client.command_prefix}findgravel",
+            description=f"Requested by: {ctx.message.author.mention}"
+        )
+        goodluckonein = 10
+        gravel = randint(0, goodluckonein - 1)
+        print(gravel)
+        e.add_field(name="Result", value=f"`{'Gravel' if gravel else 'Flint'}{'...' if gravel else '!'}`")
+        e.set_thumbnail(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png")
+        e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png" if gravel else
+                        "https://media.discordapp.net/attachments/771698457391136798/856209843174244362/flint.png")
+        e.set_footer(text=f"Odds: {str(goodluckonein - 1) if gravel else '1'}/{str(goodluckonein)}")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="findblaze", description="You kill a blaze, but does it drop a rod? Test your luck using this command!",
+                      aliases=["blaze", "rod", "blazerod"])
+    async def findblaze(self, ctx):
+        e = Embed(
+            title=f"{self.client.command_prefix}findblaze",
+            description=f"Requested by: {ctx.message.author.mention}"
+        )
+        goodluckonein = 2
+        rod = randint(0, goodluckonein - 1)
+        print(rod)
+        e.add_field(name="Result", value=f"`{'Rod' if rod else 'No Rod'} Drop{'!' if rod else '...'}`")
+        e.set_thumbnail(url="https://media.discordapp.net/attachments/771698457391136798/856213640809414666/blaze.png")
+        e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856213641020178472/rod.png" if rod else
+                        "https://cdn.discordapp.com/attachments/771698457391136798/856213642173612032/norod.png")
+        e.set_footer(text=f"Odds: {str(goodluckonein - 1) if rod else '1'}/{str(goodluckonein)}")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)

@@ -48,10 +48,15 @@ class BotInstance(Bot):
             fobj.close()
             print(f"Generated file: {name}.json")
 
+    @staticmethod
+    def generateDir(name):
+        if not path.exists(f"{PATH}/{name}"):
+            makedirs(f"{PATH}/{name}")
+            print("Generated directory: " + name)
+
     def generateFiles(self):
-        if not path.exists(f"{PATH}/data"):
-            makedirs(f"{PATH}/data")
-            print("Generated directory: data")
+        self.generateDir("data")
+        self.generateDir("temp")
         self.generateJson(
             "findseed",
             {

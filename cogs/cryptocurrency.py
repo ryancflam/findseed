@@ -294,9 +294,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                             [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
                             index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
                         )
-                        plot(df, type=chartType, savefig=imgName, mav=mav, style=style, ylabel=f"Price ({fiat})",
-                             title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})")
-                        image = File(imgName)
+                        plot(df, type=chartType, savefig=f"{funcs.getPath()}/temp/{imgName}", ylabel=f"Price ({fiat})", mav=mav,
+                             title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})", style=style)
+                        image = File(f"{funcs.getPath()}/temp/{imgName}")
                         e.set_image(url=f"attachment://{imgName}")
                     except:
                         pass
@@ -313,8 +313,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
             )
         await ctx.send(embed=e, file=image)
-        if path.exists(imgName):
-            remove(imgName)
+        if path.exists(f"{funcs.getPath()}/temp/{imgName}"):
+            print(1)
+            remove(f"{funcs.getPath()}/temp/{imgName}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos", "top"],
