@@ -893,19 +893,23 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Invalid search or server error.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="normalbodytemp", description="Shows the normal body temperature range chart.",
                       aliases=["bodytemp", "nbt"])
     async def normalbodytemp(self, ctx):
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
 
+    @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(name="cite", description="Creates a citation from a DOI number.",
-                      aliases=["reference", "ref", "citation"], usage="<DOI number> [citation style]")
+                      aliases=["reference", "ref", "citation", "doi", "cit"], usage="<DOI number> [citation style]")
     async def cite(self, ctx, doi, style="apa"):
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" https://doi.org/{doi.replace("https://doi.org/", "")}'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
-            e = Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8").split("\n")[-2]))
+            res = obj.stdout.read().decode("utf-8").split("\n")[-2]
+            if res == "</html>":
+                raise Exception("Invalid DOI number or server error.")
+            e = Embed(description=funcs.formatting(res))
             obj.kill()
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
