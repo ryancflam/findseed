@@ -224,7 +224,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findblaze", description="You kill a blaze, but does it drop a rod? Test your luck using this command!",
-                      aliases=["blaze", "rod", "blazerod"])
+                      aliases=["blaze", "rod", "blazerod", "findrod", "findblazerod"])
     async def findblaze(self, ctx):
         e = Embed(
             title=f"{self.client.command_prefix}findblaze",

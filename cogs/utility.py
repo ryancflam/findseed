@@ -1,7 +1,9 @@
 from asyncio import sleep, TimeoutError
 from datetime import datetime
 from json import dumps
+from platform import system
 from random import choice, randint
+from subprocess import PIPE, Popen, STDOUT
 from time import time
 from urllib.parse import quote
 
@@ -896,6 +898,18 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["bodytemp", "nbt"])
     async def normalbodytemp(self, ctx):
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
+
+    @commands.command(name="cite", description="Creates a citation from a DOI number.",
+                      aliases=["reference", "ref", "citation"], usage="<DOI number> [citation style]")
+    async def cite(self, ctx, doi, style="apa"):
+        cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" https://doi.org/{doi.replace("https://doi.org/", "")}'
+        try:
+            obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
+            e = Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8").split("\n")[-2]))
+            obj.kill()
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
+        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):
