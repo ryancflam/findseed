@@ -907,7 +907,8 @@ class Utility(commands.Cog, name="Utility"):
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
             res = obj.stdout.read().decode("utf-8").split("\n")[-2]
-            if res == "</html>":
+            print(res[:3])
+            if res.startswith(("<", " ")) or '{"status"' in res:
                 raise Exception("Invalid DOI number or server error.")
             e = Embed(description=funcs.formatting(res))
             obj.kill()
