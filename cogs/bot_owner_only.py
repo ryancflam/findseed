@@ -410,6 +410,21 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
+    @commands.command(name="reply", description="Replies to a user message.", usage="<message ID> <channel ID> <message>")
+    @commands.is_owner()
+    async def reply(self, ctx, msgid, cid, *, output: str=""):
+        try:
+            output = output.replace("`", "")
+            ch = self.client.get_channel(int(cid))
+            msg = await ch.fetch_message(int(msgid))
+            user = self.client.get_user(msg.author.id)
+            original = msg.content[(12 + len(self.client.command_prefix)):]
+            await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}`")
+            await ctx.send(f"Reply sent.\n\nYour reply: ```{output}```\nUser: `{str(user)}`\nMessage ID: `{msgid}`\n" + \
+                           f"Channel ID: `{cid}`\nMessage: `{original}`")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
 
 def setup(client: commands.Bot):
     client.add_cog(BotOwnerOnly(client))

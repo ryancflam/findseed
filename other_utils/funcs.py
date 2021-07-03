@@ -1,7 +1,8 @@
 from datetime import date, datetime
 from io import BytesIO
-from json import dump, load
+from json import dump, load, JSONDecodeError
 from os import path
+from time import sleep
 
 from discord import Embed, File
 from httpx import AsyncClient, get
@@ -120,12 +121,16 @@ def timeStrToDatetime(datestr: str):
 
 
 def getTickers():
-    tickers = {}
-    res = get("https://api.coingecko.com/api/v3/coins/list")
-    data = res.json()
-    for i in data:
-        tickers[i["symbol"]] = i["id"]
-    return tickers
+    while True:
+        try:
+            tickers = {}
+            res = get("https://api.coingecko.com/api/v3/coins/list")
+            data = res.json()
+            for i in data:
+                tickers[i["symbol"]] = i["id"]
+            return tickers
+        except JSONDecodeError:
+            sleep(30)
 
 
 async def readTxt(message):

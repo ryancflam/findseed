@@ -87,7 +87,7 @@ class General(commands.Cog, name="General"):
         else:
             try:
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
-                if command.hidden:
+                if command.hidden and ctx.author != (await self.client.application_info()).owner:
                     raise Exception()
                 name = command.name
                 usage = command.usage
@@ -131,6 +131,22 @@ class General(commands.Cog, name="General"):
             funcs.dumpJson("data/unprompted_messages.json", data)
             return await ctx.send("`Disabled unprompted messages for this server.`")
         await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
+
+    @commands.cooldown(1, 120, commands.BucketType.user)
+    @commands.command(name="msgbotowner", description="Messages the bot owner.", usage="<message>")
+    async def msgbotowner(self, ctx, *, output: str=""):
+        try:
+            output = output.replace("`", "")
+            user = self.client.get_user((await self.client.application_info()).owner.id)
+            msgtoowner = f"**{str(ctx.author)} ({ctx.author.mention}) has left a message for you:**" + \
+                         f"\n\n```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`"
+            if len(msgtoowner) > 2000:
+                raise Exception("The message is too long.")
+            await user.send(msgtoowner)
+            await ctx.send(f"{ctx.author.mention} **You have left a message for the bot owner:**\n\n" + \
+                           f"```{output}```\nPlease ensure that your DMs are enabled and expect a reply soon.")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
 
 def setup(client: commands.Bot):
