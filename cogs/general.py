@@ -133,13 +133,15 @@ class General(commands.Cog, name="General"):
         await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
 
     @commands.cooldown(1, 120, commands.BucketType.user)
-    @commands.command(name="msgbotowner", description="Messages the bot owner.", usage="<message>")
+    @commands.command(name="msgbotowner", description="Sends a message to the bot owner. Spam will result in a blacklist.",
+                      usage="<message>")
     async def msgbotowner(self, ctx, *, output: str=""):
         try:
             output = output.replace("`", "")
             user = self.client.get_user((await self.client.application_info()).owner.id)
             msgtoowner = f"**{str(ctx.author)} ({ctx.author.mention}) has left a message for you:**" + \
-                         f"\n\n```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`"
+                         f"\n\n```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`" + \
+                         f"\nUser ID: `{ctx.author.id}`"
             if len(msgtoowner) > 2000:
                 raise Exception("The message is too long.")
             await user.send(msgtoowner)

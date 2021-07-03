@@ -418,10 +418,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             ch = self.client.get_channel(int(cid))
             msg = await ch.fetch_message(int(msgid))
             user = self.client.get_user(msg.author.id)
+            if "msgbotowner" not in msg.content.casefold():
+                raise Exception("Not a `msgbotowner` message!")
             original = msg.content[(12 + len(self.client.command_prefix)):]
-            await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}`")
-            await ctx.send(f"Reply sent.\n\nYour reply: ```{output}```\nUser: `{str(user)}`\nMessage ID: `{msgid}`\n" + \
-                           f"Channel ID: `{cid}`\nMessage: `{original}`")
+            await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}` ({ch.mention})")
+            await ctx.send(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" + \
+                           f" `{msgid}`\nChannel ID: `{cid}`\nMessage: `{original}`")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
