@@ -906,9 +906,12 @@ class Utility(commands.Cog, name="Utility"):
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" "https://doi.org/{doi.replace("https://doi.org/", "")}"'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
-            res = obj.stdout.read().decode("utf-8").split("\n")[-2]
-            if res.startswith(("<", " ")) or '{"status"' in res:
-                raise Exception("Invalid DOI number or server error.")
+            res = obj.stdout.read().decode("utf-8").split("\n")
+            res = "".join(i.replace("\n", "") for i in res[4:-1])
+            if res.startswith(("<", " ")) or '{"status"' in res or not res:
+                raise Exception("Invalid DOI number/citation style or server error.")
+            while "  " in res:
+                res = res.replace("  ", " ")
             e = Embed(description=funcs.formatting(res))
             obj.kill()
         except Exception as ex:
