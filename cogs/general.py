@@ -138,7 +138,7 @@ class General(commands.Cog, name="General"):
     async def msgbotowner(self, ctx, *, output: str=""):
         try:
             output = output.replace("`", "")
-            user = self.client.get_user((await self.client.application_info()).owner.id)
+            user = (await self.client.application_info()).owner
             msgtoowner = f"**{str(ctx.author)} ({ctx.author.mention}) has left a message for you:**" + \
                          f"\n\n```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`" + \
                          f"\nUser ID: `{ctx.author.id}`"

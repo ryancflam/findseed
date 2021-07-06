@@ -129,20 +129,19 @@ class BotInstance(Bot):
 
     async def on_ready(self):
         print(f"Logged in as: {self.user}")
+        await (await self.application_info()).owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
             await self.loop.create_task(self.bitcoin())
         else:
             await self.presence(self.__activityName)
 
     async def on_guild_join(self, server):
-        appinfo = await self.application_info()
-        await appinfo.owner.send(
+        await (await self.application_info()).owner.send(
             f"{self.user.name} has been added to `{server.name}`."
         )
 
     async def on_guild_remove(self, server):
-        appinfo = await self.application_info()
-        await appinfo.owner.send(
+        await (await self.application_info()).owner.send(
             f"{self.user.name} has been removed from `{server.name}`."
         )
 

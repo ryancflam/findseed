@@ -567,6 +567,35 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         e.set_image(url=f"https://www.colorhexa.com/{colour}.png")
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="choice", usage="<items separated with ;>",
+                      aliases=["shuffle", "list", "choose"], description="Picks a random item from a given list.")
+    async def choice(self, ctx, *, items):
+        try:
+            while items.startswith(";"):
+                items = items[1:]
+            while items.endswith(";"):
+                items = items[:-1]
+            while "  " in items:
+                items = items.replace("  ", " ")
+            while "; ;" in items:
+                items = items.replace("; ;", ";")
+            while ";;" in items:
+                items = items.replace(";;", ";")
+            itemslist = items.split(";")
+            if "" in itemslist:
+                raise Exception("Invalid input. Please separate the items with `;`.")
+            while " " in itemslist:
+                itemslist.remove(" ")
+            itemslist = [i.strip() for i in itemslist]
+            item = choice(itemslist)
+            e = Embed(title=f"{self.client.user.name} Chooses...",
+                      description=f"Requested by: {ctx.author.mention}\n{funcs.formatting(item)}")
+            e.add_field(name="Items ({:,})".format(len(itemslist)), value=", ".join(f"`{i}`" for i in sorted(itemslist)))
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
+        await ctx.send(embed=e)
+
 
 def setup(client: commands.Bot):
     client.add_cog(RandomStuff(client))
