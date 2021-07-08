@@ -908,6 +908,8 @@ class Utility(commands.Cog, name="Utility"):
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
             res = obj.stdout.read().decode("utf-8").split("\n")
+            if res[-1]:
+                res.append("")
             res = "".join(i.replace("\n", "") for i in res[4:-1])
             if res.startswith(("<", " ")) or '{"status"' in res or not res:
                 raise Exception("Invalid DOI number/citation style or server error.")
