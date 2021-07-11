@@ -13,3 +13,4 @@ ethGasStationKey = "" # https://docs.ethgasstation.info/
 bitmixRef = "" # https://bitmix.biz/en/pages/api
 redditClientID = "" # https://www.reddit.com/prefs/apps/
 redditClientSecret = "" # https://www.reddit.com/prefs/apps/
+deepAIKey = "" # https://deepai.org/dashboard/profile

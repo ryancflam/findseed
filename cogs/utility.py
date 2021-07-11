@@ -921,6 +921,23 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="textgen", description="Generates text based on your input.",
+                      aliases=["tg", "gentext", "text"], usage="<input>")
+    async def textgen(self, ctx, *, text=""):
+        try:
+            if text:
+                await ctx.send("Processing text. Please wait...")
+            data = {"text": text}
+            res = await funcs.postRequest(
+                "https://api.deepai.org/api/text-generator", data=data, headers={"api-key": config.deepAIKey}
+            )
+            data = res.json()
+            e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid input or server error.")
+        await ctx.send(embed=e)
+
 
 def setup(client: commands.Bot):
     client.add_cog(Utility(client))
