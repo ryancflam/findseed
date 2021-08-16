@@ -385,7 +385,12 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             value = self.species[species]
             e = Embed(title=species)
             e.set_thumbnail(url=AC_LOGO)
-            e.add_field(name="Total Villagers", value=f"`{value}`")
+            villagers = []
+            for i in list(self.villagers):
+                data = self.villagers[i]
+                if data["species"] == species:
+                    villagers.append(data["name"]["name-USen"].title())
+            e.add_field(name=f"Villagers ({value})", value=", ".join(f"`{i}`" for i in sorted(villagers)))
             prob = len(list(self.species.keys())) * value
             e.add_field(inline=False, name="Villager NMT Probability", value="`1 in {:,}`".format(prob))
         except KeyError:

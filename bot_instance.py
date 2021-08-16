@@ -135,16 +135,6 @@ class BotInstance(Bot):
         else:
             await self.presence(self.__activityName)
 
-    async def on_guild_join(self, server):
-        await (await self.application_info()).owner.send(
-            f"{self.user.name} has been added to `{server.name}`."
-        )
-
-    async def on_guild_remove(self, server):
-        await (await self.application_info()).owner.send(
-            f"{self.user.name} has been removed from `{server.name}`."
-        )
-
     async def on_message(self, message):
         if (await self.get_context(message)).valid and not self.is_ready() \
                 and userNotBlacklisted(self, message):
