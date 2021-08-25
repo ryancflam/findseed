@@ -16,7 +16,7 @@
             "Lazy",
             "Snooty"
         ],
-        "desc": "Jock is a starting villager personality type in the game along with sisterly. Jock villagers are obsessed with sports, talking frequently about their physical appearances and sporting progress and occasionally gossip. They brag quite a bit, usually about working out. They would encourage the player when given tasks and other things. Stereotypically, they are also not very smart, incessantly confusing themselves - calling the brain \"the Brian\", saying they are in a \"punch\" instead of pinch and failing to even grasp the concept of the game 'rock, paper, scissors'. They rarely talk about fashion, although they are somewhat similar to snooty villagers. They are the brother-like characters in the game, giving pep talks to the player and appearing competitive towards them and other villagers when they partake in town events."
+        "desc": "Jock is a starting villager personality type in the game along with sisterly. Jock villagers are obsessed with sports, talking frequently about their physical appearances and sporting progress and occasionally gossip. They brag quite a bit, usually about working out. They would encourage the player when given tasks and other things. Stereotypically, they are also not very smart. They are the brother-like characters in the game, giving pep talks to the player and appearing competitive towards them and other villagers when they partake in town events."
     },
     "cranky": {
         "name": "Cranky",
@@ -35,7 +35,7 @@
             "Sisterly",
             "Smug"
         ],
-        "desc": "Cranky characters can seem quite bitter and out-of-touch with social trends, making them generally unpopular with peppy villagers. They have the deepest voices of all the characters, and many of them appear to be glaring. They usually spend a small amount of their day in their houses, and most of the day out. They can seem self-centred at first glance, and often enjoy gossiping about lifestyles of other villagers, making them snobby as well as grouchy. They will act protective of the player when the player becomes friends with them and they will seem to disagree with most of the things that other villagers say."
+        "desc": "Cranky characters can seem quite bitter and out-of-touch with social trends, making them generally unpopular with peppy villagers. They have the deepest voices of all the characters, and many of them appear to be glaring. They can seem self-centred at first glance, and often enjoy gossiping about lifestyles of other villagers, making them snobby as well as grouchy. They will act protective of the player when the player becomes friends with them and they will seem to disagree with most of the things that other villagers say."
     },
     "lazy": {
         "name": "Lazy",
@@ -54,7 +54,7 @@
         "fight-with": [
             "Jock"
         ],
-        "desc": "Lazy villagers have a relaxed, easygoing, and naïve approach to living in the town. They are generally friendly and hospitable when interacting with the player and other villagers. They are fairly confident in themselves and their lifestyle, and you become good friends with a lazy villager, they will tell you their made-up stories usually relating to the player, like in dreams. Other times they will not tell you their stories because they fear you would not like them. They do not take insults most of the time but sometimes they can, though they are very friendly and open minded. They also tend to dramatise when sick, and they often pronounce 'medicine' as 'bedicine'. They will also sometimes make suggestive phrases to the player."
+        "desc": "Lazy villagers have a relaxed, easygoing, and naive approach to living in the town. They are generally friendly and hospitable when interacting with the player and other villagers. They are fairly confident in themselves and their lifestyle, and once you become good friends with a lazy villager, they will tell you their made-up stories usually relating to the player, like in dreams. Other times they will not tell you their stories because they fear you would not like them. They do not take insults most of the time but sometimes they can, though they are very friendly and open minded. They may also sometimes make suggestive phrases to the player."
     },
     "smug": {
         "name": "Smug",
@@ -91,7 +91,7 @@
             "Sisterly (Neutral)"
         ],
         "fight-with": [],
-        "desc": "Normal villagers, despite being called \"normal\", have a lack of self-worth where they feel self-depreciative. They also appear slightly obsessive with cleanliness and hygiene - a trait also found in peppy villagers. They don't, however, appear to show any concern for their physical appearance, making them happy with what they have. They are the mother-like characters in the town, appearing friendly, sweet, and hospitable towards the player and other villagers. They rarely, if at all, get angry and tend to take insults and disappointment personally, but will apologise even though they may not have done anything. They also seem to enjoy cooking and will often ask the player about food."
+        "desc": "Normal villagers, despite being called \"normal\", have a lack of self-worth where they feel self-depreciative. They also appear slightly obsessive with cleanliness and hygiene. They do not, however, appear to show any concern for their physical appearance, making them happy with what they have. They are the mother-like characters in the town, appearing friendly, sweet, and hospitable towards the player and other villagers. They rarely, if at all, get angry and tend to take insults and disappointment personally, but will apologise even though they may not have done anything. They also seem to enjoy cooking and will often ask the player about food."
     },
     "peppy": {
         "name": "Peppy",
@@ -110,7 +110,7 @@
         "fight-with": [
             "Cranky"
         ],
-        "desc": "Peppy villagers speak with chipper, high-pitched voices and enjoy cheering when talking with player(s) and other villagers. They are rarely discouraged from doing anything and are always excited to see the player. They come out of their homes often, have short attention spans and wild imaginations, and express a number of aspirations which they will often share with the player such as their numerous claims to stardom as a pop star or diva. They have a tendency to say stereotypical valley girl words and sprinkle their speech with French words, such as \"le\" or \"tres\"."
+        "desc": "Peppy villagers speak with chipper, high-pitched voices and enjoy cheering when talking with players and other villagers. They are rarely discouraged from doing anything and are always excited to see the player. They have short attention spans and wild imaginations, and they express a number of aspirations which they will often share with the player such as their numerous claims to stardom as a pop star or diva. They have a tendency to say stereotypical valley girl words and sprinkle their speech with French words, such as \"le\" or \"tres\"."
     },
     "snooty": {
         "name": "Snooty",
@@ -129,7 +129,7 @@
             "Jock",
             "Sisterly"
         ],
-        "desc": "Snooty villagers are well-spoken and may sometimes appear offensive and rude towards other villagers, including the player. They are self-centred, hot-tempered, and sarcastic, but if the player talks to them often, they open up and become more kind, sometimes giving the player lessons in fashion. However, this doesn't prevent them from making the occasional scathing comment. Snooty villagers usually have exotic or upper-class names, or names relating to high-value items and gemstones, making them easy to distinguish when talking to villagers around town."
+        "desc": "Snooty villagers are well-spoken and may sometimes appear offensive and rude towards other villagers, including the player. They appear self-centred, hot-tempered, and sarcastic, but if the player talks to them often, they open up and become more kind, sometimes giving the player lessons in fashion. However, this does not prevent them from making the occasional scathing comment. Snooty villagers usually have exotic or upper-class names, or names relating to high-value items and gemstones, making them easy to distinguish when talking to villagers around town."
     },
     "sisterly": {
         "name": "Sisterly",

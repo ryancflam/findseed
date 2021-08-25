@@ -124,7 +124,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             except:
                 pass
             e = Embed(title=data[variant]["name"]["name-USen"])
-            e.set_image(url=data[variant]["image_uri"])
+            e.set_image(url=data[variant]["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
             e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
             e.add_field(name="Source", value=f"`{data[variant]['source']}`")
@@ -200,7 +200,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Has Fake", value=f"`{str(artdata['hasFake'])}`")
             e.add_field(name="Buy Price", value="`{:,}`".format(artdata['buy-price']))
             e.add_field(name="Sell Price", value="`{:,}`".format(artdata['sell-price']))
-            e.set_image(url=artdata["image_uri"])
+            e.set_image(url=artdata["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -226,7 +226,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.set_footer(
                 text='"{}"'.format(choice(catchphrases).replace('"', "'").replace("Walker ...", f"Walker {ctx.author.name}"))
             )
-            e.set_author(name=bugdata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=bugdata["icon_uri"])
+            e.set_author(name=bugdata["name"]["name-USen"].title().replace("'S", "'s"),
+                         icon_url=bugdata["icon_uri"].replace("https", "http"))
             e.add_field(name="Location", value=f"`{bugdata['availability']['location']}`")
             e.add_field(name="Rarity", value=f"`{bugdata['availability']['rarity']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
@@ -234,7 +235,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value="`{:,}`".format(bugdata['price']))
             e.add_field(name="Sell Price (Flick)", value="`{:,}`".format(bugdata['price-flick']))
-            e.set_image(url=bugdata["image_uri"])
+            e.set_image(url=bugdata["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -258,7 +259,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             except:
                 catchphrases = [fishdata["catch-phrase"]]
             e.set_footer(text='"{}"'.format(choice(catchphrases).replace('"', "'")))
-            e.set_author(name=fishdata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=fishdata["icon_uri"])
+            e.set_author(name=fishdata["name"]["name-USen"].title().replace("'S", "'s"),
+                         icon_url=fishdata["icon_uri"].replace("https", "http"))
             e.add_field(name="Shadow",value=f"`{fishdata['shadow']}`")
             e.add_field(name="Location", value=f"`{fishdata['availability']['location']}`")
             e.add_field(name="Rarity", value=f"`{fishdata['availability']['rarity']}`")
@@ -267,7 +269,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value="`{:,}`".format(fishdata['price']))
             e.add_field(name="Sell Price (C.J.)", value="`{:,}`".format(fishdata['price-cj']))
-            e.set_image(url=fishdata["image_uri"])
+            e.set_image(url=fishdata["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -283,7 +285,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       description=fossildata["museum-phrase"])
             e.add_field(name="Sell Price", value="`{:,}`".format(fossildata['price']))
             e.add_field(name="Part Of", value=f"`{fossildata['part-of'].title()}`")
-            e.set_image(url=fossildata["image_uri"])
+            e.set_image(url=fossildata["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -330,14 +332,15 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             time = seadata["availability"]["time"] if seadata["availability"]["time"] != "" else "All Day"
             e = Embed(description=seadata["museum-phrase"])
             e.set_footer(text='"{}"'.format(seadata["catch-phrase"]))
-            e.set_author(name=seadata["name"]["name-USen"].title().replace("'S", "'s"), icon_url=seadata["icon_uri"])
+            e.set_author(name=seadata["name"]["name-USen"].title().replace("'S", "'s"),
+                         icon_url=seadata["icon_uri"].replace("https", "http"))
             e.add_field(name="Shadow",value=f"`{seadata['shadow']}`")
             e.add_field(name="Speed",value=f"`{seadata['speed']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value="`{:,}`".format(seadata["price"]))
-            e.set_image(url=seadata["image_uri"])
+            e.set_image(url=seadata["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -358,8 +361,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             if not found:
                 return await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
             e = Embed(description='"' + villagerdata["saying"] + '"')
-            e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"])
-            e.set_image(url=villagerdata["image_uri"])
+            e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"].replace("https", "http"))
+            e.set_image(url=villagerdata["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
             e.add_field(
                 name="Personality",
