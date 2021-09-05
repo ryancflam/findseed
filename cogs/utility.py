@@ -3,6 +3,7 @@ from datetime import datetime
 from json import dumps
 from platform import system
 from random import choice, randint
+from statistics import mean
 from subprocess import PIPE, Popen, STDOUT
 from time import time
 from urllib.parse import quote
@@ -936,6 +937,42 @@ class Utility(commands.Cog, name="Utility"):
             e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input or server error.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="pins", description="Returns the total number of message pins in this channel.",
+                      aliases=["pin"])
+    async def pins(self, ctx):
+        await ctx.send(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="average", usage="<numbers separated with ;>",
+                      aliases=["avg", "aver", "averages"], description="Averages a list of numbers.")
+    async def average(self, ctx, *, items):
+        try:
+            while items.startswith(";"):
+                items = items[1:]
+            while items.endswith(";"):
+                items = items[:-1]
+            while "  " in items:
+                items = items.replace("  ", " ")
+            while "; ;" in items:
+                items = items.replace("; ;", ";")
+            while ";;" in items:
+                items = items.replace(";;", ";")
+            itemslist = items.split(";")
+            if "" in itemslist:
+                raise Exception("Invalid input. Please separate the items with `;`.")
+            while " " in itemslist:
+                itemslist.remove(" ")
+            itemslist = list(map(float, [i.strip() for i in itemslist]))
+            item = mean(itemslist)
+            e = Embed(title="Average Value",
+                      description=f"Requested by: {ctx.author.mention}\n{funcs.formatting('{:,}'.format(item))}")
+            e.add_field(name="Numbers ({:,})".format(len(itemslist)),
+                        value=", ".join("`{:,}`".format(i) for i in sorted(itemslist)))
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
 
