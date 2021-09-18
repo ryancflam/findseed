@@ -904,7 +904,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.command(name="cite", description="Creates a citation from a DOI number.",
                       aliases=["reference", "ref", "citation", "doi", "cit"], usage="<DOI number> [citation style]")
     async def cite(self, ctx, doi, style="apa"):
-        doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "")}"'
+        doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}"'
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" {doi}'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
@@ -916,7 +916,9 @@ class Utility(commands.Cog, name="Utility"):
                 raise Exception("Invalid DOI number/citation style or server error.")
             while "  " in res:
                 res = res.replace("  ", " ")
-            e = Embed(description=doi.replace('"', "") + "\n" + funcs.formatting(res), title="Citation")
+            doi = doi.replace('"', "")
+            e = Embed(description=doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "")
+                                  + "\n" + funcs.formatting(res), title="Citation")
             obj.kill()
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
