@@ -840,13 +840,16 @@ class Utility(commands.Cog, name="Utility"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         await ctx.send("Characters: **{:,}**\nWords: **{:,}**".format(len(inp), len(inp.split())))
 
+    # Doesn't work for now
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="country", description="Shows information about a country.",
+    @commands.command(name="country", description="Shows information about a country.", hidden=True,
                       aliases=["location", "loc", "countries", "place"], usage="<country name OR code>")
     async def country(self, ctx, *, country):
         try:
             try:
-                res = await funcs.getRequest("https://restcountries.eu/rest/v2/name/" + country.casefold().replace("_", ""))
+                res = await funcs.getRequest(
+                    "https://restcountries.eu/rest/v2/name/" + country.casefold().replace("_", ""), verify=False
+                )
                 data = res.json()
                 if len(data) > 1:
                     await ctx.send(
@@ -864,7 +867,9 @@ class Utility(commands.Cog, name="Utility"):
                     pchoice = 0
                 data = data[pchoice]
             except Exception:
-                res = await funcs.getRequest("https://restcountries.eu/rest/v2/alpha/" + country.casefold().replace("_", ""))
+                res = await funcs.getRequest(
+                    "https://restcountries.eu/rest/v2/alpha/" + country.casefold().replace("_", ""), verify=False
+                )
                 data = res.json()
             lat = data['latlng'][0]
             long = data['latlng'][1]
