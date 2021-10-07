@@ -1,4 +1,3 @@
-# from asyncio import TimeoutError
 from datetime import datetime
 from os import path, remove
 from time import time
@@ -784,101 +783,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                        "bot due to security reasons; this command was simply made for fun to demonstrate the " + \
                        "capabilities of the Python programming language. If you wish to generate a new Bitcoin " + \
                        "address for actual use, please use proper wallets like Electrum instead.```", embed=e)
-
-    # Doesn't work for now
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="bitsmix", aliases=["bm", "bitmix"], hidden=True,
-                      description="Creates a BitsMix.biz order for you to mix your BTC or LTC.")
-    @commands.dm_only()
-    async def bitsmix(self, ctx):
-        url = "https://bitsmix.biz/api/order/create"
-        try:
-            await ctx.send("For maximum anonymity, please connect to the Tor network and use the service's .onion link: h"
-                + "ttp://bitsmixbizymuphkc.onion/\n\nWould you like to mix Bitcoin or Litecoin? Enter `!c` to cancel."
-            )
-            while True:
-                coin = await self.client.wait_for(
-                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
-                    timeout=30
-                )
-                if coin.content.casefold() == "!c":
-                    return await ctx.send("Cancelling BitsMix.biz order.")
-                if coin.content.casefold()[0] not in ["b", "l"]:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid coin. Please try again."))
-                    continue
-                break
-            await ctx.send("Enter your wallet address. Enter `!c` to cancel.")
-            while True:
-                address = await self.client.wait_for(
-                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
-                    timeout=100
-                )
-                if address.content.casefold() == "!c":
-                    return await ctx.send("Cancelling BitsMix.biz order.")
-                break
-            tax, delay = 0.4, 0
-            taxmin = 2 if coin.content.casefold()[0] == "l" else 0.4
-            taxmax = 20 if coin.content.casefold()[0] == "l" else 4
-            await ctx.send(f"Select a fee from {taxmin}% to {taxmax}%. Enter `!c` to cancel.")
-            while True:
-                fee = await self.client.wait_for(
-                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
-                    timeout=60
-                )
-                if fee.content.casefold() == "!c":
-                    return await ctx.send("Cancelling BitsMix.biz order.")
-                try:
-                    tax = float(fee.content.replace("%", ""))
-                    if not taxmin <= tax <= taxmax:
-                        await ctx.send(
-                            embed=funcs.errorEmbed(None, f"Fee must be {taxmin} to {taxmax} inclusive. Please try again.")
-                        )
-                        continue
-                except ValueError:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please try again."))
-                    continue
-                break
-            await ctx.send("Enter your desired transaction delay in minutes between 0 to 4320. Enter `!c` to cancel.")
-            while True:
-                minutes = await self.client.wait_for(
-                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
-                    timeout=60
-                )
-                if minutes.content.casefold() == "!c":
-                    return await ctx.send("Cancelling BitsMix.biz order.")
-                try:
-                    delay = int(minutes.content)
-                    if not -1 < delay < 4321:
-                        await ctx.send(
-                            embed=funcs.errorEmbed(None, "Delay must be 0 to 4320 inclusive. Please try again.")
-                        )
-                        continue
-                except ValueError:
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Please try again."))
-                    continue
-                break
-        except TimeoutError:
-            return await ctx.send("Cancelling BitsMix.biz order.")
-        params = {
-            "tax": tax,
-            "delay": [delay],
-            "coin": "bitcoin" if coin.content.casefold().startswith("b") else "litecoin",
-            "address": [address.content],
-            "ref": config.bitmixRef
-        }
-        res = await funcs.postRequest(url, json=params, headers={"Accept": "application/json"})
-        data = res.json()
-        if res.status_code != 200:
-            e = funcs.errorEmbed("Invalid data given!", "\n".join(i[0] for i in data["errors"].values()))
-        else:
-            e = Embed(title="BitsMix.biz Order", description=f"https://bitsmix.biz/order/view/{data['id']}")
-            e.add_field(name="Input Address", value=f"`{data['input_address']}`")
-            e.add_field(name="Order ID", value=f"`{data['id']}`")
-            e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={data['input_address']}")
-            e.set_footer(
-                text="Note: The QR code is that of the input address. Your order will only be valid for 72 hours."
-            )
-        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="altseason", description="Returns the altcoin season index.",
