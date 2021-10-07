@@ -185,6 +185,26 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         newList = serverList[:1998]
         await ctx.send(f"`{newList}`")
 
+    @commands.command(name="channels", description="Returns a list of text channels a server the bot is in has.",
+                      aliases=["cl", "channellist"], usage=["[server ID]"])
+    @commands.is_owner()
+    @commands.guild_only()
+    async def channels(self, ctx, *, server: str=""):
+        try:
+            server = int(server)
+        except ValueError:
+            server = ctx.guild.id
+        try:
+            server = self.client.get_guild(server)
+            st = ""
+            for channel in server.text_channels:
+                st += f"- {str(channel.id)}: {channel.name}\n"
+            st = st[:-1]
+            newList = st[:1998]
+            await ctx.send(f"`{newList}`")
+        except Exception as ex:
+            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
     @commands.command(name="reloadcog", description="Reloads a cog.", usage=["<cog name>"])
     @commands.is_owner()
     async def reloadcog(self, ctx, *, cog: str=""):
