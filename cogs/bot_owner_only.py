@@ -60,12 +60,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         self.disableBotDisguise()
         await ctx.send(":ok_hand:")
 
-    @commands.command(name="botdisguise", description="Enables bot disguise mode.", aliases=["bd"])
+    @commands.command(name="botdisguise", description="Enables bot disguise mode.", aliases=["bd"],
+                      usage="[anything to enable stealth mode]")
     @commands.is_owner()
-    async def botdisguise(self, ctx):
+    async def botdisguise(self, ctx, *, stealth: str=""):
         if self.botDisguise:
             return
-        await ctx.send("Please enter channel ID, or `cancel` to cancel.")
+        await ctx.send("Please enter channel ID, or `cancel` to cancel." + \
+                       f"{' Stealth mode enabled (you cannot send messages).' if stealth else ''}")
         try:
             msg = await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=30
@@ -82,7 +84,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             self.botDisguise = True
             self.originChannel = ctx.channel
             self.client.loop.create_task(self.awaitBDStop(ctx))
-            await ctx.send("You are now in bot disguise mode! Type `!q` to quit.")
+            await ctx.send(f"You are now in bot disguise mode! Channel: #{self.destChannel.name} " + \
+                           f"({self.destChannel.guild.name}). Type `!q` to quit.")
             while self.botDisguise:
                 try:
                     msg = await self.client.wait_for(
@@ -91,7 +94,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
                     )
                 except TimeoutError:
                     continue
-                if not msg.content.casefold().startswith(("!q", self.client.command_prefix)):
+                if not msg.content.casefold().startswith(("!q", self.client.command_prefix)) and not stealth:
                     try:
                         await self.destChannel.send(f"{msg.content}" + \
                                                     f"{msg.attachments[0].url if msg.attachments else ''}")
