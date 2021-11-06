@@ -9,7 +9,7 @@ from discord.ext import commands
 
 from other_utils import funcs
 
-AC_LOGO = "https://i.imgur.com/kbWPgBd.png"
+AC_LOGO = "https://cdn.discordapp.com/attachments/771404776410972161/906436017987395604/unknown.png"
 
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hidden=True)):
