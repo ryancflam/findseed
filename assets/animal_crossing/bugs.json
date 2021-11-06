@@ -1351,10 +1351,10 @@
     "snail": {
         "availability": {
             "isAllDay": true,
-            "isAllYear": true,
-            "location": "On rocks and bush (when raining)",
-            "month-northern": "",
-            "month-southern": "",
+            "isAllYear": false,
+            "location": "On rocks and bushes (when raining)",
+            "month-northern": "2-11",
+            "month-southern": "8-5",
             "rarity": "Common",
             "time": ""
         },

@@ -3,14 +3,13 @@
         "name": "Jock",
         "gender": "Male",
         "sleep-time": "12:30am - 6:30am",
-        "total": 76,
         "get-along-with": [
             "Cranky",
             "Normal",
             "Peppy",
             "Sisterly",
-            "Jock (Neutral)",
-            "Smug (Neutral)"
+            "Jock (neutral)",
+            "Smug (neutral)"
         ],
         "fight-with": [
             "Lazy",
@@ -21,14 +20,13 @@
     "cranky": {
         "name": "Cranky",
         "gender": "Male",
-        "sleep-time": "3:30am - 9am",
-        "total": 63,
+        "sleep-time": "3:30am - 9:00am",
         "get-along-with": [
             "Jock",
             "Snooty",
-            "Lazy (Occasionally)",
-            "Normal (Occasionally)",
-            "Cranky (Neutral)"
+            "Lazy (occasionally)",
+            "Normal (occasionally)",
+            "Cranky (neutral)"
         ],
         "fight-with": [
             "Peppy",
@@ -40,16 +38,15 @@
     "lazy": {
         "name": "Lazy",
         "gender": "Male",
-        "sleep-time": "11pm - 8am",
-        "total": 74,
+        "sleep-time": "11:00pm - 8:00am",
         "get-along-with": [
             "Lazy",
             "Normal",
             "Peppy",
             "Sisterly",
             "Smug",
-            "Cranky (Occasionally)",
-            "Snooty (Neutral)"
+            "Cranky (occasionally)",
+            "Snooty (neutral)"
         ],
         "fight-with": [
             "Jock"
@@ -59,16 +56,15 @@
     "smug": {
         "name": "Smug",
         "gender": "Male",
-        "sleep-time": "2am - 7am",
-        "total": 35,
+        "sleep-time": "2:00am - 7:00am",
         "get-along-with": [
             "Smug",
             "Lazy",
             "Normal",
             "Peppy",
             "Sisterly",
-            "Jock (Neutral)",
-            "Snooty (Neutral)"
+            "Jock (neutral)",
+            "Snooty (neutral)"
         ],
         "fight-with": [
             "Cranky"
@@ -78,17 +74,16 @@
     "normal": {
         "name": "Normal",
         "gender": "Female",
-        "sleep-time": "12am - 6am",
-        "total": 71,
+        "sleep-time": "12:00am - 6:00am",
         "get-along-with": [
             "Normal",
             "Jock",
             "Lazy",
             "Peppy",
             "Smug",
-            "Cranky (Occasionally)",
-            "Snooty (Occasionally)",
-            "Sisterly (Neutral)"
+            "Cranky (occasionally)",
+            "Snooty (occasionally)",
+            "Sisterly (neutral)"
         ],
         "fight-with": [],
         "desc": "Normal villagers, despite being called \"normal\", have a lack of self-worth where they feel self-depreciative. They also appear slightly obsessive with cleanliness and hygiene. They do not, however, appear to show any concern for their physical appearance, making them happy with what they have. They are the mother-like characters in the town, appearing friendly, sweet, and hospitable towards the player and other villagers. They rarely, if at all, get angry and tend to take insults and disappointment personally, but will apologise even though they may not have done anything. They also seem to enjoy cooking and will often ask the player about food."
@@ -96,16 +91,15 @@
     "peppy": {
         "name": "Peppy",
         "gender": "Female",
-        "sleep-time": "1:30am - 7am",
-        "total": 65,
+        "sleep-time": "1:30am - 7:00am",
         "get-along-with": [
             "Jock",
             "Lazy",
             "Normal",
             "Sisterly",
             "Smug",
-            "Peppy (Neutral)",
-            "Snooty (Neutral)"
+            "Peppy (neutral)",
+            "Snooty (neutral)"
         ],
         "fight-with": [
             "Cranky"
@@ -116,14 +110,13 @@
         "name": "Snooty",
         "gender": "Female",
         "sleep-time": "2:30am - 8:30am",
-        "total": 65,
         "get-along-with": [
             "Cranky",
             "Normal",
-            "Snooty (Neutral)",
-            "Lazy (Neutral)",
-            "Peppy (Neutral)",
-            "Smug (Neutral)"
+            "Snooty (neutral)",
+            "Lazy (neutral)",
+            "Peppy (neutral)",
+            "Smug (neutral)"
         ],
         "fight-with": [
             "Jock",
@@ -134,15 +127,14 @@
     "sisterly": {
         "name": "Sisterly",
         "gender": "Female",
-        "sleep-time": "3am - 9:30am",
-        "total": 24,
+        "sleep-time": "3:00am - 9:30am",
         "get-along-with": [
             "Jock",
             "Lazy",
             "Peppy",
             "Smug",
-            "Sisterly (Neutral)",
-            "Normal (Neutral)"
+            "Sisterly (neutral)",
+            "Normal (neutral)"
         ],
         "fight-with": [
             "Cranky",

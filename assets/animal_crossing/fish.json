@@ -380,10 +380,10 @@
     "coelacanth": {
         "availability": {
             "isAllDay": true,
-            "isAllYear": true,
-            "location": "Sea (when raining or snowing)",
-            "month-northern": "",
-            "month-southern": "",
+            "isAllYear": false,
+            "location": "Sea (when raining)",
+            "month-northern": "2-11",
+            "month-southern": "8-5",
             "rarity": "Ultra-rare",
             "time": ""
         },

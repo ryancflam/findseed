@@ -2,7 +2,6 @@ from datetime import datetime
 from os import path, remove
 from time import time
 
-from bs4 import BeautifulSoup as bs4
 from discord import Colour, Embed, File
 from discord.ext import commands
 from mplfinance import make_marketcolors, make_mpf_style, plot
@@ -783,32 +782,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                        "bot due to security reasons; this command was simply made for fun to demonstrate the " + \
                        "capabilities of the Python programming language. If you wish to generate a new Bitcoin " + \
                        "address for actual use, please use proper wallets like Electrum instead.```", embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="altseason", description="Returns the altcoin season index.",
-                      aliases=["alt", "asi", "alts", "altcoinseason", "altcoinindex", "ai", "altindex", "altsindex"])
-    async def altseason(self, ctx):
-        url = "https://www.blockchaincenter.net/altcoin-season-index/"
-        res = await funcs.getRequest(url)
-        soup = bs4(res.text, features="lxml")
-        index = soup.findAll("div", class_="bccblock")
-        month = index[0].find("div", style="margin-top:-74px;padding: 0px 10px;").find("div").getText()
-        season = index[1].find("div", style="margin-top:-74px;padding: 0px 10px;").find("div").getText()
-        year = index[2].find("div", style="margin-top:-74px;padding: 0px 10px;").find("div").getText()
-        e = Embed(title="Altcoin Season Index", description=url)
-        e.add_field(
-            name="Altcoin Index", inline=False,
-            value=f"`{season}{' (Altcoin Season!)' if int(season) > 74 else ' (Bitcoin Season!)' if int(season) < 26 else ''}`"
-        )
-        e.add_field(
-            name="Month Index", inline=False,
-            value=f"`{month}{' (Altcoin Month!)' if int(month) > 74 else ' (Bitcoin Month!)' if int(month) < 26 else ''}`"
-        )
-        e.add_field(
-            name="Year Index", inline=False,
-            value=f"`{year}{' (Altcoin Year!)' if int(year) > 74 else ' (Bitcoin Year!)' if int(year) < 26 else ''}`"
-        )
-        await ctx.send(embed=e)
 
 
 def setup(client: commands.Bot):

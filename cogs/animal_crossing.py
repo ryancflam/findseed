@@ -21,8 +21,15 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         self.fossils = funcs.readJson("assets/animal_crossing/fossils.json")
         self.personalities = funcs.readJson("assets/animal_crossing/personalities.json")
         self.sea = funcs.readJson("assets/animal_crossing/sea_creatures.json")
-        self.species = funcs.readJson("assets/animal_crossing/species.json")
+        self.species = self.openSpeciesTxt()
         self.villagers = funcs.readJson("assets/animal_crossing/villagers.json")
+
+    @staticmethod
+    def openSpeciesTxt():
+        with open("assets/animal_crossing/species.txt", "r") as f:
+            lines = f.readlines()
+        f.close()
+        return [x.strip() for x in lines]
 
     @staticmethod
     def findData(data: dict, name: str):
@@ -310,7 +317,12 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                           description=personalitydata["desc"])
                 e.add_field(name="Gender", value=f"`{personalitydata['gender']}`")
                 e.add_field(name="Sleep Time", value=f"`{personalitydata['sleep-time']}`")
-                e.add_field(name="Total Villagers", value=f"`{personalitydata['total']}`")
+                i = 0
+                for villagerID in list(self.villagers):
+                    villagerdata = self.villagers[villagerID]
+                    if villagerdata["personality"].replace("Uchi", "Sisterly") == personalitydata["name"]:
+                        i += 1
+                e.add_field(name="Total Villagers", value=f"`{i}`")
                 e.add_field(name="Get Along With", value=", ".join(f"`{i}`" for i in personalitydata["get-along-with"]))
                 if personalitydata["fight-with"]:
                     e.add_field(name="Fight With", value=", ".join(f"`{i}`" for i in personalitydata["fight-with"]))
@@ -355,7 +367,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             for villagerID in list(self.villagers):
                 villagerdata = self.villagers[villagerID]
                 if villagerdata["name"]["name-USen"].casefold().replace(" ", "_") \
-                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'"):
+                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'").replace("etoile", "étoile"):
                     found = True
                     break
             if not found:
@@ -373,8 +385,21 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
             e.add_field(name="Hobby", value=f"`{villagerdata['hobby']}`")
             e.add_field(name="Initial Phrase", value='`"{}"`'.format(villagerdata["catch-phrase"]))
-            prob = len(list(self.species.keys())) * self.species[villagerdata["species"]]
-            e.add_field(inline=False, name="NMT Probability", value="`1 in {:,}`".format(prob))
+            try:
+                if villagerdata["sanrio"]:
+                    e.set_footer(text="Note: This is a Sanrio villager and cannot be obtained via NMT islands.")
+            except:
+                i = 0
+                for villagerID in list(self.villagers):
+                    newvillagerdata = self.villagers[villagerID]
+                    if newvillagerdata["species"] == villagerdata["species"]:
+                        try:
+                            if newvillagerdata["sanrio"]:
+                                continue
+                        except:
+                            i += 1
+                prob = len(self.species) * i
+                e.add_field(inline=False, name="NMT Probability", value="`1 in {:,}`".format(prob))
         except Exception as ex:
             e = funcs.errorEmbed(None, f"An error occurred - {ex}")
         await ctx.send(embed=e)
@@ -385,21 +410,28 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     async def acspecies(self, ctx, *, species: str=""):
         try:
             species = species.replace(" ", "").title()
-            value = self.species[species]
+            if species not in self.species:
+                raise Exception()
             e = Embed(title=species)
             e.set_thumbnail(url=AC_LOGO)
             villagers = []
             for i in list(self.villagers):
                 data = self.villagers[i]
                 if data["species"] == species:
-                    villagers.append(data["name"]["name-USen"].title())
-            e.add_field(name=f"Villagers ({value})", value=", ".join(f"`{i}`" for i in sorted(villagers)))
-            prob = len(list(self.species.keys())) * value
+                    try:
+                        if data["sanrio"]:
+                            villagers.append(data["name"]["name-USen"].title() + "SANRIO")
+                    except:
+                        villagers.append(data["name"]["name-USen"].title())
+            nonsanrio = [x for x in villagers if "SANRIO" not in x]
+            villagers = [y.replace("SANRIO", "") if "SANRIO" in y else y for y in villagers]
+            e.add_field(name=f"Villagers ({len(villagers)})", value=", ".join(f"`{i}`" for i in sorted(villagers)))
+            prob = len(self.species) * len(nonsanrio)
             e.add_field(inline=False, name="Villager NMT Probability", value="`1 in {:,}`".format(prob))
-        except KeyError:
+        except Exception:
             e = funcs.errorEmbed(
                     "Invalid option!",
-                    "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.species.keys()))
+                    "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.species))
             )
         await ctx.send(embed=e)
 
