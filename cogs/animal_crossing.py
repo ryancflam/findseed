@@ -26,7 +26,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @staticmethod
     def openSpeciesTxt():
-        with open("assets/animal_crossing/species.txt", "r") as f:
+        with open(f"{funcs.getPath()}/assets/animal_crossing/species.txt", "r") as f:
             lines = f.readlines()
         f.close()
         return [x.strip() for x in lines]
