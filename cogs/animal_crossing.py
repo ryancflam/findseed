@@ -367,7 +367,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             for villagerID in list(self.villagers):
                 villagerdata = self.villagers[villagerID]
                 if villagerdata["name"]["name-USen"].casefold().replace(" ", "_") \
-                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'").replace("etoile", "étoile"):
+                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'")\
+                        .replace("etoile", "étoile").replace("renee", "renée"):
                     found = True
                     break
             if not found:
@@ -400,6 +401,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                             i += 1
                 prob = len(self.species) * i
                 e.add_field(inline=False, name="NMT Probability", value="`1 in {:,}`".format(prob))
+            e.add_field(name="Vacation Theme", value=f'`"{villagerdata["paradise_theme"]}"`')
         except Exception as ex:
             e = funcs.errorEmbed(None, f"An error occurred - {ex}")
         await ctx.send(embed=e)

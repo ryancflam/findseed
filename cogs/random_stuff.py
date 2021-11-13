@@ -130,12 +130,12 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",
                       aliases=["pt", "mbti", "personality", "personalities", "16p", "16personalities"])
     async def personalitytest(self, ctx):
-        await ctx.send("```Note: You are about to take a non-professional personality test with 88 questions. " + \
-                       "The test should take around 15 to 30 minutes to complete. To select an answer, input " + \
-                       "either 'a', 'b', or 'c'. Try to leave out as many neutral answers as possible. There " + \
-                       "are no right or wrong answers.\n\nPlease note that this test does not consider the " + \
-                       "cognitive functions and is only designed purely for fun. For more accurate results, " + \
-                       "it is recommended that you study the eight cognitive functions and type yourself " + \
+        await ctx.send("```== Please Read ==\n\nYou are about to take a low-level personality test consisting of 88 q" + \
+                       "uestions. The test should take around 20 to 30 minutes to complete. To select an answer, inpu" + \
+                       "t either 'a', 'b', or 'c'. Try to leave out as many neutral answers as possible. There " + \
+                       "are no right or wrong answers.\n\nPlease note that this test does not consider the eight " + \
+                       "cognitive functions and was created purely for fun. For more accurate and meaningful" + \
+                       " results, it is recommended that you study each of the cognitive functions and type yourself " + \
                        "based on those functions with the help of a test that makes good use of them.\n\nIf " + \
                        "you want to quit, input 'quit'. Otherwise, input 'test' to start the test.\n\n" + \
                        "Questions provided by EDCampus. Each question has a 15-minute time limit.```")
@@ -245,7 +245,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         await ctx.send(f"```== {ctx.author.name}'s Personality Test Result " + \
                        f"==\n\n{eir}{eis}\n{snr}{sns}\n{tfr}{tfs}\n{jpr}{jps}\n\nYour four-letter " + \
                        f"personality code is '{eic}{snc}{tfc}{jpc}'.\n\nOnce again, this test is " + \
-                       "only for fun and should not be treated like a professional assessment. " + \
+                       "only for fun and should not be treated as a professional assessment. " + \
                        "Thank you for trying out this test!```")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
