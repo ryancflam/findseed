@@ -138,7 +138,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                        "it is recommended that you study the eight cognitive functions and type yourself " + \
                        "based on those functions with the help of a test that makes good use of them.\n\nIf " + \
                        "you want to quit, input 'quit'. Otherwise, input 'test' to start the test.\n\n" + \
-                       "Questions provided by EDCampus.```")
+                       "Questions provided by EDCampus. Each question has a 15-minute time limit.```")
         try:
             choice = await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
@@ -246,7 +246,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                        f"==\n\n{eir}{eis}\n{snr}{sns}\n{tfr}{tfs}\n{jpr}{jps}\n\nYour four-letter " + \
                        f"personality code is '{eic}{snc}{tfc}{jpc}'.\n\nOnce again, this test is " + \
                        "only for fun and should not be treated like a professional assessment. " + \
-                       "Thank you for trying out this out!```")
+                       "Thank you for trying out this test!```")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dadjoke", description="Sends a random dad joke.", aliases=["dj", "joke"])
