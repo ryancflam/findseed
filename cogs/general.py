@@ -64,6 +64,27 @@ class General(commands.Cog, name="General"):
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="category", description="Shows a list of commands in a given category.",
+                      usage="[category]", aliases=["cog"])
+    async def category(self, ctx, *, cogname: str="General"):
+        prefix = self.client.command_prefix
+        while True:
+            try:
+                cog = self.client.get_cog(cogname.replace("_", " ").title())
+                commandsList = list(filter(lambda x: not x.hidden, sorted(cog.get_commands(), key=lambda y: y.name)))
+                if not commandsList:
+                    raise Exception()
+                break
+            except:
+                cogname = "General"
+        e = Embed(
+            title=cogname.replace("_", " ").title(),
+            description=f"Use `{prefix}help <command>` for help with a specific command."
+        )
+        e.add_field(name="Commands", value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
+        await ctx.send(embed=e)
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="help", description="Shows a list of commands.", usage="[command]",
                       aliases=["cmds", "cmd", "h", "commands", "command"])
@@ -72,7 +93,7 @@ class General(commands.Cog, name="General"):
         if not cmd:
             e = Embed(
                 title=f"{self.client.user.name} Commands List",
-                description=f"Use `{prefix}help <command>` for help with a specific command."
+                description=f"Use `{prefix}help <command>` for help with a specific command.\n"
             )
             for cog in sorted(self.client.cogs):
                 commandsList = list(filter(

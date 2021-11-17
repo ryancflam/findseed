@@ -48,6 +48,34 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 return True
         return False
 
+    @staticmethod
+    def dateToZodiac(date):
+        month, day = date[:-2].split(" ")
+        if month == "December" and int(day) > 21 or month == "January" and int(day) < 20:
+            return "Capricorn"
+        if month == "January" and int(day) > 19 or month == "February" and int(day) < 19:
+            return "Aquarius"
+        if month == "February" and int(day) > 18 or month == "March" and int(day) < 21:
+            return "Pisces"
+        if month == "March" and int(day) > 20 or month == "April" and int(day) < 20:
+            return "Aries"
+        if month == "April" and int(day) > 19 or month == "May" and int(day) < 21:
+            return "Taurus"
+        if month == "May" and int(day) > 20 or month == "June" and int(day) < 22:
+            return "Gemini"
+        if month == "June" and int(day) > 21 or month == "July" and int(day) < 23:
+            return "Cancer"
+        if month == "July" and int(day) > 22 or month == "August" and int(day) < 23:
+            return "Leo"
+        if month == "August" and int(day) > 22 or month == "September" and int(day) < 23:
+            return "Virgo"
+        if month == "September" and int(day) > 22 or month == "October" and int(day) < 24:
+            return "Libra"
+        if month == "October" and int(day) > 23 or month == "November" and int(day) < 23:
+            return "Scorpio"
+        if month == "November" and int(day) > 22 or month == "December" and int(day) < 22:
+            return "Sagittarius"
+
     def addCritter(self, data: dict, month, mode):
         north, south = [], []
         for i in data:
@@ -381,7 +409,8 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 name="Personality",
                 value="`{}`".format(f'{villagerdata["personality"].replace("Uchi", "Sisterly")} ({villagerdata["subtype"]})')
             )
-            e.add_field(name="Birthday", value=f"`{villagerdata['birthday-string']}`")
+            bd = villagerdata['birthday-string']
+            e.add_field(name="Birthday", value=f"`{bd} ({self.dateToZodiac(bd)})`")
             e.add_field(name="Species", value=f"`{villagerdata['species']}`")
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
             e.add_field(name="Hobby", value=f"`{villagerdata['hobby']}`")
@@ -430,6 +459,13 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e.add_field(name=f"Villagers ({len(villagers)})", value=", ".join(f"`{i}`" for i in sorted(villagers)))
             prob = len(self.species) * len(nonsanrio)
             e.add_field(inline=False, name="Villager NMT Probability", value="`1 in {:,}`".format(prob))
+            if len(villagers) != len(nonsanrio):
+                for v in nonsanrio:
+                    villagers.remove(v)
+                e.set_footer(
+                    text="Note: NMT probability does not include the Sanrio villagers. " + \
+                         f"({', '.join(sv for sv in villagers)})"
+                )
         except Exception:
             e = funcs.errorEmbed(
                     "Invalid option!",
