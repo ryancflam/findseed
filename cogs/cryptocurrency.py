@@ -192,7 +192,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                     mav = (3, 6, 9)
                 else:
                     fiat = arg.upper()
-        coinID = self.getCoinGeckoID(coin)
+        coinID = self.getCoinGeckoID(coin.casefold())
         try:
             while not data:
                 res = await funcs.getRequest(
