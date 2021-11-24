@@ -33,6 +33,16 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         else:
             return randint(0, 255)
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="oohasecretcommand", description="Super secret command.")
+    async def oohasecretcommand(self, ctx):
+        commandsList = list(sorted(
+                self.client.get_cog("Easter Eggs").get_commands(),
+                key=lambda y: y.name
+            )
+        )
+        await ctx.send(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
                       description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
