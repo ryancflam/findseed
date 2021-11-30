@@ -1,5 +1,5 @@
 from asyncio import sleep, TimeoutError
-from datetime import datetime
+from datetime import datetime, timedelta
 from json import dumps, JSONDecodeError
 from platform import system
 from random import choice, randint
@@ -260,7 +260,7 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(name="Wind Direction",
                         value="`{}° ({})`".format(int(winddegrees), self.degreesToDirection(winddegrees)))
             e.add_field(name="Local Time", value=f"`{timenow}`")
-            e.add_field(name="Last Updated (Local time)", value=f"`{lastupdate}`")
+            e.add_field(name="Last Updated (Local Time)", value=f"`{lastupdate}`")
             e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.",
                          icon_url="https://openweathermap.org/themes/openweathermap/assets/img/mobile_app/android_icon.png")
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
@@ -685,7 +685,7 @@ class Utility(commands.Cog, name="Utility"):
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     e.set_footer(text=subreddit.public_description)
-                    e.add_field(name="Created (UTC)", value=f"`{datetime.fromtimestamp(subreddit.created_utc)}`")
+                    e.add_field(name="Created (UTC)", value=f"`{datetime.utcfromtimestamp(subreddit.created_utc)}`")
                     e.add_field(name="Subscribers", value="`{:,}`".format(subreddit.subscribers))
                     async for submission in subreddit.new(limit=1):
                         sauthor = submission.author or "[deleted]"
@@ -731,7 +731,7 @@ class Utility(commands.Cog, name="Utility"):
                         ckarma = redditor.comment_karma
                         trophies = await redditor.trophies()
                         e.set_thumbnail(url=redditor.icon_img)
-                        e.add_field(name="Join Date (UTC)", value=f"`{datetime.fromtimestamp(redditor.created_utc)}`")
+                        e.add_field(name="Join Date (UTC)", value=f"`{datetime.utcfromtimestamp(redditor.created_utc)}`")
                         e.add_field(name="Total Karma", value="`{:,}`".format(lkarma + ckarma))
                         e.add_field(name="Post Karma", value="`{:,}`".format(lkarma))
                         e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
@@ -906,7 +906,7 @@ class Utility(commands.Cog, name="Utility"):
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
 
     @commands.cooldown(1, 2, commands.BucketType.user)
-    @commands.command(description="Creates a citation from a DOI number and shows the attention score for the article.",
+    @commands.command(description="Creates a citation from an article's DOI number and shows the Altmetric score for the article.",
                       aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics"],
                       usage="<DOI number> [citation style]", name="cite")
     async def cite(self, ctx, doi, style="apa"):
@@ -923,18 +923,31 @@ class Utility(commands.Cog, name="Utility"):
             while "  " in res:
                 res = res.replace("  ", " ")
             doi = doi.replace('"', "")
-            e = Embed(description=doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "")
-                                  + "\n" + funcs.formatting(res), title="Article")
+            e = Embed(title="Article", description=doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "")
+                                                   + "\n" + funcs.formatting(res))
             obj.kill()
             try:
                 altmetricdata = await funcs.getRequest("https://api.altmetric.com/v1/doi/" + doi.split("doi.org/")[1],
                                                        verify=False)
                 altmetric = altmetricdata.json()
+                if len(altmetric["title"]) < 257:
+                    e.title = altmetric["title"]
                 e.set_thumbnail(url=altmetric["images"]["large"])
                 e.add_field(name='Authors ({:,})'.format(len(altmetric["authors"])),
                             value=", ".join(f"`{author}`" for author in altmetric["authors"][:10])
                                   + ("..." if len(altmetric["authors"]) > 10 else ""))
-                e.add_field(name="Journal", value=f"`{altmetric['journal']}`")
+                e.add_field(name="Journal",
+                            value=f"`{altmetric['journal']} (ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
+                if altmetric["published_on"] < 0:
+                    pub = str((datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])).date())
+                else:
+                    pub = str(datetime.utcfromtimestamp(int(altmetric["published_on"])).date())
+                e.add_field(name="Publish Date (UTC)", value=f'`{pub}`')
+                e.add_field(name="Altmetric Score", value="`{:,}`".format(round(altmetric["score"], 2)))
+                try:
+                    e.add_field(name="PMID", value=f"`{altmetric['pmid']}`")
+                except:
+                    pass
                 citations = [
                     {"field": "cited_by_msm_count", "name": "News Outlet"},
                     {"field": "cited_by_tweeters_count", "name": "Twitter"},
@@ -944,7 +957,10 @@ class Utility(commands.Cog, name="Utility"):
                     {"field": "cited_by_rdts_count", "name": "Reddit"},
                     {"field": "cited_by_fbwalls_count", "name": "Facebook"},
                     {"field": "cited_by_gplus_count", "name": "Google+"},
-                    {"field": "cited_by_qna_count", "name": "Q&A Thread"}
+                    {"field": "cited_by_qna_count", "name": "Q&A Thread"},
+                    {"field": "cited_by_rh_count", "name": "Research Highlight"},
+                    {"field": "cited_by_policies_count", "name": "Policy Source"},
+                    {"field": "cited_by_book_reviews_count", "name": "Book Review"}
                 ]
                 for i in citations:
                     try:
@@ -952,6 +968,8 @@ class Utility(commands.Cog, name="Utility"):
                             e.add_field(name=f"{i['name']} Mentions", value="`{:,}`".format(altmetric[i["field"]]))
                     except:
                         pass
+                e.set_footer(text="Last updated: {} UTC".format(str(datetime.utcfromtimestamp(int(altmetric["last_updated"])))),
+                             icon_url="https://secure.gravatar.com/avatar/97869aff9f24c5d0e1e44b55a274631a?s=250&d=mm&r=g")
             except JSONDecodeError:
                 e.set_footer(text="Note: No Altmetric data available for this article.")
         except Exception as ex:
