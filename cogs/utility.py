@@ -1,6 +1,6 @@
 from asyncio import sleep, TimeoutError
 from datetime import datetime
-from json import dumps
+from json import dumps, JSONDecodeError
 from platform import system
 from random import choice, randint
 from statistics import mean
@@ -906,8 +906,9 @@ class Utility(commands.Cog, name="Utility"):
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
 
     @commands.cooldown(1, 2, commands.BucketType.user)
-    @commands.command(name="cite", description="Creates a citation from a DOI number.",
-                      aliases=["reference", "ref", "citation", "doi", "cit"], usage="<DOI number> [citation style]")
+    @commands.command(description="Creates a citation from a DOI number and shows the attention score for the article.",
+                      aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics"],
+                      usage="<DOI number> [citation style]", name="cite")
     async def cite(self, ctx, doi, style="apa"):
         doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}"'
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" {doi}'
@@ -923,8 +924,36 @@ class Utility(commands.Cog, name="Utility"):
                 res = res.replace("  ", " ")
             doi = doi.replace('"', "")
             e = Embed(description=doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "")
-                                  + "\n" + funcs.formatting(res), title="Citation")
+                                  + "\n" + funcs.formatting(res), title="Article")
             obj.kill()
+            try:
+                altmetricdata = await funcs.getRequest("https://api.altmetric.com/v1/doi/" + doi.split("doi.org/")[1],
+                                                       verify=False)
+                altmetric = altmetricdata.json()
+                e.set_thumbnail(url=altmetric["images"]["large"])
+                e.add_field(name='Authors ({:,})'.format(len(altmetric["authors"])),
+                            value=", ".join(f"`{author}`" for author in altmetric["authors"][:10])
+                                  + ("..." if len(altmetric["authors"]) > 10 else ""))
+                e.add_field(name="Journal", value=f"`{altmetric['journal']}`")
+                citations = [
+                    {"field": "cited_by_msm_count", "name": "News Outlet"},
+                    {"field": "cited_by_tweeters_count", "name": "Twitter"},
+                    {"field": "cited_by_feeds_count", "name": "Blog"},
+                    {"field": "cited_by_wikipedia_count", "name": "Wikipedia"},
+                    {"field": "cited_by_videos_count", "name": "Video"},
+                    {"field": "cited_by_rdts_count", "name": "Reddit"},
+                    {"field": "cited_by_fbwalls_count", "name": "Facebook"},
+                    {"field": "cited_by_gplus_count", "name": "Google+"},
+                    {"field": "cited_by_qna_count", "name": "Q&A Thread"}
+                ]
+                for i in citations:
+                    try:
+                        if altmetric[i["field"]]:
+                            e.add_field(name=f"{i['name']} Mentions", value="`{:,}`".format(altmetric[i["field"]]))
+                    except:
+                        pass
+            except JSONDecodeError:
+                e.set_footer(text="Note: No Altmetric data available for this article.")
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
