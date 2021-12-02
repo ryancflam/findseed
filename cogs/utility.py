@@ -910,7 +910,7 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics"],
                       usage="<DOI number> [citation style]", name="cite")
     async def cite(self, ctx, doi, style="apa"):
-        doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}"'
+        doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}"'.casefold()
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" {doi}'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
@@ -939,10 +939,10 @@ class Utility(commands.Cog, name="Utility"):
                 e.add_field(name="Journal",
                             value=f"`{altmetric['journal']} (ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
                 if altmetric["published_on"] < 0:
-                    pub = str((datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])).date())
+                    pub = datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])
                 else:
-                    pub = str(datetime.utcfromtimestamp(int(altmetric["published_on"])).date())
-                e.add_field(name="Publish Date (UTC)", value=f'`{pub}`')
+                    pub = datetime.utcfromtimestamp(int(altmetric["published_on"])).date()
+                e.add_field(name="Publish Date", value="`%s %s %s`" % (pub.day, funcs.monthNumberToName(pub.month), pub.year))
                 e.add_field(name="Altmetric Score", value="`{:,}`".format(round(altmetric["score"], 2)))
                 try:
                     e.add_field(name="PMID", value=f"`{altmetric['pmid']}`")
@@ -969,7 +969,7 @@ class Utility(commands.Cog, name="Utility"):
                     except:
                         pass
                 e.set_footer(text="Last updated: {} UTC".format(str(datetime.utcfromtimestamp(int(altmetric["last_updated"])))),
-                             icon_url="https://secure.gravatar.com/avatar/97869aff9f24c5d0e1e44b55a274631a?s=250&d=mm&r=g")
+                             icon_url="https://secure.gravatar.com/avatar/97869aff9f24c5d0e1e44b55a274631a")
             except JSONDecodeError:
                 e.set_footer(text="Note: No Altmetric data available for this article.")
         except Exception as ex:

@@ -161,6 +161,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             e = Embed(title=data[variant]["name"]["name-USen"])
             e.set_image(url=data[variant]["image_uri"].replace("https", "http"))
             e.set_thumbnail(url=AC_LOGO)
+            e.set_footer(text="Note: Version 2.0 furniture items may not be available.")
             e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
             e.add_field(name="Source", value=f"`{data[variant]['source']}`")
             e.add_field(name="Size", value=f"`{data[variant]['size']}`")
@@ -410,7 +411,11 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 value="`{}`".format(f'{villagerdata["personality"].replace("Uchi", "Sisterly")} ({villagerdata["subtype"]})')
             )
             bd = villagerdata['birthday-string']
-            e.add_field(name="Birthday", value=f"`{bd} ({self.dateToZodiac(bd)})`")
+            bdm, bdd = bd[:-2].split(" ")
+            now = datetime.now()
+            e.add_field(name="Birthday",
+                        value=f"`{bd} ({self.dateToZodiac(bd)})`" + \
+                              f"{' :birthday:' if int(bdd) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ''}")
             e.add_field(name="Species", value=f"`{villagerdata['species']}`")
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
             e.add_field(name="Hobby", value=f"`{villagerdata['hobby']}`")
@@ -491,6 +496,12 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       description="Shows information about an Animal Crossing: New Horizons miscellaneous furniture item.")
     async def acmisc(self, ctx, *, item):
         await ctx.send(embed=await self.furnitureEmbed(ctx, "misc", item))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips", "act"],
+                      description="Shows pattern information about the Animal Crossing: New Horizons stalk market.")
+    async def acturnips(self, ctx):
+        await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg", message="Credit:\n<https://twitter.com/MadzMasc>")
 
 
 def setup(client: commands.Bot):
