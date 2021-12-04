@@ -1,6 +1,7 @@
 import asyncio
 from json import dump
 from os import listdir, makedirs, path
+from shutil import rmtree
 from sys import exit
 from time import time
 
@@ -56,6 +57,9 @@ class BotInstance(Bot):
 
     def generateFiles(self):
         self.generateDir("data")
+        if path.exists(f"{getPath()}/temp"):
+            rmtree(f"{getPath()}/temp")
+            print("Removed directory: temp")
         self.generateDir("temp")
         self.generateJson(
             "findseed",

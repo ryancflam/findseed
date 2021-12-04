@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from json import dumps, JSONDecodeError
 from platform import system
 from random import choice, randint
-from statistics import mean, median, mode, pstdev
+from statistics import mean, median, mode, pstdev, stdev
 from subprocess import PIPE, Popen, STDOUT
 from time import time
 from urllib.parse import quote
@@ -842,7 +842,6 @@ class Utility(commands.Cog, name="Utility"):
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         await ctx.send("Characters: **{:,}**\nWords: **{:,}**".format(len(inp), len(inp.split())))
 
-    # Doesn't work for now
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.", hidden=True,
                       aliases=["location", "loc", "countries", "place"], usage="<country name OR code>")
@@ -850,7 +849,7 @@ class Utility(commands.Cog, name="Utility"):
         try:
             try:
                 res = await funcs.getRequest(
-                    "https://restcountries.eu/rest/v2/name/" + country.casefold().replace("_", ""), verify=False
+                    "https://restcountries.com/v2/name/" + country.casefold().replace("_", ""), verify=False
                 )
                 data = res.json()
                 if len(data) > 1:
@@ -870,21 +869,24 @@ class Utility(commands.Cog, name="Utility"):
                 data = data[pchoice]
             except Exception:
                 res = await funcs.getRequest(
-                    "https://restcountries.eu/rest/v2/alpha/" + country.casefold().replace("_", ""), verify=False
+                    "https://restcountries.com/v2/alpha/" + country.casefold().replace("_", ""), verify=False
                 )
                 data = res.json()
             lat = data['latlng'][0]
             long = data['latlng'][1]
             e = Embed(title=f"{data['name']} ({data['alpha3Code']})")
-            e.set_thumbnail(url=f"https://www.countryflags.io/{data['alpha2Code']}/flat/64.png")
+            e.set_thumbnail(url=data["flags"]["png"])
             e.add_field(name="Native Name", value=f"`{data['nativeName']}`")
             e.add_field(name="Population", value="`{:,}`".format(data["population"]))
             e.add_field(name="Demonym", value=f"`{data['demonym']}`")
             e.add_field(
                 name="Local Currency", value=", ".join(f"`{c['name']} ({c['code']} {c['symbol']})`" for c in data["currencies"])
             )
-            if data["gini"]:
-                e.add_field(name="Gini Coefficient", value=f"`{round(data['gini'] / 100, 3)}`")
+            try:
+                if data["gini"]:
+                    e.add_field(name="Gini Coefficient", value=f"`{round(data['gini'] / 100, 3)}`")
+            except:
+                pass
             e.add_field(name="Capital", value=f"`{data['capital']}`")
             e.add_field(
                 name="Coordinates",
@@ -898,7 +900,7 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(name="Time Zones", value=", ".join(f"`{tz}`" for tz in data["timezones"]))
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
         except Exception:
-            e = funcs.errorEmbed(None, "Invalid search or server error.")
+            e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -1003,9 +1005,9 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="quartile", usage="<numbers separated with ;>",
-                      aliases=["avg", "average", "mean", "median", "mode", "q1", "q2", "q3", "range", "sd", "iqr"],
+                      aliases=["avg", "average", "mean", "median", "mode", "q1", "q2", "q3", "range", "sd", "iqr", "quartiles"],
                       description="Computes statistical data from a set of numerical values.")
-    async def average(self, ctx, *, items):
+    async def quartile(self, ctx, *, items):
         try:
             while items.startswith(";"):
                 items = items[1:]
@@ -1029,21 +1031,22 @@ class Utility(commands.Cog, name="Utility"):
             e = Embed(title="Quartile Calculator",
                       description=f'Requested by: {ctx.author.mention}\n' + \
                                   f'{funcs.formatting("; ".join(funcs.removeDotZero("{:,}".format(i)) for i in data), limit=2000)}')
-            e.add_field(name="Total Numbers", value="`{:,}`".format(len(data)))
+            e.add_field(name="Total Values", value="`{:,}`".format(len(data)))
             e.add_field(name="Mean", value=f'`{funcs.removeDotZero("{:,}".format(mean(data)))}`')
-            e.add_field(name="Median (Q2)", value=f'`{funcs.removeDotZero("{:,}".format(median(data)))}`')
             try:
                 e.add_field(name="Mode", value=f'`{funcs.removeDotZero("{:,}".format(mode(data)))}`')
             except:
                 e.add_field(name="Mode", value="`None`")
             e.add_field(name="Q1", value=f'`{funcs.removeDotZero("{:,}".format(q1))}`')
+            e.add_field(name="Median (Q2)", value=f'`{funcs.removeDotZero("{:,}".format(median(data)))}`')
             e.add_field(name="Q3", value=f'`{funcs.removeDotZero("{:,}".format(q3))}`')
             e.add_field(name="Interquartile Range", value=f'`{funcs.removeDotZero("{:,}".format(q3 - q1))}`')
             e.add_field(name="Range", value=f'`{funcs.removeDotZero("{:,}".format(max(data) - min(data)))}`')
-            e.add_field(name="Standard Deviation", value=f'`{funcs.removeDotZero("{:,}".format(pstdev(data)))}`')
-            e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
+            e.add_field(name="Population SD", value=f'`{funcs.removeDotZero("{:,}".format(pstdev(data)))}`')
+            e.add_field(name="Sample SD", value=f'`{funcs.removeDotZero("{:,}".format(stdev(data)))}`')
             e.add_field(name="Minimum Value", value=f'`{funcs.removeDotZero("{:,}".format(min(data)))}`')
             e.add_field(name="Maximum Value", value=f'`{funcs.removeDotZero("{:,}".format(max(data)))}`')
+            e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
