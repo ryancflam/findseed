@@ -843,7 +843,7 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send("Characters: **{:,}**\nWords: **{:,}**".format(len(inp), len(inp.split())))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="country", description="Shows information about a country.", hidden=True,
+    @commands.command(name="country", description="Shows information about a country.",
                       aliases=["location", "loc", "countries", "place"], usage="<country name OR code>")
     async def country(self, ctx, *, country):
         try:
