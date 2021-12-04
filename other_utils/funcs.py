@@ -45,6 +45,13 @@ def sign(value):
     return -1 if value < 0 else 0 if not value else 1
 
 
+def removeDotZero(valuestr):
+    valuestr = str(valuestr)
+    while valuestr.endswith(".0"):
+        valuestr = valuestr[:-2]
+    return valuestr
+
+
 def errorEmbed(error, message):
     return Embed(title=f":no_entry: {error or 'Error'}", colour=0xe74c3c, description=message)
 

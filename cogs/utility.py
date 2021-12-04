@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from json import dumps, JSONDecodeError
 from platform import system
 from random import choice, randint
-from statistics import mean
+from statistics import mean, median, mode, pstdev
 from subprocess import PIPE, Popen, STDOUT
 from time import time
 from urllib.parse import quote
@@ -16,6 +16,8 @@ from googletrans import constants, Translator
 import config
 from other_utils import funcs
 from other_utils.safe_eval import SafeEval
+
+HCF_LIMIT = 1000000
 
 
 class Utility(commands.Cog, name="Utility"):
@@ -772,7 +774,7 @@ class Utility(commands.Cog, name="Utility"):
         inp = inp.casefold().replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100") \
               .replace("×", "*").replace(" ", "")
         try:
-            e = Embed(description=funcs.formatting("{:,}".format(SafeEval(inp).safeEval())))
+            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(SafeEval(inp).safeEval()))))
         except ZeroDivisionError:
             answer = choice([
                 "Stop right there, that's illegal!",
@@ -1000,8 +1002,9 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="average", usage="<numbers separated with ;>",
-                      aliases=["avg", "aver", "averages"], description="Averages a list of numbers.")
+    @commands.command(name="quartile", usage="<numbers separated with ;>",
+                      aliases=["avg", "average", "mean", "median", "mode", "q1", "q2", "q3", "range", "sd", "iqr"],
+                      description="Computes statistical data from a set of numerical values.")
     async def average(self, ctx, *, items):
         try:
             while items.startswith(";"):
@@ -1019,15 +1022,55 @@ class Utility(commands.Cog, name="Utility"):
                 raise Exception("Invalid input. Please separate the items with `;`.")
             while " " in itemslist:
                 itemslist.remove(" ")
-            itemslist = list(map(float, [i.strip() for i in itemslist]))
-            item = mean(itemslist)
-            e = Embed(title="Average Value",
-                      description=f"Requested by: {ctx.author.mention}\n{funcs.formatting('{:,}'.format(item))}")
-            e.add_field(name="Numbers ({:,})".format(len(itemslist)),
-                        value=", ".join("`{:,}`".format(i) for i in sorted(itemslist)))
+            data = sorted(list(map(float, [i.strip() for i in itemslist])))
+            halflist = int(len(data) // 2)
+            q3 = median(data[-halflist:])
+            q1 = median(data[:halflist])
+            e = Embed(title="Quartile Calculator",
+                      description=f'Requested by: {ctx.author.mention}\n' + \
+                                  f'{funcs.formatting("; ".join(funcs.removeDotZero("{:,}".format(i)) for i in data), limit=2000)}')
+            e.add_field(name="Total Numbers", value="`{:,}`".format(len(data)))
+            e.add_field(name="Mean", value=f'`{funcs.removeDotZero("{:,}".format(mean(data)))}`')
+            e.add_field(name="Median (Q2)", value=f'`{funcs.removeDotZero("{:,}".format(median(data)))}`')
+            try:
+                e.add_field(name="Mode", value=f'`{funcs.removeDotZero("{:,}".format(mode(data)))}`')
+            except:
+                e.add_field(name="Mode", value="`None`")
+            e.add_field(name="Q1", value=f'`{funcs.removeDotZero("{:,}".format(q1))}`')
+            e.add_field(name="Q3", value=f'`{funcs.removeDotZero("{:,}".format(q3))}`')
+            e.add_field(name="Interquartile Range", value=f'`{funcs.removeDotZero("{:,}".format(q3 - q1))}`')
+            e.add_field(name="Range", value=f'`{funcs.removeDotZero("{:,}".format(max(data) - min(data)))}`')
+            e.add_field(name="Standard Deviation", value=f'`{funcs.removeDotZero("{:,}".format(pstdev(data)))}`')
+            e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
+            e.add_field(name="Minimum Value", value=f'`{funcs.removeDotZero("{:,}".format(min(data)))}`')
+            e.add_field(name="Maximum Value", value=f'`{funcs.removeDotZero("{:,}".format(max(data)))}`')
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="hcf", usage="<value #1 up to {:,}> <value #2 up to {:,}>".format(HCF_LIMIT, HCF_LIMIT),
+                      aliases=["lcm", "gcf", "gcd", "hcd", "lcf", "hcm"],
+                      description="Calculates the highest common factor and lowest common multiple of two values.")
+    async def hcf(self, ctx, number1, number2):
+        try:
+            a = int(float(number1))
+            b = int(float(number2))
+            if a > HCF_LIMIT or b > HCF_LIMIT:
+                raise ValueError
+            lst = sorted([a, b])
+            a, b = lst[0], lst[1]
+            hcf = 1
+            for i in range(2, a + 1):
+                if not a % i and not b % i:
+                    hcf = i
+            lcm = int((a * b) / hcf)
+            await ctx.send(f'The HCF of {funcs.removeDotZero("{:,}".format(a))} and ' + \
+                           f'{funcs.removeDotZero("{:,}".format(b))} is: **{funcs.removeDotZero("{:,}".format(hcf))}' + \
+                           f'**\nThe LCM of {funcs.removeDotZero("{:,}".format(a))} and ' + \
+                           f'{funcs.removeDotZero("{:,}".format(b))} is: **{funcs.removeDotZero("{:,}".format(lcm))}**')
+        except ValueError:
+            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
 
 def setup(client: commands.Bot):
