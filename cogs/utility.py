@@ -887,7 +887,11 @@ class Utility(commands.Cog, name="Utility"):
                     e.add_field(name="Gini Coefficient", value=f"`{round(data['gini'] / 100, 3)}`")
             except:
                 pass
-            e.add_field(name="Capital", value=f"`{data['capital']}`")
+            try:
+                if data["capital"]:
+                    e.add_field(name="Capital", value=f"`{data['capital']}`")
+            except:
+                pass
             e.add_field(
                 name="Coordinates",
                 value=f"`{str(round(lat, 2)).replace('-', '')}°{'N' if lat > 0 else 'S'}, " + \
