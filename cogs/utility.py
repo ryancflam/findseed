@@ -919,6 +919,7 @@ class Utility(commands.Cog, name="Utility"):
                       usage="<DOI number> [citation style]", name="cite")
     async def cite(self, ctx, doi, style="apa"):
         doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}"'.casefold()
+        style = "chicago-author-date" if style.casefold().startswith("chig") else style
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" {doi}'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
@@ -927,9 +928,11 @@ class Utility(commands.Cog, name="Utility"):
                 res.append("")
             res = "".join(i.replace("\n", "") for i in res[4:-1])
             if res.startswith(("<", " ")) or '{"status"' in res or not res:
-                raise Exception("Invalid DOI number/citation style or server error.")
+                raise Exception("Invalid DOI number or server error.")
             while "  " in res:
                 res = res.replace("  ", " ")
+            if "java.lang.Thread.run" in res:
+                res = "Invalid citation style!"
             doi = doi.replace('"', "")
             e = Embed(title="Article", description=doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "")
                                                    + "\n" + funcs.formatting(res))
