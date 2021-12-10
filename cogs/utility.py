@@ -918,9 +918,11 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics"],
                       usage="<DOI number> [citation style]", name="cite")
     async def cite(self, ctx, doi, style="apa"):
-        doi = f'"https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}"'.casefold()
+        doi = f'https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}'.casefold()
+        while doi.endswith("."):
+            doi = doi[:-1]
         style = "chicago-author-date" if style.casefold().startswith("chig") else style
-        cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" {doi}'
+        cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" "{doi}"'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
             res = obj.stdout.read().decode("utf-8").split("\n")
@@ -944,9 +946,12 @@ class Utility(commands.Cog, name="Utility"):
                 if len(altmetric["title"]) < 257:
                     e.title = altmetric["title"]
                 e.set_thumbnail(url=altmetric["images"]["large"])
-                e.add_field(name='Authors ({:,})'.format(len(altmetric["authors"])),
-                            value=", ".join(f"`{author}`" for author in altmetric["authors"][:10])
-                                  + ("..." if len(altmetric["authors"]) > 10 else ""))
+                try:
+                    e.add_field(name='Authors ({:,})'.format(len(altmetric["authors"])),
+                                value=", ".join(f"`{author}`" for author in altmetric["authors"][:10])
+                                      + ("..." if len(altmetric["authors"]) > 10 else ""))
+                except:
+                    pass
                 e.add_field(name="Journal",
                             value=f"`{altmetric['journal']} (ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
                 if altmetric["published_on"] < 0:
