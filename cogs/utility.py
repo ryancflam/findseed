@@ -921,7 +921,9 @@ class Utility(commands.Cog, name="Utility"):
         doi = f'https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}'.casefold()
         while doi.endswith("."):
             doi = doi[:-1]
-        style = "chicago-author-date" if style.casefold().startswith("chig") else style
+        style = style.casefold()
+        style = "chicago-author-date" if style.startswith("chig") or style.startswith("chic") else style
+        style = "multidisciplinary-digital-publishing-institute" if style.startswith("mdpi") else style
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" "{doi}"'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
