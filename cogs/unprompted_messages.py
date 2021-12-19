@@ -11,6 +11,7 @@ from other_utils import funcs
 class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.lastthreemsgs = {}
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -20,6 +21,24 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                                                 and message.author.id != self.client.user.id)):
             originalmsg = message.content
             lowercase = originalmsg.casefold()
+            if message.channel.id not in self.lastthreemsgs:
+                self.lastthreemsgs[message.channel.id] = [message]
+            else:
+                if len(self.lastthreemsgs[message.channel.id]) < 3:
+                    self.lastthreemsgs[message.channel.id].append(message)
+                if len(self.lastthreemsgs[message.channel.id]) == 3:
+                    authors = sorted([self.lastthreemsgs[message.channel.id][0].author.id,
+                                      self.lastthreemsgs[message.channel.id][1].author.id,
+                                      self.lastthreemsgs[message.channel.id][2].author.id])
+                    msgs = [self.lastthreemsgs[message.channel.id][0].content,
+                            self.lastthreemsgs[message.channel.id][1].content,
+                            self.lastthreemsgs[message.channel.id][2].content]
+                    if len(set(authors)) == 3 and len(set(msgs)) == 1:
+                        await message.channel.send(originalmsg)
+                        del self.lastthreemsgs[message.channel.id]
+                        return
+                    else:
+                        self.lastthreemsgs[message.channel.id].pop(0)
             if self.client.user in message.mentions and not (await self.client.get_context(message)).valid:
                 await message.channel.trigger_typing()
                 msg = sub("<@!?" + str(self.client.user.id) + ">", "", message.content).strip()
@@ -53,7 +72,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                 elif lowercase == "h":
                     if not randint(0, 9):
                         await funcs.sendImage(
-                            message.channel, "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
+                            message.channel,
+                            "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
                             name="h.gif"
                         )
                     else:
@@ -61,7 +81,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                 elif lowercase == "f":
                     if not randint(0, 9):
                         await funcs.sendImage(
-                            message.channel, "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
+                            message.channel,
+                            "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
                         )
                     else:
                         await message.channel.send("f")
@@ -69,7 +90,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                     await message.channel.send("https://i.imgur.com/XezjUCZ.gifv")
                 elif "hkeaa" in lowercase:
                     await funcs.sendImage(
-                        message.channel, "https://cdn.discordapp.com/attachments/659771291858894849/663420485438275594/HKEAA_DENIED.png"
+                        message.channel,
+                        "https://cdn.discordapp.com/attachments/659771291858894849/663420485438275594/HKEAA_DENIED.png"
                     )
                 elif lowercase.startswith("hmmm"):
                     if all(m in "m" for m in lowercase.split("hmm", 1)[1].replace(" ", "")):

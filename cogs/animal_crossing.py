@@ -450,6 +450,38 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             )
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="acvbd", aliases=["vbd", "acnhvbd", "acvb", "vb"], usage="[month] [day]",
+                      description="Shows all Animal Crossing: New Horizons villagers whose birthday is today or a given date.")
+    async def acvbd(self, ctx, month: str="", day: str=""):
+        if not month:
+            month = month or datetime.now().month
+        if not day:
+            day = day or datetime.now().day
+        try:
+            month = funcs.monthNumberToName(int(month))
+        except:
+            month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
+        try:
+            day = int(day)
+        except:
+            day = int(day[:-2])
+        date = f"{month} {str(day)}"
+        vbds = []
+        properdate = None
+        for i in list(self.villagers):
+            data = self.villagers[i]
+            if data["birthday-string"][:-2] == date:
+                vbds.append(data["name"]["name-USen"].title())
+                if not properdate:
+                    properdate = data["birthday-string"]
+        if vbds:
+            e = Embed(title=properdate + " Birthdays", description=", ".join(f"`{j}`" for j in sorted(vbds)))
+            e.set_thumbnail(url=AC_LOGO)
+        else:
+            e = funcs.errorEmbed(None, "No villagers found.")
+        await ctx.send(embed=e)
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons houseware furniture item.")
