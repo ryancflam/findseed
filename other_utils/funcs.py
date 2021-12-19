@@ -149,6 +149,15 @@ def monthNameToNumber(name: str):
         raise Exception("Invalid month.")
 
 
+def valueToOrdinal(n):
+    n = int(n)
+    if 11 <= (n% 100) <= 13:
+        ordinal = "th"
+    else:
+        ordinal = ["th", "st", "nd", "rd", "th"][min(n % 10, 4)]
+    return f"{str(n)}{ordinal}"
+
+
 def dateToZodiac(date: str, ac=False):
     month, day = date.split(" ")
     try:
@@ -185,28 +194,44 @@ def dateToZodiac(date: str, ac=False):
 def yearToChineseZodiac(year):
     year = int(year)
     if not (year - 2000) % 12:
-        return "Dragon"
+        return "Dragon (龍)"
     if (year - 2000) % 12 == 1:
-        return "Snake"
+        return "Snake (蛇)"
     if (year - 2000) % 12 == 2:
-        return "Horse"
+        return "Horse (馬)"
     if (year - 2000) % 12 == 3:
-        return "Goat"
+        return "Goat (羊)"
     if (year - 2000) % 12 == 4:
-        return "Monkey"
+        return "Monkey (猴)"
     if (year - 2000) % 12 == 5:
-        return "Rooster"
+        return "Rooster (雞)"
     if (year - 2000) % 12 == 6:
-        return "Dog"
+        return "Dog (狗)"
     if (year - 2000) % 12 == 7:
-        return "Pig"
+        return "Pig (豬)"
     if (year - 2000) % 12 == 8:
-        return "Rat"
+        return "Rat (鼠)"
     if (year - 2000) % 12 == 9:
-        return "Ox"
+        return "Ox (牛)"
     if (year - 2000) % 12 == 10:
-        return "Tiger"
-    return "Rabbit"
+        return "Tiger (虎)"
+    return "Rabbit (兔)"
+
+
+def leapYear(year):
+    a = int(year)
+    if a <= 1582:
+        return None
+    elif not a % 4:
+        if not a % 100:
+            if not a % 400:
+                return True
+            else:
+                return False
+        else:
+            return True
+    else:
+        return False
 
 
 def celsiusToFahrenheit(value):

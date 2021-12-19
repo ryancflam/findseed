@@ -1058,6 +1058,54 @@ class Utility(commands.Cog, name="Utility"):
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="zodiac", description="Converts a date to its Zodiac sign.",
+                      aliases=["dtz", "astrology", "astrological", "starsign", "z"], usage="[month] [day]")
+    async def zodiac(self, ctx, month: str="", day: str=""):
+        try:
+            if not month:
+                month = month or datetime.now().month
+            if not day:
+                day = day or datetime.now().day
+            try:
+                month = funcs.monthNumberToName(int(month))
+            except:
+                month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
+            monthint = int(funcs.monthNameToNumber(month))
+            try:
+                day = int(day)
+            except:
+                day = int(day[:-2])
+            date = f"{month} {funcs.valueToOrdinal(day)}"
+            if day < 1 or day > 31 and monthint in [1, 3, 5, 7, 8, 10, 12] \
+                    or day > 30 and monthint in [4, 6, 9, 11] \
+                    or day > 29 and monthint == 2:
+                raise Exception
+            e = Embed(
+                title=f"{date} Zodiac Sign",
+                description=funcs.formatting(funcs.dateToZodiac(date))
+            )
+        except Exception:
+            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese Zodiac sign.",
+                      aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"], usage="[year]")
+    async def chinesezodiac(self, ctx, year: str=""):
+        year = year or datetime.now().year
+        try:
+            year = int(year)
+            e = Embed(
+                title=f"{str(year)} Chinese Zodiac Sign",
+                description=funcs.formatting(funcs.yearToChineseZodiac(year))
+            )
+            ly = str(funcs.leapYear(year))
+            e.add_field(name="Leap Year", value=f"`{ly if ly != 'None' else 'Unknown'}`")
+        except Exception:
+            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
 
 def setup(client: commands.Bot):
     client.add_cog(Utility(client))

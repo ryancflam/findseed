@@ -1,5 +1,4 @@
 import hashlib
-from datetime import datetime
 
 from discord import Embed
 from discord.ext import commands
@@ -450,43 +449,6 @@ class Conversion(commands.Cog, name="Conversion"):
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
-
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="zodiac", description="Converts a date to its Zodiac sign.",
-                      aliases=["dtz", "astrology", "astrological", "starsign", "z"], usage="[month] [day]")
-    async def zodiac(self, ctx, month: str="", day: str=""):
-        if not month:
-            month = month or datetime.now().month
-        if not day:
-            day = day or datetime.now().day
-        try:
-            month = funcs.monthNumberToName(int(month))
-        except:
-            month = month
-        date = f"{month} {day}"
-        try:
-            e = Embed(
-                title="Date to Zodiac Sign",
-                description=funcs.formatting(funcs.dateToZodiac(date))
-            )
-        except Exception:
-            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
-
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese Zodiac sign.",
-                      aliases=["cz", "zodiacchinese", "zc"], usage="[year]")
-    async def chinesezodiac(self, ctx, year: str=""):
-        year = year or datetime.now().year
-        try:
-            year = int(year)
-            e = Embed(
-                title="Year to Chinese Zodiac Sign",
-                description=funcs.formatting(funcs.yearToChineseZodiac(year))
-            )
-        except Exception:
-            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
