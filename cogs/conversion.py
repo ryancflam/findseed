@@ -70,7 +70,7 @@ class Conversion(commands.Cog, name="Conversion"):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
                       aliases=["hashing", "hashbrown"], usage="<algorithm> [input]")
     async def hash(self, ctx, algo=None, *, msg=""):
@@ -115,7 +115,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = Embed(title=algo, description=funcs.formatting(output))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",
                       aliases=["ttbf", "t2bf"], usage="<input>")
     async def texttobrainfuck(self, ctx, *, text: str=""):
@@ -149,7 +149,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None,"Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="brainfucktotext", description="Converts Brainfuck to plain text.",
                       aliases=["bftt", "bf2t"], usage="<input>")
     async def brainfucktotext(self, ctx, *, text: str=""):
@@ -168,7 +168,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttomorse", description="Converts plain text to Morse code.",
                       aliases=["ttmc", "t2mc", "texttomorsecode", "ttm", "t2m"], usage="<input>")
     async def texttomorse(self, ctx, *, text: str=""):
@@ -191,7 +191,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="morsetotext", description="Converts Morse code to plain text.",
                       aliases=["mctt", "mc2t", "morsecodetotext", "mtt", "m2t"], usage="<input>")
     async def morsetotext(self, ctx, *, text: str=""):
@@ -227,7 +227,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttohex", description="Converts plain text to hexadecimal.",
                       aliases=["tth", "t2h", "texttohexadecimal"], usage="<input>")
     async def texttohex(self, ctx, *, text: str=""):
@@ -243,7 +243,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hextotext", description="Converts hexadecimal to plain text.",
                       aliases=["htt", "h2t", "hexadecimaltotext"], usage="<input>")
     async def hextotext(self, ctx, *, text: str=""):
@@ -259,7 +259,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttobinary", description="Converts plain text to binary.",
                       aliases=["ttb", "t2b"], usage="<input>")
     async def texttobinary(self, ctx, *, text: str=""):
@@ -275,7 +275,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="binarytotext", description="Converts binary to plain text.",
                       aliases=["btt", "b2t"], usage="<input>")
     async def binarytotext(self, ctx, *, text: str=""):
@@ -293,7 +293,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="decimaltobinary", description="Converts decimal to binary.",
                       aliases=["dtb", "d2b"], usage="<input>")
     async def decimaltobinary(self, ctx, *, text: str=""):
@@ -310,7 +310,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="binarytodecimal", description="Converts binary to decimal.",
                       aliases=["btd", "b2d"], usage="<input>")
     async def binarytodecimal(self, ctx, *, text: str=""):
@@ -327,7 +327,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="binarytohex", description="Converts binary to hexadecimal.",
                       aliases=["bth", "b2h", "binarytohexadecimal"], usage="<input>")
     async def binarytohex(self, ctx, *, text: str=""):
@@ -345,7 +345,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hextobinary", description="Converts hexadecimal to binary.",
                       aliases=["htb", "h2b", "hexadecimaltobinary"], usage="<input>")
     async def hextobinary(self, ctx, *, text: str=""):
@@ -362,7 +362,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hextodecimal", description="Converts hexadecimal to decimal.",
                       aliases=["htd", "h2d"], usage="<input>")
     async def hextodecimal(self, ctx, *, text: str=""):
@@ -379,7 +379,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="decimaltohex", description="Converts decimal to hexadecimal.",
                       aliases=["dth", "d2h"], usage="<input>")
     async def decimaltohex(self, ctx, *, text: str=""):
@@ -396,7 +396,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="ctf", description="Converts Celsius to Fahrenheit.",
                       aliases=["c2f", "ctof", "fahrenheit"], usage="<input>")
     async def ctf(self, ctx, *, text: str=""):
@@ -413,7 +413,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="ftc", description="Converts Fahrenheit to Celsius.",
                       aliases=["f2c", "ftoc", "celsius"], usage="<input>")
     async def ftc(self, ctx, *, text: str=""):
@@ -431,7 +431,59 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="direction", description="Converts degrees to cardinal direction.",
+                      aliases=["d2d", "degree", "degrees", "onedirection"], usage="<input>")
+    async def dtd(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                number = 0 if number == 360 else number
+                if not 0 <= number < 360:
+                    raise ValueError
+                e = Embed(
+                    title="Degrees to Cardinal Direction",
+                    description=funcs.formatting(funcs.degreesToDirection(number))
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="zodiac", description="Converts a date to its Zodiac sign.",
+                      aliases=["dtz", "astrology", "astrological", "starsign", "z"], usage="<month> <day>")
+    async def zodiac(self, ctx, month, day):
+        try:
+            month = funcs.monthNumberToName(int(month))
+        except:
+            month = month
+        date = f"{month} {day}"
+        try:
+            e = Embed(
+                title="Date to Zodiac Sign",
+                description=funcs.formatting(funcs.dateToZodiac(date))
+            )
+        except Exception:
+            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese Zodiac sign.",
+                      aliases=["cz", "zodiacchinese", "zc"], usage="<year>")
+    async def chinesezodiac(self, ctx, year):
+        try:
+            year = int(year)
+            e = Embed(
+                title="Year to Chinese Zodiac Sign",
+                description=funcs.formatting(funcs.yearToChineseZodiac(year))
+            )
+        except Exception:
+            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="lbstokg", description="Converts pounds to kilograms.", usage="<input>",
                       aliases=["kg", "kilogram", "kgs", "kilograms", "kilo", "kilos", "lbs2kg"])
     async def lbstokg(self, ctx, *, text: str=""):
@@ -449,7 +501,7 @@ class Conversion(commands.Cog, name="Conversion"):
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="kgtolbs", description="Converts kilograms to pounds.",
                       aliases=["lbs", "pound", "pounds", "kg2lbs"], usage="<input>")
     async def kgtolbs(self, ctx, *, text: str=""):

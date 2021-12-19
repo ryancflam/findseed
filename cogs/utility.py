@@ -28,40 +28,6 @@ class Utility(commands.Cog, name="Utility"):
                              user_agent="*")
         self.tickers = funcs.getTickers()
 
-    @staticmethod
-    def degreesToDirection(value):
-        if not 11.24 <= value <= 348.75:
-            return "N"
-        if 11.25 <= value <= 33.74:
-            return "NNE"
-        if 33.75 <= value <= 56.24:
-            return "NE"
-        if 56.25 <= value <= 78.74:
-            return "ENE"
-        if 78.75 <= value <= 101.24:
-            return "E"
-        if 101.25 <= value <= 123.74:
-            return "ESE"
-        if 123.75 <= value <= 146.24:
-            return "SE"
-        if 146.25 <= value <= 168.74:
-            return "SSE"
-        if 168.75 <= value <= 191.24:
-            return "S"
-        if 191.25 <= value <= 213.74:
-            return "SSW"
-        if 213.75 <= value <= 236.24:
-            return "SW"
-        if 236.25 <= value <= 258.74:
-            return "WSW"
-        if 258.75 <= value <= 281.24:
-            return "W"
-        if 281.24 <= value <= 303.74:
-            return "WNW"
-        if 303.75 <= value <= 326.24:
-            return "NW"
-        return "NNW"
-
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="covid", description="Gathers COVID-19 data.",
                       aliases=["coronavirus", "corona", "covid19", "cv", "c19", "cv19"], usage="[location]")
@@ -260,7 +226,7 @@ class Utility(commands.Cog, name="Utility"):
             e.add_field(name="Humidity", value="`{}%`".format(data["main"]["humidity"]))
             e.add_field(name="Wind Speed", value="`{} m/s`".format(data["wind"]["speed"]))
             e.add_field(name="Wind Direction",
-                        value="`{}° ({})`".format(int(winddegrees), self.degreesToDirection(winddegrees)))
+                        value="`{}° ({})`".format(int(winddegrees), funcs.degreesToDirection(winddegrees)))
             e.add_field(name="Local Time", value=f"`{timenow}`")
             e.add_field(name="Last Updated (Local Time)", value=f"`{lastupdate}`")
             e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.",
@@ -954,8 +920,11 @@ class Utility(commands.Cog, name="Utility"):
                                       + ("..." if len(altmetric["authors"]) > 10 else ""))
                 except:
                     pass
-                e.add_field(name="Journal",
-                            value=f"`{altmetric['journal']} (ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
+                try:
+                    e.add_field(name="Journal",
+                                value=f"`{altmetric['journal']} (ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
+                except:
+                    pass
                 if altmetric["published_on"] < 0:
                     pub = datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])
                 else:

@@ -79,6 +79,40 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
            f", {minutes} minute{'' if minutes == 1 else 's'}, and {seconds} second{'' if seconds == 1 else 's'}"
 
 
+def degreesToDirection(value):
+    if not 11.25 < value <= 348.75:
+        return "N"
+    if 11.25 < value <= 33.75:
+        return "NNE"
+    if 33.75 < value <= 56.25:
+        return "NE"
+    if 56.25 < value <= 78.75:
+        return "ENE"
+    if 78.75 < value <= 101.25:
+        return "E"
+    if 101.25 < value <= 123.75:
+        return "ESE"
+    if 123.75 < value <= 146.25:
+        return "SE"
+    if 146.25 < value <= 168.75:
+        return "SSE"
+    if 168.75 < value <= 191.25:
+        return "S"
+    if 191.25 < value <= 213.75:
+        return "SSW"
+    if 213.75 < value <= 236.25:
+        return "SW"
+    if 236.25 < value <= 258.75:
+        return "WSW"
+    if 258.75 < value <= 281.25:
+        return "W"
+    if 281.25 < value <= 303.75:
+        return "WNW"
+    if 303.75 < value <= 326.25:
+        return "NW"
+    return "NNW"
+
+
 def monthNumberToName(number):
     try:
         return date(1900, int(number), 1).strftime("%B")
@@ -113,6 +147,66 @@ def monthNameToNumber(name: str):
         return "12"
     else:
         raise Exception("Invalid month.")
+
+
+def dateToZodiac(date: str, ac=False):
+    month, day = date.split(" ")
+    try:
+        day = int(day)
+    except:
+        day = int(day[:-2])
+    month = monthNumberToName(monthNameToNumber(month))
+    if month == "December" and day > 21 or month == "January" and day < (20 if ac else 22):
+        return "Capricorn"
+    if month == "January" and day > (19 if ac else 21) or month == "February" and day < 19:
+        return "Aquarius"
+    if month == "February" and day > 18 or month == "March" and day < 21:
+        return "Pisces"
+    if month == "March" and day > 20 or month == "April" and day < 20:
+        return "Aries"
+    if month == "April" and day > 19 or month == "May" and day < 21:
+        return "Taurus"
+    if month == "May" and day > 20 or month == "June" and day < (22 if ac else 21):
+        return "Gemini"
+    if month == "June" and day > (21 if ac else 20) or month == "July" and day < 23:
+        return "Cancer"
+    if month == "July" and day > 22 or month == "August" and day < 23:
+        return "Leo"
+    if month == "August" and day > 22 or month == "September" and day < 23:
+        return "Virgo"
+    if month == "September" and day > 22 or month == "October" and day < (24 if ac else 23):
+        return "Libra"
+    if month == "October" and day > (23 if ac else 22) or month == "November" and day < (23 if ac else 22):
+        return "Scorpio"
+    if month == "November" and day > (22 if ac else 21) or month == "December" and day < 22:
+        return "Sagittarius"
+
+
+def yearToChineseZodiac(year):
+    year = int(year)
+    if not (year - 2000) % 12:
+        return "Dragon"
+    if (year - 2000) % 12 == 1:
+        return "Snake"
+    if (year - 2000) % 12 == 2:
+        return "Horse"
+    if (year - 2000) % 12 == 3:
+        return "Goat"
+    if (year - 2000) % 12 == 4:
+        return "Monkey"
+    if (year - 2000) % 12 == 5:
+        return "Rooster"
+    if (year - 2000) % 12 == 6:
+        return "Dog"
+    if (year - 2000) % 12 == 7:
+        return "Pig"
+    if (year - 2000) % 12 == 8:
+        return "Rat"
+    if (year - 2000) % 12 == 9:
+        return "Ox"
+    if (year - 2000) % 12 == 10:
+        return "Tiger"
+    return "Rabbit"
 
 
 def celsiusToFahrenheit(value):

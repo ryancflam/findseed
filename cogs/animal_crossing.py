@@ -48,34 +48,6 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 return True
         return False
 
-    @staticmethod
-    def dateToZodiac(date):
-        month, day = date[:-2].split(" ")
-        if month == "December" and int(day) > 21 or month == "January" and int(day) < 20:
-            return "Capricorn"
-        if month == "January" and int(day) > 19 or month == "February" and int(day) < 19:
-            return "Aquarius"
-        if month == "February" and int(day) > 18 or month == "March" and int(day) < 21:
-            return "Pisces"
-        if month == "March" and int(day) > 20 or month == "April" and int(day) < 20:
-            return "Aries"
-        if month == "April" and int(day) > 19 or month == "May" and int(day) < 21:
-            return "Taurus"
-        if month == "May" and int(day) > 20 or month == "June" and int(day) < 22:
-            return "Gemini"
-        if month == "June" and int(day) > 21 or month == "July" and int(day) < 23:
-            return "Cancer"
-        if month == "July" and int(day) > 22 or month == "August" and int(day) < 23:
-            return "Leo"
-        if month == "August" and int(day) > 22 or month == "September" and int(day) < 23:
-            return "Virgo"
-        if month == "September" and int(day) > 22 or month == "October" and int(day) < 24:
-            return "Libra"
-        if month == "October" and int(day) > 23 or month == "November" and int(day) < 23:
-            return "Scorpio"
-        if month == "November" and int(day) > 22 or month == "December" and int(day) < 22:
-            return "Sagittarius"
-
     def addCritter(self, data: dict, month, mode):
         north, south = [], []
         for i in data:
@@ -414,7 +386,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             bdm, bdd = bd[:-2].split(" ")
             now = datetime.now()
             e.add_field(name="Birthday",
-                        value=f"`{bd} ({self.dateToZodiac(bd)})`" + \
+                        value=f"`{bd} ({funcs.dateToZodiac(bd, ac=True)})`" + \
                               f"{' :birthday:' if int(bdd) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ''}")
             e.add_field(name="Species", value=f"`{villagerdata['species']}`")
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
