@@ -455,44 +455,49 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       description="Shows all Animal Crossing: New Horizons villagers who celebrates " + \
                                   f"their birthday in a given month or on a given date.")
     async def acvbd(self, ctx, month: str="", day: str=""):
-        now = datetime.now()
-        if not month:
-            month = month or now.month
         try:
-            month = funcs.monthNumberToName(int(month))
-        except:
-            month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
-        vbds = []
-        if day:
+            now = datetime.now()
+            if not month:
+                month = month or now.month
             try:
-                day = int(day)
+                month = funcs.monthNumberToName(int(month))
             except:
-                day = int(day[:-2])
-            date = f"{month} {str(day)}"
-            properdate = None
-            for i in list(self.villagers):
-                data = self.villagers[i]
-                if data["birthday-string"][:-2] == date:
-                    vbds.append(data["name"]["name-USen"].title())
-                    if not properdate:
-                        properdate = data["birthday-string"]
-            if vbds:
-                e = Embed(title=properdate + " Birthdays", description=", ".join(f"`{j}`" for j in sorted(vbds)))
-                e.set_thumbnail(url=AC_LOGO)
+                month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
+            vbds = []
+            if day:
+                try:
+                    day = int(day)
+                except:
+                    day = int(day[:-2])
+                date = f"{month} {str(day)}"
+                properdate = None
+                for i in list(self.villagers):
+                    data = self.villagers[i]
+                    if data["birthday-string"][:-2] == date:
+                        vbds.append(data["name"]["name-USen"].title())
+                        if not properdate:
+                            properdate = data["birthday-string"]
+                if vbds:
+                    e = Embed(title=properdate + " Birthdays", description=", ".join(f"`{j}`" for j in sorted(vbds)))
+                    e.set_thumbnail(url=AC_LOGO)
+                else:
+                    e = funcs.errorEmbed(None, "No villagers found.")
             else:
-                e = funcs.errorEmbed(None, "No villagers found.")
-        else:
-            for i in list(self.villagers):
-                data = self.villagers[i]
-                bdm, bdd = data["birthday-string"][:-2].split(" ")
-                if bdm == month:
-                    vbds.append(data["name"]["name-USen"].title()
-                                + ("LOL" if int(bdd) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ""))
-            e = Embed(title=month + " Birthdays",
-                      description=", ".join(
-                          f"`{j.replace('LOL', '')}`{' :birthday:' if j.endswith('LOL') else ''}" for j in sorted(vbds)
-                      ))
-            e.set_thumbnail(url=AC_LOGO)
+                for i in list(self.villagers):
+                    data = self.villagers[i]
+                    bdm, bdd = data["birthday-string"].split(" ")
+                    if bdm == month:
+                        vbds.append(data["name"]["name-USen"].title() + f" ({bdd})"
+                                    + ("LOL" if int(bdd[:-2]) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ""))
+                e = Embed(title=month + " Birthdays",
+                          description=", ".join(
+                              f"`{j.replace('LOL', '')}`{' :birthday:' if j.endswith('LOL') else ''}" for j in sorted(
+                                  vbds, key=lambda k: int(k.split(")")[0].split("(")[1][:-2])
+                              )
+                          ))
+                e.set_thumbnail(url=AC_LOGO)
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
