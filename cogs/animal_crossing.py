@@ -10,6 +10,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 AC_LOGO = "https://cdn.discordapp.com/attachments/771404776410972161/906436017987395604/unknown.png"
+BD_KEY = "LOL"
 
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hidden=True)):
@@ -38,6 +39,18 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                         .replace("’", "").replace("rock_head", "rock-head")]
         except KeyError:
             raise Exception("Not found, please check your spelling.")
+
+    @staticmethod
+    def bdList(sign, orglist, month, now):
+        vbds = filter(lambda l: funcs.dateToZodiac(l["birthday-string"], ac=True) == sign, orglist)
+        newlist = []
+        for i in vbds:
+            bdm, bdd = i["birthday-string"].split(" ")
+            newlist.append(
+                i["name"]["name-USen"].title() + f' ({bdd})' + \
+                f'{BD_KEY if int(funcs.monthNameToNumber(month)) == now.month and int(bdd[:-2]) == now.day else ""}'
+            )
+        return newlist
 
     @staticmethod
     def isArrivingOrLeaving(monthsstr, month, mode):
@@ -483,17 +496,21 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                 else:
                     e = funcs.errorEmbed(None, "No villagers found.")
             else:
+                sign1 = funcs.dateToZodiac(month + " 1", ac=True)
+                sign2 = funcs.dateToZodiac(month + " 28", ac=True)
                 for i in list(self.villagers):
                     data = self.villagers[i]
-                    bdm, bdd = data["birthday-string"].split(" ")
-                    if bdm == month:
-                        vbds.append(data["name"]["name-USen"].title() + f" ({bdd})"
-                                    + ("LOL" if int(bdd[:-2]) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ""))
-                e = Embed(title=month + " Birthdays",
-                          description=", ".join(
-                              f"`{j.replace('LOL', '')}`{' :birthday:' if j.endswith('LOL') else ''}" for j in sorted(
-                                  vbds, key=lambda k: int(k.split(")")[0].split("(")[1][:-2])
-                              )
+                    if data["birthday-string"].split(" ")[0] == month:
+                        vbds.append(data)
+                vbds = sorted(vbds, key=lambda k: int(k["birthday-string"].split(" ")[1][:-2]))
+                vbds1 = self.bdList(sign1, vbds, month, now)
+                vbds2 = self.bdList(sign2, vbds, month, now)
+                e = Embed(title=month + " Birthdays")
+                e.add_field(name=sign1, value=", ".join(
+                              f"`{j.replace(BD_KEY, '')}`{' :birthday:' if j.endswith(BD_KEY) else ''}" for j in vbds1
+                          ))
+                e.add_field(name=sign2, value=", ".join(
+                              f"`{j.replace(BD_KEY, '')}`{' :birthday:' if j.endswith(BD_KEY) else ''}" for j in vbds2
                           ))
                 e.set_thumbnail(url=AC_LOGO)
         except Exception:
