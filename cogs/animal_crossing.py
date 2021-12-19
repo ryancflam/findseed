@@ -451,35 +451,48 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acvbd", aliases=["vbd", "acnhvbd", "acvb", "vb"], usage="[month] [day]",
-                      description="Shows all Animal Crossing: New Horizons villagers whose birthday is today or a given date.")
+    @commands.command(name="acvbd", aliases=["vbd", "acnhvbd"], usage="[month] [day]",
+                      description="Shows all Animal Crossing: New Horizons villagers who celebrates " + \
+                                  f"their birthday in a given month or on a given date.")
     async def acvbd(self, ctx, month: str="", day: str=""):
+        now = datetime.now()
         if not month:
-            month = month or datetime.now().month
-        if not day:
-            day = day or datetime.now().day
+            month = month or now.month
         try:
             month = funcs.monthNumberToName(int(month))
         except:
             month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
-        try:
-            day = int(day)
-        except:
-            day = int(day[:-2])
-        date = f"{month} {str(day)}"
         vbds = []
-        properdate = None
-        for i in list(self.villagers):
-            data = self.villagers[i]
-            if data["birthday-string"][:-2] == date:
-                vbds.append(data["name"]["name-USen"].title())
-                if not properdate:
-                    properdate = data["birthday-string"]
-        if vbds:
-            e = Embed(title=properdate + " Birthdays", description=", ".join(f"`{j}`" for j in sorted(vbds)))
-            e.set_thumbnail(url=AC_LOGO)
+        if day:
+            try:
+                day = int(day)
+            except:
+                day = int(day[:-2])
+            date = f"{month} {str(day)}"
+            properdate = None
+            for i in list(self.villagers):
+                data = self.villagers[i]
+                if data["birthday-string"][:-2] == date:
+                    vbds.append(data["name"]["name-USen"].title())
+                    if not properdate:
+                        properdate = data["birthday-string"]
+            if vbds:
+                e = Embed(title=properdate + " Birthdays", description=", ".join(f"`{j}`" for j in sorted(vbds)))
+                e.set_thumbnail(url=AC_LOGO)
+            else:
+                e = funcs.errorEmbed(None, "No villagers found.")
         else:
-            e = funcs.errorEmbed(None, "No villagers found.")
+            for i in list(self.villagers):
+                data = self.villagers[i]
+                bdm, bdd = data["birthday-string"][:-2].split(" ")
+                if bdm == month:
+                    vbds.append(data["name"]["name-USen"].title()
+                                + ("LOL" if int(bdd) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ""))
+            e = Embed(title=month + " Birthdays",
+                      description=", ".join(
+                          f"`{j.replace('LOL', '')}`{' :birthday:' if j.endswith('LOL') else ''}" for j in sorted(vbds)
+                      ))
+            e.set_thumbnail(url=AC_LOGO)
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
