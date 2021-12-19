@@ -1059,8 +1059,8 @@ class Utility(commands.Cog, name="Utility"):
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="zodiac", description="Converts a date to its Zodiac sign.",
-                      aliases=["dtz", "astrology", "astrological", "starsign", "z"], usage="[month] [day]")
+    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.",
+                      aliases=["starsign", "z"], usage="[month] [day]")
     async def zodiac(self, ctx, month: str="", day: str=""):
         try:
             if not month:
@@ -1090,14 +1090,14 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese Zodiac sign.",
+    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.",
                       aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"], usage="[year]")
     async def chinesezodiac(self, ctx, year: str=""):
         year = year or datetime.now().year
         try:
             year = int(year)
             e = Embed(
-                title=f"{str(year)} Chinese Zodiac Sign",
+                title=f"{str(year) if year > 1 else str(year * -1 + 1) + ' B.C.'} Chinese Zodiac Sign",
                 description=funcs.formatting(funcs.yearToChineseZodiac(year))
             )
             ly = str(funcs.leapYear(year))

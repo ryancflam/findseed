@@ -65,6 +65,7 @@ class General(commands.Cog, name="General"):
                     value="`{:,} GB`".format(
                         round(float(dict(psutil.disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)
                     ))
+        e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.send(embed=e)
 
