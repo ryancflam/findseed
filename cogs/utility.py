@@ -965,9 +965,9 @@ class Utility(commands.Cog, name="Utility"):
                 dimensionsdata = await funcs.getRequest("https://metrics-api.dimensions.ai/doi/" + doi, verify=False)
                 dimensions = dimensionsdata.json()
                 if dimensions["times_cited"]:
-                    e.add_field(name="Times Cited", value=f'`{dimensions["times_cited"]}`')
+                    e.add_field(name="Citations", value="`{:,}`".format(dimensions["times_cited"]))
                 if dimensions["recent_citations"]:
-                    e.add_field(name="Recent Citations", value=f'`{dimensions["recent_citations"]}`')
+                    e.add_field(name="Citations (2y)", value="`{:,}`".format(dimensions["recent_citations"]))
                 if dimensions["times_cited"] or dimensions["recent_citations"]:
                     e.description = f"{desc}https://badge.dimensions.ai/details/doi/{doi}\n{funcs.formatting(res)}"
             except:
