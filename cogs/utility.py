@@ -884,6 +884,7 @@ class Utility(commands.Cog, name="Utility"):
                       aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics"],
                       usage="<DOI number> [citation style]", name="cite")
     async def cite(self, ctx, doi, style="apa"):
+        await ctx.send("Getting article data. Please wait...")
         doi = f'https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}'.casefold()
         while doi.endswith("."):
             doi = doi[:-1]
@@ -904,13 +905,15 @@ class Utility(commands.Cog, name="Utility"):
             if "java.lang.Thread.run" in res:
                 res = "Invalid citation style!"
             doi = doi.replace('"', "")
-            e = Embed(title="Article", description=doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "")
-                                                   + "\n" + funcs.formatting(res))
+            desc = doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "") + "\n"
+            e = Embed(title="Article", description=desc + funcs.formatting(res))
             obj.kill()
+            doi = doi.split("doi.org/")[1]
             try:
-                altmetricdata = await funcs.getRequest("https://api.altmetric.com/v1/doi/" + doi.split("doi.org/")[1],
-                                                       verify=False)
+                altmetricdata = await funcs.getRequest("https://api.altmetric.com/v1/doi/" + doi, verify=False)
                 altmetric = altmetricdata.json()
+                desc += altmetric["details_url"] + "\n"
+                e.description = desc + funcs.formatting(res)
                 if len(altmetric["title"]) < 257:
                     e.title = altmetric["title"]
                 e.set_thumbnail(url=altmetric["images"]["large"])
@@ -930,7 +933,6 @@ class Utility(commands.Cog, name="Utility"):
                 else:
                     pub = datetime.utcfromtimestamp(int(altmetric["published_on"])).date()
                 e.add_field(name="Publish Date", value="`%s %s %s`" % (pub.day, funcs.monthNumberToName(pub.month), pub.year))
-                e.add_field(name="Altmetric Score", value="`{:,}`".format(round(altmetric["score"], 2)))
                 try:
                     e.add_field(name="PMID", value=f"`{altmetric['pmid']}`")
                 except:
@@ -959,6 +961,17 @@ class Utility(commands.Cog, name="Utility"):
                              icon_url="https://secure.gravatar.com/avatar/97869aff9f24c5d0e1e44b55a274631a")
             except JSONDecodeError:
                 e.set_footer(text="Note: No Altmetric data available for this article.")
+            try:
+                dimensionsdata = await funcs.getRequest("https://metrics-api.dimensions.ai/doi/" + doi, verify=False)
+                dimensions = dimensionsdata.json()
+                if dimensions["times_cited"]:
+                    e.add_field(name="Times Cited", value=f'`{dimensions["times_cited"]}`')
+                if dimensions["recent_citations"]:
+                    e.add_field(name="Recent Citations", value=f'`{dimensions["recent_citations"]}`')
+                if dimensions["times_cited"] or dimensions["recent_citations"]:
+                    e.description = f"{desc}https://badge.dimensions.ai/details/doi/{doi}\n{funcs.formatting(res)}"
+            except:
+                pass
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
