@@ -267,7 +267,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                       "ether. This command is for versions 1.13+ and may " + \
                                                       "not be 100% accurate. This command may not be used" + \
                                                       " in a real speedrun.",
-                      aliases=["bt", "blind", "blindtrav"], usage="<F3+C data>", hidden=True)
+                      aliases=["bt", "blind", "blindtrav"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -300,7 +300,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                          "is command is for versions 1.13+ and may not be" + \
                                                          " 100% accurate. This command may not be used in" + \
                                                          " a real speedrun.",
-                      aliases=["et", "educated", "nethertravel"], usage="<F3+C data>", hidden=True)
+                      aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -333,7 +333,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                        "This command is for versions 1.13+ and may not be" + \
                                                        " 100% accurate. This command may not be used in a " + \
                                                        "real speedrun.",
-                      aliases=["double"], usage="<F3+C data>", hidden=True)
+                      aliases=["double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -365,7 +365,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                     "tes in the Nether. This command is for versions 1.13" + \
                                                     "+ and may not be 100% accurate. This command may not" + \
                                                     " be used in a real speedrun.",
-                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>", hidden=True)
+                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
     async def safeblind(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
@@ -460,7 +460,7 @@ class Minecraft(commands.Cog, name="Minecraft"):
                                                         " and may not be 100% accurate. This command may" + \
                                                         " not be used in a real speedrun.",
                       aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
-                      usage="<F3+C data>", hidden=True)
+                      usage="<F3+C data>")
     async def triangulation(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")
