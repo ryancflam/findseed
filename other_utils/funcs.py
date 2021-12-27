@@ -191,15 +191,15 @@ def monthNameToNumber(name: str):
 
 def valueToOrdinal(n):
     n = int(n)
-    if 11 <= (n% 100) <= 13:
+    if 11 <= (n % 100) <= 13:
         ordinal = "th"
     else:
         ordinal = ["th", "st", "nd", "rd", "th"][min(n % 10, 4)]
     return f"{str(n)}{ordinal}"
 
 
-def dateToZodiac(date: str, ac=False):
-    month, day = date.split(" ")
+def dateToZodiac(datestr: str, ac=False):
+    month, day = datestr.split(" ")
     try:
         day = int(day)
     except:

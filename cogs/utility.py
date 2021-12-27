@@ -1137,16 +1137,14 @@ class Utility(commands.Cog, name="Utility"):
                     month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
             else:
                 neg = False
-                if not month:
-                    month = month or datetime.now().month
-                if not day:
-                    day = day or datetime.now().day
-                if not year:
-                    year = year or datetime.now().year
+                month = month or datetime.now().month
+                day = day or datetime.now().day
+                year = year or datetime.now().year
                 try:
                     month = funcs.monthNumberToName(int(month))
                 except:
                     month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
+                dateobj = datetime(int(year), int(funcs.monthNameToNumber(month)), int(day))
                 if not month2:
                     month2 = month2 or datetime.now().month
                 if not day2:
@@ -1157,7 +1155,6 @@ class Utility(commands.Cog, name="Utility"):
                     month2 = funcs.monthNumberToName(int(month2))
                 except:
                     month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
-                dateobj = datetime(int(year), int(funcs.monthNameToNumber(month)), int(day))
             dateobj2 = datetime(int(year2), int(funcs.monthNameToNumber(month2)), int(day2))
             dateobjs = sorted([dateobj, dateobj2])
             delta = dateobjs[1] - dateobjs[0]
@@ -1184,13 +1181,17 @@ class Utility(commands.Cog, name="Utility"):
                 )
             else:
                 if today.date() == dateobj.date():
-                    e = Embed(title=f"{dateobj2.day} {funcs.monthNumberToName(dateobj2.month)} {dateobj2.year}")
-                    e.add_field(name="Weekday", value=f"`{funcs.weekdayNumberToName(dateobj2.weekday())}`")
+                    e = Embed(
+                        title=f"{funcs.weekdayNumberToName(dateobj2.weekday())}, " + \
+                              f"{dateobj2.day} {funcs.monthNumberToName(dateobj2.month)} {dateobj2.year}"
+                    )
                 else:
-                    e = Embed(title=f"{dateobj.day} {funcs.monthNumberToName(dateobj.month)} {dateobj.year}")
-                    e.add_field(name="Weekday", value=f"`{funcs.weekdayNumberToName(dateobj.weekday())}`")
+                    e = Embed(
+                        title=f"{funcs.weekdayNumberToName(dateobj.weekday())}, " + \
+                              f"{dateobj.day} {funcs.monthNumberToName(dateobj.month)} {dateobj.year}"
+                    )
             if daysint:
-                years, months, daysfinal, monthsfinal, daysint = funcs.dateDifference(dateobjs[0], dateobjs[1])
+                years, months, daysfinal, monthsfinal, daysint = funcs.dateDifference(dateobjs[0].date(), dateobjs[1].date())
                 res = "== Time Difference ==\n\n"
                 if years:
                     res += "{:,} year{}, {} month{}, and {} day{}\nor ".format(
@@ -1202,6 +1203,8 @@ class Utility(commands.Cog, name="Utility"):
                     )
                 res += "{:,} day{}".format(daysint, "" if daysint == 1 else "s")
                 e.description = funcs.formatting(res)
+            else:
+                e.description = funcs.formatting("Today")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
