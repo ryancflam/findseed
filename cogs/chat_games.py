@@ -14,6 +14,7 @@ from game_models.bulls_and_cows import BullsAndCows
 from game_models.card_trick import CardTrick
 from game_models.hangman import Hangman
 from game_models.minesweeper import Minesweeper
+from game_models.no_thanks import NoThanks
 from game_models.tetris import Tetris
 from game_models.uno import Uno
 from other_utils import funcs
@@ -130,6 +131,106 @@ class ChatGames(commands.Cog, name="Chat Games"):
         self.gameChannels.remove(ctx.channel.id)
         del self.tetrisGames[ctx.channel]
         await game.updateBoard()
+
+    async def ntAwaitInput(self, game, user, playerObj):
+        while playerObj in game.getPlayerList() and not game.getGameEndBool():
+            try:
+                var = await self.client.wait_for(
+                    "message", check=lambda m: m.author == user, timeout=1
+                )
+                if var.content.casefold() == "time":
+                    m, s = game.getTime()
+                    await self.sendTime(var.channel, m, s)
+                elif var.content.casefold() == "chips" or var.content.casefold() == "chip":
+                    chips = playerObj.getChips()
+                    await user.send(f"**== No Thanks ==**\n\nYou have **{chips}** chip{'' if chips == 1 else 's'} left.")
+                    await var.channel.send("`Please check DMs.`")
+                else:
+                    continue
+            except:
+                continue
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="nothanks", description="Play No Thanks.")
+    @commands.guild_only()
+    async def nothanks(self, ctx):
+        if await self.checkGameInChannel(ctx):
+            return
+        self.gameChannels.append(ctx.channel.id)
+        await ctx.send("**A game of No Thanks is starting in one minute in this channel! " + \
+                       "Say `join` to join. The game requires a minimum of 3 players and a maximum of 7.**")
+        players = [ctx.author]
+        waiting = time()
+        while time() - waiting < 60:
+            try:
+                joinGame = await self.client.wait_for(
+                "message", check=lambda m: m.channel == ctx.channel and m.content.casefold() == "join", timeout=1
+                )
+            except TimeoutError:
+                continue
+            if joinGame.author.bot or joinGame.author in players \
+                    or not funcs.userNotBlacklisted(self.client, joinGame):
+                continue
+            else:
+                players.append(joinGame.author)
+                await ctx.send(f"`{joinGame.author.name} has joined No Thanks.`")
+                if len(players) == 7:
+                    break
+        if len(players) < 3:
+            self.gameChannels.remove(ctx.channel.id)
+            return await ctx.send("**Not enough players for No Thanks; stopping current game.**")
+        await ctx.send(
+            f"**Starting a game of No Thanks with {len(players)} players. " + \
+            "Input `chips` to see how many chips you have, `time` to see total elapsed time, or " + \
+            "`quit` to quit the game (Note: You may only quit when it is your turn).**"
+        )
+        count = 1
+        game = NoThanks(players)
+        for player in players:
+            self.client.loop.create_task(self.ntAwaitInput(game, player, game.getPlayer(count - 1)))
+            try:
+                chips = game.getPlayer(count - 1).getChips()
+                await player.send(f"**== No Thanks ==**\n\nWelcome to No Thanks. You are player {str(count)}." + \
+                                  f" Active channel: <#{ctx.channel.id}>\n\n**You have {chips} chips." + \
+                                  f"You may hide or tell how many chips you have. Every time a card is drawn, you may choose" + \
+                                  " to either take it and gain all of the card's chips, or pass it to the next player and " + \
+                                  "place a chip on the card. If you have no chips left, you must take the card. Once a card is" + \
+                                  " taken, the next card gets drawn. The game ends when there are no cards left to draw, which" + \
+                                  " is when player points are accrued from their cards according to the value of the cards, but" + \
+                                  " cards in a row only count as a single card with the lowest value. Chips are worth one " + \
+                                  "negative point each. The player(s) with the lowest score wins. Good luck!**")
+            except:
+                self.gameChannels.remove(ctx.channel.id)
+                return await ctx.send("**Someone has DMs disabled; stopping current game.**")
+            count += 1
+        while not game.getGameEndBool():
+            status = "```== No Thanks ==\n\nPlayer Hands:\n\n"
+            for i in game.getPlayerList():
+                status += f"{i.getPlayer().name}: {', '.join(str(j) for j in i.getCards()) or 'None'}\n"
+            await ctx.send(status + f"\nCards Remaining: {len(game.getDeck())}```")
+            await ctx.send(f"`{game.getStatus()}`")
+            currentPlayer = game.getCurrentPlayer().getPlayer()
+            try:
+                waitForInput = await self.client.wait_for(
+                    "message", check=lambda m: m.author == currentPlayer, timeout=120
+                )
+                option = waitForInput.content
+            except TimeoutError:
+                await ctx.send(f"`{currentPlayer.name} has left No Thanks for idling too long.`")
+                option = "quit"
+            try:
+                game.turn(option)
+            except Exception as ex:
+                await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        m, s = game.getTime()
+        await ctx.send(f"`{game.getStatus()}`")
+        ranking = game.rankPlayers()
+        status = "```== No Thanks ==\n\n"
+        for i in range(len(ranking)):
+            status += f"{funcs.valueToOrdinal(i + 1)} - {ranking[i].getPlayer()} (Score: {ranking[i].calculateScore()})\n"
+        await ctx.send(status + "\nThanks for playing!```")
+        await self.sendTime(ctx, m, s)
+        self.gameChannels.remove(ctx.channel.id)
 
     @staticmethod
     async def unoDraw(user, drawn):

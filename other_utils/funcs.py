@@ -1,3 +1,4 @@
+from calendar import monthrange
 from datetime import date, datetime
 from io import BytesIO
 from json import dump, load, JSONDecodeError
@@ -111,6 +112,45 @@ def degreesToDirection(value):
     if 303.75 < value <= 326.25:
         return "NW"
     return "NNW"
+
+
+def dateDifference(dateobj, dateobj2):
+    years = dateobj2.year - dateobj.year
+    months = dateobj2.month - dateobj.month
+    daysfinal = dateobj2.day - dateobj.day
+    if dateobj.day > dateobj2.day and dateobj.month > dateobj2.month:
+        months = 11 - (dateobj.month - dateobj2.month)
+        daysfinal = monthrange(dateobj.year, dateobj.month)[1] - (dateobj.day - dateobj2.day)
+        years -= 1
+    elif dateobj.day > dateobj2.day and dateobj.month == dateobj2.month:
+        daysfinal = 30
+        months = 12 if not months else months
+        months -= 1
+        years -= 1
+    elif dateobj.day <= dateobj2.day and dateobj.month > dateobj2.month:
+        months += 12
+        years -= 1
+    elif dateobj.day > dateobj2.day and dateobj.month < dateobj2.month:
+        daysfinal = monthrange(dateobj.year, dateobj.month)[1] + daysfinal
+        months = 12 if not months else months
+        months -= 1
+    return years, months, daysfinal, years * 12 + months, (dateobj2 - dateobj).days
+
+
+def weekdayNumberToName(number):
+    if number == 0:
+        return "Monday"
+    if number == 1:
+        return "Tuesday"
+    if number == 2:
+        return "Wednesday"
+    if number == 3:
+        return "Thursday"
+    if number == 4:
+        return "Friday"
+    if number == 5:
+        return "Saturday"
+    return "Sunday"
 
 
 def monthNumberToName(number):

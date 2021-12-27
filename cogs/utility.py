@@ -1099,7 +1099,7 @@ class Utility(commands.Cog, name="Utility"):
                 description=funcs.formatting(funcs.dateToZodiac(date))
             )
         except Exception:
-            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+            e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -1116,7 +1116,94 @@ class Utility(commands.Cog, name="Utility"):
             ly = str(funcs.leapYear(year))
             e.add_field(name="Leap Year", value=f"`{ly if ly != 'None' else 'Unknown'}`")
         except Exception:
-            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+            e = funcs.errorEmbed(None, "Invalid input.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age"],
+                      usage="[day #1] [month #1] [year #1] [day #2] [month #2] [year #2]", name="date")
+    async def date(self, ctx, day: str="", month: str="", year: str="", day2: str="", month2: str="", year2: str=""):
+        today = datetime.today()
+        try:
+            if day and not month and not year and not day2 and not month2 and not year2:
+                neg = int(day) < 0
+                dateobj = datetime.today() + timedelta(days=int(day))
+                month2 = month2 or datetime.now().month
+                day2 = day2 or datetime.now().day
+                year2 = year2 or datetime.now().year
+                try:
+                    month2 = funcs.monthNumberToName(int(month2))
+                except:
+                    month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
+            else:
+                neg = False
+                if not month:
+                    month = month or datetime.now().month
+                if not day:
+                    day = day or datetime.now().day
+                if not year:
+                    year = year or datetime.now().year
+                try:
+                    month = funcs.monthNumberToName(int(month))
+                except:
+                    month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
+                if not month2:
+                    month2 = month2 or datetime.now().month
+                if not day2:
+                    day2 = day2 or datetime.now().day
+                if not year2:
+                    year2 = year2 or datetime.now().year
+                try:
+                    month2 = funcs.monthNumberToName(int(month2))
+                except:
+                    month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
+                dateobj = datetime(int(year), int(funcs.monthNameToNumber(month)), int(day))
+            dateobj2 = datetime(int(year2), int(funcs.monthNameToNumber(month2)), int(day2))
+            dateobjs = sorted([dateobj, dateobj2])
+            delta = dateobjs[1] - dateobjs[0]
+            daysint = delta.days + (1 if neg else 0)
+            if dateobj.date() != today.date() and dateobj2.date() != today.date():
+                e = Embed(title="Two Dates")
+                e.add_field(
+                    name="Date #1",
+                    value="`%s, %s %s %s`" % (
+                        funcs.weekdayNumberToName(dateobjs[0].weekday()),
+                        dateobjs[0].day,
+                        funcs.monthNumberToName(dateobjs[0].month),
+                        dateobjs[0].year
+                    )
+                )
+                e.add_field(
+                    name="Date #2",
+                    value="`%s, %s %s %s`" % (
+                        funcs.weekdayNumberToName(dateobjs[1].weekday()),
+                        dateobjs[1].day,
+                        funcs.monthNumberToName(dateobjs[1].month),
+                        dateobjs[1].year
+                    )
+                )
+            else:
+                if today.date() == dateobj.date():
+                    e = Embed(title=f"{dateobj2.day} {funcs.monthNumberToName(dateobj2.month)} {dateobj2.year}")
+                    e.add_field(name="Weekday", value=f"`{funcs.weekdayNumberToName(dateobj2.weekday())}`")
+                else:
+                    e = Embed(title=f"{dateobj.day} {funcs.monthNumberToName(dateobj.month)} {dateobj.year}")
+                    e.add_field(name="Weekday", value=f"`{funcs.weekdayNumberToName(dateobj.weekday())}`")
+            if daysint:
+                years, months, daysfinal, monthsfinal, daysint = funcs.dateDifference(dateobjs[0], dateobjs[1])
+                res = "== Time Difference ==\n\n"
+                if years:
+                    res += "{:,} year{}, {} month{}, and {} day{}\nor ".format(
+                        years, "" if years == 1 else "s", months, "" if months == 1 else "s", daysfinal, "" if daysfinal == 1 else "s"
+                    )
+                if monthsfinal:
+                    res += "{:,} month{} and {} day{}\nor ".format(
+                        monthsfinal, "" if monthsfinal == 1 else "s", daysfinal, "" if daysfinal == 1 else "s"
+                    )
+                res += "{:,} day{}".format(daysint, "" if daysint == 1 else "s")
+                e.description = funcs.formatting(res)
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
 
