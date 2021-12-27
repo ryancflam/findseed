@@ -1126,7 +1126,7 @@ class Utility(commands.Cog, name="Utility"):
         today = datetime.today()
         try:
             if day and not month and not year and not day2 and not month2 and not year2:
-                neg = int(day) < 0
+                neg1 = int(day) < 0
                 dateobj = datetime.today() + timedelta(days=int(day))
                 month2 = month2 or datetime.now().month
                 day2 = day2 or datetime.now().day
@@ -1135,8 +1135,9 @@ class Utility(commands.Cog, name="Utility"):
                     month2 = funcs.monthNumberToName(int(month2))
                 except:
                     month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
+                dateobj2 = datetime(int(year2), int(funcs.monthNameToNumber(month2)), int(day2))
             else:
-                neg = False
+                neg1 = False
                 month = month or datetime.now().month
                 day = day or datetime.now().day
                 year = year or datetime.now().year
@@ -1145,20 +1146,23 @@ class Utility(commands.Cog, name="Utility"):
                 except:
                     month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
                 dateobj = datetime(int(year), int(funcs.monthNameToNumber(month)), int(day))
-                if not month2:
-                    month2 = month2 or datetime.now().month
-                if not day2:
-                    day2 = day2 or datetime.now().day
-                if not year2:
-                    year2 = year2 or datetime.now().year
-                try:
-                    month2 = funcs.monthNumberToName(int(month2))
-                except:
-                    month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
-            dateobj2 = datetime(int(year2), int(funcs.monthNameToNumber(month2)), int(day2))
+                if day2 and not month2 and not year2:
+                    dateobj2 = dateobj + timedelta(days=int(day2))
+                else:
+                    if not month2:
+                        month2 = month2 or datetime.now().month
+                    if not day2:
+                        day2 = day2 or datetime.now().day
+                    if not year2:
+                        year2 = year2 or datetime.now().year
+                    try:
+                        month2 = funcs.monthNumberToName(int(month2))
+                    except:
+                        month2 = funcs.monthNumberToName(funcs.monthNameToNumber(month2))
+                    dateobj2 = datetime(int(year2), int(funcs.monthNameToNumber(month2)), int(day2))
             dateobjs = sorted([dateobj, dateobj2])
             delta = dateobjs[1] - dateobjs[0]
-            daysint = delta.days + (1 if neg else 0)
+            daysint = delta.days + (1 if neg1 else 0)
             if dateobj.date() != today.date() and dateobj2.date() != today.date():
                 e = Embed(title="Two Dates")
                 e.add_field(
@@ -1179,7 +1183,9 @@ class Utility(commands.Cog, name="Utility"):
                         dateobjs[1].year
                     )
                 )
+                hastoday = False
             else:
+                hastoday = True
                 if today.date() == dateobj.date():
                     e = Embed(
                         title=f"{funcs.weekdayNumberToName(dateobj2.weekday())}, " + \
@@ -1192,7 +1198,7 @@ class Utility(commands.Cog, name="Utility"):
                     )
             if daysint:
                 years, months, daysfinal, monthsfinal, daysint = funcs.dateDifference(dateobjs[0].date(), dateobjs[1].date())
-                res = "== Time Difference ==\n\n"
+                res = f"== {'Difference From Today' if hastoday else 'Time Difference'} ==\n\n"
                 if years:
                     res += "{:,} year{}, {} month{}, and {} day{}\nor ".format(
                         years, "" if years == 1 else "s", months, "" if months == 1 else "s", daysfinal, "" if daysfinal == 1 else "s"

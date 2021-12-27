@@ -123,7 +123,7 @@ def dateDifference(dateobj, dateobj2):
         daysfinal = monthrange(dateobj.year, dateobj.month)[1] - (dateobj.day - dateobj2.day)
         years -= 1
     elif dateobj.day > dateobj2.day and dateobj.month == dateobj2.month:
-        daysfinal = 30
+        daysfinal = 31 - (dateobj.day - dateobj2.day)
         months = 12 if not months else months
         months -= 1
         years -= 1
