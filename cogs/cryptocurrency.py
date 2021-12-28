@@ -344,7 +344,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                       aliases=["eg", "ef", "ethfee", "ethfees", "egas", "efee", "efees", "gasprice", "gasfee"])
     async def ethgas(self, ctx):
         res = await funcs.getRequest(
-            f"https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key={config.ethGasStationKey}"
+            f"https://ethgasstation.info/api/ethgasAPI.json?api-key={config.ethGasStationKey}"
         )
         data = res.json()
         e = Embed(colour=Colour.light_grey())
@@ -352,6 +352,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e.add_field(name="Fastest (<30s)", value="`{:,} gwei`".format(int(data['fastest'] / 10)))
         e.add_field(name="Fast (<2m)", value="`{:,} gwei`".format(int(data['fast'] / 10)))
         e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
+        e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
+        e.add_field(name="Block Time", value="`{:,} seconds`".format(round(data['block_time'])))
+        e.add_field(name="Block Height", value="`{:,} seconds`".format(data['blockNum']))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
         await ctx.send(embed=e)
 
