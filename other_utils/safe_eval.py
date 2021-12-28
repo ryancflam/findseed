@@ -37,7 +37,7 @@ class Evaluable(type):
         for node in en:
             if not issubclass(node, ast.AST):
                 raise ValueError
-            key = node.__name__.lower()
+            key = node.__name__.casefold()
             if key in Evaluable.NH:
                 raise ValueError
             func = classdict.get(key)

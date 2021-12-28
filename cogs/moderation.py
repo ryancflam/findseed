@@ -99,8 +99,7 @@ class Moderation(commands.Cog, name="Moderation"):
             f"- {ban.user.name}#{ban.user.discriminator}" + \
             f" (Reason: {ban.reason})" for ban in bannedusers
         )
-        if string == "":
-            string = "None"
+        string = string or "None"
         await ctx.send(funcs.formatting(string))
 
 

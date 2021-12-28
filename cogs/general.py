@@ -176,6 +176,12 @@ class General(commands.Cog, name="General"):
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="pins", description="Returns the total number of message pins in this channel.",
+                      aliases=["pin"])
+    async def pins(self, ctx):
+        await ctx.send(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
+
 
 def setup(client: commands.Bot):
     client.add_cog(General(client))

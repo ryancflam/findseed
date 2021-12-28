@@ -4,6 +4,7 @@ from json import dumps, JSONDecodeError
 from platform import system
 from random import choice, randint
 from statistics import mean, median, mode, pstdev, stdev
+from string import punctuation
 from subprocess import PIPE, Popen, STDOUT
 from time import time
 from urllib.parse import quote
@@ -170,7 +171,7 @@ class Utility(commands.Cog, name="Utility"):
                 imgl = res.json()["result"]["response"]["aircraftImages"]
                 thumbnail = "https://images.flightradar24.com/opengraph/fr24_logo_twitter.png"
                 for y in range(len(imgl)):
-                    image=imgl[y]
+                    image = imgl[y]
                     if image["registration"] != reg:
                         continue
                     thumbnail = list(
@@ -188,10 +189,10 @@ class Utility(commands.Cog, name="Utility"):
                 e.add_field(name="Origin", value=f"`{originname} ({originiata}/{originicao})`")
                 e.add_field(name="Destination", value=f"`{destname} ({destiata}/{desticao})`")
                 e.add_field(name=depart, value=f"`{realdepart}`")
-                if dago != "":
+                if dago:
                     e.add_field(name=dago, value=f"`{ft}`")
                 e.add_field(name=arrive, value=f"`{realarrive}`")
-                if eta != "":
+                if eta:
                     e.add_field(name=eta, value=f"`{duration}`")
                 e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.",
                              icon_url="https://i.pinimg.com/564x/8c/90/8f/8c908ff985364bdba5514129d3d4e799.jpg")
@@ -579,7 +580,7 @@ class Utility(commands.Cog, name="Utility"):
             await ctx.channel.delete_messages(messages)
         except:
             pass
-        if len(answers) <= 1:
+        if len(answers) < 2:
             return await ctx.send(embed=funcs.errorEmbed(None, "Not enough choices."))
         answer = "\n".join(f"{keycap}: {content}" for keycap, content in answers)
         e = Embed(title=f"Poll - {question}", description=f"Asked by: {ctx.author.mention}")
@@ -598,7 +599,7 @@ class Utility(commands.Cog, name="Utility"):
         if term == "":
             e = funcs.errorEmbed(None, "Empty input.")
         else:
-            res = await funcs.getRequest(f"http://api.urbandictionary.com/v0/define", params={"term": term})
+            res = await funcs.getRequest("http://api.urbandictionary.com/v0/define", params={"term": term})
             data = res.json()
             terms = data["list"]
             if not terms:
@@ -614,12 +615,15 @@ class Utility(commands.Cog, name="Utility"):
                                                         "669142387330777115/urban-dictionary-android.png")
                 e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                 if example:
-                    e.add_field(name="Example(s)", value=funcs.formatting(example, limit=1000))
-                e.set_footer(
-                    text=f"Submitted by {terms[rdm]['author']} | Approval rate: " + \
-                         f"{round(terms[rdm]['thumbs_up'] / (terms[rdm]['thumbs_up'] + terms[rdm]['thumbs_down']) * 100, 2)}" + \
-                         f"% ({terms[rdm]['thumbs_up']} 👍 - {terms[rdm]['thumbs_down']} 👎)"
-                )
+                    e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                try:
+                    e.set_footer(
+                        text=f"Submitted by {terms[rdm]['author']} | Approval rate: " + \
+                             f"{round(terms[rdm]['thumbs_up'] / (terms[rdm]['thumbs_up'] + terms[rdm]['thumbs_down']) * 100, 2)}" + \
+                             f"% ({terms[rdm]['thumbs_up']} 👍 - {terms[rdm]['thumbs_down']} 👎)"
+                    )
+                except ZeroDivisionError:
+                    e.set_footer(text=f"Submitted by {terms[rdm]['author']} | Approval rate: n/a (0 👍 - 0 👎)")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -797,8 +801,6 @@ class Utility(commands.Cog, name="Utility"):
                                "charcount", "wc", "countword", "word", "words", "countwords", "letter"],
                       usage="<input OR .txt attachment>")
     async def wordcount(self, ctx, *, inp=""):
-        if not inp and not ctx.message.attachments:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         if ctx.message.attachments:
             try:
                 inp = await funcs.readTxt(ctx.message)
@@ -806,7 +808,13 @@ class Utility(commands.Cog, name="Utility"):
                 inp = inp
         if not inp:
             return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        await ctx.send("Characters: **{:,}**\nWords: **{:,}**".format(len(inp), len(inp.split())))
+        splt = "".join(ch for ch in inp if ch not in set(punctuation)).split()
+        e = Embed(title="Word Count")
+        e.add_field(name="Characters", value="`{:,}`".format(len(inp.strip())))
+        e.add_field(name="Words", value="`{:,}`".format(len(splt)))
+        e.add_field(name="Unique Words", value="`{:,}`".format(len(set(splt))))
+        e.set_footer(text="Note: This may not be 100% accurate.")
+        await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.",
@@ -992,12 +1000,6 @@ class Utility(commands.Cog, name="Utility"):
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.send(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="pins", description="Returns the total number of message pins in this channel.",
-                      aliases=["pin"])
-    async def pins(self, ctx):
-        await ctx.send(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="quartile", usage="<numbers separated with ;>",

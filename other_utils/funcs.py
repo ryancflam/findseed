@@ -1,7 +1,7 @@
 from calendar import monthrange
 from datetime import date, datetime
 from io import BytesIO
-from json import dump, load, JSONDecodeError
+from json import dump, JSONDecodeError, load
 from os import path
 from time import sleep
 
