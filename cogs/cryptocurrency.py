@@ -75,7 +75,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
                         round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
                     ), inline=False)
         e.add_field(name="NEO Market Cap", value="`{:,} USD (Rank #{:,})`".format(neomc, neorank))
-        e.add_field(name="{}GAS".format("" if gasamount == 1 else str(gasamount) + " "),
+        e.add_field(name="{}GAS".format("" if gasamount == 1 else funcs.removeDotZero("{:,}".format(gasamount)) + " "),
                     value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
                         round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
                     ), inline=False)
@@ -354,7 +354,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
         e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
         e.add_field(name="Block Time", value="`{:,} seconds`".format(round(data['block_time'])))
-        e.add_field(name="Block Height", value="`{:,} seconds`".format(data['blockNum']))
+        e.add_field(name="Block Height", value="`{:,}`".format(data['blockNum']))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
         await ctx.send(embed=e)
 
