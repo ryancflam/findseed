@@ -888,10 +888,10 @@ class Utility(commands.Cog, name="Utility"):
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
 
     @commands.cooldown(1, 2, commands.BucketType.user)
-    @commands.command(description="Creates a citation from an article's DOI number and shows the Altmetric score for the article.",
-                      aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics"],
-                      usage="<DOI number> [citation style]", name="cite")
-    async def cite(self, ctx, doi, style="apa"):
+    @commands.command(description="Gets information and generates a citation for an article via DOI number.",
+                      aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics", "cite", "art"],
+                      usage="<DOI number> [citation style]", name="article")
+    async def article(self, ctx, doi, style="apa"):
         await ctx.send("Getting article data. Please wait...")
         doi = f'https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}'.casefold()
         while doi.endswith("."):

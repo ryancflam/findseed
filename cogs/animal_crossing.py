@@ -200,20 +200,20 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
                                                 "particular month in Animal Crossing: New Horizons.",
-                      aliases=["acn", "acarriving", "acarrive"], usage="[month]")
+                      aliases=["acarriving", "acarrive"], usage="[month]")
     async def acnew(self, ctx, month=""):
         await ctx.send(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
                                                     "particular month in Animal Crossing: New Horizons.",
-                      aliases=["acl", "acleave"], usage="[month]")
+                      aliases=["acleave"], usage="[month]")
     async def acleaving(self, ctx, month=""):
         await ctx.send(embed=self.crittersListEmbed(month, mode=-1))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
-                      aliases=["art", "acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="<artwork name>")
+                      aliases=["acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="<artwork name>")
     async def acart(self, ctx, *, art):
         try:
             artdata = self.findData(self.art, art.replace("(", "").replace(")", ""))
@@ -229,7 +229,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acbug", description="Shows information about an Animal Crossing: New Horizons bug.",
-                      aliases=["bug", "acnhbug", "acb"], usage="<bug name>")
+                      aliases=["acnhbug", "acb"], usage="<bug name>")
     async def acbug(self, ctx, *, bug):
         try:
             bugdata = self.findData(self.bugs, bug)
@@ -264,7 +264,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acfish", description="Shows information about an Animal Crossing: New Horizons fish.",
-                      aliases=["fish", "acnhfish", "acf"], usage="<fish name>")
+                      aliases=["acnhfish", "acf"], usage="<fish name>")
     async def acfish(self, ctx, *, fish):
         try:
             fishdata = self.findData(self.fish, fish)
@@ -314,7 +314,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acpersonality", usage="[personality type]",
-                      aliases=["acp", "acnhpersonality", "acpersonalities", "acnhpersonalities"],
+                      aliases=["acnhpersonality", "acpersonalities", "acnhpersonalities"],
                       description="Shows information about an Animal Crossing: New Horizons villager personality.")
     async def acpersonality(self, ctx, *, personality: str=""):
         personality = personality.casefold().replace(" ", "").replace("-", "").replace("_", "").replace("uchi", "sisterly") \
@@ -347,7 +347,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acsea", description="Shows information about an Animal Crossing: New Horizons sea creature.",
-                      aliases=["sea", "acnhsea", "sc", "acsc", "acnhsc", "acs"], usage="<sea creature name>")
+                      aliases=["acnhsea","acsc", "acnhsc"], usage="<sea creature name>")
     async def acsea(self, ctx, *, sea):
         try:
             seadata = self.findData(self.sea, sea)
@@ -374,7 +374,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvillager", description="Shows information about an Animal Crossing: New Horizons villager.",
-                      aliases=["villager", "acnhvillager", "acv", "vil", "acvil", "acnhvil"], usage="<villager name>")
+                      aliases=["acnhvillager", "acv", "vil", "acvil", "acnhvil"], usage="<villager name>")
     async def acvillager(self, ctx, *, villager):
         try:
             found, villagerdata = False, None
@@ -524,7 +524,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         await ctx.send(embed=await self.furnitureEmbed(ctx, "houseware", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw", "acwall"],
+    @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
                       usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons wallmounted furniture item.")
     async def acwallmounted(self, ctx, *, item):
@@ -537,7 +537,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         await ctx.send(embed=await self.furnitureEmbed(ctx, "misc", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips", "act"],
+    @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips"],
                       description="Shows pattern information about the Animal Crossing: New Horizons stalk market.")
     async def acturnips(self, ctx):
         await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg", message="Credit:\n<https://twitter.com/MadzMasc>")
