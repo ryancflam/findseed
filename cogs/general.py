@@ -13,6 +13,10 @@ class General(commands.Cog, name="General"):
         self.client = client
         self.starttime = time()
 
+    async def commandIsOwnerOnlyAndUserIsNotOwnerOmgThisFuncIsHorrendous(self, ctx, command):
+        return "<function is_owner.<locals>.predicate" in [str(i).split(" at")[0] for i in command.checks] \
+               and ctx.author != (await self.client.application_info()).owner
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ping", description="Shows the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
@@ -77,7 +81,8 @@ class General(commands.Cog, name="General"):
         while True:
             try:
                 cog = self.client.get_cog(cogname.replace("_", " ").title())
-                commandsList = list(filter(lambda x: not x.hidden, sorted(cog.get_commands(), key=lambda y: y.name)))
+                userisowner = ctx.author == (await self.client.application_info()).owner
+                commandsList = list(filter(lambda x: not x.hidden or userisowner, sorted(cog.get_commands(), key=lambda y: y.name)))
                 if not commandsList:
                     raise Exception()
                 break
@@ -113,7 +118,7 @@ class General(commands.Cog, name="General"):
         else:
             try:
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
-                if command.hidden and ctx.author != (await self.client.application_info()).owner:
+                if await self.commandIsOwnerOnlyAndUserIsNotOwnerOmgThisFuncIsHorrendous(ctx, command):
                     raise Exception()
                 name = command.name
                 usage = command.usage
