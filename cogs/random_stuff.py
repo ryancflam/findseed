@@ -34,13 +34,9 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             return randint(0, 255)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="oohasecretcommand", description="Super secret command.")
+    @commands.command(name="oohasecretcommand", description="A secret command except that it is not secret at all...")
     async def oohasecretcommand(self, ctx):
-        commandsList = list(sorted(
-                self.client.get_cog("Easter Eggs").get_commands(),
-                key=lambda y: y.name
-            )
-        )
+        commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
         await ctx.send(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
 
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -48,7 +44,7 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
                       description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
                                   "Translation may sometimes fail due to rate limit.",
                       aliases=["lc", "lj", "lk", "literaljapanese", "literalkorean"])
-    async def literalhanzi(self, ctx, *, inp):
+    async def literalchinese(self, ctx, *, inp):
         res = ""
         try:
             inplist = list(inp.replace(" ", ""))[:10]

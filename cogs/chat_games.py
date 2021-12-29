@@ -151,7 +151,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 continue
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="nothanks", description="Play No Thanks.")
+    @commands.command(name="nothanks", description="Play No Thanks. This game requires 3 to 7 players.")
     @commands.guild_only()
     async def nothanks(self, ctx):
         if await self.checkGameInChannel(ctx):
@@ -295,7 +295,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
         return Colour(0x23272A)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="uno", description="Play Uno.")
+    @commands.command(name="uno", description="Play Uno. This game requires 2 to 4 players.")
     @commands.guild_only()
     async def uno(self, ctx):
         if await self.checkGameInChannel(ctx):
