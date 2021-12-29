@@ -37,7 +37,15 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
     @commands.command(name="oohasecretcommand", description="A secret command except that it is not secret at all...")
     async def oohasecretcommand(self, ctx):
         commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
-        await ctx.send(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+        m = await ctx.send(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+        await sleep(1)
+        await m.edit(content="Y̷o̸u̸ ̷d̴i̵d̶n̸'̷t̸ ̷s̶e̶e̶ ̸a̴n̵y̴t̷h̸i̸n̸g̵.̷")
+        await sleep(0.5)
+        await m.edit(content="Y̵̙͓̜̻̲̗̜̘͒̓̂̀̉̈́͛̂͌̀ǫ̵̨̛̳̼̪̂̈́̅̚ų̶̟̭̙̜̺̘̱̌̍̐̎̅̕ ̷͉̈́d̵͚̣̱͈̥͖͈͉̠̘̦̝͇͛̐͛͋̿͒̉͊̃̔̃͜͜ỉ̷̡̛͈̥̯̠͒̑͂̃̊̊̈́̚͝d̶̝̠͖̝̟͆̊͜ͅn̶̢̘̯͔̖͎̬͙̦̗̖͚͔̻̒̕'̵̨͙͇̳̋̑̏̔͊̌̐̆͘ţ̷̢̬̤̰͕̘̺̻͎͕̜͙͚͒̏̈́́̒̈́̊" + \
+                             " ̶̧̱͔̤̺̯̘̠͇̻͛͗͑̄ş̸̡̛͙̺͕̣͕̬̞̹͆̈́̈́͛̊̈̑̊̈́̌̓̄̚e̶̫̲̩̭̟̋̎́͂̇̂̊͜ͅḙ̷̤͕̓̆́̍͒͛͑̔ ̶͔̥̫͖̥̻̰̅͜a̴̧̮͐̾̃́̀͒͊̓̇̈́̃̐̍̚n̴̨̢̖̹̪̦̈́̊̍̈͒̾̅̋͂̽̽y̶̡͇̖̑t̴̛̮̘͉̘͐̋̔́͛͂̉̏͝" + \
+                             "h̶̙̳̖̲̙̳̲͎͕̝̝͈͙̝̏́̃̍̑́͛̈̄̿̚͘͜ỉ̶̜̦̓͗͊̓͒̏̕͝n̶̨͔̙͎̠̲̼̩͖̖͕͐̑̽̃͊͜͝ͅͅg̶̞͎̊̂̃͆́͑̿̚͝͝.̷̨̢̡͇̜͙̼̬̗͕͙̣̤͕̈́͆͜")
+        await sleep(0.5)
+        await m.delete()
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
