@@ -26,6 +26,28 @@ def dumpJson(pathstr, data):
     f.close()
 
 
+def commandIsOwnerOnly(command):
+    return "<function is_owner.<locals>.predicate" in [str(i).split(" at")[0] for i in command.checks]
+
+
+def commandsListEmbed(client, menu: int=0):
+    e = Embed(
+        title=f"{'Hidden' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands",
+        description=f"Use `{client.command_prefix}help <command>` for help with a specific command.\n"
+    )
+    for cog in sorted(client.cogs):
+        commandsList = list(filter(
+            lambda x: (x.hidden and x.cog_name != "Easter Eggs" and not commandIsOwnerOnly(x)) if menu == 1
+            else commandIsOwnerOnly(x) if menu == 2
+            else not x.hidden,
+            sorted(client.get_cog(cog).get_commands(), key=lambda y: y.name)
+        ))
+        value = ", ".join(f"`{client.command_prefix}{str(command)}`" for command in commandsList)
+        if value:
+            e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
+    return e
+
+
 def userNotBlacklisted(client, message):
     data = readJson("data/blacklist.json")
     serverList = list(data["servers"])

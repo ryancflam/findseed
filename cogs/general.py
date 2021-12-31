@@ -13,10 +13,6 @@ class General(commands.Cog, name="General"):
         self.client = client
         self.starttime = time()
 
-    async def commandIsOwnerOnlyAndUserIsNotOwnerOmgThisFuncIsHorrendous(self, ctx, command):
-        return "<function is_owner.<locals>.predicate" in [str(i).split(" at")[0] for i in command.checks] \
-               and ctx.author != (await self.client.application_info()).owner
-
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ping", description="Shows the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
@@ -99,26 +95,13 @@ class General(commands.Cog, name="General"):
     @commands.command(name="help", description="Shows a list of commands.", usage="[command]",
                       aliases=["cmds", "cmd", "h", "commands", "command"])
     async def help(self, ctx, *cmd):
-        prefix = self.client.command_prefix
         if not cmd:
-            e = Embed(
-                title=f"{self.client.user.name} Commands List",
-                description=f"Use `{prefix}help <command>` for help with a specific command.\n"
-            )
-            for cog in sorted(self.client.cogs):
-                commandsList = list(filter(
-                    lambda x: not x.hidden, sorted(
-                        self.client.get_cog(cog).get_commands(),
-                        key=lambda y: y.name
-                    )
-                ))
-                value = ", ".join(f"`{prefix}{str(command)}`" for command in commandsList)
-                if value:
-                    e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
+            e = funcs.commandsListEmbed(self.client)
         else:
             try:
+                prefix = self.client.command_prefix
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
-                if await self.commandIsOwnerOnlyAndUserIsNotOwnerOmgThisFuncIsHorrendous(ctx, command):
+                if funcs.commandIsOwnerOnly(command) and ctx.author != (await self.client.application_info()).owner:
                     raise Exception()
                 name = command.name
                 usage = command.usage
@@ -163,9 +146,9 @@ class General(commands.Cog, name="General"):
             return await ctx.send("`Disabled unprompted messages for this server.`")
         await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
 
-    @commands.cooldown(1, 120, commands.BucketType.user)
-    @commands.command(name="msgbotowner", description="Sends a message to the bot owner. Spam will result in a blacklist.",
-                      usage="<message>")
+    @commands.cooldown(1, 180, commands.BucketType.user)
+    @commands.command(description="Sends a message to the bot owner. Feel free to say hi, but spam will result in a blacklist.",
+                      usage="<message>", name="msgbotowner")
     async def msgbotowner(self, ctx, *, output: str=""):
         try:
             output = output.replace("`", "")
@@ -174,7 +157,10 @@ class General(commands.Cog, name="General"):
                          f"\n\n```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`" + \
                          f"\nUser ID: `{ctx.author.id}`"
             if len(msgtoowner) > 2000:
-                raise Exception("The message is too long.")
+                remain = len(msgtoowner) - 2000
+                raise Exception(
+                    "The message is too long. Please make it `{:,}` character{} shorter.".format(remain, "" if remain == 1 else "s")
+                )
             await user.send(msgtoowner)
             await ctx.send(f"{ctx.author.mention} **You have left a message for the bot owner:**\n\n" + \
                            f"```{output}```\nPlease ensure that your DMs are enabled and expect a reply soon.")

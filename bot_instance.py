@@ -8,7 +8,7 @@ from time import time
 from discord import Activity, Intents
 from discord.ext.commands import Bot
 
-from other_utils.funcs import userNotBlacklisted, getPath, getRequest
+from other_utils.funcs import getPath, getRequest, userNotBlacklisted
 
 PATH = getPath()
 

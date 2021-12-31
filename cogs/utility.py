@@ -818,7 +818,7 @@ class Utility(commands.Cog, name="Utility"):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.",
-                      aliases=["location", "loc", "countries", "place"], usage="<country name OR code>")
+                      aliases=["location", "countries", "place", "nation"], usage="<country name OR code>")
     async def country(self, ctx, *, country):
         try:
             try:

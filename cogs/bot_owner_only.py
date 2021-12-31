@@ -105,7 +105,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except ValueError:
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
 
-    @commands.command(name="code", description="Returns statistics about the bot source code.", aliases=["sloc"])
+    @commands.command(name="linesofcode", description="Returns statistics about the bot's source code.", aliases=["loc", "code"])
     @commands.is_owner()
     async def code(self, ctx):
         await ctx.send("Getting repository code statistics. Please wait...")
@@ -444,11 +444,27 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
             if "msgbotowner" not in msg.content.casefold():
                 raise Exception("Not a `msgbotowner` message!")
             original = msg.content[(12 + len(self.client.command_prefix)):]
-            await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}` ({ch.mention})")
+            try:
+                men = ch.mention
+            except:
+                men = "DM"
+            await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}` ({men})")
             await ctx.send(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" + \
                            f" `{msgid}`\nChannel ID: `{cid}`\nMessage: `{original}`")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="hiddencmds", description="Shows a list of public commands hidden from the main commands menu.",
+                      aliases=["hiddencommand", "hiddencommands", "hid", "hidden", "hiddencmd"])
+    @commands.is_owner()
+    async def hidden(self, ctx):
+        await ctx.send(embed=funcs.commandsListEmbed(self.client, menu=1))
+
+    @commands.command(name="ownercmds", description="Shows a list of bot owner commands.",
+                      aliases=["ownercommand", "ownercommands", "owner", "ownercmd"])
+    @commands.is_owner()
+    async def ownercmds(self, ctx):
+        await ctx.send(embed=funcs.commandsListEmbed(self.client, menu=2))
 
 
 def setup(client: commands.Bot):
