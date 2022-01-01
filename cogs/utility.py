@@ -1228,6 +1228,23 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="iss", description="Gets information about the International Space Station and all humans in space.",
+                      aliases=["space"])
+    async def iss(self, ctx):
+        issdata = await funcs.getRequest("http://api.open-notify.org/iss-now.json", verify=False)
+        iss = issdata.json()
+        hisdata = await funcs.getRequest("http://api.open-notify.org/astros.json", verify=False)
+        his = hisdata.json()["people"]
+        e = Embed(title="The International Space Station")
+        e.add_field(name="Location", value=f"`{iss['iss_position']['latitude']}, {iss['iss_position']['longitude']}`")
+        e.add_field(name="Humans in Space ({:,})".format(len(his)), inline=False,
+                    value="".join(
+                        f"`{i['name']} ({i['craft']})`, " for i in sorted(his, key=lambda x: x["craft"])
+                    )[:800].rsplit(", ", 1)[0])
+        e.set_image(url="https://cdn.discordapp.com/attachments/771698457391136798/926876797759537192/unknown.png")
+        await ctx.send(embed=e)
+
 
 def setup(client: commands.Bot):
     client.add_cog(Utility(client))
