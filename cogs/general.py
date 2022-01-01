@@ -67,9 +67,9 @@ class General(commands.Cog, name="General"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="server", description="Shows information about a Discord server.",
-                      aliases=["guild", "serverinfo", "guildinfo"], usage="[server ID]")
-    async def server(self, ctx, *, serverID: str=""):
+    @commands.command(name="serverinfo", description="Shows information about a Discord server that the bot is in.",
+                      aliases=["guild", "server", "guildinfo"], usage="[server ID]")
+    async def serverinfo(self, ctx, *, serverID: str=""):
         try:
             serverID = serverID.replace(" ", "") or str(ctx.guild.id)
             g = self.client.get_guild(int(serverID))
