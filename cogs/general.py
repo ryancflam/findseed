@@ -75,42 +75,45 @@ class General(commands.Cog, name="General"):
     async def server(self, ctx, *, serverID: str=""):
         try:
             serverID = serverID.replace(" ", "") or str(ctx.guild.id)
-            guild = self.client.get_guild(int(serverID))
-            if not guild:
+            g = self.client.get_guild(int(serverID))
+            if not g:
                 e = funcs.errorEmbed(None, "Unknown server.")
             else:
-                e = Embed(description=guild.description or "")
-                e.set_author(name=guild.name, icon_url=guild.icon_url)
-                dt = guild.created_at
+                e = Embed(description=g.description or "")
+                e.set_author(name=g.name, icon_url=g.icon_url)
+                dt = g.created_at
                 nowt = datetime.now()
-                members = guild.members
-                e.add_field(name="Owner", value=f"`{str(guild.owner)}`")
+                members = g.members
+                e.add_field(name="Owner", value=f"`{str(g.owner)}`")
                 e.add_field(name="Creation Date",
                             value=("`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
                                   + (" :birthday:" if dt.day == nowt.day and dt.month == nowt.month else ""))
-                e.add_field(name="Premium Boosters", value="`{:,}`".format(guild.premium_subscription_count))
-                if guild.premium_subscriber_role:
-                    e.add_field(name="Premium Booster Role", value=f"`{guild.premium_subscriber_role}`")
-                if guild.discovery_splash:
-                    e.add_field(name="Discovery Splash", value=f"`{guild.discovery_splash}`")
+                e.add_field(name="Premium Boosters", value="`{:,}`".format(g.premium_subscription_count))
+                if g.premium_subscriber_role:
+                    e.add_field(name="Premium Booster Role",
+                                value=g.premium_subscriber_role.mention if ctx.guild == g else f"`{g.premium_subscriber_role}`")
+                if g.discovery_splash:
+                    e.add_field(name="Discovery Splash", value=f"`{g.discovery_splash}`")
                 e.add_field(name="Users (Excluding Bots)",
                             value="`{:,} ({:,})`".format(len(members), len([i for i in members if not i.bot])))
-                e.add_field(name="Categories", value="`{:,}`".format(len(guild.categories)))
-                e.add_field(name="Channels (Voice)", value="`{:,} ({:,})`".format(len(guild.channels), len(guild.voice_channels)))
-                if guild.public_updates_channel:
-                    e.add_field(name="Public Updates Channel", value=guild.public_updates_channel.mention)
-                if guild.afk_channel:
-                    e.add_field(name="AFK Channel", value=guild.afk_channel.mention)
-                e.add_field(name="Roles ({:,})".format(len(guild.roles)),
-                            value=("".join(
-                                f"`{i}`, " for i in guild.roles
+                e.add_field(name="Categories", value="`{:,}`".format(len(g.categories)))
+                e.add_field(name="Channels (Voice)", value="`{:,} ({:,})`".format(len(g.channels), len(g.voice_channels)))
+                if ctx.guild == g:
+                    if g.public_updates_channel:
+                        e.add_field(name="Public Updates Channel", value=g.public_updates_channel.mention)
+                    if g.afk_channel:
+                        e.add_field(name="AFK Channel", value=g.afk_channel.mention)
+                e.add_field(name="Roles ({:,})".format(len(g.roles)),
+                            value=("".join(f"{i.mention}, " for i in g.roles)[:800].rsplit(", ", 1)[0]) if ctx.guild == g
+                            else ("".join(
+                                f"`{i}`, " for i in g.roles
                             )[:800].rsplit("`, ", 1)[0] + "`").replace("`@everyone`", "@everyone"))
-                emojis = guild.emojis
+                emojis = g.emojis
                 if emojis:
                     emojistxt1, _ = ", ".join(str(i) for i in emojis)[:800].rsplit(">", 1)
                     e.add_field(name="Emojis ({:,})".format(len(emojis)), value=emojistxt1 + ">")
-                if guild.banner_url:
-                    e.set_image(url=guild.banner_url)
+                if g.banner_url:
+                    e.set_image(url=g.banner_url)
         except:
             e = funcs.errorEmbed(None, "Unknown server.")
         await ctx.send(embed=e)
