@@ -1234,11 +1234,18 @@ class Utility(commands.Cog, name="Utility"):
     async def iss(self, ctx):
         try:
             issdata = await funcs.getRequest("http://api.open-notify.org/iss-now.json", verify=False)
-            iss = issdata.json()
+            iss = issdata.json()["iss_position"]
             hisdata = await funcs.getRequest("http://api.open-notify.org/astros.json", verify=False)
             his = hisdata.json()["people"]
-            e = Embed(title="The International Space Station")
-            e.add_field(name="Location", value=f"`{iss['iss_position']['latitude']}, {iss['iss_position']['longitude']}`")
+            dt = datetime(1998, 11, 20).date()
+            nowt = datetime.now()
+            e = Embed(description="https://en.wikipedia.org/wiki/International_Space_Station")
+            e.set_author(name="The International Space Station",
+                         icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/ISS_emblem.png/195px-ISS_emblem.png")
+            e.add_field(name="Location", value=f"`{iss['latitude']}, {iss['longitude']}`")
+            e.add_field(name="Launch Date",
+                        value=("`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
+                              + (" :birthday:" if dt.day == nowt.day and dt.month == nowt.month else ""))
             e.add_field(name="Speed", value="`7.66 km/s (27,600 km/h or 17,100 mph)`")
             if his:
                 e.add_field(name="Humans in Space ({:,})".format(len(his)), inline=False,
