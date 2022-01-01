@@ -618,9 +618,9 @@ class Minecraft(commands.Cog, name="Minecraft"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="server", description="Gets the current status of a Minecraft server.", aliases=["mcserver"],
+    @commands.command(name="mcserver", description="Gets the current status of a Minecraft server.",
                       usage="[server address]")
-    async def server(self, ctx, *, ipaddress: str=""):
+    async def mcserver(self, ctx, *, ipaddress: str=""):
         ipaddress = ipaddress.casefold().replace(" ", "") or "mc.hypixel.net"
         try:
             res = await funcs.getRequest(

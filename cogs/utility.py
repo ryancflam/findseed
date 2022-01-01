@@ -1122,14 +1122,21 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age"],
-                      usage="[day #1] [month #1] [year #1] [day #2] [month #2] [year #2]", name="date")
+    @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
+                      usage="[date #1 day] [date #1 month] [date #1 year] [date #2 day] [date #2 month] [date #2 year]\n\n" +
+                            "Alternative usages:\n\n- <days (+/-) from today OR weeks (+/- ending with w) from today>\n\n" + \
+                            "- <date day> <date month> <date year> <days (+/-) from date OR weeks (+/- ending with w) from date>",
+                      name="date")
     async def date(self, ctx, day: str="", month: str="", year: str="", day2: str="", month2: str="", year2: str=""):
         today = datetime.today()
         try:
             if day and not month and not year and not day2 and not month2 and not year2:
-                neg1 = int(day) < 0
-                dateobj = datetime.today() + timedelta(days=int(day))
+                try:
+                    day1int = int(day)
+                except ValueError:
+                    day1int = int(day[:-1]) * 7
+                neg1 = day1int < 0
+                dateobj = datetime.today() + timedelta(days=day1int)
                 month2 = month2 or datetime.now().month
                 day2 = day2 or datetime.now().day
                 year2 = year2 or datetime.now().year
@@ -1149,7 +1156,11 @@ class Utility(commands.Cog, name="Utility"):
                     month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
                 dateobj = datetime(int(year), int(funcs.monthNameToNumber(month)), int(day))
                 if day2 and not month2 and not year2:
-                    dateobj2 = dateobj + timedelta(days=int(day2))
+                    try:
+                        day2int = int(day2)
+                    except ValueError:
+                        day2int = int(day2[:-1]) * 7
+                    dateobj2 = dateobj + timedelta(days=day2int)
                 else:
                     if not month2:
                         month2 = month2 or datetime.now().month

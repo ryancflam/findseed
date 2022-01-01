@@ -354,7 +354,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
         e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
         e.add_field(name="Block Time", value="`{:,} seconds`".format(round(data['block_time'])))
-        e.add_field(name="Block Height", value="`{:,}`".format(data['blockNum']))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
         await ctx.send(embed=e)
 

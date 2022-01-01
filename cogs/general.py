@@ -69,7 +69,53 @@ class General(commands.Cog, name="General"):
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="server", description="Shows information about a Discord server.",
+                      aliases=["guild", "serverinfo", "guildinfo"], usage="[server ID]")
+    async def server(self, ctx, *, serverID: str=""):
+        try:
+            serverID = serverID.replace(" ", "") or str(ctx.guild.id)
+            guild = self.client.get_guild(int(serverID))
+            if not guild:
+                e = funcs.errorEmbed(None, "Unknown server.")
+            else:
+                e = Embed(description=guild.description or "")
+                e.set_author(name=guild.name, icon_url=guild.icon_url)
+                dt = guild.created_at
+                nowt = datetime.now()
+                members = guild.members
+                e.add_field(name="Owner", value=f"`{str(guild.owner)}`")
+                e.add_field(name="Creation Date",
+                            value=("`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
+                                  + (" :birthday:" if dt.day == nowt.day and dt.month == nowt.month else ""))
+                e.add_field(name="Premium Boosters", value="`{:,}`".format(guild.premium_subscription_count))
+                if guild.premium_subscriber_role:
+                    e.add_field(name="Premium Booster Role", value=f"`{guild.premium_subscriber_role}`")
+                if guild.discovery_splash:
+                    e.add_field(name="Discovery Splash", value=f"`{guild.discovery_splash}`")
+                e.add_field(name="Users (Excluding Bots)",
+                            value="`{:,} ({:,})`".format(len(members), len([i for i in members if not i.bot])))
+                e.add_field(name="Categories", value="`{:,}`".format(len(guild.categories)))
+                e.add_field(name="Channels (Voice)", value="`{:,} ({:,})`".format(len(guild.channels), len(guild.voice_channels)))
+                if guild.public_updates_channel:
+                    e.add_field(name="Public Updates Channel", value=guild.public_updates_channel.mention)
+                if guild.afk_channel:
+                    e.add_field(name="AFK Channel", value=guild.afk_channel.mention)
+                e.add_field(name="Roles ({:,})".format(len(guild.roles)),
+                            value=("".join(
+                                f"`{i}`, " for i in guild.roles
+                            )[:800].rsplit("`, ", 1)[0] + "`").replace("`@everyone`", "@everyone"))
+                emojis = guild.emojis
+                if emojis:
+                    emojistxt1, _ = ", ".join(str(i) for i in emojis)[:800].rsplit(">", 1)
+                    e.add_field(name="Emojis ({:,})".format(len(emojis)), value=emojistxt1 + ">")
+                if guild.banner_url:
+                    e.set_image(url=guild.banner_url)
+        except:
+            e = funcs.errorEmbed(None, "Unknown server.")
+        await ctx.send(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="category", description="Shows a list of commands in a given category.",
                       usage="[category]", aliases=["cog"])
     async def category(self, ctx, *, cogname: str="General"):
