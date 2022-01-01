@@ -44,13 +44,10 @@ class General(commands.Cog, name="General"):
         e = Embed(description=appinfo.description)
         data = funcs.readJson("data/findseed.json")
         dt = self.client.user.created_at
-        nowt = datetime.now()
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Library", value=f"`discord.py {__version__}`")
-        e.add_field(name="Creation Date",
-                    value=("`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
-                          + (" :birthday:" if dt.day == nowt.day and dt.month == nowt.month else ""))
+        e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
         e.add_field(name="Server Count", value="`{:,}`".format(len(self.client.guilds)))
         e.add_field(name="User Count", value="`{:,}`".format(len(set([i for i in self.client.users if not i.bot]))))
         e.add_field(name="!findseed Calls", value="`{:,}`".format(data['calls']))
@@ -82,12 +79,9 @@ class General(commands.Cog, name="General"):
                 e = Embed(description=g.description or "")
                 e.set_author(name=g.name, icon_url=g.icon_url)
                 dt = g.created_at
-                nowt = datetime.now()
                 members = g.members
                 e.add_field(name="Owner", value=f"`{str(g.owner)}`")
-                e.add_field(name="Creation Date",
-                            value=("`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
-                                  + (" :birthday:" if dt.day == nowt.day and dt.month == nowt.month else ""))
+                e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
                 e.add_field(name="Premium Boosters", value="`{:,}`".format(g.premium_subscription_count))
                 if g.premium_subscriber_role:
                     e.add_field(name="Premium Booster Role",

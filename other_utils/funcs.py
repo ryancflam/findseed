@@ -102,6 +102,12 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
            f", {minutes} minute{'' if minutes == 1 else 's'}, and {seconds} second{'' if seconds == 1 else 's'}"
 
 
+def dateBirthday(day: int, month: int, year: int):
+    nowt = datetime.now()
+    return ("`%s %s %s`" % (day, monthNumberToName(month), year)) \
+           + (" :birthday:" if day == nowt.day and month == nowt.month else "")
+
+
 def degreesToDirection(value):
     if not 11.25 < value <= 348.75:
         return "N"

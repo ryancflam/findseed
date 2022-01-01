@@ -657,7 +657,8 @@ class Utility(commands.Cog, name="Utility"):
                     if tags:
                         e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
                     e.set_footer(text=subreddit.public_description)
-                    e.add_field(name="Created (UTC)", value=f"`{datetime.utcfromtimestamp(subreddit.created_utc)}`")
+                    dt = datetime.utcfromtimestamp(subreddit.created_utc)
+                    e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
                     e.add_field(name="Subscribers", value="`{:,}`".format(subreddit.subscribers))
                     async for submission in subreddit.new(limit=1):
                         sauthor = submission.author or "[deleted]"
@@ -703,7 +704,8 @@ class Utility(commands.Cog, name="Utility"):
                         ckarma = redditor.comment_karma
                         trophies = await redditor.trophies()
                         e.set_thumbnail(url=redditor.icon_img)
-                        e.add_field(name="Join Date (UTC)", value=f"`{datetime.utcfromtimestamp(redditor.created_utc)}`")
+                        dt = datetime.utcfromtimestamp(redditor.created_utc)
+                        e.add_field(name="Join Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
                         e.add_field(name="Total Karma", value="`{:,}`".format(lkarma + ckarma))
                         e.add_field(name="Post Karma", value="`{:,}`".format(lkarma))
                         e.add_field(name="Comment Karma", value="`{:,}`".format(ckarma))
@@ -1238,14 +1240,11 @@ class Utility(commands.Cog, name="Utility"):
             hisdata = await funcs.getRequest("http://api.open-notify.org/astros.json", verify=False)
             his = hisdata.json()["people"]
             dt = datetime(1998, 11, 20).date()
-            nowt = datetime.now()
             e = Embed(description="https://en.wikipedia.org/wiki/International_Space_Station")
             e.set_author(name="The International Space Station",
                          icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/ISS_emblem.png/195px-ISS_emblem.png")
             e.add_field(name="Location", value=f"`{iss['latitude']}, {iss['longitude']}`")
-            e.add_field(name="Launch Date",
-                        value=("`%s %s %s`" % (dt.day, funcs.monthNumberToName(dt.month), dt.year))
-                              + (" :birthday:" if dt.day == nowt.day and dt.month == nowt.month else ""))
+            e.add_field(name="Launch Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
             e.add_field(name="Speed", value="`7.66 km/s (27,600 km/h or 17,100 mph)`")
             if his:
                 e.add_field(name="Humans in Space ({:,})".format(len(his)), inline=False,
