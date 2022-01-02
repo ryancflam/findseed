@@ -168,8 +168,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 )
             except TimeoutError:
                 continue
-            if joinGame.author.bot or joinGame.author in players \
-                    or not funcs.userNotBlacklisted(self.client, joinGame):
+            if joinGame.author.bot or joinGame.author in players or not funcs.userNotBlacklisted(self.client, joinGame):
                 continue
             else:
                 players.append(joinGame.author)
@@ -313,8 +312,7 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 )
             except TimeoutError:
                 continue
-            if joinGame.author.bot or joinGame.author in game.getPlayerList() \
-                    or not funcs.userNotBlacklisted(self.client, joinGame):
+            if joinGame.author.bot or joinGame.author in game.getPlayerList() or not funcs.userNotBlacklisted(self.client, joinGame):
                 continue
             else:
                 game.addPlayer(joinGame.author)
