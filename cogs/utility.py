@@ -1257,21 +1257,23 @@ class Utility(commands.Cog, name="Utility"):
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="octaves", description="Shows the difference between two notes.", usage="<note #1> <note #2>",
-                      aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "noterange", "notesrange"])
-    async def octaves(self, ctx, *, range: str=""):
+    @commands.command(usage="<note #1 with octave (0 to 9)> <note #2 with octave (0 to 9)>",
+                      aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "octaves", "notesrange"],
+                      name="noterange", description="Shows the range between two notes.")
+    async def noterange(self, ctx, *, range):
         try:
-            note1, note2 = range.replace("-", " ").strip().split(" ")
+            note1, note2 = funcs.replaceCharacters(range.strip(), ["-", "—"], " ").split(" ")
             notes = sorted([funcs.noteFinder(note1), funcs.noteFinder(note2)], key=lambda x: x[1])
             diff = notes[1][1] - notes[0][1]
             if not diff or notes[0][1] < 0 or notes[1][1] > 119:
                 e = funcs.errorEmbed("Invalid note range!", "Notes must be between C0 and B9.")
+                e.set_footer(text="Notes: " + ", ".join(i for i in funcs.notes()))
             else:
                 octaves = diff // 12
                 semitones = diff % 12
                 andsemitones = f" and {semitones} semitone{'' if semitones == 1 else 's'}"
                 octavestr = f"{octaves} octave{'' if octaves == 1 else 's'}{andsemitones if semitones else ''}\nor "
-                e = Embed(title=f"{notes[0][0]}-{notes[1][0]}",
+                e = Embed(title=f"{notes[0][0]}—{notes[1][0]}",
                           description=funcs.formatting(
                               f"== Note Range ==\n\n{octavestr if octaves else ''}{diff} semitone{'' if diff == 1 else 's'}"
                           ))

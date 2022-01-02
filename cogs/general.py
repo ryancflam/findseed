@@ -128,7 +128,8 @@ class General(commands.Cog, name="General"):
             title=cogname.replace("_", " ").title(),
             description=f"Use `{prefix}help <command>` for help with a specific command."
         )
-        e.add_field(name="Commands", value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
+        e.add_field(name="Commands ({:,})".format(len(commandsList)),
+                    value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
