@@ -325,26 +325,26 @@ def timeStrToDatetime(datestr: str):
     return f"{dateObj.date()} {dateObj.time()}"
 
 
-def notes():
+def musicalNotes():
     return ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
 
 
 def noteFinder(note):
-    cycle = ItemCycle(notes())
+    cycle = ItemCycle(musicalNotes())
     octave = int(note[-1:])
     flatsharp = note[1:-1].casefold().replace("#", "♯").replace("b", "♭")
-    cycle.updateIndex(notes().index(note[:1].upper()))
+    cycle.updateIndex(musicalNotes().index(note[:1].upper()))
     if flatsharp:
         for i in flatsharp:
             if i == "♯":
                 cycle.nextItem()
-                if notes()[cycle.getIndex()] == "C":
+                if musicalNotes()[cycle.getIndex()] == "C":
                     octave += 1
             else:
                 cycle.previousItem()
-                if notes()[cycle.getIndex()] == "B":
+                if musicalNotes()[cycle.getIndex()] == "B":
                     octave -= 1
-    return notes()[cycle.getIndex()] + str(octave), cycle.getIndex() + octave * 12
+    return musicalNotes()[cycle.getIndex()] + str(octave), cycle.getIndex() + octave * 12
 
 
 def getTickers():

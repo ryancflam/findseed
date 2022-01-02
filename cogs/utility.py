@@ -939,7 +939,7 @@ class Utility(commands.Cog, name="Utility"):
                 except:
                     pass
                 if altmetric["published_on"] < 0:
-                    pub = datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])
+                    pub = (datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])).date()
                 else:
                     pub = datetime.utcfromtimestamp(int(altmetric["published_on"])).date()
                 e.add_field(name="Publish Date", value="`%s %s %s`" % (pub.day, funcs.monthNumberToName(pub.month), pub.year))
@@ -1259,7 +1259,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(usage="<note #1 with octave (0 to 9)> <note #2 with octave (0 to 9)>",
                       aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "octaves", "notesrange"],
-                      name="noterange", description="Shows the range between two notes.")
+                      name="noterange", description="Shows the range in octaves and semitones between two given musical notes.")
     async def noterange(self, ctx, *, range):
         try:
             note1, note2 = funcs.replaceCharacters(range.strip(), ["-", "—"], " ").split(" ")
@@ -1267,7 +1267,7 @@ class Utility(commands.Cog, name="Utility"):
             diff = notes[1][1] - notes[0][1]
             if not diff or notes[0][1] < 0 or notes[1][1] > 119:
                 e = funcs.errorEmbed("Invalid note range!", "Notes must be between C0 and B9.")
-                e.set_footer(text="Notes: " + ", ".join(i for i in funcs.notes()))
+                e.set_footer(text="Notes: " + ", ".join(i for i in funcs.musicalNotes()))
             else:
                 octaves = diff // 12
                 semitones = diff % 12
