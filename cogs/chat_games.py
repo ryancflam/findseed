@@ -22,7 +22,7 @@ from other_utils import funcs
 TETRIS_REACTIONS = {"left": "◀️", "right": "▶️", "rotate": "🔄", "softDrop": "🔽", "hardDrop": "⏬"}
 
 
-class ChatGames(commands.Cog, name="Chat Games"):
+class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for you to kill time."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.gameChannels = []

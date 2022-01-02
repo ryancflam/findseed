@@ -237,31 +237,45 @@ def valueToOrdinal(n):
     return f"{str(n)}{ordinal}"
 
 
-def getZodiacImage(zodiac: str):
+def getZodiacInfo(zodiac: str):
     if zodiac.casefold().startswith("cap"):
-        return "https://cdn.discordapp.com/attachments/771698457391136798/927265871024513034/unknown.png"
+        return "https://cdn.discordapp.com/attachments/771698457391136798/927265871024513034/unknown.png", \
+            "December 22nd to January 19th", "Capricorn"
     elif zodiac.casefold().startswith("aq"):
-        return "https://cdn.discordapp.com/attachments/771698457391136798/927266052985978960/unknown.png"
+        return "https://cdn.discordapp.com/attachments/771698457391136798/927266052985978960/unknown.png", \
+            "January 20th to February 18th", "Aquarius"
     elif zodiac.casefold().startswith("p"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927266217725657128/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927266217725657128/unknown.png", \
+            "February 19th to March 20th", "Pisces"
     elif zodiac.casefold().startswith("ar"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927266309664825374/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927266309664825374/unknown.png", \
+            "March 21st to April 19th", "Aries"
     elif zodiac.casefold().startswith("t"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927266400807030854/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927266400807030854/unknown.png", \
+            "April 20th to May 20th", "Taurus"
     elif zodiac.casefold().startswith("g"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927266546101928056/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927266546101928056/unknown.png", \
+            "May 21st to June 20th", "Gemini"
     elif zodiac.casefold().startswith("can"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927266890823401542/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927266890823401542/unknown.png", \
+            "June 21st to July 22nd", "Cancer"
     elif zodiac.casefold().startswith("le"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927266982846427176/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927266982846427176/unknown.png", \
+            "July 23rd to August 22nd", "Leo"
     elif zodiac.casefold().startswith("v"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927267049380651078/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927267049380651078/unknown.png", \
+            "August 23rd to September 22nd", "Virgo"
     elif zodiac.casefold().startswith("li"):
-        return "https://cdn.discordapp.com/attachments/771698457391136798/927267136232128552/unknown.png"
+        return "https://cdn.discordapp.com/attachments/771698457391136798/927267136232128552/unknown.png", \
+            "September 23rd to October 22nd", "Libra"
     elif zodiac.casefold().startswith("sc"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927267220839596032/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927267220839596032/unknown.png", \
+            "October 23rd to November 21st", "Scorpio"
     elif zodiac.casefold().startswith("sa"):
-        return "https://media.discordapp.net/attachments/771698457391136798/927267312246075392/unknown.png"
+        return "https://media.discordapp.net/attachments/771698457391136798/927267312246075392/unknown.png", \
+            "November 22nd to December 21st", "Sagittarius"
+    else:
+        raise Exception("Valid options:\n\n" + ", ".join(f"`{dateToZodiac(monthNumberToName(i) + ' 1')}`" for i in range(1, 13)))
 
 
 def dateToZodiac(datestr: str, ac=False):
@@ -271,9 +285,9 @@ def dateToZodiac(datestr: str, ac=False):
     except:
         day = int(day[:-2])
     month = monthNumberToName(monthNameToNumber(month))
-    if month == "December" and day > 21 or month == "January" and day < (20 if ac else 22):
+    if month == "December" and day > 21 or month == "January" and day < 20:
         return "Capricorn"
-    if month == "January" and day > (19 if ac else 21) or month == "February" and day < 19:
+    if month == "January" and day > 19 or month == "February" and day < 19:
         return "Aquarius"
     if month == "February" and day > 18 or month == "March" and day < 21:
         return "Pisces"
@@ -422,8 +436,5 @@ async def postRequest(url, data=None, headers=None, timeout=None, verify=True, j
 
 
 async def decodeQR(link):
-    res = await getRequest(
-        "http://api.qrserver.com/v1/read-qr-code",
-        params={"fileurl": link}
-    )
+    res = await getRequest("http://api.qrserver.com/v1/read-qr-code", params={"fileurl": link})
     return res.json()[0]["symbol"][0]["data"]

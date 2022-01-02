@@ -5,7 +5,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class Errors(commands.Cog, name="Errors", command_attrs=dict(hidden=True)):
+class Errors(commands.Cog, name="Errors", description="Error handler category.", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 

@@ -11,7 +11,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidden=True)):
+class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.botDisguise = False

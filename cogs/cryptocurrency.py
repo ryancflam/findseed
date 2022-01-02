@@ -19,7 +19,7 @@ ETHEREUM_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png"
 BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 
 
-class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
+class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.tickers = funcs.getTickers()

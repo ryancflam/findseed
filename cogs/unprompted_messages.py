@@ -8,7 +8,8 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True)):
+class UnpromptedMessages(commands.Cog, name="Unprompted Messages", description="Funny bot responses that are not command-invoked.",
+                         command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.lastthreemsgs = {}

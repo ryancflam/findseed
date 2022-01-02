@@ -21,7 +21,7 @@ from other_utils.safe_eval import SafeEval
 HCF_LIMIT = 1000000
 
 
-class Utility(commands.Cog, name="Utility"):
+class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.reddit = Reddit(client_id=config.redditClientID,
@@ -1076,33 +1076,41 @@ class Utility(commands.Cog, name="Utility"):
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.", aliases=["starsign"], usage="[month] [day]")
+    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.",
+                      aliases=["starsign", "horoscope"], usage="[month] [day]\n\nAlternative usage(s):\n\n- <zodiac sign>")
     async def zodiac(self, ctx, month: str="", day: str=""):
         try:
-            if not month:
-                month = month or datetime.now().month
-            if not day:
-                day = day or datetime.now().day
-            try:
-                month = funcs.monthNumberToName(int(month))
-            except:
-                month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
-            monthint = int(funcs.monthNameToNumber(month))
-            try:
-                day = int(day)
-            except:
-                day = int(day[:-2])
-            date = f"{month} {funcs.valueToOrdinal(day)}"
-            if day < 1 or day > 31 and monthint in [1, 3, 5, 7, 8, 10, 12] \
-                    or day > 30 and monthint in [4, 6, 9, 11] \
-                    or day > 29 and monthint == 2:
-                raise Exception
-            z = funcs.dateToZodiac(date)
-            e = Embed(
-                title=f"{date} Zodiac Sign :{z.casefold().replace('scorpio', 'scorpius')}:",
-                description=funcs.formatting(z)
-            )
-            e.set_image(url=funcs.getZodiacImage(z))
+            if month and not day:
+                try:
+                    z = funcs.getZodiacInfo(month)
+                    e = Embed(title=z[2] + f" :{z[2].casefold().replace('scorpio', 'scorpius')}:")
+                    e.add_field(name="Dates", value=f"`{z[1]}`")
+                    e.set_image(url=z[0])
+                except Exception as ex:
+                    e = funcs.errorEmbed("Invalid zodiac!", str(ex))
+            else:
+                if not month:
+                    month = month or datetime.now().month
+                if not day:
+                    day = day or datetime.now().day
+                try:
+                    month = funcs.monthNumberToName(int(month))
+                except:
+                    month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
+                monthint = int(funcs.monthNameToNumber(month))
+                try:
+                    day = int(day)
+                except:
+                    day = int(day[:-2])
+                date = f"{month} {funcs.valueToOrdinal(day)}"
+                if day < 1 or day > 31 and monthint in [1, 3, 5, 7, 8, 10, 12] \
+                        or day > 30 and monthint in [4, 6, 9, 11] \
+                        or day > 29 and monthint == 2:
+                    raise Exception
+                z = funcs.dateToZodiac(date)
+                e = Embed(title=f"{date} Zodiac Sign :{z.casefold().replace('scorpio', 'scorpius')}:")
+                e.set_image(url=funcs.getZodiacInfo(z)[0])
+                e.set_footer(text=z)
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
@@ -1127,7 +1135,7 @@ class Utility(commands.Cog, name="Utility"):
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
                       usage="[date #1 day] [date #1 month] [date #1 year] [date #2 day] [date #2 month] [date #2 year]\n\n" +
-                            "Alternative usages:\n\n- <days (+/-) from today OR weeks (+/- ending with w) from today>\n\n" + \
+                            "Alternative usage(s):\n\n- <days (+/-) from today OR weeks (+/- ending with w) from today>\n\n" + \
                             "- <date day> <date month> <date year> <days (+/-) from date OR weeks (+/- ending with w) from date>",
                       name="date")
     async def date(self, ctx, day: str="", month: str="", year: str="", day2: str="", month2: str="", year2: str=""):
@@ -1261,9 +1269,9 @@ class Utility(commands.Cog, name="Utility"):
     @commands.command(usage="<note #1 with octave (0 to 9)> <note #2 with octave (0 to 9)>",
                       aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "octaves", "notesrange"],
                       name="noterange", description="Shows the range in octaves and semitones between two given musical notes.")
-    async def noterange(self, ctx, *, range):
+    async def noterange(self, ctx, *, noterange):
         try:
-            note1, note2 = funcs.replaceCharacters(range.strip(), ["-", "—"], " ").split(" ")
+            note1, note2 = funcs.replaceCharacters(noterange.strip(), ["-", "—"], " ").split(" ")
             notes = sorted([funcs.noteFinder(note1), funcs.noteFinder(note2)], key=lambda x: x[1])
             diff = notes[1][1] - notes[0][1]
             if not diff or notes[0][1] < 0 or notes[1][1] > 119:

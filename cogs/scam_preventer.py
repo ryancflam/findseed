@@ -11,7 +11,8 @@ SCAM_URL = "discord.com/ra"
 IMGUR_URL = "imgur.com"
 
 
-class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidden=True)):
+class ScamPreventer(commands.Cog, name="Scam Preventer", description="Prevents Discord QR code scams.",
+                    command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 

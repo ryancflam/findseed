@@ -4,7 +4,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class Moderation(commands.Cog, name="Moderation"):
+class Moderation(commands.Cog, name="Moderation", description="Moderation and member-management commands for server staff."):
     def __init__(self, client: commands.Bot):
         self.client = client
 

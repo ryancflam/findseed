@@ -8,7 +8,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class General(commands.Cog, name="General"):
+class General(commands.Cog, name="General", description="Standard commands about Discord, this bot or its features."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.starttime = time()
@@ -130,6 +130,7 @@ class General(commands.Cog, name="General"):
         )
         e.add_field(name="Commands ({:,})".format(len(commandsList)),
                     value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
+        e.set_footer(text=cog.description)
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)

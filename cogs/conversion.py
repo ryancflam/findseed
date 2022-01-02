@@ -7,7 +7,7 @@ from other_utils import funcs
 from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
-class Conversion(commands.Cog, name="Conversion"):
+class Conversion(commands.Cog, name="Conversion", description="Convert inputs from one unit or format to another."):
     MORSE = {
         "A": ".-",
         "B": "-...",

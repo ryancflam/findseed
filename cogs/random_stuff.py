@@ -13,7 +13,7 @@ COIN_EDGE_ODDS = 6001
 RN_RANGE = 999999999999
 
 
-class RandomStuff(commands.Cog, name="Random Stuff"):
+class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fun commands for you to kill time."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.activeSpinners = []
