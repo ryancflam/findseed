@@ -1075,9 +1075,8 @@ class Utility(commands.Cog, name="Utility"):
         except ValueError:
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.",
-                      aliases=["starsign", "z"], usage="[month] [day]")
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.", aliases=["starsign"], usage="[month] [day]")
     async def zodiac(self, ctx, month: str="", day: str=""):
         try:
             if not month:
@@ -1098,17 +1097,19 @@ class Utility(commands.Cog, name="Utility"):
                     or day > 30 and monthint in [4, 6, 9, 11] \
                     or day > 29 and monthint == 2:
                 raise Exception
+            z = funcs.dateToZodiac(date)
             e = Embed(
-                title=f"{date} Zodiac Sign",
-                description=funcs.formatting(funcs.dateToZodiac(date))
+                title=f"{date} Zodiac Sign :{z.casefold().replace('scorpio', 'scorpius')}:",
+                description=funcs.formatting(z)
             )
+            e.set_image(url=funcs.getZodiacImage(z))
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.",
-                      aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"], usage="[year]")
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.", usage="[year]",
+                      aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"])
     async def chinesezodiac(self, ctx, year: str=""):
         year = year or datetime.now().year
         try:
@@ -1123,7 +1124,7 @@ class Utility(commands.Cog, name="Utility"):
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.send(embed=e)
 
-    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
                       usage="[date #1 day] [date #1 month] [date #1 year] [date #2 day] [date #2 month] [date #2 year]\n\n" +
                             "Alternative usages:\n\n- <days (+/-) from today OR weeks (+/- ending with w) from today>\n\n" + \

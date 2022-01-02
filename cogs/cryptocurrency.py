@@ -347,13 +347,14 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             f"https://ethgasstation.info/api/ethgasAPI.json?api-key={config.ethGasStationKey}"
         )
         data = res.json()
+        bt = round(data['block_time'])
         e = Embed(colour=Colour.light_grey())
         e.set_author(name="Recommended Ethereum Gas Prices", icon_url=ETHEREUM_LOGO)
         e.add_field(name="Fastest (<30s)", value="`{:,} gwei`".format(int(data['fastest'] / 10)))
         e.add_field(name="Fast (<2m)", value="`{:,} gwei`".format(int(data['fast'] / 10)))
         e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
         e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
-        e.add_field(name="Block Time", value="`{:,} seconds`".format(round(data['block_time'])))
+        e.add_field(name="Block Time", value="`{:,} second{}`".format(bt, "" if bt == 1 else "s"))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
         await ctx.send(embed=e)
 

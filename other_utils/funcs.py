@@ -237,6 +237,33 @@ def valueToOrdinal(n):
     return f"{str(n)}{ordinal}"
 
 
+def getZodiacImage(zodiac: str):
+    if zodiac.casefold().startswith("cap"):
+        return "https://cdn.discordapp.com/attachments/771698457391136798/927265871024513034/unknown.png"
+    elif zodiac.casefold().startswith("aq"):
+        return "https://cdn.discordapp.com/attachments/771698457391136798/927266052985978960/unknown.png"
+    elif zodiac.casefold().startswith("p"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927266217725657128/unknown.png"
+    elif zodiac.casefold().startswith("ar"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927266309664825374/unknown.png"
+    elif zodiac.casefold().startswith("t"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927266400807030854/unknown.png"
+    elif zodiac.casefold().startswith("g"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927266546101928056/unknown.png"
+    elif zodiac.casefold().startswith("can"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927266890823401542/unknown.png"
+    elif zodiac.casefold().startswith("le"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927266982846427176/unknown.png"
+    elif zodiac.casefold().startswith("v"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927267049380651078/unknown.png"
+    elif zodiac.casefold().startswith("li"):
+        return "https://cdn.discordapp.com/attachments/771698457391136798/927267136232128552/unknown.png"
+    elif zodiac.casefold().startswith("sc"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927267220839596032/unknown.png"
+    elif zodiac.casefold().startswith("sa"):
+        return "https://media.discordapp.net/attachments/771698457391136798/927267312246075392/unknown.png"
+
+
 def dateToZodiac(datestr: str, ac=False):
     month, day = datestr.split(" ")
     try:
