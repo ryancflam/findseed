@@ -1117,6 +1117,44 @@ class ChatGames(commands.Cog, name="Chat Games"):
                 self.gameChannels.remove(ctx.channel.id)
                 return await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
 
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="whosthatpokemon", description="Who's that Pokémon? First to guess it wins!",
+                      aliases=["wtp", "pokemon", "whosthatpokémon", "pokémon"])
+    async def whosthatpokemon(self, ctx):
+        if await self.checkGameInChannel(ctx):
+            return
+        self.gameChannels.append(ctx.channel.id)
+        try:
+            res = await funcs.getRequest(f"https://pokeapi.co/api/v2/pokemon-form/{randint(1, 898)}/", verify=False)
+            data = res.json()
+            e = Embed(description="You have 10 seconds to guess it!")
+            e.set_author(icon_url="https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png",
+                         name="Who's that Pokémon?")
+            e.set_image(url=data["sprites"]["front_default"])
+            name = str(data['pokemon']['name']).title().replace('-Null', ': Null').replace('-Rime', '. Rime') \
+                .replace('-Mime', '. Mime').replace('-M', '♂').replace('-F', '♀').replace('Flabebe', 'Flabébé').replace("-Jr", " Jr.")
+            name = name.replace("-O", "-o") if name.endswith("-O") else name.replace("-", " ") if name.startswith("Tapu") \
+                else "Sirfetch'd" if name == "Sirfetchd" else name
+            name = name.split("-")[0] if name.split("-")[-1] not in ["Oh", "Z", "o"] else name
+            removechars = [":", ";", " ", ".", ",", "♀", "♂", "-m", "-f", "-", "'", "’", "‘"]
+            guessmsg = funcs.replaceCharacters(
+                name.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
+            )
+            await ctx.send(embed=e)
+            try:
+                useranswer = await self.client.wait_for(
+                    "message", timeout=10,
+                    check=lambda m: funcs.replaceCharacters(
+                        m.content.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
+                    ) == guessmsg and m.channel == ctx.channel and funcs.userNotBlacklisted(self.client, m)
+                )
+                await ctx.send(f"{useranswer.author.mention}: `Correct! That Pokémon is {name}!`")
+            except TimeoutError:
+                await ctx.send(f"`Time's up! That Pokémon is {name}!`")
+        except:
+            await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
+        self.gameChannels.remove(ctx.channel.id)
+
 
 def setup(client: commands.Bot):
     client.add_cog(ChatGames(client))
