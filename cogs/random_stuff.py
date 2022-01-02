@@ -619,20 +619,26 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
         e = Embed(title=f"Who's that Pokémon, {str(ctx.message.author)[:-5]}?",
                   description="You have 10 seconds to guess it!")
         e.set_image(url=data["sprites"]["front_default"])
+        name = str(data['name']).title().replace('-Null', ': Null').replace('-Rime', '. Rime') \
+            .replace('-Mime', '. Mime').replace('-M', '♂').replace('-F', '♀').replace('-Red', '').replace('Flabebe', 'Flabébé')
+        name = name.replace("-O", "-o") if name.endswith("-O") else name.replace("-", " ") if name.startswith("Tapu") \
+            else "Sirfetch'd" if name == "Sirfetchd" else name
         await ctx.send(embed=e)
         try:
             useranswer = await self.client.wait_for(
                 "message", timeout=10,
                 check=lambda m: m.author == ctx.author and m.channel == ctx.channel
             )
-            removechars = [";", " ", ".", ",", "♀", "♂", "-m", "-f", "-M", "-F", "-"]
-            guess = funcs.replaceCharacters(useranswer.content.casefold(), removechars)
-            if guess == funcs.replaceCharacters(data["name"].casefold(), removechars):
-                await ctx.send(f"`Correct! That Pokémon is {str(data['name']).title().replace('-M', '♂').replace('-F', '♀')}!`")
+            removechars = [":", ";", " ", ".", ",", "♀", "♂", "-m", "-f", "-M", "-F", "-red", "-", "'", "’", "‘"]
+            guess = funcs.replaceCharacters(
+                useranswer.content.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
+            )
+            if guess == funcs.replaceCharacters(name.casefold().replace("-rime", "rime").replace("-mime", "mime"), removechars):
+                await ctx.send(f"`Correct! That Pokémon is {name}!`")
             else:
-                await ctx.send(f"`Inorrect! That Pokémon is {str(data['name']).title().replace('-M', '♂').replace('-F', '♀')}!`")
+                await ctx.send(f"`Inorrect! That Pokémon is {name}!`")
         except TimeoutError:
-            await ctx.send(f"`Time's up! That Pokémon is {str(data['name']).title().replace('-M', '♂').replace('-F', '♀')}!`")
+            await ctx.send(f"`Time's up! That Pokémon is {name}!`")
 
 
 def setup(client: commands.Bot):

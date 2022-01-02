@@ -216,7 +216,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       aliases=["acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="[artwork name]")
     async def acart(self, ctx, *, art: str=""):
         if not art:
-            e = Embed(title="Art")
+            e = Embed(title="Animal Crossing Artwork")
             e.set_thumbnail(url=AC_LOGO)
             paintings = [
                 self.art[i]['name']['name-USen'] for i in list(self.art.keys())
@@ -228,6 +228,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
             ]
             e.add_field(name="Paintings ({:,})".format(len(paintings)), value=", ".join(f"`{i.title()}`" for i in paintings))
             e.add_field(name="Statues ({:,})".format(len(statues)), value=", ".join(f"`{i.title()}`" for i in statues))
+            e.set_footer(text=f"Use {self.client.command_prefix}acart <artwork name> for more information.")
         else:
             try:
                 artdata = self.findData(self.art, funcs.replaceCharacters(art, ["(", ")"]))
@@ -335,7 +336,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       .replace("bigsister", "sisterly").replace("snobby", "snooty").replace("grumpy", "cranky")
         if not personality:
             e = Embed(title="Animal Crossing Personality Types",
-                      description="`cranky`, `jock`, `lazy`, `normal`, `peppy`, `sisterly`, `smug`, `snooty`")
+                      description="`Cranky`, `Jock`, `Lazy`, `Normal`, `Peppy`, `Sisterly`, `Smug`, `Snooty`")
             e.set_footer(text=f"Use {self.client.command_prefix}acpersonality <personality type> for more information.")
             e.set_thumbnail(url=AC_LOGO)
         else:
@@ -441,40 +442,42 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acspecies", description="Shows information about an Animal Crossing: New Horizons villager species.",
-                      aliases=["species"])
+                      aliases=["species"], usage="[species name]")
     async def acspecies(self, ctx, *, species: str=""):
-        try:
-            species = species.replace(" ", "").title()
-            if species not in self.species:
-                raise Exception()
-            e = Embed(title=species)
+        if not species:
+            e = Embed(title="Animal Crossing Species", description=", ".join(f"`{opt}`" for opt in self.species))
             e.set_thumbnail(url=AC_LOGO)
-            villagers = []
-            for i in list(self.villagers):
-                data = self.villagers[i]
-                if data["species"] == species:
-                    try:
-                        if data["sanrio"]:
-                            villagers.append(data["name"]["name-USen"].title() + "SANRIO")
-                    except:
-                        villagers.append(data["name"]["name-USen"].title())
-            nonsanrio = [x for x in villagers if "SANRIO" not in x]
-            villagers = [y.replace("SANRIO", "") if "SANRIO" in y else y for y in villagers]
-            e.add_field(name=f"Villagers ({len(villagers)})", value=", ".join(f"`{i}`" for i in sorted(villagers)))
-            prob = len(self.species) * len(nonsanrio)
-            e.add_field(inline=False, name="Villager NMT Probability", value="`1 in {:,}`".format(prob))
-            if len(villagers) != len(nonsanrio):
-                for v in nonsanrio:
-                    villagers.remove(v)
-                e.set_footer(
-                    text="Note: NMT probability does not include the Sanrio villagers. " + \
-                         f"({', '.join(sv for sv in villagers)})"
-                )
-        except Exception:
-            e = funcs.errorEmbed(
-                    "Invalid option!",
-                    "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.species))
-            )
+            e.set_footer(text=f"Use {self.client.command_prefix}acspecies <species name> for more information.")
+        else:
+            try:
+                species = species.replace(" ", "").title()
+                if species not in self.species:
+                    raise Exception()
+                e = Embed(title=species)
+                e.set_thumbnail(url=AC_LOGO)
+                villagers = []
+                for i in list(self.villagers):
+                    data = self.villagers[i]
+                    if data["species"] == species:
+                        try:
+                            if data["sanrio"]:
+                                villagers.append(data["name"]["name-USen"].title() + "SANRIO")
+                        except:
+                            villagers.append(data["name"]["name-USen"].title())
+                nonsanrio = [x for x in villagers if "SANRIO" not in x]
+                villagers = [y.replace("SANRIO", "") if "SANRIO" in y else y for y in villagers]
+                e.add_field(name=f"Villagers ({len(villagers)})", value=", ".join(f"`{i}`" for i in sorted(villagers)))
+                prob = len(self.species) * len(nonsanrio)
+                e.add_field(inline=False, name="Villager NMT Probability", value="`1 in {:,}`".format(prob))
+                if len(villagers) != len(nonsanrio):
+                    for v in nonsanrio:
+                        villagers.remove(v)
+                    e.set_footer(
+                        text="Note: NMT probability does not include the Sanrio villagers. " + \
+                             f"({', '.join(sv for sv in villagers)})"
+                    )
+            except Exception:
+                e = funcs.errorEmbed(None, "Not found, please check your spelling.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
