@@ -73,41 +73,38 @@ class General(commands.Cog, name="General"):
         try:
             serverID = serverID.replace(" ", "") or str(ctx.guild.id)
             g = self.client.get_guild(int(serverID))
-            if not g:
-                e = funcs.errorEmbed(None, "Unknown server.")
-            else:
-                e = Embed(description=g.description or "")
-                e.set_author(name=g.name, icon_url=g.icon_url)
-                dt = g.created_at
-                members = g.members
-                e.add_field(name="Owner", value=f"`{str(g.owner)}`")
-                e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
-                e.add_field(name="Premium Boosters", value="`{:,}`".format(g.premium_subscription_count))
-                if g.premium_subscriber_role:
-                    e.add_field(name="Premium Booster Role",
-                                value=g.premium_subscriber_role.mention if ctx.guild == g else f"`{g.premium_subscriber_role}`")
-                if g.discovery_splash:
-                    e.add_field(name="Discovery Splash", value=f"`{g.discovery_splash}`")
-                e.add_field(name="Users (Excluding Bots)",
-                            value="`{:,} ({:,})`".format(len(members), len([i for i in members if not i.bot])))
-                e.add_field(name="Categories", value="`{:,}`".format(len(g.categories)))
-                e.add_field(name="Channels (Voice)", value="`{:,} ({:,})`".format(len(g.channels), len(g.voice_channels)))
-                if ctx.guild == g:
-                    if g.public_updates_channel:
-                        e.add_field(name="Public Updates Channel", value=g.public_updates_channel.mention)
-                    if g.afk_channel:
-                        e.add_field(name="AFK Channel", value=g.afk_channel.mention)
-                e.add_field(name="Roles ({:,})".format(len(g.roles)),
-                            value=("".join(f"{i.mention}, " for i in g.roles)[:800].rsplit(", ", 1)[0]) if ctx.guild == g
-                            else ("".join(
-                                f"`{i}`, " for i in g.roles
-                            )[:800].rsplit("`, ", 1)[0] + "`").replace("`@everyone`", "@everyone"))
-                emojis = g.emojis
-                if emojis:
-                    emojistxt1, _ = ", ".join(str(i) for i in emojis)[:800].rsplit(">", 1)
-                    e.add_field(name="Emojis ({:,})".format(len(emojis)), value=emojistxt1 + ">")
-                if g.banner_url:
-                    e.set_image(url=g.banner_url)
+            e = Embed(description=g.description or "")
+            e.set_author(name=g.name, icon_url=g.icon_url)
+            dt = g.created_at
+            members = g.members
+            e.add_field(name="Owner", value=f"`{str(g.owner)}`")
+            e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
+            e.add_field(name="Premium Boosters", value="`{:,}`".format(g.premium_subscription_count))
+            if g.premium_subscriber_role:
+                e.add_field(name="Premium Booster Role",
+                            value=g.premium_subscriber_role.mention if ctx.guild == g else f"`{g.premium_subscriber_role}`")
+            if g.discovery_splash:
+                e.add_field(name="Discovery Splash", value=f"`{g.discovery_splash}`")
+            e.add_field(name="Users (Excluding Bots)",
+                        value="`{:,} ({:,})`".format(len(members), len([i for i in members if not i.bot])))
+            e.add_field(name="Categories", value="`{:,}`".format(len(g.categories)))
+            e.add_field(name="Channels (Voice)", value="`{:,} ({:,})`".format(len(g.channels), len(g.voice_channels)))
+            if ctx.guild == g:
+                if g.public_updates_channel:
+                    e.add_field(name="Public Updates Channel", value=g.public_updates_channel.mention)
+                if g.afk_channel:
+                    e.add_field(name="AFK Channel", value=g.afk_channel.mention)
+            e.add_field(name="Roles ({:,})".format(len(g.roles)),
+                        value=("".join(f"{i.mention}, " for i in g.roles)[:800].rsplit(", ", 1)[0]) if ctx.guild == g
+                        else ("".join(
+                            f"`{i}`, " for i in g.roles
+                        )[:800].rsplit("`, ", 1)[0] + "`").replace("`@everyone`", "@everyone"))
+            emojis = g.emojis
+            if emojis:
+                emojistxt1, _ = ", ".join(str(i) for i in emojis)[:800].rsplit(">", 1)
+                e.add_field(name="Emojis ({:,})".format(len(emojis)), value=emojistxt1 + ">")
+            if g.banner_url:
+                e.set_image(url=g.banner_url)
         except:
             e = funcs.errorEmbed(None, "Unknown server.")
         await ctx.send(embed=e)
@@ -190,23 +187,23 @@ class General(commands.Cog, name="General"):
         await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
 
     @commands.cooldown(1, 180, commands.BucketType.user)
-    @commands.command(description="Sends a message to the bot owner. Feel free to say hi, but spam will result in a blacklist.",
+    @commands.command(description="Sends a message to the bot owner. Feel free to say hi, but spam may result in a blacklist.",
                       usage="<message>", name="msgbotowner")
     async def msgbotowner(self, ctx, *, output: str=""):
         try:
             output = output.replace("`", "")
-            user = (await self.client.application_info()).owner
             msgtoowner = f"**{str(ctx.author)} ({ctx.author.mention}) has left a message for you:**" + \
-                         f"\n\n```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`" + \
-                         f"\nUser ID: `{ctx.author.id}`"
+                         f"```{output}```\nMessage ID: `{ctx.message.id}`\nChannel ID: `{ctx.channel.id}`" + \
+                         f"\nUser ID: `{ctx.author.id}`\n\n" + \
+                         f"Reply using:```{self.client.command_prefix}reply {ctx.message.id} {ctx.channel.id} <message>```"
             if len(msgtoowner) > 2000:
                 remain = len(msgtoowner) - 2000
                 raise Exception(
                     "The message is too long. Please make it `{:,}` character{} shorter.".format(remain, "" if remain == 1 else "s")
                 )
-            await user.send(msgtoowner)
-            await ctx.send(f"{ctx.author.mention} **You have left a message for the bot owner:**\n\n" + \
-                           f"```{output}```\nPlease ensure that your DMs are enabled and expect a reply soon.")
+            await (await self.client.application_info()).owner.send(msgtoowner)
+            await ctx.send(f"{ctx.author.mention} **You have left a message for the bot owner:**\n```{output}```\n" + \
+                           "Please ensure that your DMs are enabled and expect a reply soon. Spam may result in a blacklist.")
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 

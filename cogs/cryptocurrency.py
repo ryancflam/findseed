@@ -634,7 +634,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
         hashjson = hashget.json()
         latestHeight = hashjson["height"]
         hashstr = hashstr or latestHeight
-        hashstr = str(hashstr).casefold().replace("`", "").replace(" ", "").replace(",", "")
+        hashstr = funcs.replaceCharacters(str(hashstr).casefold(), ["`", " ", ","])
         if hashstr.casefold().startswith("0x"):
             hashstr = hashstr[2:]
         try:
@@ -684,7 +684,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
             hashget = await funcs.getRequest("https://blockchain.info/latestblock")
             hashjson = hashget.json()
             hashstr = hashjson["hash"]
-        hashstr = hashstr.casefold().replace("`", "").replace(" ", "").replace(",", "")
+        hashstr = funcs.replaceCharacters(str(hashstr).casefold(), ["`", " ", ","])
         try:
             try:
                 hashstr = int(hashstr)
@@ -739,7 +739,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency"):
     @commands.command(name="ethcontract", aliases=["ec", "econtract", "smartcontract"],
                       description="Shows information about an Ethereum smart contract.", usage="<contract address>")
     async def ethcontract(self, ctx, *, hashstr: str=""):
-        inphash = hashstr.replace("`", "").replace(" ", "").casefold()
+        inphash = funcs.replaceCharacters(str(hashstr).casefold(), ["`", " ", ","])
         if inphash == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:

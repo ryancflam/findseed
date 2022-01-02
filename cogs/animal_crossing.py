@@ -109,7 +109,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
         return e
 
     async def furnitureEmbed(self, ctx, ftype: str, name: str):
-        name = name.replace(" ", "_").replace("‘", "'").replace("’", "'")
+        name = funcs.replaceCharacters(name.replace(" ", "_"), ["‘", "’"], "'")
         try:
             res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
             data = res.json()
@@ -213,18 +213,32 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
-                      aliases=["acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="<artwork name>")
-    async def acart(self, ctx, *, art):
-        try:
-            artdata = self.findData(self.art, art.replace("(", "").replace(")", ""))
-            e = Embed(title=artdata["name"]["name-USen"].title(), description=artdata["museum-desc"])
-            e.add_field(name="Has Fake", value=f"`{str(artdata['hasFake'])}`")
-            e.add_field(name="Buy Price", value="`{:,}`".format(artdata['buy-price']))
-            e.add_field(name="Sell Price", value="`{:,}`".format(artdata['sell-price']))
-            e.set_image(url=artdata["image_uri"].replace("https", "http"))
+                      aliases=["acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="[artwork name]")
+    async def acart(self, ctx, *, art: str=""):
+        if not art:
+            e = Embed(title="Art")
             e.set_thumbnail(url=AC_LOGO)
-        except Exception as ex:
-            e = funcs.errorEmbed(None, str(ex))
+            paintings = [
+                self.art[i]['name']['name-USen'] for i in list(self.art.keys())
+                if not self.art[i]['name']['name-USen'].endswith(" statue")
+            ]
+            statues = [
+                self.art[i]['name']['name-USen'] for i in list(self.art.keys())
+                if self.art[i]['name']['name-USen'].endswith(" statue")
+            ]
+            e.add_field(name="Paintings ({:,})".format(len(paintings)), value=", ".join(f"`{i.title()}`" for i in paintings))
+            e.add_field(name="Statues ({:,})".format(len(statues)), value=", ".join(f"`{i.title()}`" for i in statues))
+        else:
+            try:
+                artdata = self.findData(self.art, funcs.replaceCharacters(art, ["(", ")"]))
+                e = Embed(title=artdata["name"]["name-USen"].title(), description=artdata["museum-desc"])
+                e.add_field(name="Has Fake", value=f"`{str(artdata['hasFake'])}`")
+                e.add_field(name="Buy Price", value="`{:,}`".format(artdata['buy-price']))
+                e.add_field(name="Sell Price", value="`{:,}`".format(artdata['sell-price']))
+                e.set_image(url=artdata["image_uri"].replace("https", "http"))
+                e.set_thumbnail(url=AC_LOGO)
+            except Exception as ex:
+                e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -317,7 +331,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", command_attrs=dict(hi
                       aliases=["acnhpersonality", "acpersonalities", "acnhpersonalities"],
                       description="Shows information about an Animal Crossing: New Horizons villager personality.")
     async def acpersonality(self, ctx, *, personality: str=""):
-        personality = personality.casefold().replace(" ", "").replace("-", "").replace("_", "").replace("uchi", "sisterly") \
+        personality = funcs.replaceCharacters(personality.casefold(), [" ", "-", "_"]).replace("uchi", "sisterly") \
                       .replace("bigsister", "sisterly").replace("snobby", "snooty").replace("grumpy", "cranky")
         if not personality:
             e = Embed(title="Animal Crossing Personality Types",

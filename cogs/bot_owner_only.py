@@ -189,26 +189,22 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         await ctx.send(f"`{newList}`")
 
     @commands.command(name="channels", description="Returns a list of text channels a server the bot is in has.",
-                      aliases=["cl", "channellist"], usage=["[server ID]"])
+                      aliases=["cl", "channellist"], usage="[server ID]")
     @commands.is_owner()
-    @commands.guild_only()
-    async def channels(self, ctx, *, server: str=""):
+    async def channels(self, ctx, *, serverID: str=""):
         try:
-            server = int(server)
-        except ValueError:
-            server = ctx.guild.id
-        try:
-            server = self.client.get_guild(server)
+            serverID = serverID.replace(" ", "") or str(ctx.guild.id)
+            g = self.client.get_guild(int(serverID))
             st = ""
-            for channel in server.text_channels:
+            for channel in g.text_channels:
                 st += f"- {str(channel.id)}: {channel.name}\n"
             st = st[:-1]
             newList = st[:1998]
             await ctx.send(f"`{newList}`")
-        except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        except:
+            await ctx.send(embed=funcs.errorEmbed(None, "Unknown server."))
 
-    @commands.command(name="reloadcog", description="Reloads a cog.", usage=["<cog name>"])
+    @commands.command(name="reloadcog", description="Reloads a cog.", usage="<cog name>")
     @commands.is_owner()
     async def reloadcog(self, ctx, *, cog: str=""):
         if cog == "":
@@ -220,7 +216,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="loadcog", description="Loads a cog.", usage=["<cog name>"], aliases=["enablecog"])
+    @commands.command(name="loadcog", description="Loads a cog.", usage="<cog name>", aliases=["enablecog"])
     @commands.is_owner()
     async def loadcog(self, ctx, *, cog: str=""):
         if cog == "":
@@ -232,7 +228,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", command_attrs=dict(hidde
         except Exception as ex:
             await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="unloadcog", description="Unloads a cog.", usage=["<cog name>"], aliases=["disablecog"])
+    @commands.command(name="unloadcog", description="Unloads a cog.", usage="<cog name>", aliases=["disablecog"])
     @commands.is_owner()
     async def unloadcog(self, ctx, *, cog: str=""):
         if cog == "":

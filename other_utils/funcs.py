@@ -26,6 +26,12 @@ def dumpJson(pathstr, data):
     f.close()
 
 
+def replaceCharacters(string, toreplace: list, replaceto: str=""):
+    for char in toreplace:
+        string = string.replace(char, replaceto)
+    return string
+
+
 def commandIsOwnerOnly(command):
     return "<function is_owner.<locals>.predicate" in [str(i).split(" at")[0] for i in command.checks]
 
@@ -35,6 +41,7 @@ def commandsListEmbed(client, menu: int=0):
         title=f"{'Hidden' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands",
         description=f"Use `{client.command_prefix}help <command>` for help with a specific command.\n"
     )
+    cmds = 0
     for cog in sorted(client.cogs):
         commandsList = list(filter(
             lambda x: (x.hidden and x.cog_name != "Easter Eggs" and not commandIsOwnerOnly(x)) if menu == 1
@@ -45,6 +52,8 @@ def commandsListEmbed(client, menu: int=0):
         value = ", ".join(f"`{client.command_prefix}{str(command)}`" for command in commandsList)
         if value:
             e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
+            cmds += len(commandsList)
+    e.title += " ({:,})".format(cmds)
     return e
 
 

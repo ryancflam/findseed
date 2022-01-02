@@ -610,6 +610,30 @@ class RandomStuff(commands.Cog, name="Random Stuff"):
             e = funcs.errorEmbed(None, str(ex))
         await ctx.send(embed=e)
 
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="whosthatpokemon", description="Who's that Pokémon?",
+                      aliases=["wtp", "pokemon", "whosthatpokémon", "pokémon"])
+    async def whosthatpokemon(self, ctx):
+        res = await funcs.getRequest(f"https://pokeapi.co/api/v2/pokemon-form/{randint(1, 898)}/", verify=False)
+        data = res.json()
+        e = Embed(title=f"Who's that Pokémon, {str(ctx.message.author)[:-5]}?",
+                  description="You have 10 seconds to guess it!")
+        e.set_image(url=data["sprites"]["front_default"])
+        await ctx.send(embed=e)
+        try:
+            useranswer = await self.client.wait_for(
+                "message", timeout=10,
+                check=lambda m: m.author == ctx.author and m.channel == ctx.channel
+            )
+            removechars = [";", " ", ".", ",", "♀", "♂", "-m", "-f", "-M", "-F", "-"]
+            guess = funcs.replaceCharacters(useranswer.content.casefold(), removechars)
+            if guess == funcs.replaceCharacters(data["name"].casefold(), removechars):
+                await ctx.send(f"`Correct! That Pokémon is {str(data['name']).title().replace('-M', '♂').replace('-F', '♀')}!`")
+            else:
+                await ctx.send(f"`Inorrect! That Pokémon is {str(data['name']).title().replace('-M', '♂').replace('-F', '♀')}!`")
+        except TimeoutError:
+            await ctx.send(f"`Time's up! That Pokémon is {str(data['name']).title().replace('-M', '♂').replace('-F', '♀')}!`")
+
 
 def setup(client: commands.Bot):
     client.add_cog(RandomStuff(client))

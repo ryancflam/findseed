@@ -895,7 +895,7 @@ class Utility(commands.Cog, name="Utility"):
                       usage="<DOI number> [citation style]", name="article")
     async def article(self, ctx, doi, style="apa"):
         await ctx.send("Getting article data. Please wait...")
-        doi = f'https://doi.org/{doi.replace("https://doi.org/", "").replace("doi:", "").replace("doi.org/", "")}'.casefold()
+        doi = f'https://doi.org/{funcs.replaceCharacters(doi, ["https://doi.org/", "doi:", "doi.org/"])}'.casefold()
         while doi.endswith("."):
             doi = doi[:-1]
         style = style.casefold()
