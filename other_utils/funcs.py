@@ -8,6 +8,8 @@ from time import sleep
 from discord import Embed, File
 from httpx import AsyncClient, get
 
+from other_utils.item_cycle import ItemCycle
+
 
 def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
@@ -321,6 +323,25 @@ def timeStrToDatetime(datestr: str):
         datestr = dateFilter[0] + "Z"
     dateObj = datetime.strptime(datestr.replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
     return f"{dateObj.date()} {dateObj.time()}"
+
+
+def noteFinder(note):
+    notes = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
+    cycle = ItemCycle(notes)
+    octave = int(note[-1:])
+    flatsharp = note[1:-1].casefold().replace("#", "♯").replace("b", "♭")
+    cycle.updateIndex(notes.index(note[:1].upper()))
+    if flatsharp:
+        for i in flatsharp:
+            if i == "♯":
+                cycle.nextItem()
+                if notes[cycle.getIndex()] == "C":
+                    octave += 1
+            else:
+                cycle.previousItem()
+                if notes[cycle.getIndex()] == "B":
+                    octave -= 1
+    return notes[cycle.getIndex()] + str(octave), cycle.getIndex() + octave * 12
 
 
 def getTickers():

@@ -19,3 +19,7 @@ class ItemCycle:
         self.__index -= 1
         if self.__index < 0:
             self.__index = len(self.__cycle) - 1
+
+    def updateIndex(self, index):
+        if 0 <= index <= len(self.__cycle) - 1:
+            self.__index = index
