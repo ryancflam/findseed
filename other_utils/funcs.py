@@ -53,7 +53,8 @@ def commandsListEmbed(client, menu: int=0):
             e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
             cmds += len(commandsList)
     e.title += " ({:,})".format(cmds)
-    e.set_footer(text=f"Use {client.command_prefix}help <command> for help with a specific command.")
+    zero = f", or {client.command_prefix}category <category> for more information about a specific category"
+    e.set_footer(text=f"Use {client.command_prefix}help <command> for help with a specific command{zero if not menu else ''}.")
     return e
 
 
