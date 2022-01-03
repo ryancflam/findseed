@@ -1144,9 +1144,9 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             try:
                 useranswer = await self.client.wait_for(
                     "message", timeout=10,
-                    check=lambda m: funcs.replaceCharacters(
+                    check=lambda m: guessmsg in funcs.replaceCharacters(
                         m.content.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
-                    ) == guessmsg and m.channel == ctx.channel and funcs.userNotBlacklisted(self.client, m)
+                    ) and m.channel == ctx.channel and funcs.userNotBlacklisted(self.client, m)
                 )
                 await ctx.send(f"{useranswer.author.mention}: `Correct! That Pokémon is {name}!`")
             except TimeoutError:
