@@ -39,10 +39,7 @@ def commandIsOwnerOnly(command):
 
 
 def commandsListEmbed(client, menu: int=0):
-    e = Embed(
-        title=f"{'Hidden' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands",
-        description=f"Use `{client.command_prefix}help <command>` for help with a specific command.\n"
-    )
+    e = Embed(title=f"{'Hidden' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands")
     cmds = 0
     for cog in sorted(client.cogs):
         commandsList = list(filter(
@@ -56,6 +53,7 @@ def commandsListEmbed(client, menu: int=0):
             e.add_field(name=cog + " ({:,})".format(len(commandsList)), value=value, inline=False)
             cmds += len(commandsList)
     e.title += " ({:,})".format(cmds)
+    e.set_footer(text=f"Use {client.command_prefix}help <command> for help with a specific command.")
     return e
 
 

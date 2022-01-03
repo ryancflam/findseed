@@ -246,8 +246,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             if dest.casefold() not in constants.LANGUAGES.keys():
                 e = funcs.errorEmbed(
                     "Invalid language code!",
-                    f"See [this](https://github.com/ssut/py-googletrans/blob/master/googletrans/constants.py)" + \
-                    " for a list of language codes. (Scroll down for `LANGUAGES`)"
+                    f"Valid options:\n\n{', '.join(f'`{i}`' for i in constants.LANGUAGES.keys())}"
                 )
             else:
                 output = Translator().translate(text.casefold(), dest=dest.casefold()).text
@@ -1077,7 +1076,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="zodiac", description="Converts a date to its zodiac sign.",
-                      aliases=["starsign", "horoscope"], usage="[month] [day]\n\nAlternative usage(s):\n\n- <zodiac sign>")
+                      aliases=["starsign", "horoscope", "zs"], usage="[month] [day]\n\nAlternative usage(s):\n\n- <zodiac sign>")
     async def zodiac(self, ctx, month: str="", day: str=""):
         try:
             if month and not day:

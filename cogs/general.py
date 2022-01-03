@@ -8,7 +8,7 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class General(commands.Cog, name="General", description="Standard commands about Discord, this bot or its features."):
+class General(commands.Cog, name="General", description="Standard commands relating to this bot, its features, or Discord."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.starttime = time()
@@ -124,13 +124,10 @@ class General(commands.Cog, name="General", description="Standard commands about
                 break
             except:
                 cogname = "General"
-        e = Embed(
-            title=cogname.replace("_", " ").title(),
-            description=f"Use `{prefix}help <command>` for help with a specific command."
-        )
+        e = Embed(title=cogname.replace("_", " ").title(), description=cog.description)
         e.add_field(name="Commands ({:,})".format(len(commandsList)),
                     value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
-        e.set_footer(text=cog.description)
+        e.set_footer(text=f"Use {prefix}help <command> for help with a specific command.")
         await ctx.send(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -148,7 +145,7 @@ class General(commands.Cog, name="General", description="Standard commands about
                 name = command.name
                 usage = command.usage
                 aliases = sorted(command.aliases)
-                e = Embed(title=f"{prefix}{name} ({command.cog_name})", description=command.description)
+                e = Embed(title=f"{prefix}{name}", description=command.description)
                 if usage:
                     e.set_footer(text="Command usage: <> = Required; [] = Optional")
                     e.add_field(name="Usage", value=f"```{prefix}{name} {usage}```")
@@ -156,6 +153,7 @@ class General(commands.Cog, name="General", description="Standard commands about
                     e.add_field(
                         name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
                     )
+                e.add_field(name="Category", value=f"`{command.cog_name}`")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown command.")
         await ctx.send(embed=e)

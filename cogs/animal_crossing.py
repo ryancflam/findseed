@@ -13,7 +13,7 @@ AC_LOGO = "https://cdn.discordapp.com/attachments/771404776410972161/90643601798
 BD_KEY = "LOL"
 
 
-class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands for Animal Crossing: New Horizons.",
+class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands relating to Animal Crossing: New Horizons.",
                      command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client

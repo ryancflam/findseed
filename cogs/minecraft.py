@@ -18,7 +18,7 @@ from other_utils import funcs
 BARTER_LIMIT = 896
 
 
-class Minecraft(commands.Cog, name="Minecraft"):
+class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to Minecraft and Minecraft speedrunning."):
     EYE_DATA = {
         "0": {
             "percent": "28.24",
