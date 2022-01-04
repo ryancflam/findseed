@@ -105,29 +105,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except ValueError:
             return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
 
-    @commands.command(name="linesofcode", description="Returns statistics about the bot's source code.", aliases=["loc", "code"])
-    @commands.is_owner()
-    async def code(self, ctx):
-        await ctx.send("Getting repository code statistics. Please wait...")
-        url = "https://api.codetabs.com/v1/loc/?github=ryancflam/findseed"
-        res = await funcs.getRequest(url)
-        data = res.json()
-        for i in range(len(data)):
-            if data[i]["language"] != "Python":
-                continue
-            files = data[i]["files"]
-            totalLines = data[i]["lines"]
-            blanks = data[i]["blanks"]
-            comments = data[i]["comments"]
-            linesOfCode = data[i]["linesOfCode"]
-            e = discord.Embed(title="!findseed Code Statistics", description=url)
-            e.add_field(name="Files of Code", value="`{:,}`".format(files))
-            e.add_field(name="Total Lines", value="`{:,}`".format(totalLines))
-            e.add_field(name="Blank Lines", value="`{:,}`".format(blanks))
-            e.add_field(name="Comment Lines", value="`{:,}`".format(comments))
-            e.add_field(name="Lines of Code", value="`{:,}`".format(linesOfCode))
-            return await ctx.send(embed=e)
-
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
     async def restart(self, ctx):

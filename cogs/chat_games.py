@@ -715,11 +715,11 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     if content.casefold() == "quit" or content.casefold() == "exit" or content.casefold() == "stop":
                         self.gameChannels.remove(ctx.channel.id)
                         return await ctx.send(f"`{ctx.author.name} has left the 21 Card Trick.`")
-                    choice = int(content)
-                    if not 1 <= choice <= 3:
+                    userchoice = int(content)
+                    if not 1 <= userchoice <= 3:
                         await ctx.send(embed=funcs.errorEmbed(None, "Input must be 1-3 inclusive."))
                     else:
-                        cardSample = game.shuffle(choice, p1, p2, p3)
+                        cardSample = game.shuffle(userchoice, p1, p2, p3)
                         break
                 except TimeoutError:
                     self.gameChannels.remove(ctx.channel.id)
@@ -743,8 +743,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             title = "Battleship"
         await ctx.send(f"`{ctx.author.name} has left {title} for idling too long.`")
 
-    async def rowOrCol(self, ctx, game, choice, ms):
-        if choice:
+    async def rowOrCol(self, ctx, game, userchoice, ms):
+        if userchoice:
             rolCol = "vertical row number between 0-9. (set of numbers on the left)"
         else:
             rolCol = "horizontal column number between 0-9. (set of numbers at the top)"

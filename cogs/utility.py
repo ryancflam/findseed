@@ -29,6 +29,26 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              user_agent="*")
         self.tickers = funcs.getTickers()
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="github", description="Returns statistics about a Github repository.",
+                      aliases=["loc", "code", "linesofcode", "repository", "repo"], usage='[username/repository]')
+    async def repository(self, ctx, *, repo: str=""):
+        await ctx.send("Getting repository lines of code statistics. Please wait...")
+        try:
+            repo = repo.casefold().replace(" ", "") or "ryancflam/findseed"
+            res = await funcs.getRequest("https://api.codetabs.com/v1/loc/?github=" + repo)
+            e = Embed(description=f"https://github.com/{repo}")
+            e.set_author(name=repo,
+                         icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
+            for i in sorted(res.json(), reverse=True, key=lambda x: x["linesOfCode"])[:24]:
+                if i["language"] == "Total":
+                    e.add_field(name="Total Files", value="`{:,}`".format(i["files"]))
+                e.add_field(name=f"{i['language']} Lines", value="`{:,}`".format(i["linesOfCode"]))
+            e.set_footer(text="Note: Lines of code do not include comment or blank lines.")
+        except Exception:
+            e = funcs.errorEmbed(None, "Unknown repository or server error.")
+        await ctx.send(embed=e)
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="covid", description="Gathers COVID-19 data.",
                       aliases=["coronavirus", "corona", "covid19", "cv", "c19", "cv19"], usage="[location]")
