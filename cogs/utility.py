@@ -18,6 +18,7 @@ import config
 from other_utils import funcs
 from other_utils.safe_eval import SafeEval
 
+DEFAULT_REPO = "ryancflam/findseed"
 HCF_LIMIT = 1000000
 
 
@@ -35,7 +36,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     async def repository(self, ctx, *, repo: str=""):
         await ctx.send("Getting repository lines of code statistics. Please wait...")
         try:
-            repo = repo.casefold().replace(" ", "") or "ryancflam/findseed"
+            repo = repo.casefold().replace(" ", "") or DEFAULT_REPO
             res = await funcs.getRequest("https://api.codetabs.com/v1/loc/?github=" + repo)
             e = Embed(description=f"https://github.com/{repo}")
             e.set_author(name=repo,
@@ -373,18 +374,17 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             data = res.json()
             thumbnail = data["thumbnail"]["genius"]
             link = data["links"]["genius"]
-            originallyric = data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n")
-            lyric2 = originallyric[:2048]
+            originallyric = funcs.multiString(data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n"), n=2048)
+            allpages = len(originallyric)
             title = data["title"].replace("*", "\*").replace("_", "\_")
             author = data["author"].replace("*", "\*").replace("_", "\_")
-            e = Embed(description=lyric2, title=f"{author} - {title}")
+            e = Embed(description=originallyric[0], title=f"{author} - {title}")
             e.set_thumbnail(url=thumbnail)
             e.add_field(name="Genius Link", value=link)
             page = 1
-            allpages = (len(originallyric) - 1) // 2048 + 1
             e.set_footer(text=f"Page {page} of {allpages}")
             msg = await ctx.send(embed=e)
-            if originallyric != lyric2:
+            if allpages > 1:
                 await msg.add_reaction("⏮")
                 await msg.add_reaction("⏭")
                 while True:
@@ -413,15 +413,13 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             page -= 1
                             success = True
                     if success:
-                        start = 2048 * (page - 1)
-                        limit = start + 2048
-                        newlyric = originallyric[start:limit]
-                        edited = Embed(description=newlyric, title=f"{author} - {title}")
+                        edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
                         edited.set_thumbnail(url=thumbnail)
                         edited.add_field(name="Genius Link", value=link)
                         edited.set_footer(text=f"Page {page} of {allpages}")
                         await msg.edit(embed=edited)
-        except Exception:
+        except Exception as ex:
+            print(ex)
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)

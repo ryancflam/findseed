@@ -1,9 +1,9 @@
 from datetime import datetime
 from time import time
 
-import psutil
 from discord import __version__, Embed
 from discord.ext import commands
+from psutil import cpu_percent, disk_usage, virtual_memory
 
 from other_utils import funcs
 
@@ -51,16 +51,16 @@ class General(commands.Cog, name="General", description="Standard commands relat
         e.add_field(name="Server Count", value="`{:,}`".format(len(self.client.guilds)))
         e.add_field(name="User Count", value="`{:,}`".format(len(set([i for i in self.client.users if not i.bot]))))
         e.add_field(name="!findseed Calls", value="`{:,}`".format(data['calls']))
-        e.add_field(name="CPU Usage", value=f"`{psutil.cpu_percent()}%`")
-        e.add_field(name="Memory Usage", value=f"`{dict(psutil.virtual_memory()._asdict())['percent']}%`")
+        e.add_field(name="CPU Usage", value=f"`{cpu_percent()}%`")
+        e.add_field(name="Memory Usage", value=f"`{dict(virtual_memory()._asdict())['percent']}%`")
         e.add_field(name="Memory Available",
                     value="`{:,} MB`".format(
-                        round(float(dict(psutil.virtual_memory()._asdict())['available']) / 1024 / 1024, 2)
+                        round(float(dict(virtual_memory()._asdict())['available']) / 1024 / 1024, 2)
                     ))
-        e.add_field(name="Disk Usage", value=f"`{dict(psutil.disk_usage('/')._asdict())['percent']}%`")
+        e.add_field(name="Disk Usage", value=f"`{dict(disk_usage('/')._asdict())['percent']}%`")
         e.add_field(name="Disk Space Available",
                     value="`{:,} GB`".format(
-                        round(float(dict(psutil.disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)
+                        round(float(dict(disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)
                     ))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")

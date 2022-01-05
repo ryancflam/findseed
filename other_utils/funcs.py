@@ -34,6 +34,10 @@ def replaceCharacters(string, toreplace: list, replaceto: str=""):
     return string
 
 
+def multiString(string, n: int=2000):
+    return [string[i:i + n] for i in range(0, len(string), n)]
+
+
 def commandIsOwnerOnly(command):
     return "<function is_owner.<locals>.predicate" in [str(i).split(" at")[0] for i in command.checks]
 
