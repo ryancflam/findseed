@@ -156,7 +156,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 e.add_field(name="Category", value=f"`{command.cog_name}`")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown command.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.command(name="umenable", description="Enables unprompted messages for your server.",
                       aliases=["ume", "eum", "enableum"])

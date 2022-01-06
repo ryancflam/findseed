@@ -107,9 +107,10 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
     async def restart(self, ctx):
-        await ctx.reply("Are you sure? You have 10 seconds to confirm by typing `yes`.")
+        msg = ctx.message
+        await msg.reply("Are you sure? You have 10 seconds to confirm by typing `yes`.")
         try:
-            await self.client.wait_for(
+            msg = await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
                                            and m.content.casefold() == "yes",
                 timeout=10
@@ -117,18 +118,18 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except TimeoutError:
             return await ctx.send("Cancelling restart.")
         gitpull = ""
-        await ctx.send("Pull from Git repository?")
+        await msg.reply("Pull from Git repository?")
         try:
-            await self.client.wait_for(
+            msg = await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
                                            and m.content.casefold() == "yes",
                 timeout=10
             )
             gitpull = f"cd {funcs.getPath()} && git pull && "
         except TimeoutError:
-            await ctx.send("Not git-pulling. Commencing restart...")
+            await msg.reply("Not git-pulling. Commencing restart...")
         else:
-            await ctx.send("Git-pulling. Commencing restart...")
+            await msg.reply("Git-pulling. Commencing restart...")
         obj = Popen(
             f"{gitpull}sudo reboot", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
             close_fds=False if system() == "Windows" else True
