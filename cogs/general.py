@@ -101,7 +101,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                         )[:800].rsplit("`, ", 1)[0] + "`").replace("`@everyone`", "@everyone"))
             emojis = g.emojis
             if emojis:
-                emojistxt1, _ = ", ".join(str(i) for i in emojis)[:800].rsplit(">", 1)
+                emojistxt1, _ = "".join(str(i) for i in emojis)[:800].rsplit(">", 1)
                 e.add_field(name="Emojis ({:,})".format(len(emojis)), value=emojistxt1 + ">")
             if g.banner_url:
                 e.set_image(url=g.banner_url)
