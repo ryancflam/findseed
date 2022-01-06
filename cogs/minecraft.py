@@ -248,9 +248,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 trades[trade["id"]]["quantity"] += choice(trade["quantity"])
                 trades[trade["id"]]["trades"] += 1
         res = "You bartered {:,} gold ingot{} for:\n\n".format(goldingots, "" if goldingots == 1 else "s")
+        important = [7, 8, 10, 12, 13, 18, 19]
         for i in sorted(trades):
             t = trades[i]
-            res += "- {:,} x {} ({:,} trade{})\n".format(t["quantity"], t["item"], t["trades"], "" if t["trades"] == 1 else "s")
+            res += "{}{:,} x {} ({:,} trade{})\n".format(
+                "*** " if i in important else "    ", t["quantity"], t["item"], t["trades"], "" if t["trades"] == 1 else "s"
+            )
         await ctx.reply(funcs.formatting(res))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
