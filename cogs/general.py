@@ -17,7 +17,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
     @commands.command(name="ping", description="Shows the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
         ptime = int(round(time() * 1000))
-        msg = await ctx.send(":ping_pong: Pong! `Pinging...`")
+        msg = await ctx.reply(":ping_pong: Pong! `Pinging...`")
         ping = int(round(time() * 1000)) - ptime
         newmsg = ":ping_pong: Pong! `{:,} ms`".format(ping)
         if ping >= 1000:
@@ -34,7 +34,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         )
         if botid != self.client.user.id:
             e.set_footer(text="Note: Invite link may be invalid.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="botinfo", description="Shows information about the bot.",
@@ -64,7 +64,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     ))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="serverinfo", description="Shows information about a Discord server that the bot is in.",
@@ -107,7 +107,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 e.set_image(url=g.banner_url)
         except:
             e = funcs.errorEmbed(None, "Unknown server.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="category", description="Shows a list of commands in a given category.",
@@ -128,7 +128,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         e.add_field(name="Commands ({:,})".format(len(commandsList)),
                     value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
         e.set_footer(text=f"Use {prefix}help <command> for help with a specific command.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="help", description="Shows a list of commands.", usage="[command]",
@@ -169,8 +169,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
             serverList.append(ctx.guild.id)
             data["servers"] = serverList
             funcs.dumpJson("data/unprompted_messages.json", data)
-            return await ctx.send("`Enabled unprompted messages for this server.`")
-        await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
+            return await ctx.reply("`Enabled unprompted messages for this server.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
 
     @commands.command(name="umdisable", description="Disables unprompted messages for your server.",
                       aliases=["umd", "dum", "disableum"])
@@ -183,8 +183,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
             serverList.remove(ctx.guild.id)
             data["servers"] = serverList
             funcs.dumpJson("data/unprompted_messages.json", data)
-            return await ctx.send("`Disabled unprompted messages for this server.`")
-        await ctx.send(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
+            return await ctx.reply("`Disabled unprompted messages for this server.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
 
     @commands.cooldown(1, 180, commands.BucketType.user)
     @commands.command(description="Sends a message to the bot owner. Feel free to say hi, but spam may result in a blacklist.",
@@ -202,16 +202,16 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     "The message is too long. Please make it `{:,}` character{} shorter.".format(remain, "" if remain == 1 else "s")
                 )
             await (await self.client.application_info()).owner.send(msgtoowner)
-            await ctx.send(f"{ctx.author.mention} **You have left a message for the bot owner:**\n```{output}```\n" + \
+            await ctx.reply(f"{ctx.author.mention} **You have left a message for the bot owner:**\n```{output}```\n" + \
                            "Please ensure that your DMs are enabled and expect a reply soon. Spam may result in a blacklist.")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="pins", description="Returns the total number of message pins in this channel.",
                       aliases=["pin"])
     async def pins(self, ctx):
-        await ctx.send(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
+        await ctx.reply(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
 
 
 def setup(client: commands.Bot):

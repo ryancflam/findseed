@@ -115,7 +115,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
             data = res.json()
             if len(data) > 1:
-                await ctx.send(
+                await ctx.reply(
                     "`Please select a number: {}`".format(
                         ", ".join(f"{str(var)} ({data[var]['variant']})" for var in range(len(data)))
                     )
@@ -203,14 +203,14 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                                                 "particular month in Animal Crossing: New Horizons.",
                       aliases=["acarriving", "acarrive"], usage="[month]")
     async def acnew(self, ctx, month=""):
-        await ctx.send(embed=self.crittersListEmbed(month))
+        await ctx.reply(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
                                                     "particular month in Animal Crossing: New Horizons.",
                       aliases=["acleave"], usage="[month]")
     async def acleaving(self, ctx, month=""):
-        await ctx.send(embed=self.crittersListEmbed(month, mode=-1))
+        await ctx.reply(embed=self.crittersListEmbed(month, mode=-1))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
@@ -241,7 +241,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                 e.set_thumbnail(url=AC_LOGO)
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acbug", description="Shows information about an Animal Crossing: New Horizons bug.",
@@ -276,7 +276,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acfish", description="Shows information about an Animal Crossing: New Horizons fish.",
@@ -310,7 +310,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acfossil", description="Shows information about an Animal Crossing: New Horizons fossil.",
@@ -326,7 +326,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acpersonality", usage="[personality type]",
@@ -359,7 +359,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                 e.set_thumbnail(url=AC_LOGO)
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acsea", description="Shows information about an Animal Crossing: New Horizons sea creature.",
@@ -386,7 +386,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvillager", description="Shows information about an Animal Crossing: New Horizons villager.",
@@ -402,7 +402,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                     found = True
                     break
             if not found:
-                return await ctx.send(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
             e = Embed(description='"' + villagerdata["saying"] + '"')
             e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"].replace("https", "http"))
             e.set_image(url=villagerdata["image_uri"].replace("https", "http"))
@@ -439,7 +439,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             e.add_field(name="Vacation Theme", value=f'`"{villagerdata["paradise_theme"]}"`')
         except Exception as ex:
             e = funcs.errorEmbed(None, f"An error occurred - {ex}")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acspecies", description="Shows information about an Animal Crossing: New Horizons villager species.",
@@ -479,7 +479,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                     )
             except Exception:
                 e = funcs.errorEmbed(None, "Not found, please check your spelling.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvbd", aliases=["vbd", "acnhvbd"], usage="[month] [day]",
@@ -533,26 +533,26 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                 e.set_thumbnail(url=AC_LOGO)
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons houseware furniture item.")
     async def achouseware(self, ctx, *, item):
-        await ctx.send(embed=await self.furnitureEmbed(ctx, "houseware", item))
+        await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
                       usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons wallmounted furniture item.")
     async def acwallmounted(self, ctx, *, item):
-        await ctx.send(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
+        await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
                       description="Shows information about an Animal Crossing: New Horizons miscellaneous furniture item.")
     async def acmisc(self, ctx, *, item):
-        await ctx.send(embed=await self.furnitureEmbed(ctx, "misc", item))
+        await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips"],

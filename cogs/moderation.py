@@ -33,7 +33,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
                     description=f"Removed {success} message{'' if success == 1 else 's'} " + \
                                 f"with {fails} fail{'' if fails == 1 else 's'}."
                 )
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="kick", description="Kicks a user from a server.",
@@ -48,10 +48,10 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
                                   f"{'!' if not reason else ' for: `{}`'.format(reason)}")
             except:
                 pass
-            await ctx.send(f"Successfully kicked user **{member}**" + \
+            await ctx.reply(f"Successfully kicked user **{member}**" + \
                            f"{'.' if not reason else ' for: `{}`'.format(reason)}")
         except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Cannot kick that user."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Cannot kick that user."))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="ban", description="Bans a user from a server.",
@@ -66,10 +66,10 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
                                   f"{'!' if not reason else ' for: `{}`'.format(reason)}")
             except:
                 pass
-            await ctx.send(f"Successfully banned user **{member}**" + \
+            await ctx.reply(f"Successfully banned user **{member}**" + \
                            f"{'.' if not reason else ' for: `{}`'.format(reason)}")
         except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "Cannot ban that user."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Cannot ban that user."))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="unban", description="Unbans a user on a server.",
@@ -84,9 +84,9 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
                 user = ban.user
                 if (user.name, user.discriminator) == (username, discriminator):
                     await ctx.guild.unban(user)
-                    return await ctx.send(f"Successfully unbanned user **{user}**.")
+                    return await ctx.reply(f"Successfully unbanned user **{user}**.")
         except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
+            await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="banlist", description="Returns a list of banned users on a server.",
@@ -100,7 +100,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
             f" (Reason: {ban.reason})" for ban in bannedusers
         )
         string = string or "None"
-        await ctx.send(funcs.formatting(string))
+        await ctx.reply(funcs.formatting(string))
 
 
 def setup(client: commands.Bot):

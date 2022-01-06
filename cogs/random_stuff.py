@@ -37,7 +37,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.command(name="oohasecretcommand", description="A secret command except that it is not secret at all...")
     async def oohasecretcommand(self, ctx):
         commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
-        m = await ctx.send(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+        m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
         await sleep(1)
         await m.edit(content="Y̷o̸u̸ ̷d̴i̵d̶n̸'̷t̸ ̷s̶e̶e̶ ̸a̴n̵y̴t̷h̸i̸n̸g̵.̷")
         await sleep(0.5)
@@ -62,7 +62,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             e = Embed(title="Literal Chinese", description=funcs.formatting(res))
         except Exception:
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="literalenglish", aliases=["le"], usage="<English text (10 words or less)>",
@@ -78,7 +78,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             e = Embed(title="Literal English", description=funcs.formatting(res))
         except Exception:
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
@@ -86,13 +86,13 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                       aliases=["phone", "userphone", "call"])
     async def telephone(self, ctx):
         if ctx.channel in self.phoneWaitingChannels:
-            return await ctx.send(":telephone: Cancelling phone call.")
+            return await ctx.reply(":telephone: Cancelling phone call.")
         if ctx.channel in self.phoneCallChannels:
-            return await ctx.send(
+            return await ctx.reply(
                 embed=funcs.errorEmbed(None, "A phone call is already in progress in this channel.")
             )
         self.phoneWaitingChannels.append(ctx.channel)
-        await ctx.send(":telephone_receiver: Waiting for another party to pick up the phone...")
+        await ctx.reply(":telephone_receiver: Waiting for another party to pick up the phone...")
         if len(self.phoneWaitingChannels) == 1:
             sleepTime = 0
             while len(self.phoneWaitingChannels) == 1 and sleepTime < 120:
@@ -120,7 +120,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                     )
                     if msg.content.casefold() == "!hangup":
                         relay = ":telephone: The other party has hung up the phone."
-                        await ctx.send(":telephone: You have hung up the phone.")
+                        await msg.reply(":telephone: You have hung up the phone.")
                         hangup = True
                     else:
                         relay = f"**{msg.author}** » {msg.content}" + \
@@ -144,7 +144,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",
                       aliases=["pt", "mbti", "personality", "personalities", "16p", "16personalities"])
     async def personalitytest(self, ctx):
-        await ctx.send("```== Please Read ==\n\nYou are about to take a low-level personality test consisting of 88 q" + \
+        await ctx.reply("```== Please Read ==\n\nYou are about to take a low-level personality test consisting of 88 q" + \
                        "uestions. The test should take around 20 to 30 minutes to complete. To select an answer, inpu" + \
                        "t either 'a', 'b', or 'c'. Try to leave out as many neutral answers as possible. There " + \
                        "are no right or wrong answers.\n\nPlease note that this test does not consider the eight " + \
@@ -267,7 +267,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     async def dadjoke(self, ctx):
         headers = {"Accept": "application/json"}
         res = await funcs.getRequest("https://icanhazdadjoke.com/", headers=headers)
-        await ctx.send(res.json()["joke"])
+        await ctx.reply(res.json()["joke"])
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dog", description="Sends a random dog image.")
@@ -298,7 +298,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             )
             e.add_field(name="Trump Thinks", value=f"```{something} {quotes}```")
             e.set_thumbnail(url="https://cdn.discordapp.com/attachments/659771291858894849/673599147160502282/trumpface.png")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
@@ -306,14 +306,14 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     async def roast(self, ctx, member: Member=None):
         member = member or ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
-        await ctx.send(res.json()["insult"].replace("You are", f"{member.display_name} is"))
+        await ctx.reply(res.json()["insult"].replace("You are", f"{member.display_name} is"))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="fidgetspinner", description="Spins a fidget spinner.",
                       aliases=["spin", "spinner", "youspinmerightround"])
     async def fidgetspinner(self, ctx):
         if ctx.author.id in self.activeSpinners:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
         self.activeSpinners.append(ctx.message.author.id)
         try:
             url = choice([
@@ -371,14 +371,14 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 "yeah you are average-brained, absolutely nothing out of the ordinary",
                 "lame"
             ]
-        await ctx.send(f"{mention.mention}'s IQ score is **{iqres}**.\n\n{choice(msg)}")
+        await ctx.reply(f"{mention.mention}'s IQ score is **{iqres}**.\n\n{choice(msg)}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="lovecalc", description="Calculates the love percentage between two things or users.",
                       aliases=["love", "lovecalculator", "calclove"], usage="<input> [input]")
     async def lovecalc(self, ctx, first: str="", second: str=""):
         if not first:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         second = second or f"<@!{ctx.author.id}>"
         try:
             newlist = sorted([first, second])
@@ -405,10 +405,10 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 emoji = "...** :brown_heart:"
             if int(intermediate) < 20:
                 emoji = "...** :broken_heart:"
-            await ctx.send("The love percentage between " + \
+            await ctx.reply("The love percentage between " + \
                            f"**{newlist[0]}** and **{newlist[1]}** is **{intermediate}%{emoji}")
         except Exception:
-            await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
+            await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="avatar", description="Shows the avatar of a user.",
@@ -445,7 +445,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             "Outlook not so good.",
             "Very doubtful."
         ]
-        await ctx.send(f":8ball: {mention}: `{choice(['Empty input...', 'I cannot hear you.']) if msg == '' else choice(responses)}`")
+        await ctx.reply(
+            f":8ball: {mention}: `{choice(['Empty input...', 'I cannot hear you.']) if msg == '' else choice(responses)}`"
+        )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="coin", description="Flips coins.", usage="[amount up to 100]",
@@ -457,7 +459,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         except ValueError:
             amount = 1
         if not 0 < amount < 101:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
         coins = []
         total = {"Heads": 0, "Tails": 0, "Edge": 0}
         for _ in range(amount):
@@ -474,7 +476,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             e.set_image(url=thumbnail)
             if isEdge:
                 e.set_footer(text="1 in {:,} chance".format(COIN_EDGE_ODDS))
-            await ctx.send(embed=e)
+            await ctx.reply(embed=e)
         else:
             result = ""
             for i in range(1, 4):
@@ -483,7 +485,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                     cointype, (" (1 in {:,} chance)".format(COIN_EDGE_ODDS) if i == 3 else ""),
                     total[cointype], "s" if total[cointype] > 1 else ""
                 ) if total[cointype] else ""
-            await ctx.send(f"```{', '.join(coin for coin in coins)}\n{result}\n\nRequested by: {ctx.author}```")
+            await ctx.reply(f"```{', '.join(coin for coin in coins)}\n{result}\n\nRequested by: {ctx.author}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="die", description="Rolls dice.", usage="[amount up to 100]",
@@ -494,7 +496,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         except ValueError:
             amount = 1
         if not 0 < amount < 101:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Amount must be between 1 and 100."))
         dice = []
         total = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
         for _ in range(amount):
@@ -504,14 +506,14 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         if amount == 1:
             e = Embed(title=dice[0], description=f"Requested by: {ctx.author.mention}")
             e.set_image(url=f"https://rolladie.net/images/dice/dice{dice[0]}.jpg")
-            await ctx.send(embed=e)
+            await ctx.reply(embed=e)
         else:
             result = ""
             for i in range(1, 7):
                 result += f"\n{i}: {total[i]} time{'s' if total[i] > 1 else ''}" if total[i] else ""
             dicesum = sum(dice)
             possiblepts = amount * 6
-            await ctx.send(
+            await ctx.reply(
                 f"```{', '.join(str(die) for die in dice)}\n{result}\n\nTotal value: " + \
                 f"{dicesum} out of {possiblepts} ({round(dicesum / possiblepts * 100, 3)}%)\n\nRequested by: {ctx.author}```"
             )
@@ -525,15 +527,15 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         except ValueError:
             amount = 1
         if not 0 < amount < 53:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Amount must be between 1 and 52."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Amount must be between 1 and 52."))
         pc = PlayingCards()
         cards = pc.randomCard(amount)
         if amount == 1:
             e = Embed(title=pc.returnCardName(cards[0]), description=f"Requested by: {ctx.author.mention}")
             e.set_image(url=pc.returnCardImage(cards[0]))
-            await ctx.send(embed=e)
+            await ctx.reply(embed=e)
         else:
-            await ctx.send(
+            await ctx.reply(
                 "```{}\n\nRequested by: {}```".format(
                     "\n".join(f"{card} | {pc.returnCardName(card)}" for card in cards), ctx.author
                 )
@@ -553,7 +555,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             start = 1 if int(start) >= rnrange else int(start)
         except ValueError:
             start = 1
-        await ctx.send("```{:,} (Range: {:,} to {:,})\n\nRequested by: {}```".format(
+        await ctx.reply("```{:,} (Range: {:,} to {:,})\n\nRequested by: {}```".format(
             randint(start, rnrange), start, rnrange, ctx.author
         ))
 
@@ -579,7 +581,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                   description=f"Requested by: {ctx.author.mention}")
         e.add_field(name="RGB", value=f"`{r}, {g}, {b}`")
         e.set_image(url=f"https://www.colorhexa.com/{colour}.png")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="choice", usage="<items separated with ;>",
@@ -608,7 +610,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             e.add_field(name="Items ({:,})".format(len(itemslist)), value=", ".join(f"`{i}`" for i in sorted(itemslist)))
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
 
 def setup(client: commands.Bot):

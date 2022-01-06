@@ -8,8 +8,8 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class UnpromptedMessages(commands.Cog, name="Unprompted Messages", description="Funny bot responses that are not command-invoked.",
-                         command_attrs=dict(hidden=True)):
+class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True),
+                         description="Funny bot responses that are not command-invoked."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.lastthreemsgs = {}
@@ -55,7 +55,7 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", description="
                     if data["status"] == 4 else data["that"].replace("A.L.I.C.E", self.client.user.name) \
                     .replace("ALICE", self.client.user.name).replace("<br>", "").replace("&quot;", '"') \
                     .replace("&lt;","<").replace("&gt;", ">").replace("&amp;", "&")
-                await message.channel.send(f"{message.author.mention} {text}")
+                await message.reply(content=text)
             elif not message.author.bot:
                 if lowercase.startswith(("im ", "i'm ", "i‘m ", "i’m ", "i am ")):
                     if lowercase.startswith("im "):

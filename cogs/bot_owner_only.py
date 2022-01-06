@@ -46,10 +46,9 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                     timeout=1
                 )
                 self.bdReminder = 0
-                content = msg.content
                 prefix = self.client.command_prefix
-                if content.casefold().startswith(("!q", f"{prefix}bd", f"{prefix}botdisguise")):
-                    await ctx.send("Exiting bot disguise mode.")
+                if msg.content.casefold().startswith(("!q", f"{prefix}bd", f"{prefix}botdisguise")):
+                    await msg.reply("Exiting bot disguise mode.")
                     self.disableBotDisguise()
             except TimeoutError:
                 continue
@@ -58,7 +57,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.is_owner()
     async def resetbotdisguise(self, ctx):
         self.disableBotDisguise()
-        await ctx.send(":ok_hand:")
+        await ctx.reply(":ok_hand:")
 
     @commands.command(name="botdisguise", description="Enables bot disguise mode.", aliases=["bd"],
                       usage="[anything to enable stealth mode]")
@@ -66,7 +65,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     async def botdisguise(self, ctx, *, stealth: str=""):
         if self.botDisguise:
             return
-        await ctx.send("Please enter channel ID, or `cancel` to cancel." + \
+        await ctx.reply("Please enter channel ID, or `cancel` to cancel." + \
                        f"{' Stealth mode enabled (you cannot send messages).' if stealth else ''}")
         try:
             msg = await self.client.wait_for(
@@ -74,17 +73,17 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             )
             content = msg.content
             if content.casefold().startswith(("c", self.client.command_prefix)):
-                return await ctx.send("Cancelling.")
+                return await msg.reply("Cancelling.")
             channelID = int(content)
             self.destChannel = self.client.get_channel(channelID)
             if not self.destChannel:
                 self.destChannel = self.client.get_user(channelID)
                 if not self.destChannel:
-                    return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
+                    return await msg.reply(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
             self.botDisguise = True
             self.originChannel = ctx.channel
             self.client.loop.create_task(self.awaitBDStop(ctx))
-            await ctx.send(f"You are now in bot disguise mode! Channel: #{self.destChannel.name} " + \
+            await msg.reply(f"You are now in bot disguise mode! Channel: #{self.destChannel.name} " + \
                            f"({self.destChannel.guild.name}). Type `!q` to quit.")
             while self.botDisguise:
                 try:
@@ -108,7 +107,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
     async def restart(self, ctx):
-        await ctx.send("Are you sure? You have 10 seconds to confirm by typing `yes`.")
+        await ctx.reply("Are you sure? You have 10 seconds to confirm by typing `yes`.")
         try:
             await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
@@ -144,15 +143,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             f"cd {funcs.getPath()} && git pull", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
             close_fds=False if system() == "Windows" else True
         )
-        await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
+        await ctx.reply(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
         obj.kill()
 
     @commands.command(name="say", description="Makes the bot say anything.", aliases=["tell"])
     @commands.is_owner()
     async def say(self, ctx, *, output: str=""):
         if output == "":
-            e = funcs.errorEmbed(None, "Cannot send empty message.")
-            return await ctx.send(embed=e)
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot send empty message."))
         await ctx.send(output.replace("@everyone", "everyone").replace("@here", "here"))
 
     @commands.command(name="servers", description="Returns a list of servers the bot is in.", aliases=["sl", "serverlist"])
@@ -163,7 +161,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             serverList += f"- {str(server.id)}: " + str(server) + f" ({server.member_count})\n"
         serverList = serverList[:-1]
         newList = serverList[:1998]
-        await ctx.send(f"`{newList}`")
+        await ctx.reply(f"`{newList}`")
 
     @commands.command(name="channels", description="Returns a list of text channels a server the bot is in has.",
                       aliases=["cl", "channellist"], usage="[server ID]")
@@ -177,45 +175,45 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 st += f"- {str(channel.id)}: {channel.name}\n"
             st = st[:-1]
             newList = st[:1998]
-            await ctx.send(f"`{newList}`")
+            await ctx.reply(f"`{newList}`")
         except:
-            await ctx.send(embed=funcs.errorEmbed(None, "Unknown server."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Unknown server."))
 
     @commands.command(name="reloadcog", description="Reloads a cog.", usage="<cog name>")
     @commands.is_owner()
     async def reloadcog(self, ctx, *, cog: str=""):
         if cog == "":
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
             self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
             print(f"Reloaded cog: {cog}")
-            await ctx.send(":ok_hand:")
+            await ctx.reply(":ok_hand:")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="loadcog", description="Loads a cog.", usage="<cog name>", aliases=["enablecog"])
     @commands.is_owner()
     async def loadcog(self, ctx, *, cog: str=""):
         if cog == "":
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
             self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
             print(f"Loaded cog: {cog}")
-            await ctx.send(":ok_hand:")
+            await ctx.reply(":ok_hand:")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="unloadcog", description="Unloads a cog.", usage="<cog name>", aliases=["disablecog"])
     @commands.is_owner()
     async def unloadcog(self, ctx, *, cog: str=""):
         if cog == "":
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
             self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
             print(f"Unloaded cog: {cog}")
-            await ctx.send(":ok_hand:")
+            await ctx.reply(":ok_hand:")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate"], usage="<code>")
@@ -241,14 +239,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                     e.add_field(name="Returned", value=funcs.formatting(str(obj), limit=1024))
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.command(name="blacklistserver", description="Blacklists a server.",
                       aliases=["bls"], usage="<server ID>")
     @commands.is_owner()
     async def blacklistserver(self, ctx, *, serverID=None):
         if not serverID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
             data = funcs.readJson("data/blacklist.json")
@@ -257,40 +255,38 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 serverList.append(serverID)
                 data["servers"] = serverList
                 funcs.dumpJson("data/blacklist.json", data)
-                return await ctx.send("Added.")
-            await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
+                return await ctx.reply("Added.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="blacklistuser", description="Blacklists a user.",
                       aliases=["blu"], usage="<user ID>")
     @commands.is_owner()
     async def blacklistuser(self, ctx, *, userID=None):
         if not userID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
             if userID == ctx.author.id:
-                return await ctx.send(embed=funcs.errorEmbed(
-                    None, "Are you trying to blacklist yourself, you dumb retard??!@?@?#!?"
-                ))
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Are you trying to blacklist yourself?"))
             data = funcs.readJson("data/blacklist.json")
             userList = list(data["users"])
             if userID not in userList:
                 userList.append(userID)
                 data["users"] = userList
                 funcs.dumpJson("data/blacklist.json", data)
-                return await ctx.send("Added.")
-            await ctx.send(embed=funcs.errorEmbed(None, "Already in blacklist."))
+                return await ctx.reply("Added.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="unblacklistserver", description="Unblacklists a server.",
                       aliases=["ubls"], usage="<server ID>")
     @commands.is_owner()
     async def unblacklistserver(self, ctx, *, serverID=None):
         if not serverID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
             data = funcs.readJson("data/blacklist.json")
@@ -299,17 +295,17 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 serverList.remove(serverID)
                 data["servers"] = serverList
                 funcs.dumpJson("data/blacklist.json", data)
-                return await ctx.send("Removed.")
-            await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
+                return await ctx.reply("Removed.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="unblacklistuser", description="Unblacklists a user.",
                       aliases=["ublu"], usage="<user ID>")
     @commands.is_owner()
     async def unblacklistuser(self, ctx, *, userID=None):
         if not userID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
             data = funcs.readJson("data/blacklist.json")
@@ -318,10 +314,10 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 userList.remove(userID)
                 data["users"] = userList
                 funcs.dumpJson("data/blacklist.json", data)
-                return await ctx.send("Removed.")
-            await ctx.send(embed=funcs.errorEmbed(None, "Not in blacklist."))
+                return await ctx.reply("Removed.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="blacklist", description="Gets the blacklist.", aliases=["bl"])
     @commands.is_owner()
@@ -329,7 +325,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         data = funcs.readJson("data/blacklist.json")
         serverList = list(data["servers"])
         userList = list(data["users"])
-        await ctx.send(
+        await ctx.reply(
             f"```Servers: {'None' if not serverList else ', '.join(str(server) for server in serverList)}" + \
             f"\nUsers: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
@@ -339,21 +335,21 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.is_owner()
     async def leaveserver(self, ctx, *, serverID=None):
         if not serverID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             server = self.client.get_guild(int(serverID))
             if server:
                 return await server.leave()
-            await ctx.send(embed=funcs.errorEmbed(None, "Unknown server."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Unknown server."))
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="addunpromptedbot", description="Adds a Discord bot to the list of allowed unprompted bots.",
                       aliases=["aub"], usage="<bot user ID>")
     @commands.is_owner()
     async def addunpromptedbot(self, ctx, *, userID=None):
         if not userID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
             data = funcs.readJson("data/unprompted_bots.json")
@@ -362,17 +358,17 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 userList.append(userID)
                 data["ids"] = userList
                 funcs.dumpJson("data/unprompted_bots.json", data)
-                return await ctx.send("Added.")
-            await ctx.send(embed=funcs.errorEmbed(None, "Already in unprompted bots list."))
+                return await ctx.reply("Added.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Already in unprompted bots list."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="removeunpromptedbot", description="Removes a Discord bot from the list of allowed unprompted bots.",
                       aliases=["rub"], usage="<bot user ID>")
     @commands.is_owner()
     async def removeunpromptedbot(self, ctx, *, userID=None):
         if not userID:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
             data = funcs.readJson("data/unprompted_bots.json")
@@ -381,16 +377,16 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 userList.remove(userID)
                 data["ids"] = userList
                 funcs.dumpJson("data/unprompted_bots.json", data)
-                return await ctx.send("Removed.")
-            await ctx.send(embed=funcs.errorEmbed(None, "Not in unprompted bots list."))
+                return await ctx.reply("Removed.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Not in unprompted bots list."))
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="unpromptedbots", description="Gets the list of unprompted bots.", aliases=["ub"])
     @commands.is_owner()
     async def unpromptedbots(self, ctx):
         userList = list(funcs.readJson("data/unprompted_bots.json")["ids"])
-        await ctx.send(
+        await ctx.reply(
             f"```Allowed unprompted bots: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
 
@@ -404,7 +400,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             obj.kill()
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.command(name="reply", description="Replies to a user message.", usage="<message ID> <channel ID> <message>")
     @commands.is_owner()
@@ -422,22 +418,22 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             except:
                 men = "DM"
             await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}` ({men})")
-            await ctx.send(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" + \
+            await ctx.reply(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" + \
                            f" `{msgid}`\nChannel ID: `{cid}`\nMessage: `{original}`")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="hiddencmds", description="Shows a list of public commands hidden from the main commands menu.",
                       aliases=["hiddencommand", "hiddencommands", "hid", "hidden", "hiddencmd"])
     @commands.is_owner()
     async def hidden(self, ctx):
-        await ctx.send(embed=funcs.commandsListEmbed(self.client, menu=1))
+        await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=1))
 
     @commands.command(name="ownercmds", description="Shows a list of bot owner commands.",
                       aliases=["ownercommand", "ownercommands", "owner", "ownercmd"])
     @commands.is_owner()
     async def ownercmds(self, ctx):
-        await ctx.send(embed=funcs.commandsListEmbed(self.client, menu=2))
+        await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=2))
 
 
 def setup(client: commands.Bot):

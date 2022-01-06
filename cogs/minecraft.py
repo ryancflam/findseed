@@ -142,7 +142,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                           f", found {'{:,}'.format(highestTotal)} time{'' if highestTotal == 1 else 's'})`")
         e.set_footer(text=f"The command has been called {'{:,}'.format(calls)} time{'' if calls == 1 else 's'}. !eyeodds")
         e.set_image(url="attachment://portal.png")
-        await ctx.send(embed=e, file=file)
+        await ctx.reply(embed=e, file=file)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",
@@ -152,7 +152,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         for i in range(13):
             odds = self.EYE_DATA[str(i)]["percent"]
             msg += f"{i} eye - `{odds}% (1 in {self.EYE_DATA[str(i)]['onein']})`\n"
-        await ctx.send(msg)
+        await ctx.reply(msg)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="finddream", description="Can you get Dream's" + ' Minecraft speedrunning "luck"? ' + \
@@ -185,7 +185,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findcleric", description="Will you get the ender pearl trade from the cleric, " + \
@@ -203,7 +203,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         e.set_image(url="https://media.discordapp.net/attachments/771404776410972161/856203574337601536/pearl.png" if goodluck else
                         "https://media.discordapp.net/attachments/771404776410972161/856203573113520138/bottle.png")
         e.set_footer(text=f"Odds: {str(badluckonein - 1) if goodluck else '1'}/{str(badluckonein)}")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findgravel", description="Will you get flint from gravel? Test your luck using this command!",
@@ -220,7 +220,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png" if badluck else
                         "https://media.discordapp.net/attachments/771698457391136798/856209843174244362/flint.png")
         e.set_footer(text=f"Odds: {str(goodluckonein - 1) if badluck else '1'}/{str(goodluckonein)}")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findperch", description="You are in insane pace and about to kill the dragon..." + \
@@ -239,7 +239,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                         if badluck
                         else "https://media.discordapp.net/attachments/771404776410972161/928298549861572638/2022-01-05_22.46.50.png")
         e.set_footer(text=f"Odds: {str(goodluckonein - 1) if badluck else '1'}/{str(goodluckonein)}")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findblaze", description="You kill a blaze...but does it drop a rod? Test your luck using this command!",
@@ -256,7 +256,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856213641020178472/rod.png" if goodluck else
                         "https://cdn.discordapp.com/attachments/771698457391136798/856213642173612032/norod.png")
         e.set_footer(text=f"Odds: {str(badluckonein - 1) if goodluck else '1'}/{str(badluckonein)}")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bartering", description="Finds the probability of getting 12 or more ender pearls" + \
@@ -267,13 +267,13 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         try:
             n = int(trades)
             if not 2 <= n <= BARTER_LIMIT:
-                return await ctx.send(embed=funcs.errorEmbed(None, f"Value must be between 2 and {BARTER_LIMIT}."))
+                return await ctx.reply(embed=funcs.errorEmbed(None, f"Value must be between 2 and {BARTER_LIMIT}."))
         except ValueError:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
         x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
-        await ctx.send(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
-                       f" with {n} gold ingots is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
+        await ctx.reply(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
+                        f" with {n} gold ingots is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
@@ -299,12 +299,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             xp = funcs.sign(x) * abs(o * math.cos(t))
             zp = funcs.sign(z) * abs(o * math.sin(t))
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
-            await ctx.send(
-                f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** " + \
+            await ctx.reply(
+                f"Build your portal at: **{round(xp)}, {round(zp)}** " + \
                 f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)"
             )
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="educatedtravel", description="A Minecraft: Java Edition speedrunning tool th" + \
@@ -333,9 +333,9 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             b = 2 * m1 * b1
             xp = ((-b) + (funcs.sign(f) * math.sqrt(b ** 2 - 4 * a * (b1 ** 2 - o ** 2)))) / (2 * a)
             zp = m1 * xp + b1
-            await ctx.send(f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** ")
+            await ctx.reply(f"Build your portal at: **{round(xp)}, {round(zp)}** ")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="doubletravel", description="A Minecraft: Java Edition speedrunning tool that" + \
@@ -363,13 +363,13 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             xp = funcs.sign(x) * abs(o * math.cos(t))
             zp = funcs.sign(z) * abs(o * math.sin(t))
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
-            await ctx.send(
-                f"{ctx.author.mention} Build your first portal at: **{round(xp)}, {round(zp)}** " + \
+            await ctx.reply(
+                f"Build your first portal at: **{round(xp)}, {round(zp)}** " + \
                 f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\n" + \
                 f"Use `{self.client.command_prefix}educatedtravel` afterwards."
             )
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="safeblind", description="A Minecraft: Java Edition speedrunning tool that, s" + \
@@ -398,12 +398,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             xp = funcs.sign(x) * abs(o * math.cos(t))
             zp = funcs.sign(z) * abs(o * math.sin(t))
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
-            await ctx.send(
-                f"{ctx.author.mention} Build your portal at: **{round(xp)}, {round(zp)}** " + \
+            await ctx.reply(
+                f"Build your portal at: **{round(xp)}, {round(zp)}** " + \
                 f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)"
             )
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="perfecttravel", description="A Minecraft: Java Edition speedrunning tool that att" + \
@@ -445,21 +445,21 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 targetchunk = ""
             if targetchunk:
                 if calc:
-                    await ctx.send(
-                        f"{ctx.author.mention} Build your second portal at: **" + \
+                    await ctx.reply(
+                        f"Build your second portal at: **" + \
                         f"{round(nx + (1 if nx < 0 else 0))}, 30, {round(nz + (1 if nz < 0 else 0))}** " + \
                         "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
                     )
                 else:
-                    await ctx.send(
-                        f"{ctx.author.mention} Offset: **{nx}, {nz}**\n\nYour current chunk for reference: **" + \
+                    await ctx.reply(
+                        f"Offset: **{nx}, {nz}**\n\nYour current chunk for reference: **" + \
                         f"{px}, {pz}**" + \
                         "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
                     )
             else:
-                await ctx.send(f"{ctx.author.mention} Cannot find ideal coordinates...")
+                await ctx.reply(f"Cannot find ideal coordinates...")
         except Exception as ex:
-            await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A Minecraft: Java Edition speedrunning tool tha" + \
@@ -503,14 +503,14 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             l.sort(key=lambda i: i["j"])
             xp, zp = l[0]["k"], l[0]["r"]
             blocks = round(self.coordsDifference((x0, z0), (xp, zp)))
-            await ctx.send(
-                f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
+            await ctx.reply(
+                f"The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
                 f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\nMethod: 8, 8\n\nPaste your F3+" + \
                 "C clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
                 "Type `!cancel` to cancel."
             )
         except Exception as ex:
-            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+            return await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
         x1, z1, f1 = None, None, None
         blocks = 100
         try:
@@ -523,7 +523,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                         x1, z1, f1 = self.f3cProcessing(msg.content)
                     except:
                         if msg.content.casefold() == "!cancel":
-                            return await ctx.send("Cancelling triangulation.")
+                            return await ctx.reply("Cancelling triangulation.")
                         continue
                     if x1 == x0 and z1 == z0 and f1 == f0:
                         continue
@@ -537,8 +537,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                     blocks = round(self.coordsDifference((x1, z1), (xp, zp)))
                 except:
                     continue
-                await ctx.send(
-                    f"{ctx.author.mention} The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
+                await msg.reply(
+                    f"The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
                     f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\nMethod: Triangulation\n\n" + \
                     "Paste your F3+C clipboard here once you are ready. The program will stop after 20 minutes of " + \
                     "inactivity. Type `!cancel` to cancel."
@@ -561,8 +561,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 x1, z1 = float(args[0]), float(args[1])
             x2, z2 = float(args[-2]), float(args[-1])
         except ValueError:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid arguments."))
-        await ctx.send(
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid arguments."))
+        await ctx.reply(
             f"The distance between **{int(x1)}, {int(z1)}** and **{int(x2)}, {int(z2)}** is: " + \
             f"**~{round(self.coordsDifference((x1, z1), (x2, z2)))}**"
         )
@@ -611,7 +611,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="skin", description="Gets the skin of a Minecraft user.", aliases=["mcskin"],
@@ -634,7 +634,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             e.set_image(url=skin)
         except Exception:
             e = funcs.errorEmbed(None, "Invalid skin or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="mcserver", description="Gets the current status of a Minecraft server.",
@@ -679,7 +679,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 e.set_footer(text=motd[0].strip().replace('&amp;', '&') + secondLine)
         except Exception:
             e = funcs.errorEmbed(None, "Invalid server address or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="fossils", description="Brings up a Minecraft fossil identification chart for divine travel.",
@@ -707,7 +707,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                         "Invalid option!",
                         "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.divinetravel.keys()))
                 )
-            await ctx.send(embed=e)
+            await ctx.reply(embed=e)
         else:
             url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
             await funcs.sendImage(

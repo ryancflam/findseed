@@ -1,6 +1,7 @@
 from asyncio import sleep, TimeoutError
 from datetime import datetime, timedelta
 from json import dumps, JSONDecodeError
+from pathlib import Path
 from platform import system
 from random import choice, randint
 from statistics import mean, median, mode, pstdev, stdev
@@ -23,6 +24,8 @@ HCF_LIMIT = 1000000
 
 
 class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
+    COPYPASTA = Path(f"{funcs.getPath()}/assets/copypasta.txt").read_text()
+
     def __init__(self, client: commands.Bot):
         self.client = client
         self.reddit = Reddit(client_id=config.redditClientID,
@@ -48,7 +51,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_footer(text="Note: Lines of code do not include comment or blank lines.")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown repository or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="covid", description="Gathers COVID-19 data.",
@@ -123,7 +126,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="flight", description="Gets information about a flight",
@@ -219,7 +222,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              icon_url="https://i.pinimg.com/564x/8c/90/8f/8c908ff985364bdba5514129d3d4e799.jpg")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown flight or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="weather", description="Finds the current weather of a location.",
@@ -256,7 +259,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
         except:
             e = funcs.errorEmbed(None, "Unknown location or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @commands.command(name="translate", description="Translates text to a different language. " + \
@@ -274,7 +277,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = Embed(title="Translation", description=funcs.formatting(output))
         except Exception:
             e = funcs.errorEmbed(None, "An error occurred. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="currency", description="Converts the price of one currency to another",
@@ -310,12 +313,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         amount = float(initialamount)
                     else:
                         amount /= cgData[0]["current_price"]
-            await ctx.send(
+            await ctx.reply(
                 f"The current price of **{'{:,}'.format(initialamount)} {fromCurrency}** in **{toCurrency}**: " + \
                 "`{:,}`".format(amount)
             )
         except:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="wiki", description="Returns a Wikipedia article.",
@@ -335,7 +338,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     data = res.json()
                     wikipage = data["query"]
                     if list(wikipage["pages"])[0] == "-1":
-                        return await ctx.send(embed=funcs.errorEmbed(None, "Invalid article."))
+                        return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid article."))
                 if wikipage["pages"][list(wikipage["pages"])[0]]["extract"].casefold().startswith(f"{page} may refer to:\n\n"):
                     try:
                         splitthing = f"may refer to:\n\n"
@@ -346,7 +349,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         data = res.json()
                         wikipage = data["query"]
                         if wikipage["pages"][list(wikipage["pages"])[0]] == "-1":
-                            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid article."))
+                            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid article."))
                     except IndexError:
                         pass
                 summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"]
@@ -361,7 +364,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e.add_field(name="Extract", value=f"```{summary}```")
             except Exception:
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
@@ -383,7 +386,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Genius Link", value=link)
             page = 1
             e.set_footer(text=f"Page {page} of {allpages}")
-            msg = await ctx.send(embed=e)
+            msg = await ctx.reply(embed=e)
             if allpages > 1:
                 await msg.add_reaction("⏮")
                 await msg.add_reaction("⏭")
@@ -418,9 +421,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         edited.add_field(name="Genius Link", value=link)
                         edited.set_footer(text=f"Page {page} of {allpages}")
                         await msg.edit(embed=edited)
-        except Exception as ex:
-            print(ex)
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
+        except Exception:
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr"],
@@ -432,7 +434,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             )
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],
@@ -452,7 +454,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = funcs.errorEmbed(None, str(ex))
         else:
             e = funcs.errorEmbed(None, "No attachment or URL detected, please try again.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="compile", description="Compiles code.", aliases=["comp"])
@@ -462,7 +464,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         languages = [i["name"] for i in data]
         output = ", ".join(f'`{j}`' for j in languages)
         language = ""
-        await ctx.send(embed=Embed(title="Please select a language below or input `quit` to quit...",
+        option = None
+        await ctx.reply(embed=Embed(title="Please select a language below or input `quit` to quit...",
                                    description=output))
         while language not in languages and language != "quit":
             try:
@@ -473,16 +476,16 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     "♯", "sharp").replace("++", "pp")
                 language = "javascript" if language == "js" else language
                 if language not in languages and language != "quit":
-                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid language."))
+                    await option.reply(embed=funcs.errorEmbed(None, "Invalid language."))
             except TimeoutError:
                 return await ctx.send("Cancelling compilation...")
         if language == "quit":
-            return await ctx.send("Cancelling compilation...")
+            return await option.reply("Cancelling compilation...")
         versionurl = f"https://run.glot.io/languages/{language}"
         res = await funcs.getRequest(versionurl, verify=False)
         data = res.json()
         url = data["url"]
-        await ctx.send("**You have 15 minutes to type out your code. Input `quit` to quit.**")
+        await option.reply("**You have 15 minutes to type out your code. Input `quit` to quit.**")
         code = None
         try:
             option = await self.client.wait_for(
@@ -494,12 +497,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     content = await funcs.readTxt(option)
                 code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
                 if code == "quit":
-                    return await ctx.send("Cancelling compilation...")
+                    return await option.reply("Cancelling compilation...")
             except:
                 pass
         except TimeoutError:
             return await ctx.send("Cancelling compilation...")
-        await ctx.send("**Please enter your desired file name including the extension.** (e.g. `main.py`)")
+        await option.reply("**Please enter your desired file name including the extension.** (e.g. `main.py`)")
         try:
             option = await self.client.wait_for(
                 "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
@@ -517,11 +520,11 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             data = res.json()
             stderr = data["stderr"]
             if stderr == "":
-                await ctx.send(embed=Embed(title="Compilation", description=funcs.formatting(data["stdout"] or "None")))
+                await option.reply(embed=Embed(title="Compilation", description=funcs.formatting(data["stdout"] or "None")))
             else:
-                await ctx.send(embed=funcs.errorEmbed(data["error"].title(), funcs.formatting(stderr)))
+                await option.reply(embed=funcs.errorEmbed(data["error"].title(), funcs.formatting(stderr)))
         except AttributeError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
+            await option.reply(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="dictionary", description="Returns the definition(s) of a word.",
@@ -557,19 +560,19 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1]))
                 except Exception:
                     e = funcs.errorEmbed(None, "Unknown word.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="poll", description="Makes a poll.", usage="<question>", aliases=["questionnaire"])
     @commands.guild_only()
     async def poll(self, ctx, *, question):
         if len(question) > 200:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Question must be 200 characters or less."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Question must be 200 characters or less."))
         messages, answers = [ctx.message], []
         count = 0
         while count < 20:
             messages.append(
-                await ctx.send("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
+                await messages[-1].reply("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
             )
             try:
                 entry = await self.client.wait_for(
@@ -588,7 +591,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     count -= 1
                 else:
                     messages.append(
-                        await ctx.send(embed=funcs.errorEmbed(None, "No choices."))
+                        await entry.reply(embed=funcs.errorEmbed(None, "No choices."))
                     )
             else:
                 answers.append((chr(0x1f1e6 + count), entry.content))
@@ -598,16 +601,16 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         except:
             pass
         if len(answers) < 2:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Not enough choices."))
+            return await messages[-1].reply(embed=funcs.errorEmbed(None, "Not enough choices."))
         answer = "\n".join(f"{keycap}: {content}" for keycap, content in answers)
         e = Embed(title=f"Poll - {question}", description=f"Asked by: {ctx.author.mention}")
         e.add_field(name="Choices", value=answer)
         try:
-            poll = await ctx.send(embed=e)
+            poll = await messages[-1].reply(embed=e)
             for emoji, _ in answers:
                 await poll.add_reaction(emoji)
         except Exception:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Too many choices?"))
+            return await messages[-1].reply(embed=funcs.errorEmbed(None, "Too many choices?"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
@@ -641,7 +644,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     )
                 except ZeroDivisionError:
                     e.set_footer(text=f"Submitted by {terms[rdm]['author']} | Approval rate: n/a (0 👍 - 0 👎)")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
@@ -754,7 +757,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
         except Exception:
             e = funcs.errorEmbed(None, "Invalid search.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="calc", description="Does simple math.",
@@ -766,6 +769,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(SafeEval(inp).safeEval()))))
         except ZeroDivisionError:
             answer = choice([
+                self.COPYPASTA.replace("\*", "*")[:1994],
                 "Stop right there, that's illegal!",
                 "Wait hol up...",
                 "FBI OPEN UP!!!",
@@ -794,12 +798,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 "EXXXXXCCCCCCUUUUUSEEEE MEEE",
                 "what", "wat", "wut", "Negative nothing", "屌", "No.", "no",
                 "Der Mann sprach für seine Rechte\ner ist verstört, er ist ein egoistischer Gör!",
-                "You did absolutely **** all to resolve the pandemic, you did close to nothing to " + \
-                "prepare yourselves for it, and let alone did you do anything to functionally reso" + \
-                "lve problems. You are oppressing our individual liberties because of the shortcom" + \
-                "ings of your institutions. You are stifling your economy and, as a consequence, o" + \
-                "ur income because of your vices. And last but not least, you seem to be absolutel" + \
-                "y stuck into a self-repetitive loop of making the same idiotic mistakes over and over again.",
                 "ENOUGH! Because of you, I almost lost my way! But everycreature here has reminded me of " + \
                 "the true power of friendship! There will always be darkness in the world, but there will " + \
                 "also always be those who find the light!",
@@ -812,7 +810,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=f"```{answer}```")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="wordcount", description="Counts the number of words and characters in an input.",
@@ -826,19 +824,20 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             except:
                 inp = inp
         if not inp:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Cannot process empty input."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         splt = "".join(ch for ch in inp if ch not in set(punctuation)).split()
         e = Embed(title="Word Count")
         e.add_field(name="Characters", value="`{:,}`".format(len(inp.strip())))
         e.add_field(name="Words", value="`{:,}`".format(len(splt)))
         e.add_field(name="Unique Words", value="`{:,}`".format(len(set(splt))))
         e.set_footer(text="Note: This may not be 100% accurate.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.",
                       aliases=["location", "countries", "place", "nation"], usage="<country name OR code>")
     async def country(self, ctx, *, country):
+        msg = ctx.message
         try:
             try:
                 res = await funcs.getRequest(
@@ -846,7 +845,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 )
                 data = res.json()
                 if len(data) > 1:
-                    await ctx.send(
+                    await ctx.reply(
                         "`Please select a number: " + \
                         f"{', '.join(str(var) + ' (' + data[var]['name'] + ')' for var in range(len(data)))}`"
                     )
@@ -854,6 +853,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         pchoice = await self.client.wait_for(
                             "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=20
                         )
+                        msg = pchoice
                         pchoice = int(pchoice.content) if -1 < int(pchoice.content) < len(data) else 0
                     except (TimeoutError, ValueError):
                         pchoice = 0
@@ -898,7 +898,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.send(embed=e)
+        await msg.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="normalbodytemp", description="Shows the normal body temperature range chart.",
@@ -1001,7 +1001,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 pass
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="textgen", description="Generates text based on your input.",
@@ -1018,7 +1018,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="quartile", usage="<numbers separated with ;>",
@@ -1066,7 +1066,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hcf", usage="<value #1 up to {:,}> <value #2 up to {:,}>".format(HCF_LIMIT, HCF_LIMIT),
@@ -1085,12 +1085,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 if not a % i and not b % i:
                     hcf = i
             lcm = int((a * b) / hcf)
-            await ctx.send(f'The HCF of {funcs.removeDotZero("{:,}".format(a))} and ' + \
+            await ctx.reply(f'The HCF of {funcs.removeDotZero("{:,}".format(a))} and ' + \
                            f'{funcs.removeDotZero("{:,}".format(b))} is: **{funcs.removeDotZero("{:,}".format(hcf))}' + \
                            f'**\nThe LCM of {funcs.removeDotZero("{:,}".format(a))} and ' + \
                            f'{funcs.removeDotZero("{:,}".format(b))} is: **{funcs.removeDotZero("{:,}".format(lcm))}**')
         except ValueError:
-            await ctx.send(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="zodiac", description="Converts a date to its zodiac sign.",
@@ -1130,7 +1130,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e.set_footer(text=z)
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.", usage="[year]",
@@ -1147,7 +1147,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Leap Year", value=f"`{ly if ly != 'None' else 'Unknown'}`")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
@@ -1254,7 +1254,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e.description = funcs.formatting("Today")
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="iss", description="Gets information about the International Space Station and all humans in space.",
@@ -1280,7 +1280,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_image(url="https://cdn.discordapp.com/attachments/771698457391136798/926876797759537192/unknown.png")
         except Exception:
             e = funcs.errorEmbed(None, "Server error.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(usage="<note #1 with octave (0 to 9)> <note #2 with octave (0 to 9)>",
@@ -1305,7 +1305,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                           ))
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
 
 def setup(client: commands.Bot):

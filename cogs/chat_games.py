@@ -31,7 +31,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
 
     async def checkGameInChannel(self, ctx):
         if ctx.channel.id in self.gameChannels:
-            await ctx.send(
+            await ctx.reply(
                 embed=funcs.errorEmbed(
                     None, "A game is already in progress in this channel, please be patient or use another channel!"
                 )
@@ -48,7 +48,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     @commands.is_owner()
     async def cleargamechannels(self, ctx):
         self.gameChannels = []
-        await ctx.send(":ok_hand:")
+        await ctx.reply(":ok_hand:")
 
     @tasks.loop(seconds=1.0)
     async def tetrisTick(self):
@@ -1148,7 +1148,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                         m.content.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
                     ) and m.channel == ctx.channel and funcs.userNotBlacklisted(self.client, m)
                 )
-                await ctx.send(f"{useranswer.author.mention}: `Correct! That Pokémon is {name}!`")
+                await useranswer.reply(f"`Correct! That Pokémon is {name}!`")
             except TimeoutError:
                 await ctx.send(f"`Time's up! That Pokémon is {name}!`")
         except:

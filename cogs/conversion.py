@@ -113,7 +113,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                     algo = "SHA512"
                     output = str(hashlib.sha512(msg.encode("utf-8")).hexdigest())
                 e = Embed(title=algo, description=funcs.formatting(output))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",
@@ -147,7 +147,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None,"Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="brainfucktotext", description="Converts Brainfuck to plain text.",
@@ -166,7 +166,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttomorse", description="Converts plain text to Morse code.",
@@ -189,7 +189,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="morsetotext", description="Converts Morse code to plain text.",
@@ -225,7 +225,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttohex", description="Converts plain text to hexadecimal.",
@@ -241,7 +241,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hextotext", description="Converts hexadecimal to plain text.",
@@ -257,7 +257,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttobinary", description="Converts plain text to binary.",
@@ -273,7 +273,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="binarytotext", description="Converts binary to plain text.",
@@ -291,7 +291,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="decimaltobinary", description="Converts decimal to binary.",
@@ -308,7 +308,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="binarytodecimal", description="Converts binary to decimal.",
@@ -325,7 +325,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="binarytohex", description="Converts binary to hexadecimal.",
@@ -343,7 +343,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hextobinary", description="Converts hexadecimal to binary.",
@@ -360,7 +360,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except Exception:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hextodecimal", description="Converts hexadecimal to decimal.",
@@ -377,7 +377,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="decimaltohex", description="Converts decimal to hexadecimal.",
@@ -394,7 +394,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="ctf", description="Converts Celsius to Fahrenheit.",
@@ -411,7 +411,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="ftc", description="Converts Fahrenheit to Celsius.",
@@ -429,7 +429,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="direction", description="Converts degrees to cardinal direction.",
@@ -449,7 +449,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="lbstokg", description="Converts pounds to kilograms.", usage="<input>",
@@ -467,7 +467,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="kgtolbs", description="Converts kilograms to pounds.",
@@ -485,7 +485,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
 
 def setup(client: commands.Bot):

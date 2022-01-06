@@ -156,6 +156,16 @@ def degreesToDirection(value):
     return "NNW"
 
 
+def btcOrSat(sats):
+    sats = int(sats)
+    if -10000 < sats < 10000:
+        unit = " sat."
+    else:
+        sats = round(sats * 0.00000001, 8)
+        unit = " BTC"
+    return removeDotZero("{:,}".format(sats)) + unit
+
+
 def dateDifference(dateobj, dateobj2):
     years = dateobj2.year - dateobj.year
     months = dateobj2.month - dateobj.month
@@ -429,7 +439,7 @@ async def getImage(url, headers=None, params=None, timeout=None, verify=True):
 
 
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
-    await ctx.send(message, file=File(await getImage(url), name))
+    await ctx.reply(message, file=File(await getImage(url), name))
 
 
 async def postRequest(url, data=None, headers=None, timeout=None, verify=True, json=None):

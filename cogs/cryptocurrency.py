@@ -81,7 +81,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     ), inline=False)
         e.add_field(name="GAS Market Cap", value="`{:,} USD (Rank #{:,})`".format(gasmc, gasrank))
         e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="gas", description="Calculates N3 GAS earnings based on the amount of NEO you hold.",
@@ -105,7 +105,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     value="`~{:,} GAS ({:,} USD)`".format(round(hodl, 5), round(gasusd * hodl, 5)))
         e.add_field(name="Monthly Governance Participation Reward", inline=False,
                     value="`~{:,} GAS ({:,} USD)`".format(round(governance, 5), round(gasusd * governance, 5)))
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptovs", aliases=["cvs", "vs", "coinvs", "vscoin", "vscrypto", "vsc", "cap", "coincap"],
@@ -114,7 +114,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
     async def cryptovs(self, ctx, coin1: str="eth", coin2: str="btc"):
         coinID1, coinID2 = self.getCoinGeckoID(coin1), self.getCoinGeckoID(coin2)
         if coinID1 == coinID2:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Both cryptocurrencies are the same."))
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Both cryptocurrencies are the same."))
         try:
             res = await funcs.getRequest(
                 COINGECKO_URL + "coins/markets", params={"ids": f"{coinID1},{coinID2}", "vs_currency": "usd"}
@@ -130,7 +130,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             coin2price = data[1]["current_price"]
             newvalue = coin1cap / coin2cap
             newvalue2 = coin2cap / coin1cap
-            await ctx.send(f"If **{coin2name} ({coin2symb})** had the market cap of **{coin1name} ({coin1symb})**:\n\n`" + \
+            await ctx.reply(f"If **{coin2name} ({coin2symb})** had the market cap of **{coin1name} ({coin1symb})**:\n\n`" + \
                            "{:,} USD` per {} **(+{:,}%)**\n\n".format(
                                round(newvalue * coin2price, 4), coin2symb, round((newvalue - 1) * 100, 2)
                            ) + f"If **{coin1name} ({coin1symb})** had the market cap of **{coin2name} ({coin2symb})**:\n\n`" + \
@@ -142,7 +142,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                                coin2symb, coin2price, coin2symb, coin2cap, data[1]["market_cap_rank"]
                            ))
         except Exception:
-            return await ctx.send(embed=funcs.errorEmbed(
+            return await ctx.reply(embed=funcs.errorEmbed(
                 "Invalid argument(s) and/or invalid currency!",
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
             ))
@@ -310,7 +310,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 "Invalid argument(s) and/or invalid currency!",
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
             )
-        await ctx.send(embed=e, file=image)
+        await ctx.reply(embed=e, file=image)
         if path.exists(f"{funcs.getPath()}/temp/{imgName}"):
             remove(f"{funcs.getPath()}/temp/{imgName}")
 
@@ -337,7 +337,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             )
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
-        await ctx.send(embed=e, file=image)
+        await ctx.reply(embed=e, file=image)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ethgas", description="Shows the recommended gas prices for Ethereum transactions.",
@@ -356,7 +356,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
         e.add_field(name="Block Time", value="`{:,} second{}`".format(bt, "" if bt == 1 else "s"))
         e.set_footer(text="1 gwei = 0.000000001 ETH")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
@@ -366,12 +366,21 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         try:
             data = await funcs.getRequest("https://blockchain.info/stats", params={"format": "json"})
             blockchain = data.json()
-            data = await funcs.getRequest("https://api.blockcypher.com/v1/btc/main", params=BLOCKCYPHER_PARAMS)
-            blockchain2 = data.json()
-            data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
-            blockchain3 = data.json()
-            data = await funcs.getRequest("https://mempool.space/api/v1/fees/recommended")
-            fees = data.json()
+            try:
+                data = await funcs.getRequest("https://api.blockcypher.com/v1/btc/main", params=BLOCKCYPHER_PARAMS)
+                blockchain2 = data.json()
+            except:
+                blockchain2 = None
+            try:
+                data = await funcs.getRequest("https://bitnodes.io/api/v1/snapshots/latest/")
+                blockchain3 = data.json()
+            except:
+                blockchain3 = None
+            try:
+                data = await funcs.getRequest("https://mempool.space/api/v1/fees/recommended")
+                fees = data.json()
+            except:
+                fees = None
             e = Embed(description="https://www.blockchain.com/stats", colour=Colour.orange())
             height = blockchain2["height"]
             blockreward = 50
@@ -380,29 +389,30 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 halvingheight += 210000
                 blockreward /= 2
             bl = halvingheight - height
+            blocktime = blockchain['minutes_between_blocks']
             e.set_author(name="Bitcoin Network", icon_url=BITCOIN_LOGO)
-            e.add_field(name="Market Price", value="`{:,} USD`".format(blockchain['market_price_usd']))
-            e.add_field(name="Minutes Between Blocks", value=f"`{blockchain['minutes_between_blocks']}`")
+            e.add_field(name="Block Time", value="`{:,} minute{}`".format(blocktime, "" if blocktime == 1 else "s"))
             e.add_field(name="Mining Difficulty", value="`{:,}`".format(blockchain['difficulty']))
             e.add_field(name="Hash Rate", value="`{:,} TH/s`".format(int(int(blockchain['hash_rate']) / 1000)))
             e.add_field(name="Trading Volume (24h)", value="`{:,} BTC`".format(blockchain['trade_volume_btc']))
-            e.add_field(name="Total Transactions (24h)", value="`{:,}`".format(blockchain['n_tx']))
             e.add_field(name="Block Height", value="`{:,}`".format(height))
             e.add_field(name="Next Halving Height",
                         value="`{:,} ({:,} ".format(halvingheight, bl) + f"block{'' if bl == 1 else 's'} left)`")
-            e.add_field(name="Block Reward", value=f"`{blockreward} BTC`")
-            e.add_field(name="Unconfirmed Transactions", value="`{:,}`".format(blockchain2['unconfirmed_count']))
-            e.add_field(name="Full Nodes", value="`{:,}`".format(blockchain3['total_nodes']))
-            e.add_field(
-                name="Total Transaction Fees (24h)", value=f"`{round(blockchain['total_fees_btc'] * 0.00000001, 8)} BTC`"
-            )
-            e.add_field(name="High Priority Fee (~10m)", value="`{:,} sats/vB`".format(fees['fastestFee']))
-            e.add_field(name="Medium Priority Fee (~3h)", value="`{:,} sats/vB`".format(fees['halfHourFee']))
-            e.add_field(name="Low Priority Fee (~1d)", value="`{:,} sats/vB`".format(fees['hourFee']))
-            e.add_field(name="Minimum Fee", value="`{:,} sats/vB`".format(fees['minimumFee']))
+            e.add_field(name="Block Reward", value=f"`{funcs.btcOrSat(blockreward / 0.00000001)}`")
+            if blockchain3:
+                e.add_field(name="Full Nodes", value="`{:,}`".format(blockchain3['total_nodes']))
+            e.add_field(name="Total Transactions (24h)", value="`{:,}`".format(blockchain['n_tx']))
+            e.add_field(name="Total Transaction Fees (24h)", value=f"`{funcs.btcOrSat(abs(blockchain['total_fees_btc']))}`")
+            if fees:
+                e.add_field(name="High Priority Fee (~10m)", value="`{:,} sats/vB`".format(fees['fastestFee']))
+                e.add_field(name="Medium Priority Fee (~3h)", value="`{:,} sats/vB`".format(fees['halfHourFee']))
+                e.add_field(name="Low Priority Fee (~1d)", value="`{:,} sats/vB`".format(fees['hourFee']))
+                e.add_field(name="Minimum Fee", value="`{:,} sats/vB`".format(fees['minimumFee']))
+            if blockchain2:
+                e.add_field(name="Unconfirmed Transactions", value="`{:,}`".format(blockchain2['unconfirmed_count']))
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="ethtx", description="Gets information about an Ethereum transaction.",
@@ -443,7 +453,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Output Address", value=f"`{'0x' + data['outputs'][0]['addresses'][0]}`")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btctx", description="Gets information about a Bitcoin transaction.",
@@ -473,13 +483,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 fee = txinfo2["fees"]
                 e.add_field(name="Size",value="`{:,} bytes`".format(size))
                 e.add_field(name="Weight",value="`{:,} WU`".format(txinfo['weight']))
-                e.add_field(
-                    name="Total", value="`{:,} sat.`".format(txinfo2['total']) if txinfo2["total"] < 10000
-                    else "`{:,} BTC`".format(round(int(txinfo2['total']) * 0.00000001, 8))
-                )
-                e.add_field(
-                    name="Fees", value=("`{:,} sat.".format(fee) if fee < 10000
-                    else "`{:,} BTC".format(round(int(fee) * 0.00000001, 8))) + f" ({round(fee / size, 2)} sat/byte)`"
+                e.add_field(name="Total", value=f"`{funcs.btcOrSat(txinfo2['total'])}`")
+                e.add_field(name="Fees", value=f"`{funcs.btcOrSat(fee)}" + f" ({round(fee / size, 2)} sat/byte)`"
                 )
                 e.add_field(name="Confirmations", value="`{:,}`".format(txinfo2['confirmations']))
                 try:
@@ -487,34 +492,22 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 except:
                     e.add_field(name="Relayed By", value="`N/A`")
                 value = ""
-                for i in range(len(txinfo["inputs"])):
-                    if i == 20:
-                        break
+                for i in range(len(txinfo["inputs"][:20])):
                     if txinfo2["inputs"][i]["output_index"] == -1:
                         value = "Newly generated coins"
                         break
-                    if txinfo["inputs"][i]["prev_out"]["value"] < 10000:
-                        value += txinfo2["inputs"][i]["addresses"][0] + \
-                                 " ({:,} sat.)\n\n".format(txinfo['inputs'][i]['prev_out']['value'])
-                    else:
-                        value += txinfo2["inputs"][i]["addresses"][0] + \
-                                 " ({:,} BTC)\n\n".format(
-                                     round(int(txinfo['inputs'][i]['prev_out']['value']) * 0.00000001, 8)
-                                 )
+                    value += txinfo2["inputs"][i]["addresses"][0] \
+                             + f" ({funcs.btcOrSat(txinfo['inputs'][i]['prev_out']['value'])})\n\n"
                 newvalue = value[:500]
                 if newvalue != value:
                     newvalue += "..."
                 e.add_field(name="Inputs ({:,})".format(txinfo['vin_sz']), value=f"```{newvalue}```")
                 value = ""
-                for i in range(len(txinfo["out"])):
-                    if i == 20 or not txinfo2["outputs"][i]["addresses"]:
+                for i in range(len(txinfo["out"][:20])):
+                    if not txinfo2["outputs"][i]["addresses"]:
                         break
-                    if txinfo["out"][i]["value"] < 10000:
-                        value += txinfo2["outputs"][i]["addresses"][0] + \
-                                 " ({:,} sat.)\n\n".format(txinfo['out'][i]['value'])
-                    else:
-                        value += txinfo2["outputs"][i]["addresses"][0] + \
-                                 " ({:,} BTC)\n\n".format(round(int(txinfo['out'][i]['value']) * 0.00000001, 8))
+                    value += txinfo2["outputs"][i]["addresses"][0] \
+                             + f" ({funcs.btcOrSat(txinfo['out'][i]['value'])})\n\n"
                 newvalue = value[:500]
                 if newvalue != value:
                     newvalue += "..."
@@ -522,7 +515,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.set_footer(text="1 satoshi = 0.00000001 BTC")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="ethaddr", description="Gets information about an Ethereum address.",
@@ -568,7 +561,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     e.add_field(name="Last Transaction Hash", value=f"`{latestTx['tx_hash']}`")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown address or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcaddr", description="Gets information about a Bitcoin address.",
@@ -591,32 +584,16 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 )
                 e.set_thumbnail(url=f"https://api.qrserver.com/v1/create-qr-code/?data={inphash}")
                 e.add_field(name="Address", value=f"`{inphash}`")
-                e.add_field(
-                    name="Final Balance", value="`{:,} BTC`".format(round(data['balance'] * 0.00000001, 8))
-                    if data["balance"] > 9999 else "`{:,} sat.`".format(data['balance'])
-                )
-                e.add_field(
-                    name="Unconfirmed Balance", value="`{:,} BTC`".format(
-                        round(data['unconfirmed_balance'] * 0.00000001, 8)
-                    ) if (data["unconfirmed_balance"] > 9999 or data["unconfirmed_balance"] < -9999)
-                    else "`{:,} sat.`".format(data['unconfirmed_balance'])
-                )
-                e.add_field(
-                    name="Total Sent", value="`{:,} BTC`".format(round(data['total_sent'] * 0.00000001, 8))
-                    if data["total_sent"] > 9999 else "`{:,} sat.`".format(data['total_sent'])
-                )
-                e.add_field(
-                    name="Total Received", value="`{:,} BTC`".format(round(data['total_received'] * 0.00000001, 8))
-                    if data["total_received"] > 9999 else "`{:,} sat.`".format(data['total_received'])
-                )
+                e.add_field(name="Final Balance", value=f"`{funcs.btcOrSat(data['balance'])}`")
+                e.add_field(name="Unconfirmed Balance", value=f"`{funcs.btcOrSat(data['unconfirmed_balance'])}`")
+                e.add_field(name="Total Sent", value=f"`{funcs.btcOrSat(data['total_sent'])}`")
+                e.add_field(name="Total Received", value=f"`{funcs.btcOrSat(data['total_received'])}`")
                 e.add_field(name="Transactions", value="`{:,}`".format(data['n_tx']))
                 try:
                     output = "-" if data["txrefs"][0]["tx_output_n"] == -1 else "+"
-                    tran = "{:,} sat.".format(data["txrefs"][0]["value"]) if -9999 < data["txrefs"][0]["value"] < 10000 \
-                           else "{:,} BTC".format(round(data["txrefs"][0]["value"] * 0.00000001, 8))
                     e.add_field(
                         name=f"Last Transaction ({funcs.timeStrToDatetime(data['txrefs'][0]['confirmed'])})",
-                        value=f"`{output}{tran}`"
+                        value=f"`{output}{funcs.btcOrSat(data['txrefs'][0]['value'])}`"
                     )
                     e.add_field(name="Last Transaction Hash", value=f"`{data['txrefs'][0]['tx_hash']}`")
                 except:
@@ -624,7 +601,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.set_footer(text="1 satoshi = 0.00000001 BTC")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown address or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="ethblock", description="Gets information about an Ethereum block.",
@@ -674,7 +651,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Next Block ({:,})".format(nextHeight), value=f"`{nextHash}`")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown block or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcblock", description="Gets information about a Bitcoin block.",
@@ -734,7 +711,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Next Block ({:,})".format(height + 1), value=f"`{nextblock[0]}`")
         except Exception:
             e = funcs.errorEmbed(None, "Unknown block or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ethcontract", aliases=["ec", "econtract", "smartcontract"],
@@ -764,7 +741,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.set_footer(text=data["ico_data"]["description"])
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown contract or server error?")
-        await ctx.send(embed=e)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr"],
@@ -781,7 +758,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         e.add_field(name="Private Key",value=f"```{swif}```")
         e.add_field(name="Private Key in Hex",value=f"```{shex}```")
         e.set_footer(text=f"Requested by: {ctx.author.name}")
-        await ctx.send("```WARNING: It is recommended that you do NOT use any Bitcoin address generated via this " + \
+        await ctx.reply("```WARNING: It is recommended that you do NOT use any Bitcoin address generated via this " + \
                        "bot due to security reasons; this command was simply made for fun to demonstrate the " + \
                        "capabilities of the Python programming language. If you wish to generate a new Bitcoin " + \
                        "address for actual use, please use proper wallets like Electrum instead.```", embed=e)
