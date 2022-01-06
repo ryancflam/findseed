@@ -33,6 +33,33 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              user_agent="*")
         self.tickers = funcs.getTickers()
 
+    async def waitForReaction(self, ctx, msg, allpages: int, page: int):
+        try:
+            reaction, user = await self.client.wait_for(
+                "reaction_add",
+                check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(
+                    reaction.emoji
+                ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
+            )
+        except TimeoutError:
+            try:
+                await msg.clear_reactions()
+            except:
+                pass
+            return None, 0
+        success = False
+        if str(reaction.emoji) == "⏭":
+            await funcs.reactionRemove(reaction, user)
+            if page < allpages:
+                page += 1
+                success = True
+        else:
+            await funcs.reactionRemove(reaction, user)
+            if page > 1:
+                page -= 1
+                success = True
+        return success, page
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a Github repository.",
                       aliases=["loc", "code", "linesofcode", "repository", "repo"], usage='[username/repository]')
@@ -391,36 +418,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 await msg.add_reaction("⏮")
                 await msg.add_reaction("⏭")
                 while True:
-                    try:
-                        reaction, user = await self.client.wait_for(
-                            "reaction_add",
-                            check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(
-                                reaction.emoji
-                            ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
-                        )
-                    except TimeoutError:
-                        try:
-                            await msg.clear_reactions()
-                        except:
-                            pass
-                        return
-                    success = False
-                    if str(reaction.emoji) == "⏭":
-                        await funcs.reactionRemove(reaction, user)
-                        if page < allpages:
-                            page += 1
-                            success = True
-                    else:
-                        await funcs.reactionRemove(reaction, user)
-                        if page > 1:
-                            page -= 1
-                            success = True
+                    success, page = await self.waitForReaction(ctx, msg, allpages, page)
                     if success:
                         edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
                         edited.set_thumbnail(url=thumbnail)
                         edited.add_field(name="Genius Link", value=link)
                         edited.set_footer(text=f"Page {page} of {allpages}")
                         await msg.edit(embed=edited)
+                    elif success is None:
+                        return
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
@@ -629,74 +635,54 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 example = terms[0]["example"].replace("[", "").replace("]", "")
                 definition = terms[0]["definition"].replace("[", "").replace("]", "")
                 permalink = terms[0]["permalink"]
-                word = terms[0]["word"].replace("*", "\*").replace("_", "\_")
+                word = terms[0]["word"]
                 e = Embed(description=permalink)
                 e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                         "669142387330777115/urban-dictionary-android.png")
                 e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                 if example:
                     e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                e.add_field(name="Author", value=f"`{terms[0]['author']}`")
                 try:
                     e.set_footer(
-                        text=f"Submitted by {terms[0]['author']} | Approval rate: " + \
+                        text=f"Approval rate: " + \
                              f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                             f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎)"
+                             f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎) | Page {page} of {len(terms)}"
                     )
                 except ZeroDivisionError:
-                    e.set_footer(text=f"Submitted by {terms[0]['author']} | Approval rate: n/a (0 👍 - 0 👎)")
+                    e.set_footer(text=f"Approval rate: n/a (0 👍 - 0 👎) | Page {page} of {len(terms)}")
                 msg = await ctx.reply(embed=e)
                 if len(terms) > 1:
                     await msg.add_reaction("⏮")
                     await msg.add_reaction("⏭")
                     while True:
-                        try:
-                            reaction, user = await self.client.wait_for(
-                                "reaction_add",
-                                check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(
-                                    reaction.emoji
-                                ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
-                            )
-                        except TimeoutError:
-                            try:
-                                await msg.clear_reactions()
-                            except:
-                                pass
-                            return
-                        success = False
-                        if str(reaction.emoji) == "⏭":
-                            await funcs.reactionRemove(reaction, user)
-                            if page < len(terms):
-                                page += 1
-                                success = True
-                        else:
-                            await funcs.reactionRemove(reaction, user)
-                            if page > 1:
-                                page -= 1
-                                success = True
+                        success, page = await self.waitForReaction(ctx, msg, len(terms), page)
                         if success:
                             example = terms[page - 1]["example"].replace("[", "").replace("]", "")
                             definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
                             permalink = terms[page - 1]["permalink"]
-                            word = terms[page - 1]["word"].replace("*", "\*").replace("_", "\_")
+                            word = terms[page - 1]["word"]
                             e = Embed(description=permalink)
                             e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                                     "669142387330777115/urban-dictionary-android.png")
                             e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                             if example:
                                 e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                            e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
                             try:
                                 ar = round(
                                     terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
                                     * 100, 2
                                 )
                                 e.set_footer(
-                                    text=f"Submitted by {terms[page - 1]['author']} | Approval rate: " + \
-                                         f"{ar}" + \
-                                         f"% ({terms[page - 1]['thumbs_up']} 👍 - {terms[page - 1]['thumbs_down']} 👎)"
+                                    text=f"Approval rate: {ar}% ({terms[page - 1]['thumbs_up']} 👍 - " + \
+                                         f"{terms[page - 1]['thumbs_down']} 👎) | Page {page} of {len(terms)}"
                                 )
                             except ZeroDivisionError:
-                                e.set_footer(text=f"Submitted by {terms[page - 1]['author']} | Approval rate: n/a (0 👍 - 0 👎)")
+                                e.set_footer(text=f"Approval rate: n/a (0 👍 - 0 👎) | Page {page} of {len(terms)}")
                             await msg.edit(embed=e)
+                        elif success is None:
+                            return
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",

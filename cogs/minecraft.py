@@ -42,7 +42,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 item = i["item"]
                 for j in range(1, 4):
                     i["item"] = f"{item} {j}"
-                    for _ in range(5 if i["id"] < 3 else 8):
+                    for _ in range(i["weight"]):
                         ltnew.append(i.copy())
                     i["id"] += 1
             else:
@@ -247,7 +247,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             else:
                 trades[trade["id"]]["quantity"] += choice(trade["quantity"])
                 trades[trade["id"]]["trades"] += 1
-        res = "You traded {:,} gold ingot{} for:\n\n".format(goldingots, "" if goldingots == 1 else "s")
+        res = "You bartered {:,} gold ingot{} for:\n\n".format(goldingots, "" if goldingots == 1 else "s")
         for i in sorted(trades):
             t = trades[i]
             res += "- {:,} x {} ({:,} trade{})\n".format(t["quantity"], t["item"], t["trades"], "" if t["trades"] == 1 else "s")
