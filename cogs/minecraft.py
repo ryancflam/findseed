@@ -7,7 +7,7 @@ import math
 from asyncio import TimeoutError
 from base64 import b64decode
 from json import loads
-from random import randint
+from random import choice, randint
 from time import time
 
 from discord import Colour, Embed, File
@@ -19,65 +19,12 @@ BARTER_LIMIT = 896
 
 
 class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to Minecraft and Minecraft speedrunning."):
-    EYE_DATA = {
-        "0": {
-            "percent": "28.24",
-            "onein": "3.54"
-        },
-        "1": {
-            "percent": "37.66",
-            "onein": "2.66"
-        },
-        "10": {
-            "percent": "0.0000005",
-            "onein": "187,055,743"
-        },
-        "11": {
-            "percent": "0.00000001",
-            "onein": "9,259,259,259"
-        },
-        "12": {
-            "percent": "0.0000000001",
-            "onein": "1,000,000,000,000"
-        },
-        "2": {
-            "percent": "23.01",
-            "onein": "4.35"
-        },
-        "3": {
-            "percent": "8.52",
-            "onein": "11.7"
-        },
-        "4": {
-            "percent": "2.13",
-            "onein": "46.9"
-        },
-        "5": {
-            "percent": "0.38",
-            "onein": "264"
-        },
-        "6": {
-            "percent": "0.05",
-            "onein": "2,036"
-        },
-        "7": {
-            "percent": "0.005",
-            "onein": "21,381"
-        },
-        "8": {
-            "percent": "0.0003",
-            "onein": "307,882"
-        },
-        "9": {
-            "percent": "0.00002",
-            "onein": "6,235,191"
-        }
-    }
-
     def __init__(self, client: commands.Bot):
         self.client = client
         self.divinetravel = funcs.readJson("assets/divine_travel.json")
         self.perfecttravel = funcs.readJson("assets/perfect_travel.json")
+        self.eyedata = funcs.readJson("assets/eye_data.json")
+        self.loottable = self.piglinLootTable()
 
     @staticmethod
     def randomEyes():
@@ -85,6 +32,23 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         for _ in range(12):
             eyes += 1 if not randint(0, 9) else 0
         return eyes
+
+    @staticmethod
+    def piglinLootTable():
+        lt = funcs.readJson("assets/piglin_loot_table.json")
+        ltnew = []
+        for i in lt:
+            if i["id"] < 5:
+                item = i["item"]
+                for j in range(1, 4):
+                    i["item"] = f"{item} {j}"
+                    for _ in range(5 if i["id"] < 3 else 8):
+                        ltnew.append(i.copy())
+                    i["id"] += 1
+            else:
+                for _ in range(i["weight"] * 3):
+                    ltnew.append(i)
+        return ltnew
 
     @staticmethod
     def f3cProcessing(clipboard):
@@ -113,8 +77,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     async def findseed(self, ctx):
         eyes = self.randomEyes()
         data = funcs.readJson("data/findseed.json")
-        odds = self.EYE_DATA[str(eyes)]["percent"]
-        onein = self.EYE_DATA[str(eyes)]["onein"]
+        odds = self.eyedata[str(eyes)]["percent"]
+        onein = self.eyedata[str(eyes)]["onein"]
         update = False
         if eyes >= data["highest"]["number"]:
             data["highest"]["found"] -= data["highest"]["found"] - 1 if eyes > data["highest"]["number"] else -1
@@ -150,8 +114,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     async def eyeodds(self, ctx):
         msg = ""
         for i in range(13):
-            odds = self.EYE_DATA[str(i)]["percent"]
-            msg += f"{i} eye - `{odds}% (1 in {self.EYE_DATA[str(i)]['onein']})`\n"
+            odds = self.eyedata[str(i)]["percent"]
+            msg += f"{i} eye - `{odds}% (1 in {self.eyedata[str(i)]['onein']})`\n"
         await ctx.reply(msg)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -259,11 +223,42 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bartering", description="Finds the probability of getting 12 or more ender pearls" + \
-                                                    " in a given number of piglin trades in Minecraft 1.16.1.",
-                      aliases=["piglin", "barter", "pearlbarter", "pearl", "pearls", "trades", "trade", "bart"],
+    @commands.command(name="bartersim", description="Simulates Minecraft 1.16.1 piglin bartering.",
+                      aliases=["barter", "piglin", "poglin", "bartering", "barteringsim"],
+                      usage=f"[gold ingots up to 10,000]\n\nAlternative usage(s):\n\n- <gold blocks up to 1,111 (ending with b)>")
+    async def bartersim(self, ctx, goldingots: str="1"):
+        try:
+            try:
+                goldingots = int(goldingots)
+            except:
+                goldingots = int(goldingots[:-1]) * 9
+            if not 0 < goldingots < 10001:
+                return await ctx.reply(embed=funcs.errorEmbed(None, f"Value must be between 1 and 10,000."))
+        except ValueError:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
+        trades = {}
+        for _ in range(goldingots):
+            trade = choice(self.loottable)
+            if trade["id"] not in list(trades.keys()):
+                trades[trade["id"]] = {}
+                trades[trade["id"]]["item"] = trade["item"]
+                trades[trade["id"]]["quantity"] = choice(trade["quantity"])
+                trades[trade["id"]]["trades"] = 1
+            else:
+                trades[trade["id"]]["quantity"] += choice(trade["quantity"])
+                trades[trade["id"]]["trades"] += 1
+        res = "You traded {:,} gold ingot{} for:\n\n".format(goldingots, "" if goldingots == 1 else "s")
+        for i in sorted(trades):
+            t = trades[i]
+            res += "- {:,} x {} ({:,} trade{})\n".format(t["quantity"], t["item"], t["trades"], "" if t["trades"] == 1 else "s")
+        await ctx.reply(funcs.formatting(res))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="pearlbarter", description="Finds the probability of getting 12 or more ender pearls" + \
+                                                      " in a given number of piglin trades in Minecraft 1.16.1.",
+                      aliases=["pearltrade", "pearlbartering", "barteringpearl", "barterpearl", "barterpearls"],
                       usage=f"[total gold ingots up to {BARTER_LIMIT}]")
-    async def pearlbarter(self, ctx, *, trades: str="2"):
+    async def pearlbarter(self, ctx, trades: str="2"):
         try:
             n = int(trades)
             if not 2 <= n <= BARTER_LIMIT:
