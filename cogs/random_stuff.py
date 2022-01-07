@@ -6,6 +6,7 @@ from discord import Colour, Embed, Member
 from discord.ext import commands
 from googletrans import Translator
 
+import config
 from other_utils import funcs
 from other_utils.playing_cards import PlayingCards
 
@@ -643,6 +644,23 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 glitch += choice(mid)
                 res += char + "".join(glitch)
             e = Embed(title="Glitch Text", description=funcs.formatting(res))
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.command(name="gentext", description="Generates text based on your input.",
+                      aliases=["tg", "textgen", "gt"], usage="<input>")
+    async def gentext(self, ctx, *, text=""):
+        try:
+            if text:
+                await ctx.send("Processing text. Please wait...")
+            data = {"text": text}
+            res = await funcs.postRequest(
+                "https://api.deepai.org/api/text-generator", data=data, headers={"api-key": config.deepAIKey}
+            )
+            data = res.json()
+            e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
+        except Exception:
+            e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
 

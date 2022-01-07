@@ -1030,23 +1030,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="textgen", description="Generates text based on your input.",
-                      aliases=["tg", "gentext", "text"], usage="<input>")
-    async def textgen(self, ctx, *, text=""):
-        try:
-            if text:
-                await ctx.send("Processing text. Please wait...")
-            data = {"text": text}
-            res = await funcs.postRequest(
-                "https://api.deepai.org/api/text-generator", data=data, headers={"api-key": config.deepAIKey}
-            )
-            data = res.json()
-            e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
-        except Exception:
-            e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.reply(embed=e)
-
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="quartile", usage="<numbers separated with ;>",
                       aliases=["avg", "average", "mean", "median", "mode", "q1", "q2", "q3", "range", "sd", "iqr", "quartiles"],
@@ -1336,7 +1319,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 20, commands.BucketType.user)
     @commands.command(name="wolfram", description="Queries things using the Wolfram Alpha API.",
-                      aliases=["wolf", "google", "wa", "wolframalpha", "query"], usage="<input>")
+                      aliases=["wolf", "wa", "wolframalpha", "query"], usage="<input>")
     async def wolfram(self, ctx, *, inp: str=""):
         if not inp:
             e = funcs.errorEmbed(None, "Empty input.")
