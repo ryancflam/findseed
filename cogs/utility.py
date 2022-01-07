@@ -1,5 +1,6 @@
 from asyncio import sleep, TimeoutError
 from datetime import datetime, timedelta
+from dateutil import parser
 from json import dumps, JSONDecodeError
 from pathlib import Path
 from platform import system
@@ -615,6 +616,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 definition = terms[0]["definition"].replace("[", "").replace("]", "")
                 permalink = terms[0]["permalink"]
                 word = terms[0]["word"]
+                writtenon = str(parser.parse(terms[0]["written_on"])).split(".")[0].replace("+00:00", "")
                 e = Embed(description=permalink)
                 e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                         "669142387330777115/urban-dictionary-android.png")
@@ -622,6 +624,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 if example:
                     e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
                 e.add_field(name="Author", value=f"`{terms[0]['author']}`")
+                e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
                 try:
                     e.set_footer(
                         text=f"Approval rate: " + \
@@ -645,6 +648,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
                         permalink = terms[page - 1]["permalink"]
                         word = terms[page - 1]["word"]
+                        writtenon = str(parser.parse(terms[page - 1]["written_on"])).split(".")[0].replace("+00:00", "")
                         e = Embed(description=permalink)
                         e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                                 "669142387330777115/urban-dictionary-android.png")
@@ -652,6 +656,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         if example:
                             e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
                         e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
+                        e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
                         try:
                             ar = round(
                                 terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
