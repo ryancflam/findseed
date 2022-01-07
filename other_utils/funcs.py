@@ -451,7 +451,7 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
             page -= 1
             success = True
     else:
-        return 0, 0
+        return -1, 0
     return success, page
 
 

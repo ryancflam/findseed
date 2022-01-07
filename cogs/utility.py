@@ -397,6 +397,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             while True:
                 success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
                 if success:
+                    if success == -1:
+                        return await msg.delete()
                     edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
                     edited.set_thumbnail(url=thumbnail)
                     edited.add_field(name="Genius Link", value=link)
@@ -404,8 +406,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     await msg.edit(embed=edited)
                 elif success is None:
                     return
-                elif success == 0:
-                    return await msg.delete()
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
@@ -639,6 +639,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 while True:
                     success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, len(terms), page)
                     if success:
+                        if success == -1:
+                            return await msg.delete()
                         example = terms[page - 1]["example"].replace("[", "").replace("]", "")
                         definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
                         permalink = terms[page - 1]["permalink"]
@@ -665,8 +667,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         await msg.edit(embed=e)
                     elif success is None:
                         return
-                    elif success == 0:
-                        return await msg.delete()
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
