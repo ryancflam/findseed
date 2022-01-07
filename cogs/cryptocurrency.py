@@ -402,14 +402,14 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             if blockchain3:
                 e.add_field(name="Full Nodes", value="`{:,}`".format(blockchain3['total_nodes']))
             e.add_field(name="Total Transactions (24h)", value="`{:,}`".format(blockchain['n_tx']))
+            if blockchain2:
+                e.add_field(name="Unconfirmed Transactions", value="`{:,}`".format(blockchain2['unconfirmed_count']))
             e.add_field(name="Total Transaction Fees (24h)", value=f"`{funcs.btcOrSat(abs(blockchain['total_fees_btc']))}`")
             if fees:
                 e.add_field(name="High Priority Fee (~10m)", value="`{:,} sats/vB`".format(fees['fastestFee']))
                 e.add_field(name="Medium Priority Fee (~3h)", value="`{:,} sats/vB`".format(fees['halfHourFee']))
                 e.add_field(name="Low Priority Fee (~1d)", value="`{:,} sats/vB`".format(fees['hourFee']))
                 e.add_field(name="Minimum Fee", value="`{:,} sats/vB`".format(fees['minimumFee']))
-            if blockchain2:
-                e.add_field(name="Unconfirmed Transactions", value="`{:,}`".format(blockchain2['unconfirmed_count']))
         except Exception:
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.reply(embed=e)

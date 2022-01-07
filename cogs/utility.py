@@ -1334,6 +1334,34 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="wolfram", description="Queries things using the Wolfram Alpha API.",
+                      aliases=["wolf", "google", "wa", "wolframalpha", "query"], usage="<input>")
+    async def wolfram(self, ctx, *, inp: str=""):
+        if not inp:
+            e = funcs.errorEmbed(None, "Empty input.")
+        else:
+            await ctx.send("Querying. Please wait...")
+            try:
+                data = await funcs.getRequest(
+                    f"http://api.wolframalpha.com/v2/query?appid={config.wolframID}&output=json&input={inp}"
+                )
+                res = data.json()["queryresult"]
+                e = Embed(title="Wolfram Alpha Query")
+                if res["success"]:
+                    for i in res["pods"][:25]:
+                        if i["subpods"][0]["plaintext"]:
+                            e.add_field(name=i["title"].title(), value=funcs.formatting(i["subpods"][0]["plaintext"], limit=200))
+                else:
+                    try:
+                        e.add_field(name="Did You Mean", value=", ".join(f"`{i['val']}`" for i in res["didyoumeans"][:20]))
+                    except:
+                        e.add_field(name="Tips", value=funcs.formatting("Check your spelling, and use English"))
+                e.set_footer(text="Note: Results may be cut-off due to Discord's limit.")
+            except Exception:
+                e = funcs.errorEmbed(None, "Server error or query limit reached.")
+        await ctx.reply(embed=e)
+
 
 def setup(client: commands.Bot):
     client.add_cog(Utility(client))
