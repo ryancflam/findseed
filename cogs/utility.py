@@ -1334,7 +1334,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 20, commands.BucketType.user)
     @commands.command(name="wolfram", description="Queries things using the Wolfram Alpha API.",
                       aliases=["wolf", "google", "wa", "wolframalpha", "query"], usage="<input>")
     async def wolfram(self, ctx, *, inp: str=""):
@@ -1343,9 +1343,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         else:
             await ctx.send("Querying. Please wait...")
             try:
-                data = await funcs.getRequest(
-                    f"http://api.wolframalpha.com/v2/query?appid={config.wolframID}&output=json&input={inp.replace('+', ' plus ')}"
-                )
+                params = {"appid": config.wolframID, "output": "json", "lang": "en", "input": inp}
+                data = await funcs.getRequest("http://api.wolframalpha.com/v2/query", params=params)
                 res = data.json()["queryresult"]
                 e = Embed(title="Wolfram Alpha Query")
                 if res["success"]:
