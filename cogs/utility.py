@@ -33,38 +33,11 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              user_agent="*")
         self.tickers = funcs.getTickers()
 
-    async def waitForReaction(self, ctx, msg, allpages: int, page: int):
-        try:
-            reaction, user = await self.client.wait_for(
-                "reaction_add",
-                check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(
-                    reaction.emoji
-                ) == "⏭") and user == ctx.author and reaction.message == msg, timeout=300
-            )
-        except TimeoutError:
-            try:
-                await msg.clear_reactions()
-            except:
-                pass
-            return None, 0
-        success = False
-        if str(reaction.emoji) == "⏭":
-            await funcs.reactionRemove(reaction, user)
-            if page < allpages:
-                page += 1
-                success = True
-        else:
-            await funcs.reactionRemove(reaction, user)
-            if page > 1:
-                page -= 1
-                success = True
-        return success, page
-
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a Github repository.",
                       aliases=["loc", "code", "linesofcode", "repository", "repo"], usage='[username/repository]')
     async def repository(self, ctx, *, repo: str=""):
-        await ctx.send("Getting repository lines of code statistics. Please wait...")
+        await ctx.send("Getting repository statistics. Please wait...")
         try:
             repo = repo.casefold().replace(" ", "") or DEFAULT_REPO
             res = await funcs.getRequest("https://api.codetabs.com/v1/loc/?github=" + repo)
@@ -76,6 +49,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     e.add_field(name="Total Files", value="`{:,}`".format(i["files"]))
                 e.add_field(name=f"{i['language']} Lines", value="`{:,}`".format(i["linesOfCode"]))
             e.set_footer(text="Note: Lines of code do not include comment or blank lines.")
+            e.set_image(
+                url="https://opengraph.githubassets.com/80a30c53eedf18f870a1779deaa8a7a60553494e284d23664c5bd983fa063d8e/" + repo
+            )
         except Exception:
             e = funcs.errorEmbed(None, "Unknown repository or server error.")
         await ctx.reply(embed=e)
@@ -412,21 +388,24 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_thumbnail(url=thumbnail)
             e.add_field(name="Genius Link", value=link)
             page = 1
-            e.set_footer(text=f"Page {page} of {allpages}")
+            e.set_footer(text="Page {:,} of {:,}".format(page, allpages))
             msg = await ctx.reply(embed=e)
+            await msg.add_reaction("🚫")
             if allpages > 1:
                 await msg.add_reaction("⏮")
                 await msg.add_reaction("⏭")
-                while True:
-                    success, page = await self.waitForReaction(ctx, msg, allpages, page)
-                    if success:
-                        edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
-                        edited.set_thumbnail(url=thumbnail)
-                        edited.add_field(name="Genius Link", value=link)
-                        edited.set_footer(text=f"Page {page} of {allpages}")
-                        await msg.edit(embed=edited)
-                    elif success is None:
-                        return
+            while True:
+                success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
+                if success:
+                    edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
+                    edited.set_thumbnail(url=thumbnail)
+                    edited.add_field(name="Genius Link", value=link)
+                    edited.set_footer(text="Page {:,} of {:,}".format(page, allpages))
+                    await msg.edit(embed=edited)
+                elif success is None:
+                    return
+                elif success == 0:
+                    return await msg.delete()
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
@@ -647,42 +626,47 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     e.set_footer(
                         text=f"Approval rate: " + \
                              f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                             f"% ({terms[0]['thumbs_up']} 👍 - {terms[0]['thumbs_down']} 👎) | Page {page} of {len(terms)}"
+                             "% ({:,} 👍 - {:,} 👎) | ".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
+                             "Page {:,} of {:,}".format(page, len(terms))
                     )
                 except ZeroDivisionError:
-                    e.set_footer(text=f"Approval rate: n/a (0 👍 - 0 👎) | Page {page} of {len(terms)}")
+                    e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page {:,} of {:,}".format(page, len(terms)))
                 msg = await ctx.reply(embed=e)
+                await msg.add_reaction("🚫")
                 if len(terms) > 1:
                     await msg.add_reaction("⏮")
                     await msg.add_reaction("⏭")
-                    while True:
-                        success, page = await self.waitForReaction(ctx, msg, len(terms), page)
-                        if success:
-                            example = terms[page - 1]["example"].replace("[", "").replace("]", "")
-                            definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
-                            permalink = terms[page - 1]["permalink"]
-                            word = terms[page - 1]["word"]
-                            e = Embed(description=permalink)
-                            e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                                    "669142387330777115/urban-dictionary-android.png")
-                            e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                            if example:
-                                e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                            e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
-                            try:
-                                ar = round(
-                                    terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
-                                    * 100, 2
-                                )
-                                e.set_footer(
-                                    text=f"Approval rate: {ar}% ({terms[page - 1]['thumbs_up']} 👍 - " + \
-                                         f"{terms[page - 1]['thumbs_down']} 👎) | Page {page} of {len(terms)}"
-                                )
-                            except ZeroDivisionError:
-                                e.set_footer(text=f"Approval rate: n/a (0 👍 - 0 👎) | Page {page} of {len(terms)}")
-                            await msg.edit(embed=e)
-                        elif success is None:
-                            return
+                while True:
+                    success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, len(terms), page)
+                    if success:
+                        example = terms[page - 1]["example"].replace("[", "").replace("]", "")
+                        definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
+                        permalink = terms[page - 1]["permalink"]
+                        word = terms[page - 1]["word"]
+                        e = Embed(description=permalink)
+                        e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                                                "669142387330777115/urban-dictionary-android.png")
+                        e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
+                        if example:
+                            e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                        e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
+                        try:
+                            ar = round(
+                                terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
+                                * 100, 2
+                            )
+                            e.set_footer(
+                                text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[page - 1]['thumbs_up']) + \
+                                     "{:,} 👎) | ".format(terms[page - 1]['thumbs_down']) + \
+                                     "Page {:,} of {:,}".format(page, len(terms))
+                            )
+                        except ZeroDivisionError:
+                            e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page {:,} of {:,}".format(page, len(terms)))
+                        await msg.edit(embed=e)
+                    elif success is None:
+                        return
+                    elif success == 0:
+                        return await msg.delete()
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",

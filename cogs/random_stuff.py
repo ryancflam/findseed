@@ -34,7 +34,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             return randint(0, 255)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="oohasecretcommand", description="A secret command except that it is not secret at all...")
+    @commands.command(name="oohasecretcommand", hidden=True,
+                      description="Ỳ̩̹̏͆ͅo̩͍̙͊́̂ù̧̦͘ ̙̩̓̀a̭̅r̜̀e̖̫̯̘͛̈́̌͋ ̛͙n̨̛͎̾͢͠ó̧̏͜t̻̥̙̏̔̔ ͒͢s̭̲̣̫̎̋͒̿u͖̝̖̬͂̆̈̉p̲̹̯̍̑̿p̨͔̒͊ò" +
+                                  "̢s̱̭̮̘͒̀͝͝ë͉͖̞͍͉́͂̄̈́̉d̈͢ t̜̫͖̓͐͠ö̠̰̮͖́̐̕͘͜͞ ̥̤̲̤͗̑̆̕ḅ͎̼̫͗̾͐͛͗͜e̟̮͈͗̑͝ ̮̒h̐͟e̛̜͙̒r̼̜͍̟̿̓̓̿ë͙͙́.̪̥͌̾")
     async def oohasecretcommand(self, ctx):
         commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
         m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))

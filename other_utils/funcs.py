@@ -426,6 +426,35 @@ async def reactionRemove(reaction, user):
         return
 
 
+async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
+    try:
+        reaction, user = await client.wait_for(
+            "reaction_add",
+            check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(reaction.emoji) == "⏭" or str(reaction.emoji) == "🚫")
+                                         and user == ctx.author and reaction.message == msg, timeout=300
+        )
+    except TimeoutError:
+        try:
+            await msg.clear_reactions()
+        except:
+            pass
+        return None, 0
+    success = False
+    if str(reaction.emoji) == "⏭":
+        await reactionRemove(reaction, user)
+        if page < allpages:
+            page += 1
+            success = True
+    elif str(reaction.emoji) == "⏮":
+        await reactionRemove(reaction, user)
+        if page > 1:
+            page -= 1
+            success = True
+    else:
+        return 0, 0
+    return success, page
+
+
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
