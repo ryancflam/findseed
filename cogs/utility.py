@@ -1344,7 +1344,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             await ctx.send("Querying. Please wait...")
             try:
                 data = await funcs.getRequest(
-                    f"http://api.wolframalpha.com/v2/query?appid={config.wolframID}&output=json&input={inp}"
+                    f"http://api.wolframalpha.com/v2/query?appid={config.wolframID}&output=json&input={inp.replace('+', ' plus ')}"
                 )
                 res = data.json()["queryresult"]
                 e = Embed(title="Wolfram Alpha Query")
@@ -1352,6 +1352,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     for i in res["pods"][:25]:
                         if i["subpods"][0]["plaintext"]:
                             e.add_field(name=i["title"].title(), value=funcs.formatting(i["subpods"][0]["plaintext"], limit=200))
+                        elif "plot" in i["title"].casefold():
+                            e.set_image(url=i["subpods"][0]["img"]["src"])
                 else:
                     try:
                         e.add_field(name="Did You Mean", value=", ".join(f"`{i['val']}`" for i in res["didyoumeans"][:20]))
