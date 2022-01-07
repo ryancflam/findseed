@@ -51,6 +51,10 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         return ltnew
 
     @staticmethod
+    def chargeableAnchors(glowdust: int, cryobby: int):
+        return min([glowdust // 16, cryobby // 6])
+
+    @staticmethod
     def f3cProcessing(clipboard):
         try:
             args = clipboard.split(" ")
@@ -222,9 +226,33 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         e.set_footer(text=f"Odds: {str(badluckonein - 1) if goodluck else '1'}/{str(badluckonein)}")
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="anchors", description="Calculates how many chargeable respawn anchors you can craft based on how " + \
+                                                  "much glowstone dust and crying obsidian you have.",
+                      aliases=["anchor"], usage="<amount of glowstone dust> <amount of crying obdisian>")
+    async def anchors(self, ctx, glowdust, cryobby):
+        try:
+            glowdust = int(glowdust)
+            cryobby = int(cryobby)
+            if glowdust < 1 or cryobby < 1:
+                raise ValueError
+            anchors = self.chargeableAnchors(glowdust, cryobby)
+            charge = " and sufficiently charge {}".format("it" if anchors == 1 else "them") if anchors else ""
+            try:
+                await ctx.reply(
+                    "You have **{:,}** glowstone dust and **{:,}** crying obsidian.\n\nYou can make **".format(glowdust, cryobby) +
+                    "{:,}** respawn anchor{}{}.".format(anchors, "" if anchors == 1 else "s", charge)
+                )
+            except:
+                raise ValueError
+        except ValueError:
+            return await ctx.reply(
+                embed=funcs.errorEmbed(None, "Invalid input. Please make sure you are entering positive, non-zero integers.")
+            )
+
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bartersim", description="Simulates Minecraft 1.16.1 piglin bartering.",
-                      aliases=["barter", "piglin", "poglin", "bartering", "barteringsim"],
+    @commands.command(description="Simulates Minecraft 1.16.1 piglin bartering. Test your luck using this command!",
+                      aliases=["barter", "piglin", "poglin", "bartering", "barteringsim"], name="bartersim",
                       usage=f"[gold ingots up to 10,000]\n\nAlternative usage(s):\n\n- <gold blocks up to 1,111 (ending with b)>")
     async def bartersim(self, ctx, goldingots: str="1"):
         try:
@@ -237,23 +265,40 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         except ValueError:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
         trades = {}
+        string, glowdust, cryobby = 0, 0, 0
         for _ in range(goldingots):
             trade = choice(self.loottable)
             if trade["id"] not in list(trades.keys()):
                 trades[trade["id"]] = {}
                 trades[trade["id"]]["item"] = trade["item"]
-                trades[trade["id"]]["quantity"] = choice(trade["quantity"])
+                n = choice(trade["quantity"])
+                trades[trade["id"]]["quantity"] = n
                 trades[trade["id"]]["trades"] = 1
             else:
-                trades[trade["id"]]["quantity"] += choice(trade["quantity"])
+                n = choice(trade["quantity"])
+                trades[trade["id"]]["quantity"] += n
                 trades[trade["id"]]["trades"] += 1
+            if trade["id"] == 13:
+                string += n
+            elif trade["id"] == 10:
+                glowdust += n
+            elif trade["id"] == 19:
+                cryobby += n
         res = "You bartered {:,} gold ingot{} for:\n\n".format(goldingots, "" if goldingots == 1 else "s")
-        important = [7, 8, 10, 12, 13, 18, 19]
         for i in sorted(trades):
             t = trades[i]
             res += "{}{:,} x {} ({:,} trade{})\n".format(
-                "*** " if i in important else "    ", t["quantity"], t["item"], t["trades"], "" if t["trades"] == 1 else "s"
+                "*** " if i in [7, 8, 10, 12, 13, 18, 19] else "    ",
+                t["quantity"], t["item"], t["trades"], "" if t["trades"] == 1 else "s"
             )
+        anchors = self.chargeableAnchors(glowdust, cryobby)
+        beds = string // 12
+        if beds or anchors:
+            res += "\nExplosives you can craft:\n\n"
+            if beds:
+                res += "    {:,} x Bed\n".format(beds)
+            if anchors:
+                res += "    {:,} x Respawn Anchor (w/ enough glowstone to power)".format(anchors)
         await ctx.reply(funcs.formatting(res))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -271,7 +316,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
         await ctx.reply(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
-                        f" with {n} gold ingots is:\n\n`{x * 100}%`\n\n*(1 in {1 / x})*")
+                        f" with {n} gold ingots is:\n\n`{round(x * 100, 5)}% (1 in {round(1 / x, 5)})")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
