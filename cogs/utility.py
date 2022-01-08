@@ -41,6 +41,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.send("Getting repository statistics. Please wait...")
         try:
             repo = repo.casefold().replace(" ", "") or DEFAULT_REPO
+            while repo.endswith("/"):
+                repo = repo[:-1]
+            repo = repo.split("github.com/")[1] if "github.com/" in repo else repo
             res = await funcs.getRequest("https://api.codetabs.com/v1/loc/?github=" + repo)
             e = Embed(description=f"https://github.com/{repo}")
             e.set_author(name=repo,
@@ -627,14 +630,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
                       aliases=["subreddit", "r", "redditor"], usage="<r/subreddit OR u/redditor>")
     async def reddit(self, ctx, *, inp=""):
-        inp = inp.replace(" ", "/")
+        inp = inp.casefold().replace(" ", "/")
+        inp = inp.split("reddit.com/")[1] if "reddit.com/" in inp else inp
         while inp.startswith("/"):
             inp = inp[1:]
         while inp.endswith("/"):
             inp = inp[:-1]
         try:
             icon_url = "https://www.redditinc.com/assets/images/site/reddit-logo.png"
-            if inp.casefold().startswith("r") and "/" in inp:
+            if inp.startswith("r") and "/" in inp:
                 subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
                 if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) \
                         and not ctx.channel.is_nsfw():
@@ -669,7 +673,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                                   f"https://old.reddit.com{submission.permalink}))",
                             inline=False
                         )
-            elif inp.casefold().startswith("u") and "/" in inp:
+            elif inp.startswith("u") and "/" in inp:
                 redditor = await self.reddit.redditor(inp.split("/")[-1], fetch=True)
                 try:
                     suspended = redditor.is_suspended
@@ -1268,7 +1272,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="wolfram", description="Queries things using the Wolfram Alpha API.",
+    @commands.command(name="wolfram", description="Queries things using the Wolfram|Alpha API.",
                       aliases=["wolf", "wa", "wolframalpha", "query"], usage="<input>")
     async def wolfram(self, ctx, *, inp: str=""):
         if not inp:
@@ -1279,11 +1283,13 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 params = {"appid": config.wolframID, "output": "json", "lang": "en", "input": inp}
                 data = await funcs.getRequest("http://api.wolframalpha.com/v2/query", params=params)
                 res = data.json()["queryresult"]
-                e = Embed(title="Wolfram Alpha Query")
+                e = Embed()
+                e.set_author(icon_url="https://media.discordapp.net/attachments/771404776410972161/929386312765669376/wolfram.png",
+                             name="Wolfram|Alpha Query")
                 if res["success"]:
                     for i in res["pods"][:25]:
                         if i["subpods"][0]["plaintext"]:
-                            e.add_field(name=i["title"].title(), value=funcs.formatting(i["subpods"][0]["plaintext"], limit=200))
+                            e.add_field(name=i["title"], value=funcs.formatting(i["subpods"][0]["plaintext"], limit=200))
                         elif "plot" in i["title"].casefold():
                             e.set_image(url=i["subpods"][0]["img"]["src"])
                 else:
