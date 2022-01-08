@@ -87,7 +87,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 e.add_field(name="Discovery Splash", value=f"`{g.discovery_splash}`")
             e.add_field(name="Users (Excluding Bots)",
                         value="`{:,} ({:,})`".format(len(members), len([i for i in members if not i.bot])))
-            e.add_field(name="Categories", value="`{:,}`".format(len(g.categories)))
+            e.add_field(name="Channel Categories", value="`{:,}`".format(len(g.categories)))
             e.add_field(name="Channels (Voice)", value="`{:,} ({:,})`".format(len(g.channels), len(g.voice_channels)))
             if ctx.guild == g:
                 if g.public_updates_channel:
@@ -212,6 +212,57 @@ class General(commands.Cog, name="General", description="Standard commands relat
                       aliases=["pin"])
     async def pins(self, ctx):
         await ctx.reply(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="poll", description="Makes a poll.", usage="<question>", aliases=["questionnaire"])
+    @commands.guild_only()
+    async def poll(self, ctx, *, question):
+        if len(question) > 200:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Question must be 200 characters or less."))
+        messages, answers = [ctx.message], []
+        count = 0
+        while count < 20:
+            messages.append(
+                await messages[-1].reply("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
+            )
+            try:
+                entry = await self.client.wait_for(
+                    "message",
+                    check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
+                    timeout=60
+                )
+            except TimeoutError:
+                break
+            messages.append(entry)
+            if entry.content.casefold() == "!done":
+                break
+            if entry.content.casefold() == "!undo":
+                if answers:
+                    answers.pop()
+                    count -= 1
+                else:
+                    messages.append(
+                        await entry.reply(embed=funcs.errorEmbed(None, "No choices."))
+                    )
+            else:
+                answers.append((chr(0x1f1e6 + count), entry.content))
+                count += 1
+        try:
+            await ctx.channel.delete_messages(messages)
+        except:
+            pass
+        if len(answers) < 2:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Not enough choices."))
+        answer = "\n".join(f"{keycap}: {content}" for keycap, content in answers)
+        e = Embed(title=question, description=f"Poll by: {ctx.author.mention}")
+        e.add_field(name="Choices", value=answer)
+        e.set_footer(text=str(datetime.utcfromtimestamp(int(time()))) + " UTC")
+        try:
+            poll = await ctx.send(embed=e)
+            for emoji, _ in answers:
+                await poll.add_reaction(emoji)
+        except Exception:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Too many choices?"))
 
 
 def setup(client: commands.Bot):

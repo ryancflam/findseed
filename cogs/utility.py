@@ -548,56 +548,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="poll", description="Makes a poll.", usage="<question>", aliases=["questionnaire"])
-    @commands.guild_only()
-    async def poll(self, ctx, *, question):
-        if len(question) > 200:
-            return await ctx.reply(embed=funcs.errorEmbed(None, "Question must be 200 characters or less."))
-        messages, answers = [ctx.message], []
-        count = 0
-        while count < 20:
-            messages.append(
-                await messages[-1].reply("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
-            )
-            try:
-                entry = await self.client.wait_for(
-                    "message",
-                    check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
-                    timeout=60
-                )
-            except TimeoutError:
-                break
-            messages.append(entry)
-            if entry.content.casefold() == "!done":
-                break
-            if entry.content.casefold() == "!undo":
-                if answers:
-                    answers.pop()
-                    count -= 1
-                else:
-                    messages.append(
-                        await entry.reply(embed=funcs.errorEmbed(None, "No choices."))
-                    )
-            else:
-                answers.append((chr(0x1f1e6 + count), entry.content))
-                count += 1
-        try:
-            await ctx.channel.delete_messages(messages)
-        except:
-            pass
-        if len(answers) < 2:
-            return await messages[-1].reply(embed=funcs.errorEmbed(None, "Not enough choices."))
-        answer = "\n".join(f"{keycap}: {content}" for keycap, content in answers)
-        e = Embed(title=f"Poll - {question}", description=f"Asked by: {ctx.author.mention}")
-        e.add_field(name="Choices", value=answer)
-        try:
-            poll = await messages[-1].reply(embed=e)
-            for emoji, _ in answers:
-                await poll.add_reaction(emoji)
-        except Exception:
-            return await messages[-1].reply(embed=funcs.errorEmbed(None, "Too many choices?"))
-
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
                       aliases=["ud", "urbandictionary"], usage="<term>")

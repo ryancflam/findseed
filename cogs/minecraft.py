@@ -293,8 +293,9 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             )
         anchors = self.chargeableAnchors(glowdust, cryobby)
         beds = string // 12
-        if beds or anchors:
-            res += "\nExplosives you can craft:\n\n"
+        explosives = anchors + beds
+        if explosives:
+            res += "\nExplosives you can craft ({:,}):\n\n".format(explosives)
             if beds:
                 res += "    {:,} x Bed\n".format(beds)
             if anchors:
@@ -316,7 +317,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
         await ctx.reply(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
-                        f" with {n} gold ingots is:\n\n`{round(x * 100, 5)}% (1 in {round(1 / x, 5)})")
+                        f" with {n} gold ingots is:\n\n`{round(x * 100, 5)}%` (1 in {round(1 / x, 5)})")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
