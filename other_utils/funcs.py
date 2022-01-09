@@ -1,11 +1,12 @@
+import time
+from asyncio import sleep, TimeoutError
 from calendar import monthrange
 from datetime import date, datetime
 from io import BytesIO
 from json import dump, JSONDecodeError, load
 from os import path
-from time import sleep
 
-from discord import Embed, File
+from discord import Embed, File, utils
 from httpx import AsyncClient, get
 
 from other_utils.item_cycle import ItemCycle
@@ -411,7 +412,7 @@ def getTickers():
                 tickers[i["symbol"]] = i["id"]
             return tickers
         except JSONDecodeError:
-            sleep(30)
+            time.sleep(30)
 
 
 async def readTxt(message):
@@ -434,10 +435,9 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
                                          and user == ctx.author and reaction.message == msg, timeout=300
         )
     except TimeoutError:
-        try:
-            await msg.clear_reactions()
-        except:
-            pass
+        for reaction in list(utils.get(client.cached_messages, id=msg.id).reactions):
+            async for user in reaction.users():
+                await reactionRemove(reaction, user)
         return None, 0
     success = False
     if str(reaction.emoji) == "⏭":
@@ -451,6 +451,8 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
             page -= 1
             success = True
     else:
+        await msg.edit(content="Deleting message...", embed=None)
+        await sleep(1)
         return -1, 0
     return success, page
 
