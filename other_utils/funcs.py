@@ -427,6 +427,13 @@ async def reactionRemove(reaction, user):
         return
 
 
+async def nextPrevPageOptions(msg, allpages: int):
+    await msg.add_reaction("🚫")
+    if allpages > 1:
+        await msg.add_reaction("⏮")
+        await msg.add_reaction("⏭")
+
+
 async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
     try:
         reaction, user = await client.wait_for(
@@ -453,7 +460,8 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
     else:
         await msg.edit(content="Deleting message...", embed=None)
         await sleep(1)
-        return -1, 0
+        await msg.delete()
+        success = None
     return success, page
 
 

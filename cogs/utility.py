@@ -391,18 +391,13 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=originallyric[0], title=f"{author} - {title}")
             e.set_thumbnail(url=thumbnail)
             e.add_field(name="Genius Link", value=link)
-            page = 1
-            e.set_footer(text="Page {:,} of {:,}".format(page, allpages))
+            e.set_footer(text="Page 1 of {:,}".format(allpages))
             msg = await ctx.reply(embed=e)
-            await msg.add_reaction("🚫")
-            if allpages > 1:
-                await msg.add_reaction("⏮")
-                await msg.add_reaction("⏭")
+            await funcs.nextPrevPageOptions(msg, allpages)
+            page = 1
             while True:
                 success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
                 if success:
-                    if success == -1:
-                        return await msg.delete()
                     edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
                     edited.set_thumbnail(url=thumbnail)
                     edited.add_field(name="Genius Link", value=link)
@@ -564,7 +559,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             if not terms:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
             else:
-                page = 1
                 example = terms[0]["example"].replace("[", "").replace("]", "")
                 definition = terms[0]["definition"].replace("[", "").replace("]", "")
                 permalink = terms[0]["permalink"]
@@ -583,20 +577,16 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         text=f"Approval rate: " + \
                              f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
                              "% ({:,} 👍 - {:,} 👎) | ".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
-                             "Page {:,} of {:,}".format(page, len(terms))
+                             "Page 1 of {:,}".format(len(terms))
                     )
                 except ZeroDivisionError:
-                    e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page {:,} of {:,}".format(page, len(terms)))
+                    e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page 1 of {:,}".format(len(terms)))
                 msg = await ctx.reply(embed=e)
-                await msg.add_reaction("🚫")
-                if len(terms) > 1:
-                    await msg.add_reaction("⏮")
-                    await msg.add_reaction("⏭")
+                await funcs.nextPrevPageOptions(msg, len(terms))
+                page = 1
                 while True:
                     success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, len(terms), page)
                     if success:
-                        if success == -1:
-                            return await msg.delete()
                         example = terms[page - 1]["example"].replace("[", "").replace("]", "")
                         definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
                         permalink = terms[page - 1]["permalink"]
