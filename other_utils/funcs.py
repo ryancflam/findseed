@@ -5,6 +5,7 @@ from datetime import date, datetime
 from io import BytesIO
 from json import dump, JSONDecodeError, load
 from os import path
+from re import split
 
 from discord import Embed, File, utils
 from httpx import AsyncClient, get
@@ -384,11 +385,15 @@ def musicalNotes():
     return ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
 
 
-def noteFinder(note):
+def noteFinder(rawNote):
     cycle = ItemCycle(musicalNotes())
-    octave = int(note[-1:])
-    flatsharp = note[1:-1].casefold().replace("#", "♯").replace("b", "♭")
-    cycle.updateIndex(musicalNotes().index(note[:1].upper()))
+    noteandoctave = split(r"(^[^\d]+)", rawNote)[1:]
+    octave = int(noteandoctave[1])
+    flatsharp = noteandoctave[0][1:].casefold().replace("#", "♯").replace("b", "♭")
+    if flatsharp.endswith("-"):
+        flatsharp = flatsharp[:-1]
+        octave *= -1
+    cycle.updateIndex(musicalNotes().index(rawNote[:1].upper()))
     if flatsharp:
         for i in flatsharp:
             if i == "♯":
@@ -438,8 +443,8 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
     try:
         reaction, user = await client.wait_for(
             "reaction_add",
-            check=lambda reaction, user: (str(reaction.emoji) == "⏮" or str(reaction.emoji) == "⏭" or str(reaction.emoji) == "🚫")
-                                         and user == ctx.author and reaction.message == msg, timeout=300
+            check=lambda r, u: (str(r.emoji) == "⏮" or str(r.emoji) == "⏭" or str(r.emoji) == "🚫")
+                               and u == ctx.author and r.message == msg, timeout=300
         )
     except TimeoutError:
         for reaction in list(utils.get(client.cached_messages, id=msg.id).reactions):

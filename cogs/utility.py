@@ -409,7 +409,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr"],
+    @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr", "qrc"],
                       usage="<input>")
     async def qrgen(self, ctx, *, text):
         try:
@@ -1237,28 +1237,31 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(usage="<note #1 with octave (0 to 9)> <note #2 with octave (0 to 9)>",
+    @commands.command(usage="<note #1 with octave (e.g. G5)> <note #2 with octave (e.g. G5)>",
                       aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "octaves", "notesrange"],
                       name="noterange", description="Shows the range in octaves and semitones between two given musical notes.")
     async def noterange(self, ctx, *, noterange):
         try:
-            note1, note2 = funcs.replaceCharacters(noterange.strip(), ["-", "—"], " ").split(" ")
+            while "  " in noterange:
+                noterange = noterange.replace("  ", " ")
+            note1, note2 = funcs.replaceCharacters(noterange.strip().replace(",", ""), [" - ", " — ", "—"], " ").split(" ")
             notes = sorted([funcs.noteFinder(note1), funcs.noteFinder(note2)], key=lambda x: x[1])
             diff = notes[1][1] - notes[0][1]
-            if not diff or notes[0][1] < 0 or notes[1][1] > 119:
-                e = funcs.errorEmbed("Invalid note range!", "Notes must be between C0 and B9.")
-                e.set_footer(text="Notes: " + ", ".join(i for i in funcs.musicalNotes()))
+            if not diff:
+                raise Exception
             else:
                 octaves = diff // 12
                 semitones = diff % 12
                 andsemitones = f" and {semitones} semitone{'' if semitones == 1 else 's'}"
-                octavestr = f"{octaves} octave{'' if octaves == 1 else 's'}{andsemitones if semitones else ''}\nor "
-                e = Embed(title=f"{notes[0][0]}—{notes[1][0]}",
+                octavestr = f"{'{:,}'.format(octaves)} octave{'' if octaves == 1 else 's'}{andsemitones if semitones else ''}\nor "
+                e = Embed(title=f"{notes[0][0]} — {notes[1][0]}",
                           description=funcs.formatting(
-                              f"== Note Range ==\n\n{octavestr if octaves else ''}{diff} semitone{'' if diff == 1 else 's'}"
+                              f"== Note Range ==\n\n{octavestr if octaves else ''}{'{:,}'.format(diff)} semitone" +
+                              f"{'' if diff == 1 else 's'}"
                           ))
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
+            e.set_footer(text="Notes: " + ", ".join(i for i in funcs.musicalNotes()))
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 20, commands.BucketType.user)
