@@ -77,7 +77,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command. Test your luck using this command!",
-                      aliases=["fs", "seed", "f", "s", "findseeds", "seeds"])
+                      aliases=["fs", "seed", "findseeds", "f"])
     async def findseed(self, ctx):
         eyes = self.randomEyes()
         data = funcs.readJson("data/findseed.json")
@@ -98,7 +98,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
         foundTime = "just now"
         if not update:
-            foundTime = f"{funcs.timeDifferenceStr(time(), highestTime)}"
+            timestr = funcs.timeDifferenceStr(time(), highestTime)
+            timestr_0 = int(timestr.split(" ")[0])
+            if timestr_0 > 2:
+                foundTime = f"{timestr_0} days"
+            else:
+                foundTime = timestr
         e = Embed(
             title=f"{self.client.command_prefix}findseed",
             description=f"Requested by: {ctx.message.author.mention}"
@@ -114,7 +119,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",
-                      aliases=["odds", "eo", "odd", "o"])
+                      aliases=["odds", "eyes", "eye"])
     async def eyeodds(self, ctx):
         msg = ""
         for i in range(13):
@@ -125,7 +130,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="finddream", description="Can you get Dream's" + ' Minecraft speedrunning "luck"? ' + \
                                                     "Test your luck using this command!",
-                      aliases=["dl", "dream", "dreamsimulator", "d", "dreamsim", "dreamluck", "fd"])
+                      aliases=["dream", "dreamsimulator", "dreamsim", "dreamluck", "fd"])
     async def finddream(self, ctx):
         pearls, rods = 0, 0
         dpearls, drods = 262, 305
