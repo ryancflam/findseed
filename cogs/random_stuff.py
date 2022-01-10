@@ -2,7 +2,7 @@ from asyncio import sleep, TimeoutError
 from random import choice, choices, randint, shuffle
 from time import time
 
-from discord import Colour, Embed, Member
+from discord import Colour, Embed, User
 from discord.ext import commands
 from googletrans import Translator
 
@@ -164,7 +164,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
             )
         except TimeoutError:
-            return await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
+            return await ctx.send(f"`{ctx.author.name} has left the personality test for idling for too long.`")
         if choice.content.casefold() != "test":
             return await ctx.send(f"`{ctx.author.name} has left the personality test.`")
         res = list(self.personalityTest["questions"])
@@ -199,7 +199,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                         "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=900
                     )
                 except TimeoutError:
-                    return await ctx.send(f"`{ctx.author.name} has left the personality test for idling too long.`")
+                    return await ctx.send(f"`{ctx.author.name} has left the personality test for idling for too long.`")
                 userInput = answer.content
                 if userInput.casefold() != "a" and userInput.casefold() != "b" \
                         and userInput.casefold() != "c" and userInput.casefold() != "quit" \
@@ -309,7 +309,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
                       usage="[@mention]")
-    async def roast(self, ctx, member: Member=None):
+    async def roast(self, ctx, member: User=None):
         member = member or ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
         await ctx.reply(res.json()["insult"].replace("You are", f"{member.display_name} is"))
@@ -348,7 +348,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="iq", description="Calculates your IQ. This is a joke command.", usage="[@mention]")
-    async def iq(self, ctx, mention: Member=None):
+    async def iq(self, ctx, mention: User=None):
         if not mention:
             mention = ctx.author
         iqres = randint(1, 200)
@@ -415,14 +415,6 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                            f"**{newlist[0]}** and **{newlist[1]}** is **{intermediate}%{emoji}")
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="avatar", description="Shows the avatar of a user.",
-                      aliases=["pfp", "icon"], usage="[@mention]")
-    async def avatar(self, ctx, *, user: Member=None):
-        user = user or ctx.author
-        ext = "gif" if user.is_avatar_animated() else "png"
-        await funcs.sendImage(ctx, str(user.avatar_url_as(format=ext if ext != "gif" else None)), name=f"avatar.{ext}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="8ball", description="Ask 8ball a question.",

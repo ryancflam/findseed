@@ -1,7 +1,7 @@
 from datetime import datetime
 from time import time
 
-from discord import __version__, Embed
+from discord import __version__, Embed, User
 from discord.ext import commands
 from psutil import cpu_percent, disk_usage, virtual_memory
 
@@ -263,6 +263,14 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 await poll.add_reaction(emoji)
         except Exception:
             return await ctx.send(embed=funcs.errorEmbed(None, "Too many choices?"))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="avatar", description="Shows the avatar of a user.",
+                      aliases=["pfp", "icon"], usage="[@mention]")
+    async def avatar(self, ctx, *, user: User=None):
+        user = user or ctx.author
+        ext = "gif" if user.is_avatar_animated() else "png"
+        await funcs.sendImage(ctx, str(user.avatar_url_as(format=ext if ext != "gif" else None)), name=f"avatar.{ext}")
 
 
 def setup(client: commands.Bot):

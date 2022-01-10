@@ -6,7 +6,7 @@ from time import time
 
 from akinator import CantGoBackAnyFurther
 from akinator.async_aki import Akinator
-from discord import Colour, Embed, File
+from discord import Colour, Embed, File, User
 from discord.ext import commands, tasks
 
 from game_models.battleship import Battleship
@@ -16,6 +16,7 @@ from game_models.hangman import Hangman
 from game_models.minesweeper import Minesweeper
 from game_models.no_thanks import NoThanks
 from game_models.tetris import Tetris
+from game_models.tic_tac_toe import TicTacToe
 from game_models.uno import Uno
 from other_utils import funcs
 
@@ -215,7 +216,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 )
                 option = waitForInput.content
             except TimeoutError:
-                await ctx.send(f"`{currentPlayer.name} has left No Thanks for idling too long.`")
+                await ctx.send(f"`{currentPlayer.name} has left No Thanks for idling for too long.`")
                 option = "quit"
             try:
                 game.turn(option)
@@ -395,7 +396,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                     "message", check=lambda m: m.author == currentPlayer, timeout=120
                                 )
                             except TimeoutError:
-                                await ctx.send(f"`{currentPlayer.name} has left Uno for idling too long.`")
+                                await ctx.send(f"`{currentPlayer.name} has left Uno for idling for too long.`")
                                 game.removePlayer(currentPlayer)
                                 break
                             colour = waitForColour.content
@@ -432,7 +433,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                                 "message", check=lambda m: m.author == waitForOption.author, timeout=120
                                             )
                                         except TimeoutError:
-                                            await ctx.send(f"`{waitForOption.author.name} has left Uno for idling too long.`")
+                                            await ctx.send(f"`{waitForOption.author.name} has left Uno for idling for too long.`")
                                             game.removePlayer(waitForOption.author)
                                             break
                                         colour = waitForColour.content
@@ -498,7 +499,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                             break
                         break
                     except TimeoutError:
-                        await ctx.send(f"`{currentPlayer.name} has left Uno for idling too long.`")
+                        await ctx.send(f"`{currentPlayer.name} has left Uno for idling for too long.`")
                         game.removePlayer(currentPlayer)
                         break
             except Exception as ex:
@@ -553,7 +554,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 )
             except TimeoutError:
                 self.gameChannels.remove(ctx.channel.id)
-                return await ctx.send(f"`{ctx.author.name} has left Akinator for idling too long.`")
+                return await ctx.send(f"`{ctx.author.name} has left Akinator for idling for too long.`")
             if resp.content.casefold() == "b":
                 try:
                     game = await aki.back()
@@ -601,7 +602,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     "message", check=lambda msg: msg.author == ctx.author and msg.channel == ctx.channel, timeout=30
                 )
             except TimeoutError:
-                await ctx.send(f"`{ctx.author.name} has left Guess the Number for idling too long.`")
+                await ctx.send(f"`{ctx.author.name} has left Guess the Number for idling for too long.`")
                 break
             try:
                 guess = int(message.content.replace(" ", "").replace(",", ""))
@@ -647,7 +648,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     "message", check=lambda msg: msg.author == ctx.author and msg.channel == ctx.channel, timeout=90
                 )
             except TimeoutError:
-                await ctx.send(f"`{ctx.author.name} has left Bulls and Cows for idling too long.`")
+                await ctx.send(f"`{ctx.author.name} has left Bulls and Cows for idling for too long.`")
                 break
             try:
                 guess = message.content
@@ -723,7 +724,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                         break
                 except TimeoutError:
                     self.gameChannels.remove(ctx.channel.id)
-                    return await ctx.send(f"`{ctx.author.name} has left the 21 Card Trick for idling too long.`")
+                    return await ctx.send(f"`{ctx.author.name} has left the 21 Card Trick for idling for too long.`")
                 except ValueError:
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
         cardName, cardImg = game.getCardNameImg(cardSample[10])
@@ -741,7 +742,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             game.revealDots()
         else:
             title = "Battleship"
-        await ctx.send(f"`{ctx.author.name} has left {title} for idling too long.`")
+        await ctx.send(f"`{ctx.author.name} has left {title} for idling for too long.`")
 
     async def rowOrCol(self, ctx, game, userchoice, ms):
         if userchoice:
@@ -914,6 +915,79 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="tictactoe", description="Play Tic Tac Toe. Mention someone to play with them.",
+                      aliases=["ttt", "tictac"], usage="[@mention]")
+    async def tictactoe(self, ctx, *, user: User=None):
+        if await self.checkGameInChannel(ctx):
+            return
+        if randint(0, 1):
+            player1 = ctx.author
+            if user == self.client.user or not user:
+                player2 = None
+                computer2 = True
+                computer1 = False
+            elif ctx.guild and not user.bot and user in ctx.guild.members:
+                player2 = user
+                computer2 = False
+                computer1 = False
+            else:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
+        else:
+            player2 = ctx.author
+            if user == self.client.user or not user:
+                player1 = None
+                computer1 = True
+                computer2 = False
+            elif ctx.guild and not user.bot and user in ctx.guild.members:
+                player1 = user
+                computer1 = False
+                computer2 = False
+            else:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
+        self.gameChannels.append(ctx.channel.id)
+        await ctx.send("**Welcome to Tic Tac Toe. Input `quit` to quit the game.\n\nPlayer 1 (X)** is " +
+                       f"{'me' if computer1 else player1.mention}. **Player 2 (O)** is {'me' if computer2 else player2.mention}.")
+        game = TicTacToe(player1=player1, player2=player2)
+        await ctx.send(funcs.formatting(game.displayBoard(numbers=True)))
+        if computer1:
+            game.makeMove(randint(0, 8))
+            await ctx.send(funcs.formatting(game.displayBoard()))
+        while game.getEmptySlots():
+            currentPlayer = game.getCurrentPlayer()
+            await ctx.send(f"`It is {currentPlayer.name}'s turn! Please select a slot number between 1-9.`")
+            try:
+                move = await self.client.wait_for(
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer, timeout=120
+                )
+            except TimeoutError:
+                await ctx.send(f"`{currentPlayer.name} has left Tic Tac Toe for idling for too long. Game over!`")
+                break
+            if move.content.casefold() == "quit":
+                await ctx.send(f"`{currentPlayer.name} has left Tic Tac Toe. Game over!`")
+                break
+            try:
+                try:
+                    game.makeMove(int(move.content) - 1)
+                except ValueError:
+                    raise Exception("Invalid input.")
+            except Exception as ex:
+                await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+                continue
+            await ctx.send(funcs.formatting(game.displayBoard()))
+            if game.getWinner():
+                try:
+                    winner = game.getWinner().getPlayer().name + " wins"
+                except:
+                    winner = "I win"
+                await ctx.send(f"`{winner}! Game over!`")
+                break
+        if not game.getEmptySlots() and not game.getWinner():
+            await ctx.send("`Draw! Game over!`")
+        m, s = game.getTime()
+        await self.sendTime(ctx, m, s)
+        self.gameChannels.remove(ctx.channel.id)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="rps", description="Play Rock Paper Scissors.",
                       aliases=["rockpaperscissors", "rsp", "psr", "prs", "srp", "spr"])
     async def rps(self, ctx):
@@ -933,7 +1007,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 )
             except TimeoutError:
                 self.gameChannels.remove(ctx.channel.id)
-                return await ctx.send(f"`{ctx.author.name} has feft Rock Paper Scissors for idling too long.`")
+                return await ctx.send(f"`{ctx.author.name} has feft Rock Paper Scissors for idling for too long.`")
             if msg.content.casefold().startswith(("r", "p", "s")):
                 answer = "Rock" if msg.content.casefold().startswith("r") else "Paper" \
                     if msg.content.casefold().startswith("p") else "Scissors"
@@ -969,7 +1043,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
                 )
             except TimeoutError:
-                await ctx.send(f"`{ctx.author.name} has left Hangman for idling too long.`")
+                await ctx.send(f"`{ctx.author.name} has left Hangman for idling for too long.`")
                 self.gameChannels.remove(ctx.channel.id)
                 return await ctx.send(f"`{ctx.author.name}'s word was {game.getWord()}.`")
             content = guess.content
