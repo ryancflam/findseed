@@ -140,8 +140,8 @@ class BotInstance(Bot):
             await self.presence(self.__activityName)
 
     async def on_message(self, message):
-        if (await self.get_context(message)).valid and not self.is_ready() \
-                and userNotBlacklisted(self, message):
+        ctx = await self.get_context(message)
+        if ctx.valid and not self.is_ready() and userNotBlacklisted(self, message):
             return await message.channel.send(
                 f"{self.user.name} is not ready yet, please wait!"
             )
@@ -150,4 +150,6 @@ class BotInstance(Bot):
                 message.content = message.content.replace(
                     f"{self.command_prefix} ", f"{self.command_prefix}", 1
                 )
+            if ctx.valid:
+                await message.channel.trigger_typing()
             await self.process_commands(message)

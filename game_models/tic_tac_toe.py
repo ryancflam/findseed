@@ -1,6 +1,6 @@
 # Credit - https://github.com/kying18/tic-tac-toe
 
-from math import inf, floor
+from math import floor, inf
 from time import time
 
 from other_utils.funcs import timeDifferenceStr
