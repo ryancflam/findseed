@@ -920,33 +920,32 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     async def tictactoe(self, ctx, *, user: User=None):
         if await self.checkGameInChannel(ctx):
             return
-        if randint(0, 1):
+        computer1, computer2 = False, False
+        player1, player2 = None, None
+        rdn = randint(0, 1)
+        if rdn:
             player1 = ctx.author
-            if user == self.client.user or not user:
-                player2 = None
-                computer2 = True
-                computer1 = False
-            elif ctx.guild and not user.bot and user in ctx.guild.members:
-                player2 = user
-                computer2 = False
-                computer1 = False
-            else:
-                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
         else:
             player2 = ctx.author
-            if user == self.client.user or not user:
-                player1 = None
-                computer1 = True
-                computer2 = False
-            elif ctx.guild and not user.bot and user in ctx.guild.members:
-                player1 = user
-                computer1 = False
-                computer2 = False
+        if user == self.client.user or not user:
+            if rdn:
+                computer2 = True
             else:
-                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
+                computer1 = True
+        elif user == ctx.author or ctx.guild and not user.bot and user in ctx.guild.members:
+            if rdn:
+                player2 = user
+            else:
+                player1 = user
+        else:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
         self.gameChannels.append(ctx.channel.id)
-        await ctx.send("**Welcome to Tic Tac Toe. Input `quit` to quit the game.\n\nPlayer 1 (X)** is " +
-                       f"{'me' if computer1 else player1.mention}. **Player 2 (O)** is {'me' if computer2 else player2.mention}.")
+        if player1 == player2:
+            msg = f"Both **Player 1 (X)** and **Player 2 (O)** are {player1.mention}."
+        else:
+            msg = f"**Player 1 (X)** is {'me' if computer1 else player1.mention}. **Player 2 (O)** is " + \
+                  f"{'me' if computer2 else player2.mention}."
+        await ctx.send(f"**Welcome to Tic Tac Toe. Input `quit` to quit the game.**\n\n{msg}")
         game = TicTacToe(player1=player1, player2=player2)
         await ctx.send(funcs.formatting(game.displayBoard(numbers=True)))
         if computer1:
