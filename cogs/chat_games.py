@@ -93,12 +93,11 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             ", `bnw` to enable black-and-white mode, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
-        self.tetrisGames[ctx.channel] = Tetris()
+        self.tetrisGames[ctx.channel] = Tetris(self.client)
         game = self.tetrisGames[ctx.channel]
         game.newBlock()
-        e = Embed(description=game.gameBoard())
+        e = Embed(title="Tetris", description=game.gameBoard())
         e.set_footer(text=f"Called by: {ctx.author}")
-        e.set_author(name="Tetris")
         e.set_thumbnail(url=f"{game.NEXT_BLOCK_IMAGES[game.getNextBlock().getBlockType()]}")
         e.add_field(name="Lines", value="`0`")
         e.add_field(name="Level", value="`0`")
@@ -940,13 +939,13 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         else:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
         self.gameChannels.append(ctx.channel.id)
+        game = TicTacToe(player1=player1, player2=player2)
         if player1 == player2:
-            msg = f"Both **Player 1 (X)** and **Player 2 (O)** are {player1.mention}."
+            msg = f"Both **Player 1 ({game.CROSS})** and **Player 2 ({game.NOUGHT})** are {player1.mention}."
         else:
-            msg = f"**Player 1 (X)** is {'me' if computer1 else player1.mention}.\n**Player 2 (O)** is " + \
+            msg = f"**Player 1 ({game.CROSS})** is {'me' if computer1 else player1.mention}.\n**Player 2 ({game.NOUGHT})** is " + \
                   f"{'me' if computer2 else player2.mention}."
         await ctx.send(f"**Welcome to Tic Tac Toe. Input `quit` to quit the game.**\n\n{msg}")
-        game = TicTacToe(player1=player1, player2=player2)
         await ctx.send(funcs.formatting(game.displayBoard(numbers=True)))
         if computer1:
             game.move(randint(1, 9))

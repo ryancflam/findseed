@@ -432,6 +432,12 @@ async def reactionRemove(reaction, user):
         return
 
 
+async def removeReactionsFromCache(client, msg):
+    for reaction in list(utils.get(client.cached_messages, id=msg.id).reactions):
+        async for user in reaction.users():
+            await reactionRemove(reaction, user)
+
+
 async def nextPrevPageOptions(msg, allpages: int):
     await msg.add_reaction("🚫")
     if allpages > 1:
@@ -447,9 +453,7 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
                                and u == ctx.author and r.message == msg, timeout=300
         )
     except TimeoutError:
-        for reaction in list(utils.get(client.cached_messages, id=msg.id).reactions):
-            async for user in reaction.users():
-                await reactionRemove(reaction, user)
+        await removeReactionsFromCache(client, msg)
         return None, 0
     success = False
     if str(reaction.emoji) == "⏭":

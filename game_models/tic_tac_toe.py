@@ -7,9 +7,12 @@ from other_utils.funcs import timeDifferenceStr
 
 
 class TicTacToe:
+    CROSS = "X"
+    NOUGHT = "O"
+
     def __init__(self, player1=None, player2=None):
-        self.__player1 = TicTacToePlayer(letter="X", user=player1)
-        self.__player2 = TicTacToePlayer(letter="O", user=player2)
+        self.__player1 = TicTacToePlayer(letter=self.CROSS, user=player1)
+        self.__player2 = TicTacToePlayer(letter=self.NOUGHT, user=player2)
         self.__startTime = time()
         self.__winner = None
         self.__board = [" " for _ in range(9)]
@@ -29,7 +32,7 @@ class TicTacToe:
         self.__currentPlayer = self.__player1 if self.__currentPlayer == self.__player2 else self.__player2
 
     def __computerMinimax(self, player, bot):
-        otherPlayer = "X" if player == "O" else "O"
+        otherPlayer = self.CROSS if player == self.NOUGHT else self.NOUGHT
         try:
             if self.__winner.getLetter() == otherPlayer:
                 return [None, (1 if otherPlayer == bot else -1) * (self.getEmptySlots() + 1)]
@@ -37,7 +40,7 @@ class TicTacToe:
                 return [None, 0]
         except:
             pass
-        best = [None, -inf] if player == bot else [None, inf]
+        best = [None, -inf if player == bot else inf]
         for move in [i for i, j in enumerate(self.__board) if j == " "]:
             self.move(move + 1, computerSim=True)
             score = self.__computerMinimax(otherPlayer, bot)

@@ -5,19 +5,20 @@ from other_utils.funcs import getPath, timeDifferenceStr
 
 
 class Hangman:
+    HANGMAN_STATES = [
+        "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  / \\\n| /   \\\n|\n| Over!\n└-------",
+        "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  / \\\n| /\n|\n|1 life\n└-------",
+        "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  /\n| /\n|\n|2 lives\n└-------",
+        "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  /\n|\n|\n|3 lives\n└-------",
+        "┌----\n|   |\n|   O\n| / | \\\n|   |\n|\n|\n|\n|4 lives\n└-------",
+        "┌----\n|   |\n|   O\n| / | \\\n|\n|\n|\n|\n|5 lives\n└-------",
+        "┌----\n|   |\n|   O\n| / |\n|\n|\n|\n|\n|6 lives\n└-------",
+        "┌----\n|   |\n|   O\n|   |\n|\n|\n|\n|\n|7 lives\n└-------",
+        "┌----\n|   |\n|   O\n|\n|\n|\n|\n|\n|8 lives\n└-------",
+        "┌----\n|   |\n|\n|\n|\n|\n|\n|\n|9 lives\n└-------"
+    ]
+
     def __init__(self):
-        self.__hangmanpics = [
-            "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  / \\\n| /   \\\n|\n| Over!\n└-------",
-            "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  / \\\n| /\n|\n|1 life\n└-------",
-            "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  /\n| /\n|\n|2 lives\n└-------",
-            "┌----\n|   |\n|   O\n| / | \\\n|   |\n|  /\n|\n|\n|3 lives\n└-------",
-            "┌----\n|   |\n|   O\n| / | \\\n|   |\n|\n|\n|\n|4 lives\n└-------",
-            "┌----\n|   |\n|   O\n| / | \\\n|\n|\n|\n|\n|5 lives\n└-------",
-            "┌----\n|   |\n|   O\n| / |\n|\n|\n|\n|\n|6 lives\n└-------",
-            "┌----\n|   |\n|   O\n|   |\n|\n|\n|\n|\n|7 lives\n└-------",
-            "┌----\n|   |\n|   O\n|\n|\n|\n|\n|\n|8 lives\n└-------",
-            "┌----\n|   |\n|\n|\n|\n|\n|\n|\n|9 lives\n└-------"
-        ]
         self.__word = self.__randomWord()
         self.__dashes = str("-" * len(self.__word))
         self.__lives = 10
@@ -52,11 +53,11 @@ class Hangman:
         return m, s
 
     def hangmanPic(self):
-        return self.__hangmanpics[self.__lives]
+        return self.HANGMAN_STATES[self.__lives]
 
     def makeGuess(self, guess):
         if guess.lower() in self.__guesses:
-            raise Exception("You have guessed this letter before.")
+            raise Exception("You have already guessed this letter!")
         elif guess.lower() in self.__word:
             self.__dashes = self.__dash(self.__word, self.__dashes, guess.lower())
             self.__guesses.add(guess.lower())

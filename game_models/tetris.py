@@ -1,9 +1,9 @@
 from random import randint
 from time import time
 
-from other_utils.funcs import timeDifferenceStr
+from other_utils.funcs import removeReactionsFromCache, timeDifferenceStr
 
-BLOCKS = [
+TETRIS_BLOCKS = [
     [
         [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
         [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]]
@@ -50,7 +50,8 @@ class Tetris:
         "https://i.imgur.com/WkbxL9l.jpg"
     ]
 
-    def __init__(self):
+    def __init__(self, client):
+        self.__client = client
         self.__startTime = time()
         self.__width = 10
         self.__height = 20
@@ -95,10 +96,7 @@ class Tetris:
         e.add_field(name="Score", value="`{:,}`".format(self.__score))
         await self.__message.edit(embed=e)
         if self.__gameEnd:
-            try:
-                await self.__message.clear_reactions()
-            except:
-                pass
+            await removeReactionsFromCache(self.__client, self.__message)
 
     def __endScreen(self):
         endScreen = "```"
@@ -153,7 +151,7 @@ class Tetris:
             self.__currentBlock.moveY(down=False)
         if self.isOccupied(self.__currentBlock):
             self.__currentBlock.rotation = self.__currentBlock.rotation + 1
-            if self.__currentBlock.rotation >= len(BLOCKS[self.__currentBlock.getBlockType()]):
+            if self.__currentBlock.rotation >= len(TETRIS_BLOCKS[self.__currentBlock.getBlockType()]):
                 self.__currentBlock.rotation = 0
             if self.isOccupied(self.__currentBlock):
                 self.__gameEnd = True
@@ -282,7 +280,7 @@ class TetrisBlock:
         self.__rotation = value
 
     def getBlock(self):
-        return BLOCKS[self.__blockType][self.__rotation]
+        return TETRIS_BLOCKS[self.__blockType][self.__rotation]
 
     def getBlockType(self):
         return self.__blockType
@@ -300,7 +298,7 @@ class TetrisBlock:
         self.__game.removeBlock(self)
         prevRotation = self.__rotation
         self.__rotation += 1
-        if self.__rotation >= len(BLOCKS[self.__blockType]):
+        if self.__rotation >= len(TETRIS_BLOCKS[self.__blockType]):
             self.__rotation = 0
         if self.__game.isOccupied(self):
             self.__x += 1
