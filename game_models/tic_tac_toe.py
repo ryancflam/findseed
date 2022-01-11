@@ -61,16 +61,15 @@ class TicTacToe:
             raise Exception("Slot number must be 1-9 inclusive.")
         if self.__board[slot] != " ":
             raise Exception("Slot already occupied!")
-        else:
-            self.__board[slot] = self.__currentPlayer.getLetter()
-            self.__checkWinner(slot, self.__board[slot])
-            if self.__winner and not computerSim:
-                return
-            self.__switchPlayer()
-            if not self.__currentPlayer.getPlayer() and not computerSim:
-                self.move(self.__computerMinimax(self.__currentPlayer.getLetter(), self.__currentPlayer.getLetter())[0] + 1)
-                if not self.__currentPlayer.getPlayer():
-                    self.__switchPlayer()
+        self.__board[slot] = self.__currentPlayer.getLetter()
+        self.__checkWinner(slot, self.__board[slot])
+        if self.__winner and not computerSim:
+            return
+        self.__switchPlayer()
+        if not self.__currentPlayer.getPlayer() and not computerSim:
+            self.move(self.__computerMinimax(self.__currentPlayer.getLetter(), self.__currentPlayer.getLetter())[0] + 1)
+            if not self.__currentPlayer.getPlayer():
+                self.__switchPlayer()
 
     def displayBoard(self, numbers: bool=False):
         output = "Tic-Tac-Toe:\n\n"
