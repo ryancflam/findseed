@@ -793,7 +793,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send(
             f"`{ctx.author.name} has {90 - game.getUncovered()} dot{'' if dotsLeft == 1 else 's'} left to uncover.`"
         )
-        await ctx.send("`Would you like to reveal, flag, or unflag a location?`")
+        await ctx.send("`Would you like to reveal (r), flag (f), or unflag (u) a location?`")
         try:
             msg = await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
@@ -807,7 +807,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 and decision.casefold() != "unflag" and decision.casefold() != "exit" \
                 and decision.casefold() != "quit" and decision.casefold() != "stop":
             await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
-            await ctx.send("`Would you like to reveal, flag, or unflag a location?`")
+            await ctx.send("`Would you like to reveal (r), flag (f), or unflag (u) a location?`")
             try:
                 msg = await self.client.wait_for(
                     "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=120
@@ -863,10 +863,10 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         won = False
         while not game.getGameEnd():
             await ctx.send("```Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
-                           f"Current board:\n\n{game.displayBoard()}```")
+                           f"{game.displayBoard()}```")
             await self.gameOptions(ctx, game)
             won = game.winLose()
-        await ctx.send(f"```Current board:\n\n{game.displayBoard()}```")
+        await ctx.send(f"```{game.displayBoard()}```")
         m, s = game.getTime()
         await ctx.send(
             "```You have {} Minesweeper!\n\nTotal attempts: {:,}".format("won" if won else "lost", game.getAttempts()) + \
@@ -943,13 +943,13 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         if player1 == player2:
             msg = f"Both **Player 1 (X)** and **Player 2 (O)** are {player1.mention}."
         else:
-            msg = f"**Player 1 (X)** is {'me' if computer1 else player1.mention}. **Player 2 (O)** is " + \
+            msg = f"**Player 1 (X)** is {'me' if computer1 else player1.mention}.\n**Player 2 (O)** is " + \
                   f"{'me' if computer2 else player2.mention}."
         await ctx.send(f"**Welcome to Tic Tac Toe. Input `quit` to quit the game.**\n\n{msg}")
         game = TicTacToe(player1=player1, player2=player2)
         await ctx.send(funcs.formatting(game.displayBoard(numbers=True)))
         if computer1:
-            game.makeMove(randint(0, 8))
+            game.move(randint(1, 9))
             await ctx.send(funcs.formatting(game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
@@ -965,10 +965,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 await ctx.send(f"`{currentPlayer.name} has left Tic Tac Toe. Game over!`")
                 break
             try:
-                try:
-                    game.makeMove(int(move.content) - 1)
-                except ValueError:
-                    raise Exception("Invalid input.")
+                game.move(move.content)
             except Exception as ex:
                 await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
                 continue

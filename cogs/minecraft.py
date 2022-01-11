@@ -598,10 +598,11 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.send("You have been inactive for over 20 minutes, stopping triangulation program.")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="coordsdist", description="Calculates the distance between two sets of coordinates.",
+    @commands.command(name="coordsdist", description="Calculates the distance between two sets of Minecraft coordinates.",
                       aliases=["coords", "distance", "dist", "coord", "coordinates", "coordinate"],
                       usage="<x #1> <z #1> <x #2> <z #2>\n\nAlternative usage(s):\n\n- <F3+C data> <x> <z>")
     async def coords(self, ctx, *, inp: str):
+        inp = funcs.replaceCharacters(inp, [",", "(", ")", ";"])
         args = inp.split(" ")
         try:
             try:
@@ -612,8 +613,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         except ValueError:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid arguments."))
         await ctx.reply(
-            f"The distance between **{int(x1)}, {int(z1)}** and **{int(x2)}, {int(z2)}** is: " + \
-            f"**~{round(self.coordsDifference((x1, z1), (x2, z2)))}**"
+            "The distance between (**{}**; **{}**) and (**{}**; **{}**) is: ".format(
+                funcs.removeDotZero("{:,}".format(round(x1, 5))),
+                funcs.removeDotZero("{:,}".format(round(z1, 5))),
+                funcs.removeDotZero("{:,}".format(round(x2, 5))),
+                funcs.removeDotZero("{:,}".format(round(z2, 5)))
+            ) + f"**{funcs.removeDotZero('{:,}'.format(round(self.coordsDifference((x1, z1), (x2, z2)), 5)))}**"
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)

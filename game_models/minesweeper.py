@@ -70,7 +70,7 @@ class Minesweeper:
         self.__gameEnd = True
 
     def displayBoard(self):
-        output = "  "
+        output = "Current board:\n\n  "
         for i in range(self.__col):
             output += " " + str(i)
         output += "\n   " + "-" * (self.__col * 2 - 1)
