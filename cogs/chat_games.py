@@ -631,7 +631,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="bullsandcows", description="Play Bulls and Cows.", aliases=["bc", "bulls", "cows"])
+    @commands.command(name="bullsandcows", description="Play Bulls and Cows.", aliases=["bc", "bulls", "cows", "cowsandbulls"])
     async def bullsandcows(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
@@ -914,8 +914,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="tictactoe", description="Play Tic Tac Toe. Mention someone to play with them.",
-                      aliases=["ttt", "tictac"], usage="[@mention]")
+    @commands.command(name="tictactoe", description="Play Tic-Tac-Toe. Mention someone to play with them.",
+                      aliases=["ttt", "tictac", "noughtsandcrosses", "nc"], usage="[@mention]")
     async def tictactoe(self, ctx, *, user: User=None):
         if await self.checkGameInChannel(ctx):
             return
@@ -943,9 +943,9 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         if player1 == player2:
             msg = f"Both **Player 1 ({game.CROSS})** and **Player 2 ({game.NOUGHT})** are {player1.mention}."
         else:
-            msg = f"**Player 1 ({game.CROSS})** is {'me' if computer1 else player1.mention}.\n**Player 2 ({game.NOUGHT})** is " + \
-                  f"{'me' if computer2 else player2.mention}."
-        await ctx.send(f"**Welcome to Tic Tac Toe. Input `quit` to quit the game.**\n\n{msg}")
+            msg = f"**Player 1 ({game.CROSS})** is {'me' if computer1 else player1.mention}.\n**Player 2 ({game.NOUGHT}" + \
+                  f")** is {'me' if computer2 else player2.mention}."
+        await ctx.send(f"**Welcome to Tic-Tac-Toe. Input `quit` to quit the game.**\n\n{msg}")
         await ctx.send(funcs.formatting(game.displayBoard(numbers=True)))
         if computer1:
             game.move(randint(1, 9))
@@ -958,10 +958,10 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer, timeout=120
                 )
             except TimeoutError:
-                await ctx.send(f"`{currentPlayer.name} has left Tic Tac Toe for idling for too long. Game over!`")
+                await ctx.send(f"`{currentPlayer.name} has left Tic-Tac-Toe for idling for too long. Game over!`")
                 break
             if move.content.casefold() == "quit":
-                await ctx.send(f"`{currentPlayer.name} has left Tic Tac Toe. Game over!`")
+                await ctx.send(f"`{currentPlayer.name} has left Tic-Tac-Toe. Game over!`")
                 break
             try:
                 game.move(move.content)

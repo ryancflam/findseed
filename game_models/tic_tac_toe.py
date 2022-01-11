@@ -73,7 +73,7 @@ class TicTacToe:
                     self.__switchPlayer()
 
     def displayBoard(self, numbers: bool=False):
-        output = "Tic Tac Toe:\n\n"
+        output = "Tic-Tac-Toe:\n\n"
         if numbers:
             board = [[str(i + 1) for i in range(j * 3, (j + 1) * 3)] for j in range(3)]
         else:
