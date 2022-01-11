@@ -360,7 +360,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="btcnetwork", description="Gets current information about the Bitcoin network.",
-                      aliases=["btc", "bitcoinnetwork", "bn", "bitcoin", "bf", "btcfee", "btcfees"])
+                      aliases=["btc", "bitcoinnetwork", "bn", "bitcoin", "btcfee", "btcfees"])
     async def btcnetwork(self, ctx):
         await ctx.send("Getting Bitcoin network information. Please wait...")
         try:

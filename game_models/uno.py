@@ -135,7 +135,7 @@ class Uno:
             elif not self.__thirdPlace:
                 self.__thirdPlace = self.__playerList[self.__currentIndex]
             self.removePlayer(self.__playerList[self.__currentIndex], playedAllCards=True)
-            self.__nextPlayer(True)
+            self.__nextPlayer(backward=True)
             if len(self.__playerList) == 1:
                 if self.__originalPlayerCount == 2:
                     self.__secondPlace = self.__playerList[0]
@@ -166,10 +166,10 @@ class Uno:
                 self.__nextPlayer()
                 if self.__firstPlay:
                     for _ in range(2):
-                        self.__nextPlayer(True)
+                        self.__nextPlayer(backward=True)
             else:
                 if self.__firstPlay:
-                    self.__nextPlayer(True)
+                    self.__nextPlayer(backward=True)
         elif "+" in discard:
             if "+4" in discard and not self.__playedWF:
                 self.__playedWF = True
@@ -232,12 +232,16 @@ class Uno:
 
     def callout(self):
         if self.__callout:
-            self.__nextPlayer(True)
+            twoplayers = ("+" in self.__discardPile[-1] or "Skip" in self.__discardPile[-1] or "Reverse" in self.__discardPile[-1]) \
+                         and len(self.__playerList) == 2
+            if not twoplayers:
+                self.__nextPlayer(backward=True)
             drawnCards = []
             for _ in range(2):
                 drawnCards.append(self.__dealOne(self.__playerHands[self.__currentIndex]))
             self.__callout = False
-            self.__nextPlayer()
+            if not twoplayers:
+                self.__nextPlayer()
             return sorted(drawnCards)
         return None
 
@@ -245,7 +249,7 @@ class Uno:
         if self.__playedWF:
             guilty = False
             if challenge:
-                self.__nextPlayer(True)
+                self.__nextPlayer(backward=True)
                 for card in self.getHand(self.__playerList[self.__currentIndex]):
                     if card.startswith("Wild"):
                         continue
@@ -264,7 +268,7 @@ class Uno:
 
     def playWildCard(self, colour, plusFour=False, playDrawn=False):
         if playDrawn:
-            self.__nextPlayer(True)
+            self.__nextPlayer(backward=True)
         try:
             colour = self.__getColour(colour)
             if colour is None or colour == "Wild":
@@ -284,7 +288,7 @@ class Uno:
 
     def playColouredCard(self, card, playDrawn=False):
         if playDrawn:
-            self.__nextPlayer(True)
+            self.__nextPlayer(backward=True)
         discard = self.__discardPile[-1]
         card = card.casefold().replace(":", " ").replace("_", " ").replace("-", " ")
         try:

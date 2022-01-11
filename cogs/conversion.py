@@ -117,7 +117,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="texttobrainfuck", description="Converts plain text to Brainfuck.",
-                      aliases=["ttbf", "t2bf"], usage="<input>")
+                      aliases=["ttbf", "t2bf", "bf", "brainfuck"], usage="<input>")
     async def texttobrainfuck(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")

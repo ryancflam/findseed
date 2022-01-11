@@ -42,15 +42,16 @@ class General(commands.Cog, name="General", description="Standard commands relat
     async def botinfo(self, ctx):
         appinfo = await self.client.application_info()
         e = Embed(description=appinfo.description)
-        data = funcs.readJson("data/findseed.json")
         dt = self.client.user.created_at
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Library", value=f"`discord.py {__version__}`")
         e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
-        e.add_field(name="Server Count", value="`{:,}`".format(len(self.client.guilds)))
-        e.add_field(name="User Count", value="`{:,}`".format(len(set([i for i in self.client.users if not i.bot]))))
-        e.add_field(name="!findseed Calls", value="`{:,}`".format(data['calls']))
+        e.add_field(name="Servers", value="`{:,}`".format(len(self.client.guilds)))
+        e.add_field(name="Users (Excluding Bots)", value="`{:,} ({:,})`".format(
+            len(self.client.users), len(set([i for i in self.client.users if not i.bot]))
+        ))
+        e.add_field(name="!findseed Calls", value="`{:,}`".format(funcs.readJson("data/findseed.json")['calls']))
         e.add_field(name="CPU Usage", value=f"`{cpu_percent()}%`")
         e.add_field(name="Memory Usage", value=f"`{dict(virtual_memory()._asdict())['percent']}%`")
         e.add_field(name="Memory Available",

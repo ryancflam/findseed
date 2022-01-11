@@ -2,7 +2,7 @@
 
 class BrainfuckInterpreter:
     def __init__(self, commands: str):
-        self.__commands = commands.replace(" ", "")
+        self.__commands = commands.replace(" ", "").replace("\n", "")
         self.__instructionPointer = 0
         self.__cells = IncrementalByteCellArray()
         self.__openingBracketIndexes = []

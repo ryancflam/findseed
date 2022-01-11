@@ -1264,6 +1264,31 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_footer(text="Notes: " + ", ".join(i for i in funcs.musicalNotes()))
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(description="Adds a timestamp to a YouTube video link, " +
+                                  "useful for mobile users who cannot copy links with timestamps.",
+                      aliases=["yt", "timestamp", "youtube"], usage="<YouTube video link> <timestamp>", name="yttimestamp")
+    async def yttimestamp(self, ctx, link, timestamp):
+        if "youtu" not in link.casefold():
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Not a YouTube link."))
+        s = 0
+        try:
+            for i in range(timestamp.count(":") + 1):
+                try:
+                    spl = timestamp.rsplit(":", 1)
+                    val = int(spl[1])
+                    timestamp = spl[0]
+                except IndexError:
+                    val = int(timestamp)
+                s += val * 60 ** i
+        except:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
+        if "youtu.be" in link.casefold():
+            link = link.split('?')[0] + "?"
+        else:
+            link = link.split('&')[0] + "&"
+        await ctx.reply(f"<{link}t={s}>")
+
     @commands.cooldown(1, 20, commands.BucketType.user)
     @commands.command(name="wolfram", description="Queries things using the Wolfram|Alpha API.",
                       aliases=["wolf", "wa", "wolframalpha", "query"], usage="<input>")

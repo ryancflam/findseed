@@ -165,7 +165,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         while time() - waiting < 60:
             try:
                 joinGame = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.channel and m.content.casefold() == "join", timeout=1
+                    "message", check=lambda m: m.channel == ctx.channel and m.content.casefold() == "join", timeout=1
                 )
             except TimeoutError:
                 continue
@@ -190,7 +190,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             self.client.loop.create_task(self.ntAwaitInput(game, player, game.getPlayer(count - 1)))
             try:
                 chips = game.getPlayer(count - 1).getChips()
-                await player.send(f"**== No Thanks ==**\n\nWelcome to No Thanks. You are player {str(count)}." + \
+                await player.send(f"**== No Thanks ==**\n\nWelcome to No Thanks. You are **Player {str(count)}**." + \
                                   f" Active channel: <#{ctx.channel.id}>\n\n**You have {chips} chips." + \
                                   f"You may hide or tell how many chips you have. Every time a card is drawn, you may choose" + \
                                   " to either take it and gain all of the card's chips, or pass it to the next player and " + \
@@ -309,7 +309,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         while time() - waiting < 60:
             try:
                 joinGame = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.channel and m.content.casefold() == "join", timeout=1
+                    "message", check=lambda m: m.channel == ctx.channel and m.content.casefold() == "join", timeout=1
                 )
             except TimeoutError:
                 continue
@@ -337,7 +337,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             hand = game.getHand(player)
             msg = f"`{', '.join(card for card in hand)}` ({len(hand)} left)"
             try:
-                await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are player {str(count)}." + \
+                await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are **Player {str(count)}**." + \
                                   f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}\n\n" + \
                                   "**Remember to say `uno` as soon as you play your second to last card!**")
             except:
