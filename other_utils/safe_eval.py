@@ -2,8 +2,9 @@ import ast
 
 
 class SafeEval:
-    def __init__(self, s: str):
-        self.__s = s
+    def __init__(self, toCompile: str):
+        self.__toCompile = toCompile.casefold().replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100") \
+            .replace("×", "*").replace(" ", "")
 
     def __evaluate(self, astt: ast.AST):
         if not isinstance(astt, ast.AST):
@@ -21,7 +22,7 @@ class SafeEval:
             n = gen.send(res)
 
     def __comp(self):
-        return compile(source=self.__s, filename="<unknown>", mode="eval", flags=ast.PyCF_ONLY_AST)
+        return compile(source=self.__toCompile, filename="<unknown>", mode="eval", flags=ast.PyCF_ONLY_AST)
 
     def safeEval(self):
         astt = self.__comp()

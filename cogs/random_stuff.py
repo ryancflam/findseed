@@ -1,4 +1,4 @@
-from asyncio import sleep, TimeoutError
+from asyncio import TimeoutError, sleep
 from random import choice, choices, randint, shuffle
 from time import time
 

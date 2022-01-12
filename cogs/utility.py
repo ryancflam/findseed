@@ -1,7 +1,8 @@
-from asyncio import sleep, TimeoutError
+from asyncio import TimeoutError, sleep
 from datetime import datetime, timedelta
 from dateutil import parser
-from json import dumps, JSONDecodeError
+from json import JSONDecodeError, dumps
+from math import sqrt
 from pathlib import Path
 from platform import system
 from random import choice
@@ -12,9 +13,9 @@ from time import time
 from urllib.parse import quote
 
 from asyncpraw import Reddit
-from discord import channel, Embed
+from discord import Embed, channel
 from discord.ext import commands
-from googletrans import constants, Translator
+from googletrans import Translator, constants
 
 import config
 from other_utils import funcs
@@ -734,8 +735,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="calc", description="Does simple math.",
                       aliases=["calculate", "calculator", "cal", "math", "maths", "safeeval"], usage="<input>")
     async def calc(self, ctx, *, inp):
-        inp = inp.casefold().replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100") \
-              .replace("×", "*").replace(" ", "")
         try:
             e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(SafeEval(inp).safeEval()))))
         except ZeroDivisionError:
@@ -780,6 +779,16 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             ])
             e = Embed(description=f"```{answer}```")
         except Exception:
+            e = funcs.errorEmbed(None, "Invalid input.")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="sqrt", usage="<input>",
+                      aliases=["square", "root"], description="Calculates the square root of a given value or math expession.")
+    async def sqrt(self, ctx, *, val):
+        try:
+            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(sqrt(SafeEval(val).safeEval())))))
+        except:
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 

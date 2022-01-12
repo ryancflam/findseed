@@ -1,7 +1,7 @@
 from datetime import datetime
 from time import time
 
-from discord import __version__, Embed, User
+from discord import Embed, User, __version__
 from discord.ext import commands
 from psutil import cpu_percent, disk_usage, virtual_memory
 
