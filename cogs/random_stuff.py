@@ -44,9 +44,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         else:
             q = choice(self.truths)
             type = "Truth"
-        e = Embed(title="Truth or Dare", description=q)
-        e.set_footer(text=type)
-        return e
+        return Embed(title="Truth or Dare", description=q).set_footer(text=type)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="oohasecretcommand", hidden=True,
@@ -79,10 +77,13 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             total = total1 + total2
             opt1 = data['option_1']
             opt2 = data['option_2']
+            info = data['moreinfo']
             e = Embed(title="Would You Rather",
                       description=f"🔵 {opt1 + ('' if opt1.endswith('.') else '.')}\n🔴 {opt2 + ('' if opt1.endswith('.') else '.')}")
             e.add_field(name="🔵 Option 1", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2))))
             e.add_field(name="🔴 Option 2", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2))))
+            if info:
+                e.set_footer(text=info)
             yes = True
         except Exception:
             e = funcs.errorEmbed(None, "Server error.")

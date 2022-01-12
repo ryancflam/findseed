@@ -18,7 +18,7 @@ def getPath():
 
 
 def readTxtLines(pathstr):
-    with open(f"{getPath()}/{pathstr}", "r") as f:
+    with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
         lines = f.readlines()
     f.close()
     return [i[:-1] for i in lines if i]
