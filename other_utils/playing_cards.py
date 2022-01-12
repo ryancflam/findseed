@@ -7,9 +7,11 @@ class PlayingCards:
             "A  ", "2  ", "3  ", "4  ", "5  ", "6  ", "7  ", "8  ", "9  ", "10 ", "J  ", "Q  ", "K  "
         ]
         self.__suit = ["♠", "♦", "♥", "♣"]
-        self.__cards = [x + y for y in self.__suit for x in self.__number]
+        self.__cards = [i + j for j in self.__suit for i in self.__number]
 
     def randomCard(self, amount: int=1):
+        if not 1 <= amount <= 52:
+            raise Exception("Amount must be 1-52 inclusive.")
         return sample(self.__cards, amount)
 
     @staticmethod
@@ -43,6 +45,5 @@ class PlayingCards:
 
     @staticmethod
     def returnCardImage(card):
-        card = card.replace("10", "0").replace("♠", "S").replace("♦", "D")
-        card = card.replace("♥", "H").replace("♣", "C").replace(" ", "")
+        card = card.replace("10", "0").replace("♠", "S").replace("♦", "D").replace("♥", "H").replace("♣", "C").replace(" ", "")
         return f"https://deckofcardsapi.com/static/img/{card[:1]}{card[-1]}.png"

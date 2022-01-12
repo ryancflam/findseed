@@ -13,7 +13,7 @@ AC_LOGO = "https://cdn.discordapp.com/attachments/771404776410972161/90643601798
 BD_KEY = "LOL"
 
 
-class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands relating to Animal Crossing: New Horizons.",
+class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands relating to *Animal Crossing: New Horizons*.",
                      command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
@@ -200,20 +200,20 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
-                                                "particular month in Animal Crossing: New Horizons.",
+                                                "particular month in *Animal Crossing: New Horizons*.",
                       aliases=["acarriving", "acarrive"], usage="[month]")
     async def acnew(self, ctx, month=""):
         await ctx.reply(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
-                                                    "particular month in Animal Crossing: New Horizons.",
+                                                    "particular month in *Animal Crossing: New Horizons*.",
                       aliases=["acleave"], usage="[month]")
     async def acleaving(self, ctx, month=""):
         await ctx.reply(embed=self.crittersListEmbed(month, mode=-1))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acart", description="Shows information about an Animal Crossing: New Horizons artwork.",
+    @commands.command(name="acart", description="Shows information about an *Animal Crossing: New Horizons* artwork.",
                       aliases=["acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="[artwork name]")
     async def acart(self, ctx, *, art: str=""):
         if not art:
@@ -244,7 +244,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acbug", description="Shows information about an Animal Crossing: New Horizons bug.",
+    @commands.command(name="acbug", description="Shows information about an *Animal Crossing: New Horizons* bug.",
                       aliases=["acnhbug", "acb"], usage="<bug name>")
     async def acbug(self, ctx, *, bug):
         try:
@@ -279,7 +279,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acfish", description="Shows information about an Animal Crossing: New Horizons fish.",
+    @commands.command(name="acfish", description="Shows information about an *Animal Crossing: New Horizons* fish.",
                       aliases=["acnhfish", "acf"], usage="<fish name>")
     async def acfish(self, ctx, *, fish):
         try:
@@ -313,7 +313,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acfossil", description="Shows information about an Animal Crossing: New Horizons fossil.",
+    @commands.command(name="acfossil", description="Shows information about an *Animal Crossing: New Horizons* fossil.",
                       aliases=["acnhfossil", "acfossils", "acnhfossils"], usage="<fossil name>")
     async def acfossil(self, ctx, *, fossil):
         try:
@@ -331,7 +331,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acpersonality", usage="[personality type]",
                       aliases=["acnhpersonality", "acpersonalities", "acnhpersonalities"],
-                      description="Shows information about an Animal Crossing: New Horizons villager personality.")
+                      description="Shows information about an *Animal Crossing: New Horizons* villager personality.")
     async def acpersonality(self, ctx, *, personality: str=""):
         personality = funcs.replaceCharacters(personality.casefold(), [" ", "-", "_"]).replace("uchi", "sisterly") \
                       .replace("bigsister", "sisterly").replace("snobby", "snooty").replace("grumpy", "cranky")
@@ -362,7 +362,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acsea", description="Shows information about an Animal Crossing: New Horizons sea creature.",
+    @commands.command(name="acsea", description="Shows information about an *Animal Crossing: New Horizons* sea creature.",
                       aliases=["acnhsea","acsc", "acnhsc"], usage="<sea creature name>")
     async def acsea(self, ctx, *, sea):
         try:
@@ -389,7 +389,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acvillager", description="Shows information about an Animal Crossing: New Horizons villager.",
+    @commands.command(name="acvillager", description="Shows information about an *Animal Crossing: New Horizons* villager.",
                       aliases=["acnhvillager", "acv", "vil", "acvil", "acnhvil"], usage="<villager name>")
     async def acvillager(self, ctx, *, villager):
         try:
@@ -442,7 +442,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acspecies", description="Shows information about an Animal Crossing: New Horizons villager species.",
+    @commands.command(name="acspecies", description="Shows information about an *Animal Crossing: New Horizons* villager species.",
                       aliases=["species"], usage="[species name]")
     async def acspecies(self, ctx, *, species: str=""):
         if not species:
@@ -483,7 +483,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvbd", aliases=["vbd", "acnhvbd"], usage="[month] [day]",
-                      description="Shows all Animal Crossing: New Horizons villagers who celebrates " + \
+                      description="Shows all *Animal Crossing: New Horizons* villagers who celebrates " + \
                                   f"their birthday in a given month or on a given date.")
     async def acvbd(self, ctx, month: str="", day: str=""):
         try:
@@ -537,26 +537,26 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
-                      description="Shows information about an Animal Crossing: New Horizons houseware furniture item.")
+                      description="Shows information about an *Animal Crossing: New Horizons* houseware furniture item.")
     async def achouseware(self, ctx, *, item):
         await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
                       usage="<item name (case sensitive)>",
-                      description="Shows information about an Animal Crossing: New Horizons wallmounted furniture item.")
+                      description="Shows information about an *Animal Crossing: New Horizons* wallmounted furniture item.")
     async def acwallmounted(self, ctx, *, item):
         await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
-                      description="Shows information about an Animal Crossing: New Horizons miscellaneous furniture item.")
+                      description="Shows information about an *Animal Crossing: New Horizons* miscellaneous furniture item.")
     async def acmisc(self, ctx, *, item):
         await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips"],
-                      description="Shows pattern information about the Animal Crossing: New Horizons stalk market.")
+                      description="Shows pattern information about the *Animal Crossing: New Horizons* stalk market.")
     async def acturnips(self, ctx):
         await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg", message="Credit:\n<https://twitter.com/MadzMasc>")
 

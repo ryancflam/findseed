@@ -36,7 +36,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         self.tickers = funcs.getTickers()
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="github", description="Returns statistics about a Github repository.",
+    @commands.command(name="github", description="Returns statistics about a GitHub repository.",
                       aliases=["loc", "code", "linesofcode", "repository", "repo"], usage='[username/repository]')
     async def repository(self, ctx, *, repo: str=""):
         await ctx.send("Getting repository statistics. Please wait...")
@@ -62,7 +62,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="covid", description="Gathers COVID-19 data.",
+    @commands.command(name="covid", description="Gets COVID-19 data.",
                       aliases=["coronavirus", "corona", "covid19", "cv", "c19", "cv19"], usage="[location]")
     async def covid(self, ctx, *, searchtype: str=""):
         headers = {
@@ -137,7 +137,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="flight", description="Gets information about a flight",
+    @commands.command(name="flight", description="Gets information about a flight.",
                       aliases=["flightinfo", "flightradar"], usage="<flight number>")
     async def flight(self, ctx, *, flightstr: str=""):
         if flightstr == "":
@@ -288,7 +288,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="currency", description="Converts the price of one currency to another",
+    @commands.command(name="currency", description="Converts the price of one currency to another.",
                       aliases=["fiat", "cc", "convertcurrency", "currencyconvert"], usage="<from currency> <to currency> [amount]")
     async def currency(self, ctx, fromC, toC, *, amount: str="1"):
         try:

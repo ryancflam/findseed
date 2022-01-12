@@ -1,7 +1,7 @@
 from random import sample
 from time import time
 
-from other_utils.funcs import timeDifferenceStr
+from other_utils.funcs import replaceCharacters, timeDifferenceStr
 
 
 class BullsAndCows:
@@ -9,36 +9,36 @@ class BullsAndCows:
         self.__startTime = time()
         self.__attempts = 0
         self.__number = "".join(map(str, sample(range(1, 10), 4)))
-        self.__stopped = False
+        self.__gameEnd = False
 
     def getNumber(self, sep=False):
-        return self.__number if not sep else self.__number[:1] + "," + self.__number[1:]
+        return self.__number if not sep else "-".join(self.__number)
 
     def getAttempts(self):
         return self.__attempts
 
-    def getStoppedBool(self):
-        return self.__stopped
+    def getGameEnd(self):
+        return self.__gameEnd
 
     def getTime(self):
         _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
         return m, s
 
     def guess(self, value: str):
-        value = value.replace(" ", "").replace(",", "")
+        value = replaceCharacters(value, [" ", ",", "-"])
         if value.casefold() == "quit" or value.casefold() == "exit" or value.casefold() == "stop":
-            self.__stopped = True
+            self.__gameEnd = True
             return 0, 0
         if value.casefold() == "help" or value.casefold() == "time":
             return 0, 0
-        if len(value) != 4:
-            raise Exception("Number must contain exactly four digits.")
         try:
-            aa, bb, cc, dd = int(value[0]), int(value[1]), int(value[2]), int(value[3])
+            _ = int(value)
         except ValueError:
             raise Exception("Invalid characters found.")
-        if aa == bb or aa == cc or aa == dd or bb == cc or bb == dd or cc == dd:
-            raise Exception("Duplicates found.")
+        if len(value) != 4:
+            raise Exception("Number must contain exactly four digits.")
+        if len(set(value)) != 4:
+            raise Exception("Duplicate characters found.")
         bulls, cows = 0, 0
         for i in value:
             for j in self.__number:
@@ -49,5 +49,5 @@ class BullsAndCows:
                         cows += 1
         self.__attempts += 1
         if bulls == 4:
-            self.__stopped = True
+            self.__gameEnd = True
         return bulls, cows

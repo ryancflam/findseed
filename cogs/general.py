@@ -14,7 +14,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         self.starttime = time()
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="ping", description="Shows the latency of the bot.", aliases=["p", "pong", "latency"])
+    @commands.command(name="ping", description="Tests the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
         ptime = int(round(time() * 1000))
         msg = await ctx.reply(":ping_pong: Pong! `Pinging...`")
@@ -215,7 +215,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         await ctx.reply(embed=Embed(title="Channel Pins", description=funcs.formatting("{:,}".format(len(await ctx.pins())))))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="poll", description="Makes a poll.", usage="<question>", aliases=["questionnaire"])
+    @commands.command(name="poll", description="Makes a poll.", usage="<question>", aliases=["questionnaire", "question", "survey"])
     @commands.guild_only()
     async def poll(self, ctx, *, question):
         if len(question) > 200:

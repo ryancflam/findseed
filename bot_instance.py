@@ -72,14 +72,7 @@ class BotInstance(Bot):
                 }
             }
         )
-        self.generateJson(
-            "finddream",
-            {
-                "iteration": 0,
-                "mostPearls": 0,
-                "mostRods": 0
-            }
-        )
+        self.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
         self.generateJson("blacklist", {"servers": [], "users": []})
         self.generateJson("unprompted_bots", {"ids": []})
         self.generateJson("unprompted_messages", {"servers": []})
@@ -94,10 +87,7 @@ class BotInstance(Bot):
     def kill(self):
         try:
             self.__loop.stop()
-            tasks = asyncio.gather(
-                *asyncio.Task.all_tasks(),
-                loop=self.__loop
-            )
+            tasks = asyncio.gather(*asyncio.Task.all_tasks(), loop=self.__loop)
             tasks.cancel()
             self.__loop.run_forever()
             tasks.exception()
@@ -123,13 +113,7 @@ class BotInstance(Bot):
             btc = not btc
 
     async def presence(self, name):
-        await self.change_presence(
-            activity=Activity(
-                name=name,
-                type=self.__activityType
-            ),
-            status=self.__status
-        )
+        await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
 
     async def on_ready(self):
         print(f"Logged in as: {self.user}")
@@ -142,14 +126,10 @@ class BotInstance(Bot):
     async def on_message(self, message):
         ctx = await self.get_context(message)
         if ctx.valid and not self.is_ready() and userNotBlacklisted(self, message):
-            return await message.channel.send(
-                f"{self.user.name} is not ready yet, please wait!"
-            )
+            return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
         if self.is_ready() and userNotBlacklisted(self, message):
             while message.content.startswith(f"{self.command_prefix} "):
-                message.content = message.content.replace(
-                    f"{self.command_prefix} ", f"{self.command_prefix}", 1
-                )
+                message.content = message.content.replace(f"{self.command_prefix} ", f"{self.command_prefix}", 1)
             if ctx.valid:
                 await message.channel.trigger_typing()
             await self.process_commands(message)

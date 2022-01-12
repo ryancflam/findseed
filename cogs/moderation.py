@@ -4,13 +4,12 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class Moderation(commands.Cog, name="Moderation", description="Moderation and member-management commands for server staff."):
+class Moderation(commands.Cog, name="Moderation", description="Simple moderation and member-management commands for server staff."):
     def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="clear", description="Clears channel messages.", usage="<amount>",
-                      aliases=["prune", "purge"])
+    @commands.command(name="clear", description="Clears channel messages.", usage="<amount>", aliases=["prune", "purge"])
     @commands.bot_has_permissions(read_message_history=True, manage_messages=True)
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, amount=""):
@@ -36,8 +35,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="kick", description="Kicks a user from a server.",
-                      usage="<@mention> [reason]")
+    @commands.command(name="kick", description="Kicks a user from your server.", usage="<@mention> [reason]")
     @commands.bot_has_permissions(kick_members=True)
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: Member, *, reason=None):
@@ -54,8 +52,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot kick that user."))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="ban", description="Bans a user from a server.",
-                      usage="<@mention> [reason]")
+    @commands.command(name="ban", description="Bans a user from your server.", usage="<@mention> [reason]")
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: Member, *, reason=None):
@@ -72,8 +69,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot ban that user."))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="unban", description="Unbans a user on a server.",
-                      usage="<username#discriminator>")
+    @commands.command(name="unban", description="Unbans a user on your server.", usage="<username#discriminator>")
     @commands.bot_has_permissions(ban_members=True, manage_guild=True)
     @commands.has_permissions(ban_members=True, manage_guild=True)
     async def unban(self, ctx, *, member=""):
@@ -89,8 +85,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation and me
             await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="banlist", description="Returns a list of banned users on a server.",
-                      aliases=["bans"])
+    @commands.command(name="banlist", description="Returns a list of banned users on your server.", aliases=["bans"])
     @commands.bot_has_permissions(manage_guild=True)
     @commands.has_permissions(manage_guild=True)
     async def banlist(self, ctx):

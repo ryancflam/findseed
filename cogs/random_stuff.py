@@ -24,7 +24,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.trumpquotes = funcs.readJson("assets/trump_quotes.json")
 
     @staticmethod
-    def RGB(value):
+    def rgb(value):
         if value is not None:
             try:
                 value = int(str(value).replace(",", ""))
@@ -289,7 +289,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await funcs.sendImage(ctx, image, name=image.split("thecatapi.com/images/")[1])
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="trumpthinks", description="What Donald Trump thinks about something or someone.",
+    @commands.command(name="trumpthinks", description="What does Donald Trump think about something or someone?",
                       aliases=["whatdoestrumpthink", "plstrump", "trump", "asktrump", "tt", "tq"], usage="<input>")
     async def trumpthinks(self, ctx, *, something: str=""):
         if something == "":
@@ -419,7 +419,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="8ball", description="Ask 8ball a question.",
                       aliases=["8b", "8"], usage="[input]")
-    async def eightball(self, ctx, *, msg=""):
+    async def eightball(self, ctx, *, msg: str=""):
         mention = ctx.author.mention
         responses = [
             "It is certain.",
@@ -444,14 +444,14 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             "Very doubtful."
         ]
         await ctx.reply(
-            f":8ball: {mention}: `{choice(['Empty input...', 'I cannot hear you.']) if msg == '' else choice(responses)}`"
+            f":8ball: {mention}: `{choice(['Empty input...', 'I cannot hear you.']) if not msg else choice(responses)}`"
         )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="coin", description="Flips coins.", usage="[amount up to 100]",
                       aliases=["coins", "flip", "fc", "flipcoin", "coinflip",
                                "flipcoins", "tosscoins", "cointoss", "tosscoin", "toss"])
-    async def coin(self, ctx, amount="1"):
+    async def coin(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
@@ -488,7 +488,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="die", description="Rolls dice.", usage="[amount up to 100]",
                       aliases=["dice", "roll", "rd", "rolldice", "rolldie", "diceroll", "dieroll"])
-    async def die(self, ctx, amount="1"):
+    async def die(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
@@ -519,15 +519,16 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="card", description="Deals cards.", usage="[amount up to 52]",
                       aliases=["rc", "cards", "deal", "randomcard", "randomcards", "dc", "dealcard", "dealcards"])
-    async def card(self, ctx, amount="1"):
+    async def card(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
             amount = 1
-        if not 0 < amount < 53:
-            return await ctx.reply(embed=funcs.errorEmbed(None, "Amount must be between 1 and 52."))
         pc = PlayingCards()
-        cards = pc.randomCard(amount)
+        try:
+            cards = pc.randomCard(amount)
+        except Exception as ex:
+            return await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
         if amount == 1:
             e = Embed(title=pc.returnCardName(cards[0]), description=f"Requested by: {ctx.author.mention}")
             e.set_image(url=pc.returnCardImage(cards[0]))
@@ -567,13 +568,13 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 try:
                     r, g, b = (int(colour[i:i + 2], 16) for i in (0, 2, 4))
                 except ValueError:
-                    r = self.RGB(r)
+                    r = self.rgb(r)
             else:
-                r = self.RGB(r)
+                r = self.rgb(r)
         else:
-            r = self.RGB(r)
-        g = self.RGB(g)
-        b = self.RGB(b)
+            r = self.rgb(r)
+        g = self.rgb(g)
+        b = self.rgb(b)
         colour = "%02x%02x%02x" % (r, g, b)
         e = Embed(colour=Colour(int(colour, 16)), title="#" + colour.casefold(),
                   description=f"Requested by: {ctx.author.mention}")

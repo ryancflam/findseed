@@ -18,7 +18,7 @@ from other_utils import funcs
 BARTER_LIMIT = 896
 
 
-class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to Minecraft and Minecraft speedrunning."):
+class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to *Minecraft* and *Minecraft* speedrunning."):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.divinetravel = funcs.readJson("assets/divine_travel.json")
@@ -128,7 +128,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(msg)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="finddream", description="Can you get Dream's" + ' Minecraft speedrunning "luck"? ' + \
+    @commands.command(name="finddream", description="Can you get Dream's" + ' *Minecraft* speedrunning "luck"? ' + \
                                                     "Test your luck using this command!",
                       aliases=["dream", "dreamsimulator", "dreamsim", "dreamluck", "fd"])
     async def finddream(self, ctx):
@@ -256,7 +256,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(description="Simulates Minecraft 1.16.1 piglin bartering. Test your luck using this command!",
+    @commands.command(description="Simulates *Minecraft* 1.16.1 piglin bartering. Test your luck using this command!",
                       aliases=["barter", "piglin", "poglin", "bartering", "barteringsim"], name="bartersim",
                       usage=f"[gold ingots up to 10,000]\n\nAlternative usage(s):\n\n- <gold blocks up to 1,111 (ending with b)>")
     async def bartersim(self, ctx, goldingots: str="1"):
@@ -309,7 +309,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="pearlbarter", description="Finds the probability of getting 12 or more ender pearls" + \
-                                                      " in a given number of piglin trades in Minecraft 1.16.1.",
+                                                      " in a given number of piglin trades in *Minecraft* 1.16.1.",
                       aliases=["pearltrade", "pearlbartering", "barteringpearl", "barterpearl", "barterpearls"],
                       usage=f"[total gold ingots up to {BARTER_LIMIT}]")
     async def pearlbarter(self, ctx, trades: str="2"):
@@ -325,7 +325,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                         f" with {n} gold ingots is:\n\n`{round(x * 100, 5)}%` (1 in {round(1 / x, 5)})")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="blindtravel", description="A Minecraft: Java Edition speedrunning tool that " + \
+    @commands.command(name="blindtravel", description="A *Minecraft: Java Edition* speedrunning tool that " + \
                                                       "should be used when you want to build another por" + \
                                                       "tal in the Nether before throwing any eyes of end" + \
                                                       "er. To use this command, in the game, press F3+C," + \
@@ -356,7 +356,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="educatedtravel", description="A Minecraft: Java Edition speedrunning tool th" + \
+    @commands.command(name="educatedtravel", description="A *Minecraft: Java Edition* speedrunning tool th" + \
                                                          "at should be used when you want to build anoth" + \
                                                          "er portal in the Nether after throwing an eye " + \
                                                          "of ender. To use this command, in the game, th" + \
@@ -387,7 +387,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="doubletravel", description="A Minecraft: Java Edition speedrunning tool that" + \
+    @commands.command(name="doubletravel", description="A *Minecraft: Java Edition* speedrunning tool that" + \
                                                        ", whilst you are in the Nether, gets a spot for " + \
                                                        "you to make your first portal inside the second " + \
                                                        "ring of strongholds. To use this command, in the" + \
@@ -421,7 +421,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="safeblind", description="A Minecraft: Java Edition speedrunning tool that, s" + \
+    @commands.command(name="safeblind", description="A *Minecraft: Java Edition* speedrunning tool that, s" + \
                                                     "imilar to `blindtravel`, should be used when you wan" + \
                                                     "t to build another portal in the Nether before thro" + \
                                                     "wing any eyes of ender. This on average will get yo" + \
@@ -455,7 +455,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="perfecttravel", description="A Minecraft: Java Edition speedrunning tool that att" + \
+    @commands.command(name="perfecttravel", description="A *Minecraft: Java Edition* speedrunning tool that att" + \
                                                         "empts to take you directly to the stronghold portal " + \
                                                         "room with the use of two Nether portals and F3 data." + \
                                                         " To use this command, in the game, leave your first " + \
@@ -511,7 +511,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="triangulation", description="A Minecraft: Java Edition speedrunning tool tha" + \
+    @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
                                                         "t attempts to locate the stronghold using both " + \
                                                         'the "8, 8" rule and triangulation. To use this ' + \
                                                         "command, in the game, throw and eye, stand stil" + \
@@ -598,7 +598,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.send("You have been inactive for over 20 minutes, stopping triangulation program.")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="coordsdist", description="Calculates the distance between two sets of Minecraft coordinates.",
+    @commands.command(name="coordsdist", description="Calculates the distance between two sets of *Minecraft* coordinates.",
                       aliases=["coords", "distance", "dist", "coord", "coordinates", "coordinate"],
                       usage="<x #1> <z #1> <x #2> <z #2>\n\nAlternative usage(s):\n\n- <F3+C data> <x> <z>")
     async def coords(self, ctx, *, inp: str):
@@ -622,8 +622,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="speedrunwr", description="Shows the current world records for the solo Any% Glitchless" + \
-                                               "Minecraft: Java Edition speedrun categories.",
+    @commands.command(name="speedrunwr", description="Shows the current world records for the solo Any% Glitchless " + \
+                                                     "*Minecraft: Java Edition* speedrun categories.",
                       aliases=["worldrecord", "wr", "src", "speedrun", "mcwr", "any", "ssg", "rsg"])
     async def speedrunwr(self, ctx):
         await ctx.send("Getting speedrun.com data. Please wait...")
@@ -668,7 +668,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="skin", description="Gets the skin of a Minecraft user.", aliases=["mcskin"],
+    @commands.command(name="skin", description="Gets the skin of a *Minecraft: Java Edition* user.", aliases=["mcskin"],
                       usage="[username]")
     async def skin(self, ctx, username: str=""):
         if username == "":
@@ -691,7 +691,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="mcserver", description="Gets the current status of a Minecraft server.",
+    @commands.command(name="mcserver", description="Gets the current status of a *Minecraft: Java Edition* server.",
                       usage="[server address]")
     async def mcserver(self, ctx, *, ipaddress: str=""):
         ipaddress = ipaddress.casefold().replace(" ", "") or "mc.hypixel.net"
@@ -736,7 +736,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="fossils", description="Brings up a Minecraft fossil identification chart for divine travel.",
+    @commands.command(name="fossils", description="Brings up a *Minecraft* fossil identification chart for divine travel.",
                       aliases=["ft", "fossiltable", "fossilchart", "fossil"])
     async def fossils(self, ctx):
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
@@ -747,7 +747,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="divinetravel", description="Brings up a Minecraft divine travel chart.",
+    @commands.command(name="divinetravel", description="Brings up a *Minecraft* divine travel chart.",
                       aliases=["dt", "divine", "div", "dv"], usage="[option]")
     async def divinetravel(self, ctx, *, option: str=""):
         if option:

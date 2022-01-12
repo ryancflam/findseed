@@ -37,7 +37,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         return value / 1000000000000000000
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS to NEO ratio.",
+    @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS-to-NEO ratio.",
                       aliases=["n3", "n3o", "noe", "n30", "n", "n**"], usage="[amount of NEO or GAS]", name="neo")
     async def neo(self, ctx, amount="1"):
         try:
@@ -715,7 +715,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ethcontract", aliases=["ec", "econtract", "smartcontract"],
-                      description="Shows information about an Ethereum smart contract.", usage="<contract address>")
+                      description="Gets information about an Ethereum smart contract.", usage="<contract address>")
     async def ethcontract(self, ctx, *, hashstr: str=""):
         inphash = funcs.replaceCharacters(str(hashstr).casefold(), ["`", " ", ","])
         if inphash == "":
