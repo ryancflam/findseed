@@ -1,7 +1,7 @@
 from random import choice
 from time import time
 
-from other_utils.funcs import getPath, timeDifferenceStr
+from other_utils.funcs import readTxtLines, timeDifferenceStr
 
 
 class Hangman:
@@ -19,18 +19,11 @@ class Hangman:
     ]
 
     def __init__(self):
-        self.__word = self.__randomWord()
+        self.__word = choice(readTxtLines("assets/hangman_words.txt"))
         self.__dashes = str("-" * len(self.__word))
         self.__lives = 10
         self.__guesses = set()
         self.__startTime = time()
-
-    @staticmethod
-    def __randomWord():
-        with open(f"{getPath()}/assets/hangman_words.txt", "r") as f:
-            lines = f.readlines()
-        f.close()
-        return choice(lines)[:-1]
 
     @staticmethod
     def __dash(secret, d, r):

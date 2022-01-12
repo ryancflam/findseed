@@ -17,6 +17,13 @@ def getPath():
     return path.dirname(path.realpath(__file__))[:-12]
 
 
+def readTxtLines(pathstr):
+    with open(f"{getPath()}/{pathstr}", "r") as f:
+        lines = f.readlines()
+    f.close()
+    return [i[:-1] for i in lines if i]
+
+
 def readJson(pathstr):
     with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
         data = load(f)
@@ -420,7 +427,7 @@ def getTickers():
             time.sleep(30)
 
 
-async def readTxt(message):
+async def readTxtAttachment(message):
     attachment = await message.attachments[0].read()
     return attachment.decode("utf-8")
 

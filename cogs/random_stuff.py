@@ -22,6 +22,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.phoneCallChannels = []
         self.personalityTest = funcs.readJson("assets/personality_test.json")
         self.trumpquotes = funcs.readJson("assets/trump_quotes.json")
+        self.truths = funcs.readTxtLines("assets/truths.txt")
+        self.dares = funcs.readTxtLines("assets/dares.txt")
+        self.nhie = funcs.readTxtLines("assets/nhie.txt")
 
     @staticmethod
     def rgb(value):
@@ -33,6 +36,17 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 return randint(0, 255)
         else:
             return randint(0, 255)
+
+    def todEmbed(self, dare: int=0):
+        if dare:
+            q = choice(self.dares)
+            type = "Dare"
+        else:
+            q = choice(self.truths)
+            type = "Truth"
+        e = Embed(title="Truth or Dare", description=q)
+        e.set_footer(text=type)
+        return e
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="oohasecretcommand", hidden=True,
@@ -52,6 +66,53 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                              "h̶̙̳̖̲̙̳̲͎͕̝̝͈͙̝̏́̃̍̑́͛̈̄̿̚͘͜ỉ̶̜̦̓͗͊̓͒̏̕͝n̶̨͔̙͎̠̲̼̩͖̖͕͐̑̽̃͊͜͝ͅͅg̶̞͎̊̂̃͆́͑̿̚͝͝.̷̨̢̡͇̜͙̼̬̗͕͙̣̤͕̈́͆͜")
         await sleep(0.5)
         await m.delete()
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="wyr", description="Sends a random Would You Rather question.",
+                      aliases=["rather", "wouldyourather"])
+    async def wyr(self, ctx):
+        try:
+            res = await funcs.getRequest("http://either.io/questions/next/1")
+            data = res.json()["questions"][0]
+            total1 = int(data['option1_total'])
+            total2 = int(data['option2_total'])
+            total = total1 + total2
+            opt1 = data['option_1']
+            opt2 = data['option_2']
+            e = Embed(title="Would You Rather",
+                      description=f"🔵 {opt1 + ('' if opt1.endswith('.') else '.')}\n🔴 {opt2 + ('' if opt1.endswith('.') else '.')}")
+            e.add_field(name="🔵 Option 1", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2))))
+            e.add_field(name="🔴 Option 2", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2))))
+            yes = True
+        except Exception:
+            e = funcs.errorEmbed(None, "Server error.")
+            yes = False
+        msg = await ctx.send(embed=e)
+        if yes:
+            await msg.add_reaction("🔵")
+            await msg.add_reaction("🔴")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="nhie", description="Sends a random Never Have I Ever question.",
+                      aliases=["never", "ever", "neverhavei", "neverhaveiever"])
+    async def nhie(self, ctx):
+        await ctx.send(embed=Embed(title="Never Have I Ever...", description="..." + choice(self.nhie)))
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="tod", description="Sends a random Truth or Dare question.",
+                      aliases=["truthordare"])
+    async def tod(self, ctx):
+        await ctx.send(embed=self.todEmbed(dare=randint(0, 1)))
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="truth", description="Sends a random Truth or Dare truth question.")
+    async def truth(self, ctx):
+        await ctx.send(embed=self.todEmbed())
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="dare", description="Sends a random Truth or Dare dare.")
+    async def dare(self, ctx):
+        await ctx.send(embed=self.todEmbed(dare=1))
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",

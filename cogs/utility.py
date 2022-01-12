@@ -479,7 +479,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             content = option.content
             try:
                 if option.attachments:
-                    content = await funcs.readTxt(option)
+                    content = await funcs.readTxtAttachment(option)
                 code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
                 if code == "quit":
                     return await option.reply("Cancelling compilation...")
@@ -800,7 +800,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     async def wordcount(self, ctx, *, inp=""):
         if ctx.message.attachments:
             try:
-                inp = await funcs.readTxt(ctx.message)
+                inp = await funcs.readTxtAttachment(ctx.message)
             except:
                 inp = inp
         if not inp:
