@@ -538,13 +538,6 @@ async def sendImage(ctx, url: str, name: str="image.png", message=None):
     await ctx.reply(message, file=File(await getImage(url), name))
 
 
-async def sendEmbedToChannel(channel: int, embed):
-    try:
-        await channel.send(embed=embed)
-    except Exception as ex:
-        print(ex)
-
-
 async def postRequest(url, data=None, headers=None, timeout=None, verify=True, json=None):
     async with AsyncClient(verify=verify) as session:
         res = await session.post(url, data=data, headers=headers, timeout=timeout, json=json)
