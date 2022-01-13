@@ -513,7 +513,7 @@ async def sendImage(ctx, url: str, name: str="image.png", message=None):
 
 async def sendEmbedToChannel(channelID: int, embed):
     channel = channelID
-    #print(embed)
+    print(embed)
     #await channel.send(embed=embed)
 
 

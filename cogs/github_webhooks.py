@@ -61,7 +61,8 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                     e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                     task = loop().create_task(funcs.sendEmbedToChannel(channelID, e))
                     loop().run_until_complete(task)
-                except:
+                except Exception as ex:
+                    print(ex)
                     pass
             return "success", 200
         abort(400)
