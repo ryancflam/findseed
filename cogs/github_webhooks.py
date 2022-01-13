@@ -51,16 +51,16 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                 headcommit = data['head_commit']
                 commits = data["commits"]
                 e = Embed(
-                    title=f"{len(commits)} New Commit{'' if len(commits) == 1 else 's'} - {headcommit['url']}",
-                    description=""
+                    title=f"{len(commits)} New Commit{'' if len(commits) == 1 else 's'}",
+                    description=headcommit['url']
                 )
                 e.set_author(name=repo["full_name"] + f" ({data['ref']})",
                              icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
                 for commit in commits:
                     user = commit['committer']['username']
                     message = commit['message']
-                    e.description += f"`{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
-                                     f"- [{user}](https://github.com/{user})\n"
+                    e.description += f"`\n{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
+                                     f"- [{user}](https://github.com/{user})"
                 e.set_footer(text=f"Commit Time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                 executeSend(e)
             except:
@@ -75,17 +75,8 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         Thread(target=self.run).start()
 
 
-async def sendEmbedToChannels(embed: Embed):
-    for channel in CHANNEL_LIST[:-1]:
-        if channel:
-            try:
-                await channel.send(embed=embed)
-            except:
-                pass
-
-
-def executeSend(e):
-    CHANNEL_LIST[-1].loop.create_task(sendEmbedToChannels(e))
+def executeSend(embed):
+    CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(embed, CHANNEL_LIST[:-1]))
 
 
 def setup(client: commands.Bot):
