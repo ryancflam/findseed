@@ -173,7 +173,7 @@ def btcOrSat(sats):
     else:
         sats = round(sats * 0.00000001, 8)
         unit = " BTC"
-    return removeDotZero("{:,}".format(sats))
+    return removeDotZero("{:,}".format(sats)) + unit
 
 
 def dateDifference(dateobj, dateobj2):
