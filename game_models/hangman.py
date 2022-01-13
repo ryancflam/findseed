@@ -19,7 +19,7 @@ class Hangman:
     ]
 
     def __init__(self):
-        self.__word = choice(readTxtLines("assets/hangman_words.txt"))
+        self.__word = choice(readTxtLines("assets/chat_games/hangman_words.txt"))
         self.__dashes = str("-" * len(self.__word))
         self.__lives = 10
         self.__guesses = set()

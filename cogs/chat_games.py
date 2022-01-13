@@ -360,7 +360,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     colour=colour
                 )
                 file = File(
-                    f"{funcs.getPath()}/assets/uno_cards/" + \
+                    f"{funcs.getPath()}/assets/chat_games/uno_cards/" + \
                     f"{'Xmas_' if datetime.now().month == 12 else ''}{discard.replace(' ', '_')}.png",
                     filename="card.png"
                 )
@@ -515,7 +515,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             colour = self.unoEmbedColour(discard)
             e = Embed(title="Uno", description=f"The final card - `{discard}`", colour=colour)
             file = File(
-                f"{funcs.getPath()}/assets/uno_cards/" + \
+                f"{funcs.getPath()}/assets/chat_games/uno_cards/" + \
                 f"{'Xmas_' if datetime.now().month == 12 else ''}{discard.replace(' ', '_')}.png",
                 filename="card.png"
             )

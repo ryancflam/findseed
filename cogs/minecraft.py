@@ -95,7 +95,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         data["calls"] += 1
         calls = data["calls"]
         funcs.dumpJson("data/findseed.json", data)
-        file = File(f"{funcs.getPath()}/assets/minecraft/{eyes}eye.png", filename="portal.png")
+        file = File(f"{funcs.getPath()}/assets/minecraft/portal_frame_images/{eyes}eye.png", filename="portal.png")
         foundTime = "just now"
         if not update:
             timestr = funcs.timeDifferenceStr(time(), highestTime)
