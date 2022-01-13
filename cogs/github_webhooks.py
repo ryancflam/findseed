@@ -62,7 +62,9 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                             e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
                         e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                         loop = new_event_loop()
+                        print(e)
                         run_coroutine_threadsafe(sendEmbedToChannel(channel, e), loop).result()
+                        print(1)
                     except Exception as ex:
                         print(ex)
                         pass
