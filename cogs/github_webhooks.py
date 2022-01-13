@@ -1,6 +1,5 @@
 # Hidden category
 
-from asyncio import new_event_loop as loop
 from threading import Thread
 
 from discord import Embed
@@ -20,7 +19,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         self.client = client
         self.host = "0.0.0.0"
         self.port = 8080
-        if CHANNEL_LIST:
+        if CHANNEL_LIST[:-1]:
             self.startServer()
 
     @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
@@ -28,7 +27,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
-        for channel in CHANNEL_LIST:
+        for channel in CHANNEL_LIST[:-1]:
             if channel:
                 try:
                     name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
@@ -60,7 +59,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                     e.description += f"`{commit['id'][:7]}` {message[:50] + '...' if len(message) > 50 else ''} " + \
                                      f"- [{user}](https://github.com/{user})\n"
                 e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                loop().create_task(sendEmbedToChannels(e))
+                executeSend(e)
             except Exception as ex:
                 print(1 + str(ex))
                 pass
@@ -75,12 +74,16 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
 
 
 async def sendEmbedToChannels(embed: Embed):
-    for channel in CHANNEL_LIST:
+    for channel in CHANNEL_LIST[:-1]:
         if channel:
             try:
                 await channel.send(embed=embed)
             except Exception as ex:
                 print(ex)
+
+
+def executeSend(e):
+    CHANNEL_LIST[-1].loop.create_task(sendEmbedToChannels(e))
 
 
 def setup(client: commands.Bot):
@@ -89,4 +92,5 @@ def setup(client: commands.Bot):
         channel = client.get_channel(channelID)
         if channel:
             CHANNEL_LIST.append(channel)
+    CHANNEL_LIST.append(client)
     client.add_cog(GitHubWebhooks(client))
