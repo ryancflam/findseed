@@ -38,22 +38,18 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
     @staticmethod
-    async def sendEmbed(channel, embed):
-        await channel.send(embed=embed)
-
-    @staticmethod
     @APP.route("/")
     def home():
         return "GitHub Webhooks cog is active."
 
+    @staticmethod
     @APP.route("/git", methods=["POST"])
-    def gitlog(self):
+    def gitlog():
         if request.method == "POST":
             data = request.json
-            headcommit = data['head_commit']
             for channelID in config.githubWebhooks:
                 try:
-                    channel = self.client.get_channel(channelID)
+                    headcommit = data['head_commit']
                     commits = data["commits"]
                     e = Embed(
                         title=f"[{len(commits)} New Commit{'' if len(commits) == 1 else 's'}]({headcommit['url']})",
@@ -63,7 +59,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         user = commit['committer']['username']
                         e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
                     e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                    task = loop().create_task(self.sendEmbed(channel, e))
+                    task = loop().create_task(funcs.sendEmbedToChannel(channelID, e))
                     loop().run_until_complete(task)
                 except:
                     pass
