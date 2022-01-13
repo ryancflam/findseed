@@ -495,6 +495,33 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
     return success, page
 
 
+def reloadCog(client, cog):
+    try:
+        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        client.reload_extension(f"cogs.{cog}")
+        print(f"Reloaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def loadCog(client, cog):
+    try:
+        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        client.load_extension(f"cogs.{cog}")
+        print(f"Loaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def unloadCog(client, cog):
+    try:
+        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        client.unload_extension(f"cogs.{cog}")
+        print(f"Unloaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)

@@ -186,8 +186,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         if cog == "":
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
-            self.client.reload_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
-            print(f"Reloaded cog: {cog}")
+            funcs.reloadCog(self.client, cog)
             await ctx.reply(":ok_hand:")
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
@@ -198,8 +197,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         if cog == "":
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
-            self.client.load_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
-            print(f"Loaded cog: {cog}")
+            funcs.loadCog(self.client, cog)
             await ctx.reply(":ok_hand:")
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
@@ -210,8 +208,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         if cog == "":
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         try:
-            self.client.unload_extension(f"cogs.{cog.casefold().replace(' ', '_').replace('.py', '')}")
-            print(f"Unloaded cog: {cog}")
+            funcs.unloadCog(self.client, cog)
             await ctx.reply(":ok_hand:")
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))

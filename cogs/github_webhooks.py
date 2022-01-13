@@ -7,7 +7,7 @@ from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, request
 
-import config
+from config import githubWebhooks
 from other_utils import funcs
 
 APP = Flask("")
@@ -28,8 +28,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
-        for channelID in config.githubWebhooks:
-            channel = self.client.get_channel(channelID)
+        for channel in CHANNEL_LIST:
             if channel:
                 try:
                     name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
@@ -76,6 +75,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
 
 
 def setup(client: commands.Bot):
-    for channelID in config.githubWebhooks:
+    global CHANNEL_LIST
+    for channelID in githubWebhooks:
         CHANNEL_LIST.append(client.get_channel(channelID))
     client.add_cog(GitHubWebhooks(client))

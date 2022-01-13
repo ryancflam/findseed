@@ -8,7 +8,7 @@ from time import time
 from discord import Activity, Intents
 from discord.ext.commands import Bot
 
-from other_utils.funcs import getPath, getRequest, userNotBlacklisted
+from other_utils.funcs import getPath, getRequest, loadCog, reloadCog, userNotBlacklisted
 
 PATH = getPath()
 
@@ -80,8 +80,7 @@ class BotInstance(Bot):
     def startup(self):
         for cog in listdir(f"{PATH}/cogs"):
             if cog.endswith(".py"):
-                self.load_extension(f"cogs.{cog[:-3]}")
-                print(f"Loaded cog: {cog[:-3]}")
+                loadCog(self, cog[:-3])
         super().run(self.__token, bot=True, reconnect=True)
 
     def kill(self):
@@ -116,6 +115,10 @@ class BotInstance(Bot):
         await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
 
     async def on_ready(self):
+        try:
+            reloadCog(self, "github_webhooks")
+        except:
+            pass
         print(f"Logged in as: {self.user}")
         await (await self.application_info()).owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
