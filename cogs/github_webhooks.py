@@ -47,22 +47,21 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     def gitlog():
         if request.method == "POST":
             data = request.json
-            for channel in CHANNEL_LIST:
-                if channel:
-                    try:
-                        headcommit = data['head_commit']
-                        commits = data["commits"]
-                        e = Embed(
-                            title=f"[{len(commits)} New Commit{'' if len(commits) == 1 else 's'}]({headcommit['url']})",
-                            description=""
-                        )
-                        for commit in commits:
-                            user = commit['committer']['username']
-                            e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
-                        e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                        loop().run_until_complete(sendEmbedToChannel(channel, e))
-                    except:
-                        pass
+            try:
+                headcommit = data['head_commit']
+                commits = data["commits"]
+                e = Embed(
+                    title=f"[{len(commits)} New Commit{'' if len(commits) == 1 else 's'}]({headcommit['url']})",
+                    description=""
+                )
+                for commit in commits:
+                    user = commit['committer']['username']
+                    e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
+                e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
+                loop().run_until_complete(sendEmbedToChannels(e))
+            except Exception as ex:
+                print(1 + str(ex))
+                pass
             return "success", 200
         abort(400)
 
@@ -73,12 +72,12 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         Thread(target=self.run).start()
 
 
-async def sendEmbedToChannel(channel, embed: Embed):
-    try:
-        print(channel)
-        await channel.send(embed=embed)
-    except Exception as ex:
-        print(ex)
+async def sendEmbedToChannels(embed: Embed):
+    for channel in CHANNEL_LIST:
+        try:
+            await channel.send(embed=embed)
+        except Exception as ex:
+            print(ex)
 
 
 def setup(client: commands.Bot):
