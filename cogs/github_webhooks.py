@@ -28,7 +28,6 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
-        print(CHANNEL_LIST)
         for channel in CHANNEL_LIST:
             if channel:
                 try:
@@ -46,6 +45,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @staticmethod
     @APP.route("/git", methods=["POST"])
     def gitlog():
+        global CHANNEL_LIST
         if request.method == "POST":
             data = request.json
             print(CHANNEL_LIST)
@@ -64,7 +64,6 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                         loop = new_event_loop()
                         set_event_loop(loop)
-                        print(channel)
                         loop.run_until_complete(funcs.sendEmbedToChannel(channel, e))
                     except Exception as ex:
                         print(ex)
