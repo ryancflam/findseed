@@ -25,11 +25,11 @@ class BullsAndCows:
         return m, s
 
     def guess(self, value: str):
-        value = replaceCharacters(value, [" ", ",", "-"])
-        if value.casefold() == "quit" or value.casefold() == "exit" or value.casefold() == "stop":
+        value = replaceCharacters(value, [" ", ",", "-"]).casefold()
+        if value == "quit" or value == "exit" or value == "stop":
             self.__gameEnd = True
             return 0, 0
-        if value.casefold() == "help" or value.casefold() == "time":
+        if value == "help" or value == "time":
             return 0, 0
         try:
             _ = int(value)
