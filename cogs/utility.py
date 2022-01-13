@@ -541,7 +541,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             for k in definitions:
                                 definition = k["definition"]
                                 output += f"- {definition} [{partOfSpeech}]\n"
-                    e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1]))
+                    e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1], limit=1000))
                 except Exception:
                     e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.reply(embed=e)

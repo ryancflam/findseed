@@ -10,7 +10,7 @@ from flask import Flask, abort, request
 from config import githubWebhooks
 from other_utils import funcs
 
-APP = Flask("")
+APP = Flask(__name__)
 CHANNEL_LIST = []
 
 
@@ -45,10 +45,8 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @staticmethod
     @APP.route("/git", methods=["POST"])
     def gitlog():
-        global CHANNEL_LIST
         if request.method == "POST":
             data = request.json
-            print(CHANNEL_LIST)
             for channel in CHANNEL_LIST:
                 if channel:
                     try:
@@ -65,8 +63,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         loop = new_event_loop()
                         set_event_loop(loop)
                         loop.run_until_complete(funcs.sendEmbedToChannel(channel, e))
-                    except Exception as ex:
-                        print(ex)
+                    except:
                         pass
             return "success", 200
         abort(400)
@@ -81,5 +78,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
 def setup(client: commands.Bot):
     global CHANNEL_LIST
     for channelID in githubWebhooks:
-        CHANNEL_LIST.append(client.get_channel(channelID))
+        channel = client.get_channel(channelID)
+        if channel:
+            CHANNEL_LIST.append(channel)
     client.add_cog(GitHubWebhooks(client))
