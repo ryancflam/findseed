@@ -23,7 +23,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
             self.startServer()
 
     @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
-                      aliases=["gitlog", "gitchannels", "gitchannel"])
+                      aliases=["gitlog", "gitchannels", "gitchannel", "gitlogs", "gitlogchannel"])
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
