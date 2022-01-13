@@ -47,14 +47,13 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         if request.method == "POST":
             data = request.json
             try:
-                repo = data["repository"]
                 headcommit = data['head_commit']
                 commits = data["commits"]
                 e = Embed(
                     title=f"{len(commits)} New Commit{'' if len(commits) == 1 else 's'}",
                     description=headcommit['url']
                 )
-                e.set_author(name=repo["full_name"] + f" ({data['ref']})",
+                e.set_author(name=data["repository"]["full_name"] + f" ({data['ref']})",
                              icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
                 for commit in commits:
                     user = commit['committer']['username']
