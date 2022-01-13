@@ -28,6 +28,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
+        print(CHANNEL_LIST)
         for channel in CHANNEL_LIST:
             if channel:
                 try:
@@ -47,23 +48,27 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     def gitlog():
         if request.method == "POST":
             data = request.json
+            print(CHANNEL_LIST)
             for channel in CHANNEL_LIST:
-                try:
-                    headcommit = data['head_commit']
-                    commits = data["commits"]
-                    e = Embed(
-                        title=f"[{len(commits)} New Commit{'' if len(commits) == 1 else 's'}]({headcommit['url']})",
-                        description=""
-                    )
-                    for commit in commits:
-                        user = commit['committer']['username']
-                        e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
-                    e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                    loop = new_event_loop()
-                    set_event_loop(loop)
-                    loop.run_until_complete(funcs.sendEmbedToChannel(channel, e))
-                except:
-                    pass
+                if channel:
+                    try:
+                        headcommit = data['head_commit']
+                        commits = data["commits"]
+                        e = Embed(
+                            title=f"[{len(commits)} New Commit{'' if len(commits) == 1 else 's'}]({headcommit['url']})",
+                            description=""
+                        )
+                        for commit in commits:
+                            user = commit['committer']['username']
+                            e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
+                        e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
+                        loop = new_event_loop()
+                        set_event_loop(loop)
+                        print(channel)
+                        loop.run_until_complete(funcs.sendEmbedToChannel(channel, e))
+                    except Exception as ex:
+                        print(ex)
+                        pass
             return "success", 200
         abort(400)
 
