@@ -46,7 +46,6 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     def gitlog():
         if request.method == "POST":
             data = request.json
-            print(data)
             try:
                 repo = data["repository"]
                 headcommit = data['head_commit']
@@ -60,7 +59,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                 for commit in commits:
                     user = commit['committer']['username']
                     message = commit['message']
-                    e.description += f"`{commit['id'][:7]}` {message[:50] + ('...' if len(message) > 50 else '')} " + \
+                    e.description += f"`{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
                                      f"- [{user}](https://github.com/{user})\n"
                 e.set_footer(text=f"Commit Time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                 executeSend(e)
