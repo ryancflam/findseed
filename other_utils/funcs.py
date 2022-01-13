@@ -397,7 +397,7 @@ def timeStrToDatetime(datestr: str):
         timezone = datestr.rsplit("-", 1)[1]
         neg = True
     hour, minute = timezone.split(":")
-    timezone = (int(hour) * 3600 + int(minute) * 60) * (-1 if neg else 1)
+    timezone = (int(hour) * 3600 + int(minute) * 60) * (1 if neg else -1)
     dateObj = parser.parse(datestr) + timedelta(seconds=timezone)
     return f"{dateObj.date()} {dateObj.time()}"
 

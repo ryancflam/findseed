@@ -46,19 +46,22 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     def gitlog():
         if request.method == "POST":
             data = request.json
+            print(data)
             try:
+                repo = data["repository"]
                 headcommit = data['head_commit']
                 commits = data["commits"]
                 e = Embed(
-                    title=f"[{len(commits)} New Commit{'' if len(commits) == 1 else 's'}]({headcommit['url']})",
+                    title=f"{len(commits)} New Commit{'' if len(commits) == 1 else 's'} - {headcommit['url']}",
                     description=""
                 )
+                e.set_author(name=repo["full_name"],
+                             icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
                 for commit in commits:
                     user = commit['committer']['username']
                     message = commit['message']
                     e.description += f"`{commit['id'][:7]}` {message[:50] + '...' if len(message) > 50 else ''} " + \
                                      f"- [{user}](https://github.com/{user})\n"
-                print(headcommit['timestamp'])
                 e.set_footer(text=f"Commit Time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                 executeSend(e)
             except:
