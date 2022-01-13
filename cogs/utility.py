@@ -1,6 +1,5 @@
 from asyncio import TimeoutError, sleep
 from datetime import datetime, timedelta
-from dateutil import parser
 from json import JSONDecodeError, dumps
 from math import sqrt
 from pathlib import Path
@@ -564,7 +563,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 definition = terms[0]["definition"].replace("[", "").replace("]", "")
                 permalink = terms[0]["permalink"]
                 word = terms[0]["word"]
-                writtenon = str(parser.parse(terms[0]["written_on"])).split(".")[0].replace("+00:00", "")
+                writtenon = funcs.timeStrToDatetime(terms[0]["written_on"])
                 e = Embed(description=permalink)
                 e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                         "669142387330777115/urban-dictionary-android.png")
@@ -592,7 +591,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
                         permalink = terms[page - 1]["permalink"]
                         word = terms[page - 1]["word"]
-                        writtenon = str(parser.parse(terms[page - 1]["written_on"])).split(".")[0].replace("+00:00", "")
+                        writtenon = funcs.timeStrToDatetime(terms[page - 1]["written_on"])
                         e = Embed(description=permalink)
                         e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                                                 "669142387330777115/urban-dictionary-android.png")

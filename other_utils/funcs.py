@@ -1,7 +1,8 @@
 import time
 from asyncio import TimeoutError, sleep
 from calendar import monthrange
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from dateutil import parser
 from io import BytesIO
 from json import JSONDecodeError, dump, load
 from os import path
@@ -381,10 +382,23 @@ def celsiusToFahrenheit(value):
 
 
 def timeStrToDatetime(datestr: str):
-    dateFilter = datestr.split(".")
-    if len(dateFilter) > 1:
-        datestr = dateFilter[0] + "Z"
-    dateObj = datetime.strptime(datestr.replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+    datestr = datestr.split(" ", 1)
+    if len(datestr) > 1:
+        datestr = datestr[0] + "T" + datestr[1]
+    else:
+        datestr = datestr[0]
+    if "+" not in datestr and "-" not in datestr and not datestr.endswith("Z"):
+        datestr += "Z"
+    datestr = datestr.replace("Z", "+00:00")
+    if "+" in datestr:
+        timezone = datestr.rsplit("+", 1)[1]
+        neg = False
+    else:
+        timezone = datestr.rsplit("-", 1)[1]
+        neg = True
+    hour, minute = timezone.split(":")
+    timezone = (int(hour) * 3600 + int(minute) * 60) * (-1 if neg else 1)
+    dateObj = parser.parse(datestr) + timedelta(seconds=timezone)
     return f"{dateObj.date()} {dateObj.time()}"
 
 
