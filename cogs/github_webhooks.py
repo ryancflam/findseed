@@ -63,7 +63,8 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         loop = get_event_loop()
                         send_fut = run_coroutine_threadsafe(sendEmbedToChannel(channel, e), loop)
                         send_fut.result()
-                    except:
+                    except Exception as ex:
+                        print(ex)
                         pass
             return "success", 200
         abort(400)
