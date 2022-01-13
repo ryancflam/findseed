@@ -59,8 +59,10 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         user = commit['committer']['username']
                         e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
                     e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
+                    print(e)
                     task = loop().create_task(funcs.sendEmbedToChannel(channelID, e))
                     loop().run_until_complete(task)
+                    print(1)
                 except Exception as ex:
                     print(ex)
                     pass
