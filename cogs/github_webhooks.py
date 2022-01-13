@@ -1,5 +1,6 @@
 # Hidden category
 
+from asyncio import new_event_loop, set_event_loop
 from threading import Thread
 
 from discord import Embed
@@ -43,10 +44,9 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
 
     @staticmethod
     @APP.route("/git", methods=["POST"])
-    async def gitlog():
+    def gitlog():
         if request.method == "POST":
             data = request.json
-            print(data)
             for channel in CHANNEL_LIST:
                 if channel:
                     try:
@@ -60,7 +60,9 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                             user = commit['committer']['username']
                             e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
                         e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                        await sendEmbedToChannel(channel, e)
+                        loop = new_event_loop()
+                        set_event_loop(loop)
+                        loop.run_until_complete(sendEmbedToChannel(channel, e))
                     except:
                         pass
             return "success", 200
