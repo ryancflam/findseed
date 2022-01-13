@@ -26,7 +26,7 @@ HCF_LIMIT = 1000000
 
 
 class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
-    COPYPASTA = Path(f"{funcs.getPath()}/assets/copypasta.txt").read_text()
+    COPYPASTA = Path(f"{funcs.getPath()}/assets/random_stuff/copypasta.txt").read_text()
 
     def __init__(self, client: commands.Bot):
         self.client = client

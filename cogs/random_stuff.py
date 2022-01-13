@@ -20,11 +20,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.activeSpinners = []
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
-        self.personalityTest = funcs.readJson("assets/personality_test.json")
-        self.trumpquotes = funcs.readJson("assets/trump_quotes.json")
-        self.truths = funcs.readTxtLines("assets/truths.txt")
-        self.dares = funcs.readTxtLines("assets/dares.txt")
-        self.nhie = funcs.readTxtLines("assets/nhie.txt")
+        self.personalityTest = funcs.readJson("assets/random_stuff/personality_test.json")
+        self.trumpquotes = funcs.readJson("assets/random_stuff/trump_quotes.json")
+        self.truths = funcs.readTxtLines("assets/random_stuff/truths.txt")
+        self.dares = funcs.readTxtLines("assets/random_stuff/dares.txt")
+        self.nhie = funcs.readTxtLines("assets/random_stuff/nhie.txt")
 
     @staticmethod
     def rgb(value):
@@ -106,12 +106,12 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.send(embed=self.todEmbed(dare=randint(0, 1)))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="truth", description="Sends a random Truth or Dare truth question.")
+    @commands.command(name="truth", description="Sends a random Truth or Dare truth question.", aliases=["truths"])
     async def truth(self, ctx):
         await ctx.send(embed=self.todEmbed())
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="dare", description="Sends a random Truth or Dare dare.")
+    @commands.command(name="dare", description="Sends a random Truth or Dare dare.", aliases=["dares"])
     async def dare(self, ctx):
         await ctx.send(embed=self.todEmbed(dare=1))
 

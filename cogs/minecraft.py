@@ -21,9 +21,9 @@ BARTER_LIMIT = 896
 class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to *Minecraft* and *Minecraft* speedrunning."):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.divinetravel = funcs.readJson("assets/divine_travel.json")
-        self.perfecttravel = funcs.readJson("assets/perfect_travel.json")
-        self.eyedata = funcs.readJson("assets/eye_data.json")
+        self.divinetravel = funcs.readJson("assets/minecraft/divine_travel.json")
+        self.perfecttravel = funcs.readJson("assets/minecraft/perfect_travel.json")
+        self.eyedata = funcs.readJson("assets/minecraft/eye_data.json")
         self.loottable = self.piglinLootTable()
 
     @staticmethod
@@ -35,7 +35,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @staticmethod
     def piglinLootTable():
-        lt = funcs.readJson("assets/piglin_loot_table.json")
+        lt = funcs.readJson("assets/minecraft/piglin_loot_table.json")
         ltnew = []
         for i in lt:
             if i["id"] < 5:
@@ -95,7 +95,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         data["calls"] += 1
         calls = data["calls"]
         funcs.dumpJson("data/findseed.json", data)
-        file = File(f"{funcs.getPath()}/assets/{eyes}eye.png", filename="portal.png")
+        file = File(f"{funcs.getPath()}/assets/minecraft/{eyes}eye.png", filename="portal.png")
         foundTime = "just now"
         if not update:
             timestr = funcs.timeDifferenceStr(time(), highestTime)
