@@ -11,6 +11,7 @@ import config
 from other_utils import funcs
 
 APP = Flask("")
+CHANNEL_LIST = []
 
 
 class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
@@ -19,7 +20,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         self.client = client
         self.host = "0.0.0.0"
         self.port = 8080
-        if config.githubWebhooks:
+        if CHANNEL_LIST:
             self.startServer()
 
     @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
@@ -47,7 +48,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     def gitlog():
         if request.method == "POST":
             data = request.json
-            for channelID in config.githubWebhooks:
+            for channel in CHANNEL_LIST:
                 try:
                     headcommit = data['head_commit']
                     commits = data["commits"]
@@ -59,15 +60,10 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         user = commit['committer']['username']
                         e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
                     e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                    print(e)
                     loop = new_event_loop()
-                    print(1)
                     set_event_loop(loop)
-                    print(2)
-                    loop.run_until_complete(funcs.sendEmbedToChannel(channelID, e))
-                    print(3)
-                except Exception as ex:
-                    print(ex)
+                    loop.run_until_complete(funcs.sendEmbedToChannel(channel, e))
+                except:
                     pass
             return "success", 200
         abort(400)
@@ -80,4 +76,6 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
 
 
 def setup(client: commands.Bot):
+    for channelID in config.githubWebhooks:
+        CHANNEL_LIST.append(client.get_channel(channelID))
     client.add_cog(GitHubWebhooks(client))
