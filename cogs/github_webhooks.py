@@ -75,6 +75,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
 
 async def sendEmbedToChannel(channel, embed: Embed):
     try:
+        print(channel)
         await channel.send(embed=embed)
     except Exception as ex:
         print(ex)
