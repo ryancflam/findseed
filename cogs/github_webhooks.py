@@ -63,6 +63,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                         loop = new_event_loop()
                         set_event_loop(loop)
                         loop.run_until_complete(sendEmbedToChannel(channel, e))
+                        # await sendEmbedToChannel(channel, e)
                     except:
                         pass
             return "success", 200

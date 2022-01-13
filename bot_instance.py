@@ -115,10 +115,11 @@ class BotInstance(Bot):
         await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
 
     async def on_ready(self):
-        try:
-            reloadCog(self, "github_webhooks")
-        except:
-            pass
+        if config.githubWebhooks:
+            try:
+                reloadCog(self, "github_webhooks")
+            except:
+                pass
         print(f"Logged in as: {self.user}")
         await (await self.application_info()).owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
