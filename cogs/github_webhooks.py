@@ -46,6 +46,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     async def gitlog():
         if request.method == "POST":
             data = request.json
+            print(data)
             for channel in CHANNEL_LIST:
                 if channel:
                     try:
@@ -72,7 +73,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         Thread(target=self.run).start()
 
 
-async def sendEmbedToChannel(channel: int, embed: Embed):
+async def sendEmbedToChannel(channel, embed: Embed):
     try:
         await channel.send(embed=embed)
     except Exception as ex:
