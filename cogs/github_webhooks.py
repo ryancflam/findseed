@@ -1,6 +1,6 @@
 # Hidden category
 
-from asyncio import get_event_loop, run_coroutine_threadsafe
+from asyncio import new_event_loop, run_coroutine_threadsafe
 from threading import Thread
 
 from discord import Embed
@@ -60,7 +60,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                             user = commit['committer']['username']
                             e.description += f"`{commit['id'][:7]}` {commit['message']} - [{user}](https://github.com/{user})\n"
                         e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                        loop = get_event_loop()
+                        loop = new_event_loop()
                         send_fut = run_coroutine_threadsafe(sendEmbedToChannel(channel, e), loop)
                         send_fut.result()
                     except Exception as ex:
