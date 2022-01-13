@@ -58,10 +58,10 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                     message = commit['message']
                     e.description += f"`{commit['id'][:7]}` {message[:50] + '...' if len(message) > 50 else ''} " + \
                                      f"- [{user}](https://github.com/{user})\n"
-                e.set_footer(text=f"Date: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
+                print(headcommit['timestamp'])
+                e.set_footer(text=f"Commit Time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                 executeSend(e)
-            except Exception as ex:
-                print(1 + str(ex))
+            except:
                 pass
             return "success", 200
         abort(400)
@@ -78,8 +78,8 @@ async def sendEmbedToChannels(embed: Embed):
         if channel:
             try:
                 await channel.send(embed=embed)
-            except Exception as ex:
-                print(ex)
+            except:
+                pass
 
 
 def executeSend(e):
