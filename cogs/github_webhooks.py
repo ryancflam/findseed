@@ -46,6 +46,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @APP.route("/git", methods=["POST"])
     def gitlog():
         if request.method == "POST":
+            print(CHANNEL_LIST)
             data = request.json
             for channel in CHANNEL_LIST:
                 if channel:
