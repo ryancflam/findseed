@@ -18,7 +18,12 @@ def getPath():
     pathname = path.dirname(path.realpath(__file__))
     while pathname.endswith("\\"):
         pathname = pathname[:-1]
-    return pathname.rsplit("\\", 1)[0]
+    while pathname.endswith("/"):
+        pathname = pathname[:-1]
+    if "\\" in pathname:
+        return pathname.rsplit("\\", 1)[0]
+    if "/" in pathname:
+        return pathname.rsplit("/", 1)[0]
 
 
 def readTxtLines(pathstr):
