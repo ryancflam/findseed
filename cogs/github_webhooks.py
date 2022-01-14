@@ -9,8 +9,8 @@ from flask import Flask, abort, request
 from config import githubWebhooks
 from other_utils import funcs
 
-APP = Flask(__name__)
-CHANNEL_LIST = []
+FLASK_APP = Flask(__name__)
+RIDICULOUS_CHANNEL_LIST = []
 
 
 class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
@@ -19,7 +19,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         self.client = client
         self.host = "0.0.0.0"
         self.port = 8080
-        if CHANNEL_LIST[:-1]:
+        if RIDICULOUS_CHANNEL_LIST[:-1]:
             self.startServer()
 
     @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
@@ -27,7 +27,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
-        for channel in CHANNEL_LIST[:-1]:
+        for channel in RIDICULOUS_CHANNEL_LIST[:-1]:
             if channel:
                 try:
                     name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
@@ -37,12 +37,12 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
     @staticmethod
-    @APP.route("/")
+    @FLASK_APP.route("/")
     def home():
         return "GitHub Webhooks cog is active."
 
     @staticmethod
-    @APP.route("/git", methods=["POST"])
+    @FLASK_APP.route("/git", methods=["POST"])
     def gitlog():
         if request.method == "POST":
             data = request.json
@@ -61,28 +61,28 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                     e.description += f"\n`{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
                                      f"- [{user}](https://github.com/{user})"
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                executeSend(e)
+                ridiculousFunctionThatShouldNotWorkAtAllButItDoes(embed=e)
             except:
                 pass
             return "success", 200
         abort(400)
 
     def run(self):
-        APP.run(host=self.host, port=self.port)
+        FLASK_APP.run(host=self.host, port=self.port)
 
     def startServer(self):
         Thread(target=self.run).start()
 
 
-def executeSend(embed):
-    CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(embed, CHANNEL_LIST[:-1]))
+def ridiculousFunctionThatShouldNotWorkAtAllButItDoes(embed):
+    RIDICULOUS_CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(embed, RIDICULOUS_CHANNEL_LIST[:-1]))
 
 
 def setup(client: commands.Bot):
-    global CHANNEL_LIST
+    global RIDICULOUS_CHANNEL_LIST
     for channelID in githubWebhooks:
         channel = client.get_channel(channelID)
         if channel:
-            CHANNEL_LIST.append(channel)
-    CHANNEL_LIST.append(client)
+            RIDICULOUS_CHANNEL_LIST.append(channel)
+    RIDICULOUS_CHANNEL_LIST.append(client)
     client.add_cog(GitHubWebhooks(client))
