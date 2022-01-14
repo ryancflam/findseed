@@ -26,7 +26,7 @@ def readTxtLines(pathstr):
     with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
         lines = f.readlines()
     f.close()
-    return [i[:-1] for i in lines if i]
+    return [i[:-1] for i in lines if i[:-1]]
 
 
 def readJson(pathstr):

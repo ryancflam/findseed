@@ -40,11 +40,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     def todEmbed(self, dare: int=0):
         if dare:
             q = choice(self.dares)
-            type = "Dare"
+            etype = "Dare"
         else:
             q = choice(self.truths)
-            type = "Truth"
-        return Embed(title="Truth or Dare", description=q).set_footer(text=type)
+            etype = "Truth"
+        return Embed(title="Truth or Dare", description=q).set_footer(text=etype)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="oohasecretcommand", hidden=True,
@@ -80,8 +80,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             info = data['moreinfo']
             e = Embed(title="Would You Rather",
                       description=f"🔵 {opt1 + ('' if opt1.endswith('.') else '.')}\n🔴 {opt2 + ('' if opt1.endswith('.') else '.')}")
-            e.add_field(name="🔵 Option 1", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2))))
-            e.add_field(name="🔴 Option 2", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2))))
+            e.add_field(name="Option 1 Votes", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2))))
+            e.add_field(name="Option 2 Votes", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2))))
             if info:
                 e.set_footer(text=info)
             yes = True
@@ -152,9 +152,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="telephone", description="Talk to other users from other chatrooms! " + \
-                                                    "This is an experimental feature and might not work 100% of the time.",
-                      aliases=["phone", "userphone", "call"])
+    @commands.command(name="telephone", aliases=["phone", "userphone", "call"],
+                      description="Talk to other users from other chatrooms! This is an experimental feature and may not work.")
     async def telephone(self, ctx):
         if ctx.channel in self.phoneWaitingChannels:
             return await ctx.reply(":telephone: Cancelling phone call.")
@@ -225,12 +224,12 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                        "you want to quit, input 'quit'. Otherwise, input 'test' to start the test.\n\n" + \
                        "Questions provided by EDCampus. Each question has a 15-minute time limit.```")
         try:
-            choice = await self.client.wait_for(
+            userchoice = await self.client.wait_for(
                 "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=300
             )
         except TimeoutError:
             return await ctx.send(f"`{ctx.author.name} has left the personality test for idling for too long.`")
-        if choice.content.casefold() != "test":
+        if userchoice.content.casefold() != "test":
             return await ctx.send(f"`{ctx.author.name} has left the personality test.`")
         res = list(self.personalityTest["questions"])
         e, i, s, n, t, f, j, p = 0, 0, 0, 0, 0, 0, 0, 0
@@ -240,20 +239,20 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
               "46", "50", "54", "58", "62", "66", "70", "74", "78", "82", "86"]
         tf = ["3.", "7.", "11", "15", "19", "23", "27", "31", "35", "39", "43",
               "47", "51", "55", "59", "63", "67", "71", "75", "79", "83", "87"]
-        choices = [0, 1]
+        userchoices = [0, 1]
         questionNumbers = [i for i in range(88)]
         questionCount, choiceCount = 1, 1
-        choice = None
+        userchoice = None
         shuffle(questionNumbers)
         for x in questionNumbers:
             userInput = ""
             title = res[x]["title"]
             question = f"{title.split('. ')[1]}\n\n"
-            shuffle(choices)
-            for choice in choices:
+            shuffle(userchoices)
+            for userchoice in userchoices:
                 sub = "a) " if choiceCount == 1 else "b) "
                 choiceCount = 2 if choiceCount == 1 else 1
-                question += sub + res[x]["selections"][choice] + "\n"
+                question += sub + res[x]["selections"][userchoice] + "\n"
             await ctx.send(f"```Question {questionCount} of 88 for {ctx.author.name}:\n\n{question[:-1]}\n" + \
                            "c) none of the above/neutral.```")
             while userInput.casefold() != "a" and userInput.casefold() != "b" \
@@ -273,8 +272,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             if userInput.casefold() == "quit" or userInput.casefold() == "exit" \
                     or userInput.casefold() == "leave":
                 return await ctx.send(f"`{ctx.author.name} has left the personality test.`")
-            if userInput.casefold() == "a" and choice == 1 \
-                    or userInput.casefold() == "b" and not choice:
+            if userInput.casefold() == "a" and userchoice == 1 \
+                    or userInput.casefold() == "b" and not userchoice:
                 if any(res[x]["title"].startswith(y) for y in ei):
                     e += 1
                 elif any(res[x]["title"].startswith(y) for y in sn):
@@ -283,8 +282,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                     t += 1
                 else:
                     j += 1
-            elif userInput.casefold() == "b" and choice == 1 \
-                    or userInput.casefold() == "a" and not choice:
+            elif userInput.casefold() == "b" and userchoice == 1 \
+                    or userInput.casefold() == "a" and not userchoice:
                 if any(res[x]["title"].startswith(y) for y in ei):
                     i += 1
                 elif any(res[x]["title"].startswith(y) for y in sn):
@@ -312,7 +311,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         tffavour = t if t > f else f
         jpfavour = j if j > p else p
         eir = "Extraverted - " if e > i else "Extraverted/Introverted? - " if e == i else "Introverted - "
-        snr = "Sensing - " if s > n else "Sensing/Intuitive? - " if s == n else "Intuitive - "
+        snr = "Sensing - " if s > n else "Sensing/iNtuitive? - " if s == n else "iNtuitive - "
         tfr = "Thinking - " if t > f else "Thinking/Feeling? - " if t == f else "Feeling - "
         jpr = "Judging - " if j > p else "Judging/Perceiving? - " if j == p else "Perceiving - "
         eic = "E" if e > i else "X" if e == i else "I"
