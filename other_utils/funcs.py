@@ -15,7 +15,10 @@ from other_utils.item_cycle import ItemCycle
 
 
 def getPath():
-    return path.dirname(path.realpath(__file__)).rsplit("\\", 1)[0]
+    pathname = path.dirname(path.realpath(__file__))
+    while pathname.endswith("\\"):
+        pathname = pathname[:-1]
+    return pathname.rsplit("\\", 1)[0]
 
 
 def readTxtLines(pathstr):
