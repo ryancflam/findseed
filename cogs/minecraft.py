@@ -663,7 +663,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 count += 1
             e.set_footer(text="Click the link above for more speedrun categories.",
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Possible server error.")
         await ctx.reply(embed=e)
 
@@ -686,7 +687,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 description=f"**{username}**"
             )
             e.set_image(url=skin)
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid skin or server error.")
         await ctx.reply(embed=e)
 
@@ -731,7 +733,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 except:
                     secondLine = ""
                 e.set_footer(text=motd[0].strip().replace('&amp;', '&') + secondLine)
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid server address or server error?")
         await ctx.reply(embed=e)
 

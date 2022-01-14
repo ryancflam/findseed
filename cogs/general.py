@@ -267,7 +267,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
             poll = await ctx.send(embed=e)
             for emoji, _ in answers:
                 await poll.add_reaction(emoji)
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             return await ctx.send(embed=funcs.errorEmbed(None, "Too many choices?"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)

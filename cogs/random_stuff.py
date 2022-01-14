@@ -85,7 +85,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             if info:
                 e.set_footer(text=info)
             yes = True
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Server error.")
             yes = False
         msg = await ctx.send(embed=e)
@@ -128,7 +129,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             for t in output:
                 res += f"{t.text} "
             e = Embed(title="Literal Chinese", description=funcs.formatting(res))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
         await ctx.reply(embed=e)
 
@@ -144,7 +146,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             for t in output:
                 res += t.text
             e = Embed(title="Literal English", description=funcs.formatting(res))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
         await ctx.reply(embed=e)
 
@@ -333,22 +336,30 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dadjoke", description="Sends a random dad joke.", aliases=["dj", "joke"])
     async def dadjoke(self, ctx):
-        headers = {"Accept": "application/json"}
-        res = await funcs.getRequest("https://icanhazdadjoke.com/", headers=headers)
-        await ctx.reply(res.json()["joke"])
+        try:
+            res = await funcs.getRequest("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
+            await ctx.reply(res.json()["joke"])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dog", description="Sends a random dog image.")
     async def dog(self, ctx):
-        res = await funcs.getRequest("https://dog.ceo/api/breeds/image/random")
-        await funcs.sendImage(ctx, res.json()["message"])
+        try:
+            res = await funcs.getRequest("https://dog.ceo/api/breeds/image/random")
+            await funcs.sendImage(ctx, res.json()["message"])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cat", description="Sends a random cat image.")
     async def cat(self, ctx):
-        res = await funcs.getRequest("https://api.thecatapi.com/v1/images/search")
-        image = res.json()[0]["url"]
-        await funcs.sendImage(ctx, image, name=image.split("thecatapi.com/images/")[1])
+        try:
+            res = await funcs.getRequest("https://api.thecatapi.com/v1/images/search")
+            image = res.json()[0]["url"]
+            await funcs.sendImage(ctx, image, name=image.split("thecatapi.com/images/")[1])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="trumpthinks", description="What does Donald Trump think about something or someone?",
@@ -401,7 +412,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 f"spinning; it lasted {randomSeconds} seconds!** <:fidgetspinner:675314386784485376>"
             )
             self.activeSpinners.remove(ctx.message.author.id)
-        except:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             await ctx.send(embed=funcs.errorEmbed(None, "An error occurred. Please try again later."))
             try:
                 self.activeSpinners.remove(ctx.message.author.id)
@@ -475,7 +487,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 emoji = "...** :broken_heart:"
             await ctx.reply("The love percentage between " + \
                            f"**{newlist[0]}** and **{newlist[1]}** is **{intermediate}%{emoji}")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -670,6 +683,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                       description=f"Requested by: {ctx.author.mention}\n{funcs.formatting(item)}")
             e.add_field(name="Items ({:,})".format(len(itemslist)), value=", ".join(f"`{i}`" for i in sorted(itemslist)))
         except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
@@ -714,7 +728,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             )
             data = res.json()
             e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 

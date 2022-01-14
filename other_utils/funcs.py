@@ -18,6 +18,10 @@ def getPath():
     return path.dirname(path.realpath(__file__)).rsplit("other_utils", 1)[0][:-1]
 
 
+def printError(ctx, error):
+    print(f"Error ({ctx.command.name}): {error}")
+
+
 def readTxtLines(pathstr):
     with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -540,7 +544,10 @@ async def getImage(url, headers=None, params=None, timeout=None, verify=True):
 
 
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
-    await ctx.reply(message, file=File(await getImage(url), name))
+    try:
+        await ctx.reply(message, file=File(await getImage(url), name))
+    except Exception as ex:
+        printError(ctx, ex)
 
 
 async def sendEmbedToChannels(embed: Embed, channellist: list):

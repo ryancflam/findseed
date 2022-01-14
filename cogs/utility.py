@@ -56,7 +56,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_image(
                 url="https://opengraph.githubassets.com/80a30c53eedf18f870a1779deaa8a7a60553494e284d23664c5bd983fa063d8e/" + repo
             )
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown repository or server error.")
         await ctx.reply(embed=e)
 
@@ -131,7 +132,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="New Cases Today", value=f"`{total['new_cases']}`")
             e.add_field(name="New Deaths Today", value=f"`{total['new_deaths']}`")
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
@@ -227,7 +229,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     e.add_field(name=eta, value=f"`{duration}`")
                 e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.",
                              icon_url="https://i.pinimg.com/564x/8c/90/8f/8c908ff985364bdba5514129d3d4e799.jpg")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown flight or server error.")
         await ctx.reply(embed=e)
 
@@ -264,7 +267,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.",
                          icon_url="https://cdn.discordapp.com/attachments/771404776410972161/931460099296358470/unknown.png")
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
-        except:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown location or server error.")
         await ctx.reply(embed=e)
 
@@ -282,7 +286,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             else:
                 output = Translator().translate(text.casefold(), dest=dest.casefold()).text
                 e = Embed(title="Translation", description=funcs.formatting(output))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred. Invalid input?")
         await ctx.reply(embed=e)
 
@@ -324,7 +329,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 f"The current price of **{'{:,}'.format(initialamount)} {fromCurrency}** in **{toCurrency}**: " + \
                 "`{:,}`".format(amount)
             )
-        except:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input or unknown currency."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -369,7 +375,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
                                       "677853982718165001/1122px-Wikipedia-logo-v2.png")
                 e.add_field(name="Extract", value=f"```{summary}```")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
@@ -405,7 +412,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     await msg.edit(embed=edited)
                 elif success is None:
                     return
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -431,7 +439,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             img.save(f"{funcs.getPath()}/temp/{imgName}")
             image = File(f"{funcs.getPath()}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e, file=image)
         funcs.deleteTempFile(imgName)
@@ -451,6 +460,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = Embed(title="QR Code Message", description=funcs.formatting(qr)) if qr \
                     else funcs.errorEmbed(None, "Cannot detect QR code. Maybe try making the image clearer?")
             except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, str(ex))
         else:
             e = funcs.errorEmbed(None, "No attachment or URL detected, please try again.")
@@ -459,72 +469,75 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="compile", description="Compiles code.", aliases=["comp"])
     async def compile(self, ctx):
-        res = await funcs.getRequest("https://run.glot.io/languages", verify=False)
-        data = res.json()
-        languages = [i["name"] for i in data]
-        output = ", ".join(f'`{j}`' for j in languages)
-        language = ""
-        option = None
-        await ctx.reply(embed=Embed(title="Please select a language below or input `quit` to quit...",
-                                   description=output))
-        while language not in languages and language != "quit":
+        try:
+            res = await funcs.getRequest("https://run.glot.io/languages", verify=False)
+            data = res.json()
+            languages = [i["name"] for i in data]
+            output = ", ".join(f'`{j}`' for j in languages)
+            language = ""
+            option = None
+            await ctx.reply(embed=Embed(title="Please select a language below or input `quit` to quit...",
+                                       description=output))
+            while language not in languages and language != "quit":
+                try:
+                    option = await self.client.wait_for(
+                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
+                    )
+                    language = option.content.casefold().replace(" ", "").replace("#", "sharp").replace(
+                        "♯", "sharp").replace("++", "pp")
+                    language = "javascript" if language == "js" else language
+                    if language not in languages and language != "quit":
+                        await option.reply(embed=funcs.errorEmbed(None, "Invalid language."))
+                except TimeoutError:
+                    return await ctx.send("Cancelling compilation...")
+            if language == "quit":
+                return await option.reply("Cancelling compilation...")
+            versionurl = f"https://run.glot.io/languages/{language}"
+            res = await funcs.getRequest(versionurl, verify=False)
+            data = res.json()
+            url = data["url"]
+            await option.reply("**You have 15 minutes to type out your code. Input `quit` to quit.**")
+            code = None
+            try:
+                option = await self.client.wait_for(
+                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
+                )
+                content = option.content
+                try:
+                    if option.attachments:
+                        content = await funcs.readTxtAttachment(option)
+                    code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
+                    if code == "quit":
+                        return await option.reply("Cancelling compilation...")
+                except:
+                    pass
+            except TimeoutError:
+                return await ctx.send("Cancelling compilation...")
+            await option.reply("**Please enter your desired file name including the extension.** (e.g. `main.py`)")
             try:
                 option = await self.client.wait_for(
                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
                 )
-                language = option.content.casefold().replace(" ", "").replace("#", "sharp").replace(
-                    "♯", "sharp").replace("++", "pp")
-                language = "javascript" if language == "js" else language
-                if language not in languages and language != "quit":
-                    await option.reply(embed=funcs.errorEmbed(None, "Invalid language."))
+                filename = option.content
             except TimeoutError:
                 return await ctx.send("Cancelling compilation...")
-        if language == "quit":
-            return await option.reply("Cancelling compilation...")
-        versionurl = f"https://run.glot.io/languages/{language}"
-        res = await funcs.getRequest(versionurl, verify=False)
-        data = res.json()
-        url = data["url"]
-        await option.reply("**You have 15 minutes to type out your code. Input `quit` to quit.**")
-        code = None
-        try:
-            option = await self.client.wait_for(
-                "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
-            )
-            content = option.content
+            data = {"files": [{"name": filename, "content": code}]}
+            headers = {
+                "Authorization": f"Token {config.glotIoKey}",
+                "Content-type": "application/json"
+            }
+            res = await funcs.postRequest(url=url, data=dumps(data), headers=headers, verify=False)
             try:
-                if option.attachments:
-                    content = await funcs.readTxtAttachment(option)
-                code = content.replace("```", "").replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
-                if code == "quit":
-                    return await option.reply("Cancelling compilation...")
-            except:
-                pass
-        except TimeoutError:
-            return await ctx.send("Cancelling compilation...")
-        await option.reply("**Please enter your desired file name including the extension.** (e.g. `main.py`)")
-        try:
-            option = await self.client.wait_for(
-                "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
-            )
-            filename = option.content
-        except TimeoutError:
-            return await ctx.send("Cancelling compilation...")
-        data = {"files": [{"name": filename, "content": code}]}
-        headers = {
-            "Authorization": f"Token {config.glotIoKey}",
-            "Content-type": "application/json"
-        }
-        res = await funcs.postRequest(url=url, data=dumps(data), headers=headers, verify=False)
-        try:
-            data = res.json()
-            stderr = data["stderr"]
-            if stderr == "":
-                await option.reply(embed=Embed(title="Compilation", description=funcs.formatting(data["stdout"] or "None")))
-            else:
-                await option.reply(embed=funcs.errorEmbed(data["error"].title(), funcs.formatting(stderr)))
-        except AttributeError:
-            await option.reply(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
+                data = res.json()
+                stderr = data["stderr"]
+                if stderr == "":
+                    await option.reply(embed=Embed(title="Compilation", description=funcs.formatting(data["stdout"] or "None")))
+                else:
+                    await option.reply(embed=funcs.errorEmbed(data["error"].title(), funcs.formatting(stderr)))
+            except AttributeError:
+                await option.reply(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="dictionary", description="Returns the definition(s) of a word.",
@@ -558,7 +571,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             output += f"- {definition}{partOfSpeech}\n"
                 e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1], limit=1000))
             except Exception as ex:
-                print(ex)
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.reply(embed=e)
 
@@ -569,68 +582,71 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         if term == "":
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         else:
-            res = await funcs.getRequest("http://api.urbandictionary.com/v0/define", params={"term": term})
-            data = res.json()
-            terms = data["list"]
-            if not terms:
-                return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
-            else:
-                example = terms[0]["example"].replace("[", "").replace("]", "")
-                definition = terms[0]["definition"].replace("[", "").replace("]", "")
-                permalink = terms[0]["permalink"]
-                word = terms[0]["word"]
-                writtenon = funcs.timeStrToDatetime(terms[0]["written_on"])
-                e = Embed(description=permalink)
-                e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                        "669142387330777115/urban-dictionary-android.png")
-                e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                if example:
-                    e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                e.add_field(name="Author", value=f"`{terms[0]['author']}`")
-                e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
-                try:
-                    e.set_footer(
-                        text=f"Approval rate: " + \
-                             f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                             "% ({:,} 👍 - {:,} 👎) | ".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
-                             "Page 1 of {:,}".format(len(terms))
-                    )
-                except ZeroDivisionError:
-                    e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page 1 of {:,}".format(len(terms)))
-                msg = await ctx.reply(embed=e)
-                await funcs.nextPrevPageOptions(msg, len(terms))
-                page = 1
-                while True:
-                    success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, len(terms), page)
-                    if success:
-                        example = terms[page - 1]["example"].replace("[", "").replace("]", "")
-                        definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
-                        permalink = terms[page - 1]["permalink"]
-                        word = terms[page - 1]["word"]
-                        writtenon = funcs.timeStrToDatetime(terms[page - 1]["written_on"])
-                        e = Embed(description=permalink)
-                        e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                                "669142387330777115/urban-dictionary-android.png")
-                        e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                        if example:
-                            e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                        e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
-                        e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
-                        try:
-                            ar = round(
-                                terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
-                                * 100, 2
-                            )
-                            e.set_footer(
-                                text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[page - 1]['thumbs_up']) + \
-                                     "{:,} 👎) | ".format(terms[page - 1]['thumbs_down']) + \
-                                     "Page {:,} of {:,}".format(page, len(terms))
-                            )
-                        except ZeroDivisionError:
-                            e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page {:,} of {:,}".format(page, len(terms)))
-                        await msg.edit(embed=e)
-                    elif success is None:
-                        return
+            try:
+                res = await funcs.getRequest("http://api.urbandictionary.com/v0/define", params={"term": term})
+                data = res.json()
+                terms = data["list"]
+                if not terms:
+                    return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
+                else:
+                    example = terms[0]["example"].replace("[", "").replace("]", "")
+                    definition = terms[0]["definition"].replace("[", "").replace("]", "")
+                    permalink = terms[0]["permalink"]
+                    word = terms[0]["word"]
+                    writtenon = funcs.timeStrToDatetime(terms[0]["written_on"])
+                    e = Embed(description=permalink)
+                    e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                                            "669142387330777115/urban-dictionary-android.png")
+                    e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
+                    if example:
+                        e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                    e.add_field(name="Author", value=f"`{terms[0]['author']}`")
+                    e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
+                    try:
+                        e.set_footer(
+                            text=f"Approval rate: " + \
+                                 f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
+                                 "% ({:,} 👍 - {:,} 👎) | ".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
+                                 "Page 1 of {:,}".format(len(terms))
+                        )
+                    except ZeroDivisionError:
+                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page 1 of {:,}".format(len(terms)))
+                    msg = await ctx.reply(embed=e)
+                    await funcs.nextPrevPageOptions(msg, len(terms))
+                    page = 1
+                    while True:
+                        success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, len(terms), page)
+                        if success:
+                            example = terms[page - 1]["example"].replace("[", "").replace("]", "")
+                            definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
+                            permalink = terms[page - 1]["permalink"]
+                            word = terms[page - 1]["word"]
+                            writtenon = funcs.timeStrToDatetime(terms[page - 1]["written_on"])
+                            e = Embed(description=permalink)
+                            e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                                                    "669142387330777115/urban-dictionary-android.png")
+                            e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
+                            if example:
+                                e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                            e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
+                            e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
+                            try:
+                                ar = round(
+                                    terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
+                                    * 100, 2
+                                )
+                                e.set_footer(
+                                    text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[page - 1]['thumbs_up']) + \
+                                         "{:,} 👎) | ".format(terms[page - 1]['thumbs_down']) + \
+                                         "Page {:,} of {:,}".format(page, len(terms))
+                                )
+                            except ZeroDivisionError:
+                                e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page {:,} of {:,}".format(page, len(terms)))
+                            await msg.edit(embed=e)
+                        elif success is None:
+                            return
+            except Exception as ex:
+                funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
@@ -742,7 +758,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         e.set_image(url=redditor.subreddit["banner_img"])
             else:
                 e = funcs.errorEmbed("Invalid input!", 'Please use `r/"subreddit name"` or `u/"username"`.')
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid search.")
         await ctx.reply(embed=e)
 
@@ -793,7 +810,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 " ARSE AND YOU DON'T EVEN SEE IT!"
             ])
             e = Embed(description=f"```{answer}```")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
@@ -803,7 +821,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     async def sqrt(self, ctx, *, val):
         try:
             e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(sqrt(SafeEval(val).safeEval())))))
-        except:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
@@ -891,7 +910,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Top Level Domain", value=", ".join(f"`{dom}`" for dom in data["topLevelDomain"]))
             e.add_field(name="Time Zones", value=", ".join(f"`{tz}`" for tz in data["timezones"]))
             e.set_footer(text="Note: The data provided may not be 100% accurate.")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
         await msg.reply(embed=e)
 
@@ -995,6 +1015,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             except:
                 pass
         except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
@@ -1043,6 +1064,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Maximum Value", value=f'`{funcs.removeDotZero("{:,}".format(max(data)))}`')
             e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
         except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
@@ -1230,7 +1252,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e.description = funcs.formatting(res)
             else:
                 e.description = funcs.formatting("Today")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
@@ -1256,7 +1279,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                                 f"`{i['name']} ({i['craft']})`" for i in sorted(his, key=lambda x: x["craft"])
                             )[:800].rsplit("`, ", 1)[0] + "`")
             e.set_image(url="https://cdn.discordapp.com/attachments/771698457391136798/926876797759537192/unknown.png")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Server error.")
         await ctx.reply(embed=e)
 
@@ -1283,7 +1307,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                               f"== Note Range ==\n\n{octavestr if octaves else ''}{'{:,}'.format(diff)} semitone" +
                               f"{'' if diff == 1 else 's'}"
                           ))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
             e.set_footer(text="Notes: " + ", ".join(i for i in funcs.musicalNotes()))
         await ctx.reply(embed=e)
@@ -1340,7 +1365,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     except:
                         e.add_field(name="Tips", value=funcs.formatting("Check your spelling, and use English"))
                 e.set_footer(text="Note: Results may be cut-off due to Discord's limit.")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Server error or query limit reached.")
         await ctx.reply(embed=e)
 

@@ -48,38 +48,42 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             amount = 1
         if gasamount <= 0:
             gasamount = 1
-        res = await funcs.getRequest(COINGECKO_URL + "coins/markets", params={"vs_currency": "usd", "ids": "bitcoin,neo,gas"})
-        tickers = res.json()
-        btcprice = None
-        neobtc, neousd, gasbtc, gasusd = None, None, None, None
-        neorank, gasrank, neomc, gasmc = None, None, None, None
-        for ticker in tickers:
-            if ticker["symbol"] == "btc":
-                btcprice = ticker["current_price"]
-            if ticker["symbol"] == "neo":
-                neousd = ticker["current_price"]
-                neobtc = neousd / btcprice
-                neorank = ticker["market_cap_rank"]
-                neomc = ticker["market_cap"]
-            if ticker["symbol"] == "gas":
-                gasusd = ticker["current_price"]
-                gasbtc = gasusd / btcprice
-                gasrank = ticker["market_cap_rank"]
-                gasmc = ticker["market_cap"]
-        e = Embed(colour=Colour.green())
-        e.set_author(name="NEO and GAS Prices",
-                     icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
-        e.add_field(name="{}NEO".format("" if amount == 1 else str(amount) + " "),
-                    value="`{:,} BTC | {:,} USD | {:,} GAS`".format(
-                        round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
-                    ), inline=False)
-        e.add_field(name="NEO Market Cap", value="`{:,} USD (Rank #{:,})`".format(neomc, neorank))
-        e.add_field(name="{}GAS".format("" if gasamount == 1 else funcs.removeDotZero("{:,}".format(gasamount)) + " "),
-                    value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
-                        round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
-                    ), inline=False)
-        e.add_field(name="GAS Market Cap", value="`{:,} USD (Rank #{:,})`".format(gasmc, gasrank))
-        e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
+        try:
+            res = await funcs.getRequest(COINGECKO_URL + "coins/markets", params={"vs_currency": "usd", "ids": "bitcoin,neo,gas"})
+            tickers = res.json()
+            btcprice = None
+            neobtc, neousd, gasbtc, gasusd = None, None, None, None
+            neorank, gasrank, neomc, gasmc = None, None, None, None
+            for ticker in tickers:
+                if ticker["symbol"] == "btc":
+                    btcprice = ticker["current_price"]
+                if ticker["symbol"] == "neo":
+                    neousd = ticker["current_price"]
+                    neobtc = neousd / btcprice
+                    neorank = ticker["market_cap_rank"]
+                    neomc = ticker["market_cap"]
+                if ticker["symbol"] == "gas":
+                    gasusd = ticker["current_price"]
+                    gasbtc = gasusd / btcprice
+                    gasrank = ticker["market_cap_rank"]
+                    gasmc = ticker["market_cap"]
+            e = Embed(colour=Colour.green())
+            e.set_author(name="NEO and GAS Prices",
+                         icon_url="https://assets.coingecko.com/coins/images/480/large/NEO_512_512.png")
+            e.add_field(name="{}NEO".format("" if amount == 1 else str(amount) + " "),
+                        value="`{:,} BTC | {:,} USD | {:,} GAS`".format(
+                            round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
+                        ), inline=False)
+            e.add_field(name="NEO Market Cap", value="`{:,} USD (Rank #{:,})`".format(neomc, neorank))
+            e.add_field(name="{}GAS".format("" if gasamount == 1 else funcs.removeDotZero("{:,}".format(gasamount)) + " "),
+                        value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
+                            round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
+                        ), inline=False)
+            e.add_field(name="GAS Market Cap", value="`{:,} USD (Rank #{:,})`".format(gasmc, gasrank))
+            e.set_footer(text=f"GAS to NEO ratio: ~{round(gasusd / neousd * 100, 2)}%")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Server error.")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -93,17 +97,21 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         if amount < 1:
             amount = 1
         hodl, governance = GAS_HODL * amount, GAS_GOVN * amount
-        res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "gas"})
-        gasusd = res.json()["tickers"][0]["converted_last"]["usd"]
-        gasbtc = res.json()["tickers"][0]["converted_last"]["btc"]
-        e = Embed(colour=Colour.green())
-        e.set_author(name="GAS Earnings for {:,} NEO".format(amount),
-                     icon_url="https://assets.coingecko.com/coins/images/858/large/GAS_512_512.png")
-        e.set_footer(text="GAS price: {:,} BTC | {:,} USD".format(gasbtc, gasusd))
-        e.add_field(name="Monthly Holding Reward", inline=False,
-                    value="`~{:,} GAS ({:,} USD)`".format(round(hodl, 5), round(gasusd * hodl, 5)))
-        e.add_field(name="Monthly Governance Participation Reward", inline=False,
-                    value="`~{:,} GAS ({:,} USD)`".format(round(governance, 5), round(gasusd * governance, 5)))
+        try:
+            res = await funcs.getRequest(COINGECKO_URL + "exchanges/binance/tickers", params={"coin_ids": "gas"})
+            gasusd = res.json()["tickers"][0]["converted_last"]["usd"]
+            gasbtc = res.json()["tickers"][0]["converted_last"]["btc"]
+            e = Embed(colour=Colour.green())
+            e.set_author(name="GAS Earnings for {:,} NEO".format(amount),
+                         icon_url="https://assets.coingecko.com/coins/images/858/large/GAS_512_512.png")
+            e.set_footer(text="GAS price: {:,} BTC | {:,} USD".format(gasbtc, gasusd))
+            e.add_field(name="Monthly Holding Reward", inline=False,
+                        value="`~{:,} GAS ({:,} USD)`".format(round(hodl, 5), round(gasusd * hodl, 5)))
+            e.add_field(name="Monthly Governance Participation Reward", inline=False,
+                        value="`~{:,} GAS ({:,} USD)`".format(round(governance, 5), round(gasusd * governance, 5)))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Server error.")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -140,7 +148,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                            ) + "\n{} price: `{:,} USD` | {} market cap: `{:,} USD` (Rank #{:,})".format(
                                coin2symb, coin2price, coin2symb, coin2cap, data[1]["market_cap_rank"]
                            ))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             return await ctx.reply(embed=funcs.errorEmbed(
                 "Invalid argument(s) and/or invalid currency!",
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
@@ -304,7 +313,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 )
             else:
                 e = funcs.errorEmbed(None, "Possible server error.")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(
                 "Invalid argument(s) and/or invalid currency!",
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
@@ -333,7 +343,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             e.set_footer(
                 text=f"Use {self.client.command_prefix}coinprice <coin symbol> [vs currency] for more information."
             )
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.reply(embed=e, file=image)
 
@@ -341,19 +352,23 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
     @commands.command(name="ethgas", description="Shows the recommended gas prices for Ethereum transactions.",
                       aliases=["eg", "ef", "ethfee", "ethfees", "egas", "efee", "efees", "gasprice", "gasfee"])
     async def ethgas(self, ctx):
-        res = await funcs.getRequest(
-            f"https://ethgasstation.info/api/ethgasAPI.json?api-key={config.ethGasStationKey}"
-        )
-        data = res.json()
-        bt = round(data['block_time'])
-        e = Embed(colour=Colour.light_grey())
-        e.set_author(name="Recommended Ethereum Gas Prices", icon_url=ETHEREUM_LOGO)
-        e.add_field(name="Fastest (<30s)", value="`{:,} gwei`".format(int(data['fastest'] / 10)))
-        e.add_field(name="Fast (<2m)", value="`{:,} gwei`".format(int(data['fast'] / 10)))
-        e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
-        e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
-        e.add_field(name="Block Time", value="`{:,} second{}`".format(bt, "" if bt == 1 else "s"))
-        e.set_footer(text="1 gwei = 0.000000001 ETH")
+        try:
+            res = await funcs.getRequest(
+                f"https://ethgasstation.info/api/ethgasAPI.json?api-key={config.ethGasStationKey}"
+            )
+            data = res.json()
+            bt = round(data['block_time'])
+            e = Embed(colour=Colour.light_grey())
+            e.set_author(name="Recommended Ethereum Gas Prices", icon_url=ETHEREUM_LOGO)
+            e.add_field(name="Fastest (<30s)", value="`{:,} gwei`".format(int(data['fastest'] / 10)))
+            e.add_field(name="Fast (<2m)", value="`{:,} gwei`".format(int(data['fast'] / 10)))
+            e.add_field(name="Average (<5m)", value="`{:,} gwei`".format(int(data['average'] / 10)))
+            e.add_field(name="Safe Low (<30m)", value="`{:,} gwei`".format(int(data['safeLow'] / 10)))
+            e.add_field(name="Block Time", value="`{:,} second{}`".format(bt, "" if bt == 1 else "s"))
+            e.set_footer(text="1 gwei = 0.000000001 ETH")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Server error.")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -408,7 +423,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Medium Priority Fee (~3h)", value="`{:,} sats/vB`".format(fees['halfHourFee']))
                 e.add_field(name="Low Priority Fee (~1d)", value="`{:,} sats/vB`".format(fees['hourFee']))
                 e.add_field(name="Minimum Fee", value="`{:,} sats/vB`".format(fees['minimumFee']))
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
         await ctx.reply(embed=e)
 
@@ -449,7 +465,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Relayed By", value=f"`{relayed}`")
                 e.add_field(name="Input Address", value=f"`{'0x' + data['inputs'][0]['addresses'][0]}`")
                 e.add_field(name="Output Address", value=f"`{'0x' + data['outputs'][0]['addresses'][0]}`")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
         await ctx.reply(embed=e)
 
@@ -511,7 +528,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     newvalue += "..."
                 e.add_field(name="Outputs ({:,})".format(txinfo['vout_sz']), value=f"```{newvalue}```")
                 e.set_footer(text="1 satoshi = 0.00000001 BTC")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown transaction hash or server error?")
         await ctx.reply(embed=e)
 
@@ -557,7 +575,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                               f"{'{:,}'.format(value) if value else 0} ETH`"
                     )
                     e.add_field(name="Last Transaction Hash", value=f"`{latestTx['tx_hash']}`")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown address or server error?")
         await ctx.reply(embed=e)
 
@@ -597,7 +616,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 except:
                     pass
                 e.set_footer(text="1 satoshi = 0.00000001 BTC")
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown address or server error?")
         await ctx.reply(embed=e)
 
@@ -647,7 +667,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 )
                 nextHash = res.json()["hash"]
                 e.add_field(name="Next Block ({:,})".format(nextHeight), value=f"`{nextHash}`")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown block or server error?")
         await ctx.reply(embed=e)
 
@@ -707,7 +728,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Previous Block ({:,})".format(height - 1), value=f"`{blockinfo['prev_block']}`")
             if nextblock:
                 e.add_field(name="Next Block ({:,})".format(height + 1), value=f"`{nextblock[0]}`")
-        except Exception:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown block or server error?")
         await ctx.reply(embed=e)
 
@@ -737,7 +759,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 e.add_field(name="Circulating",
                             value=f"`{'{:,}'.format(data['market_data']['circulating_supply']) or 'None'}`")
                 e.set_footer(text=data["ico_data"]["description"])
-            except Exception:
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown contract or server error?")
         await ctx.reply(embed=e)
 

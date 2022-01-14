@@ -191,10 +191,11 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                 e.add_field(name="Buy Price", value="`{:,}`".format(data[variant]["buy-price"]))
             e.add_field(name="Sell Price", value="`{:,}`".format(data[variant]["sell-price"]))
         except Exception:
+            pref = self.client.command_prefix
             e = funcs.errorEmbed(
                 None, "Not found, please check your spelling. Furniture names are case sensitive." + \
                       " (e.g. `acoustic guitar` or `Bunny Day arch`)\n\nOr is this even the right category? " + \
-                      f"(houseware, wallmounted, misc)"
+                      f"(`{pref}achouseware`/`{pref}acmisc`/`{pref}acwallmounted`)"
             )
         return e
 
@@ -539,20 +540,29 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
     @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
                       description="Shows information about an *Animal Crossing: New Horizons* houseware furniture item.")
     async def achouseware(self, ctx, *, item):
-        await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
+        try:
+            await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
                       usage="<item name (case sensitive)>",
                       description="Shows information about an *Animal Crossing: New Horizons* wallmounted furniture item.")
     async def acwallmounted(self, ctx, *, item):
-        await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
+        try:
+            await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
                       description="Shows information about an *Animal Crossing: New Horizons* miscellaneous furniture item.")
     async def acmisc(self, ctx, *, item):
-        await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
+        try:
+            await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips"],
