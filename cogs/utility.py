@@ -529,37 +529,37 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="dictionary", description="Returns the definition(s) of a word.",
                       aliases=["dict", "def", "definition", "meaning", "define"],
-                      usage="<word> [language code]")
-    async def dictionary(self, ctx, word="", lang="en"):
-        if word == "":
-            e = funcs.errorEmbed(None, "Cannot process empty input.")
+                      usage="<language code> <word>")
+    async def dictionary(self, ctx, lang, *, word):
+        codes = ["en", "hi", "es", "fr", "ja", "ru", "de", "it", "ko", "pt-BR", "ar", "tr"]
+        languages = [
+            "English", "Hindi", "Spanish", "French", "Japanese", "Russian", "German",
+            "Italian", "Korean", "Brazilian Portuguese", "Arabic", "Turkish"
+        ]
+        if lang not in codes:
+            codesList = ", ".join(f"`{code}` ({languages[codes.index(code)]})" for code in codes)
+            e = funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}")
         else:
-            codes = ["en", "hi", "es", "fr", "ja", "ru", "de", "it", "ko", "pt-BR", "ar", "tr"]
-            languages = [
-                "English", "Hindi", "Spanish", "French", "Japanese", "Russian", "German",
-                "Italian", "Korean", "Brazilian Portuguese", "Arabic", "Turkish"
-            ]
-            if lang not in codes:
-                codesList = ", ".join(f"`{code}` ({languages[codes.index(code)]})" for code in codes)
-                e = funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}")
-            else:
-                try:
-                    url = f"https://api.dictionaryapi.dev/api/v2/entries/{lang}/{word}"
-                    res = await funcs.getRequest(url)
-                    data = res.json()
-                    word = data[0]["word"].title()
-                    output = ""
-                    for i in data:
-                        meanings = i["meanings"]
-                        for j in meanings:
-                            partOfSpeech = j["partOfSpeech"]
-                            definitions = j["definitions"]
-                            for k in definitions:
-                                definition = k["definition"]
-                                output += f"- {definition} [{partOfSpeech}]\n"
-                    e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1], limit=1000))
-                except Exception:
-                    e = funcs.errorEmbed(None, "Unknown word.")
+            try:
+                res = await funcs.getRequest(f"https://api.dictionaryapi.dev/api/v2/entries/{lang}/{word}")
+                data = res.json()
+                word = data[0]["word"].title()
+                output = ""
+                for i in data:
+                    meanings = i["meanings"]
+                    for j in meanings:
+                        try:
+                            partOfSpeech = f' [{j["partOfSpeech"]}]'
+                        except:
+                            partOfSpeech = ""
+                        definitions = j["definitions"]
+                        for k in definitions:
+                            definition = k["definition"]
+                            output += f"- {definition}{partOfSpeech}\n"
+                e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1], limit=1000))
+            except Exception as ex:
+                print(ex)
+                e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
