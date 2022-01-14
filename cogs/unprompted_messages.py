@@ -89,6 +89,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                         await message.channel.send("f")
                 elif "gordon ramsay" in lowercase:
                     await message.channel.send("https://i.imgur.com/XezjUCZ.gifv")
+                elif "staying alive" in lowercase:
+                    await message.channel.send("https://tenor.com/view/stayin-alive-staying-alive-bee-gees-gif-14315934")
                 elif "hkeaa" in lowercase:
                     await funcs.sendImage(
                         message.channel,

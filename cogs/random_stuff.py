@@ -342,6 +342,15 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="yomama", description="Sends a random yo mama joke.", aliases=["yomoma", "yomomma", "yomamma", "yomom"])
+    async def yomama(self, ctx):
+        try:
+            res = await funcs.getRequest("https://api.yomomma.info/")
+            await ctx.reply(res.json()["joke"])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dog", description="Sends a random dog image.")
     async def dog(self, ctx):
         try:

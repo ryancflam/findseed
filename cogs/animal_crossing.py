@@ -391,7 +391,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvillager", description="Shows information about an *Animal Crossing: New Horizons* villager.",
-                      aliases=["acnhvillager", "acv", "vil", "acvil", "acnhvil"], usage="<villager name>")
+                      aliases=["acnhvillager", "acv", "acvil", "acnhvil"], usage="<villager name>")
     async def acvillager(self, ctx, *, villager):
         try:
             found, villagerdata = False, None
