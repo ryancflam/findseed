@@ -61,7 +61,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                     e.description += f"\n`{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
                                      f"- [{user}](https://github.com/{user})"
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                ridiculousFunctionThatShouldNotWorkAtAllButItDoes(embed=e)
+                RIDICULOUS_CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(e, RIDICULOUS_CHANNEL_LIST[:-1]))
             except:
                 pass
             return "success", 200
@@ -74,7 +74,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         Thread(target=self.run).start()
 
 
-def ridiculousFunctionThatShouldNotWorkAtAllButItDoes(embed):
+def ridiculousFunctionThatShouldNotWorkAtAllButItDoes(embed: Embed):
     RIDICULOUS_CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(embed, RIDICULOUS_CHANNEL_LIST[:-1]))
 
 
