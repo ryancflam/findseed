@@ -153,7 +153,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="telephone", aliases=["phone", "userphone", "call"],
-                      description="Talk to other users from other chatrooms! This is an experimental feature and may not work.")
+                      description="Talk to other users from other servers! This is an experimental feature and may not work.")
     async def telephone(self, ctx):
         if ctx.channel in self.phoneWaitingChannels:
             return await ctx.reply(":telephone: Cancelling phone call.")
