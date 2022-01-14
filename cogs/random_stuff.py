@@ -11,7 +11,7 @@ from other_utils import funcs
 from other_utils.playing_cards import PlayingCards
 
 COIN_EDGE_ODDS = 6001
-RN_RANGE = 999999999999
+RN_RANGE = 99999999999
 
 
 class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fun commands for you to kill time."):
