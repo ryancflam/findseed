@@ -9,12 +9,12 @@ from statistics import mean, median, mode, pstdev, stdev
 from string import punctuation
 from subprocess import PIPE, Popen, STDOUT
 from time import time
-from urllib.parse import quote
 
 from asyncpraw import Reddit
-from discord import Embed, channel
+from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
+from qrcode import QRCode
 
 import config
 from other_utils import funcs
@@ -408,17 +408,33 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr", "qrc"],
-                      usage="<input>")
+                      usage='<input> ["QRcolour=black"]\n\nNote: Add "QRcolour=black" at the end to make the QR code black.')
     async def qrgen(self, ctx, *, text):
+        black = text.split(" ")[-1] == "QRcolour=black"
+        if black:
+            text = text[:-14]
+            while text.endswith(" "):
+                text = text[:-1]
+        imgName = f"{time()}.png"
+        image = None
         try:
-            e = Embed(title="QR Code").set_image(
-                url=f"http://api.qrserver.com/v1/create-qr-code/?data={quote(text)}&margin=25"
-            )
+            e = Embed(title="QR Code")
+            qr = QRCode()
+            qr.add_data(text)
+            qr.make(fit=True)
+            if black:
+                img = qr.make_image(fill_color="white", back_color="black")
+            else:
+                img = qr.make_image(fill_color="black", back_color="white")
+            img.save(f"{funcs.getPath()}/temp/{imgName}")
+            image = File(f"{funcs.getPath()}/temp/{imgName}")
+            e.set_image(url=f"attachment://{imgName}")
         except Exception:
-            e = funcs.errorEmbed(None, "Invalid input or server error?")
-        await ctx.reply(embed=e)
+            e = funcs.errorEmbed(None, "Invalid input.")
+        await ctx.reply(embed=e, file=image)
+        funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],

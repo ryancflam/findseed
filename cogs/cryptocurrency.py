@@ -1,5 +1,4 @@
 from datetime import datetime
-from os import path, remove
 from time import time
 
 from discord import Colour, Embed, File
@@ -311,8 +310,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
             )
         await ctx.reply(embed=e, file=image)
-        if path.exists(f"{funcs.getPath()}/temp/{imgName}"):
-            remove(f"{funcs.getPath()}/temp/{imgName}")
+        funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos", "top"],

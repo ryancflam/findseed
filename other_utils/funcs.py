@@ -4,7 +4,7 @@ from calendar import monthrange
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from json import JSONDecodeError, dump, load
-from os import path
+from os import path, remove
 from re import split
 
 from dateutil import parser
@@ -15,7 +15,7 @@ from other_utils.item_cycle import ItemCycle
 
 
 def getPath():
-    return path.dirname(path.realpath(__file__))[:-12]
+    return path.dirname(path.realpath(__file__)).rsplit("\\", 1)[0]
 
 
 def readTxtLines(pathstr):
@@ -520,6 +520,11 @@ def unloadCog(client, cog):
         print(f"Unloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
+
+
+def deleteTempFile(file: str):
+    if path.exists(f"{getPath()}/temp/{file}"):
+        remove(f"{getPath()}/temp/{file}")
 
 
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):
