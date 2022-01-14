@@ -2,12 +2,12 @@ import time
 from asyncio import TimeoutError, sleep
 from calendar import monthrange
 from datetime import date, datetime, timedelta
-from dateutil import parser
 from io import BytesIO
 from json import JSONDecodeError, dump, load
 from os import path
 from re import split
 
+from dateutil import parser
 from discord import Embed, File, utils
 from httpx import AsyncClient, get
 

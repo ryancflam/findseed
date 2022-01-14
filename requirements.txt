@@ -7,3 +7,4 @@ httpx==0.13.3
 mplfinance==0.12.7a5
 pandas==1.1.5
 psutil==5.9.0
+python-dateutil==2.8.2
