@@ -74,10 +74,6 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         Thread(target=self.run).start()
 
 
-def ridiculousFunctionThatShouldNotWorkAtAllButItDoes(embed: Embed):
-    RIDICULOUS_CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(embed, RIDICULOUS_CHANNEL_LIST[:-1]))
-
-
 def setup(client: commands.Bot):
     global RIDICULOUS_CHANNEL_LIST
     for channelID in githubWebhooks:
