@@ -13,27 +13,32 @@ class General(commands.Cog, name="General", description="Standard commands relat
         self.client = client
         self.starttime = time()
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ping", description="Tests the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
         ptime = int(round(time() * 1000))
         msg = await ctx.reply(":ping_pong: Pong! `Pinging...`")
         ping = int(round(time() * 1000)) - ptime
         newmsg = ":ping_pong: Pong! `{:,} ms`".format(ping)
-        if ping >= 1000:
+        if ping == 420:
+            newmsg += " <:weed:663638830309703680>"
+        elif ping >= 1000:
             newmsg += "\n\nWell that was slow..."
         await msg.edit(content=newmsg)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="invite", description="Invite any bot to your server.", usage="[bot user ID]")
+    @commands.command(name="invite", description="Invite this or another bot to your server.", usage="[bot user ID]")
     async def invite(self, ctx, *, botid=""):
         botid = botid.replace(" ", "") or self.client.user.id
         e = Embed(
             description=f"[Invite Link](https://discord.com/oauth2/authorize?client_id={botid}" + \
                         "&permissions=473196598&scope=bot)"
         )
-        if botid != self.client.user.id:
-            e.set_footer(text="Note: Invite link may be invalid.")
+        try:
+            user = self.client.get_user(int(botid))
+            if not user or not user.bot:
+                e.set_footer(text="Note: Invite link may be invalid.")
+        except:
+            e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)

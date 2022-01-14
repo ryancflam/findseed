@@ -60,7 +60,7 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                     message = commit['message']
                     e.description += f"\n`{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
                                      f"- [{user}](https://github.com/{user})"
-                e.set_footer(text=f"Commit Time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
+                e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                 executeSend(e)
             except:
                 pass

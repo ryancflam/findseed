@@ -399,7 +399,7 @@ def timeStrToDatetime(datestr: str):
     hour, minute = timezone.split(":")
     timezone = (int(hour) * 3600 + int(minute) * 60) * (1 if neg else -1)
     dateObj = parser.parse(datestr) + timedelta(seconds=timezone)
-    return f"{dateObj.date()} {dateObj.time()}"
+    return dateObj.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def musicalNotes():

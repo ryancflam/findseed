@@ -262,7 +262,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Local Time", value=f"`{timenow}`")
             e.add_field(name="Last Updated (Local Time)", value=f"`{lastupdate}`")
             e.set_footer(text="Note: Weather data provided by OpenWeatherMap may not be 100% accurate.",
-                         icon_url="https://openweathermap.org/themes/openweathermap/assets/img/mobile_app/android_icon.png")
+                         icon_url="https://cdn.discordapp.com/attachments/771404776410972161/931460099296358470/unknown.png")
             e.set_thumbnail(url=f"http://openweathermap.org/img/wn/{data['weather'][0]['icon']}@2x.png")
         except:
             e = funcs.errorEmbed(None, "Unknown location or server error.")
