@@ -130,7 +130,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="finddream", description="Can you get Dream's" + ' *Minecraft* speedrunning "luck"? ' + \
                                                     "Test your luck using this command!",
-                      aliases=["dream", "dreamsimulator", "dreamsim", "dreamluck", "fd"])
+                      aliases=["dream", "dreamsimulator", "dreamsim", "dreamluck", "fd"], hidden=True)
     async def finddream(self, ctx):
         pearls, rods = 0, 0
         dpearls, drods = 262, 305
@@ -433,7 +433,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                     "tes in the Nether. This command is for versions 1.13" + \
                                                     "+ and may not be 100% accurate. This command may not" + \
                                                     " be used in a real speedrun.",
-                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>")
+                      aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>", hidden=True)
     async def safeblind(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other " + \
                        "speedrunning calculators, may not be used in a real speedrun.")

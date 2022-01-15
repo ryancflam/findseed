@@ -120,7 +120,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
                       description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
                                   "Translation may sometimes fail due to rate limit.",
-                      aliases=["lc", "lj", "lk", "literaljapanese", "literalkorean"])
+                      aliases=["lc", "lj", "lk", "literaljapanese", "literalkorean"], hidden=True)
     async def literalchinese(self, ctx, *, inp):
         res = ""
         try:
@@ -137,7 +137,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="literalenglish", aliases=["le"], usage="<English text (10 words or less)>",
                       description="Literally translates English words to Chinese one by one. " + \
-                                  "Translation may sometimes fail due to rate limit.")
+                                  "Translation may sometimes fail due to rate limit.", hidden=True)
     async def literalenglish(self, ctx, *, inp):
         res = ""
         try:
@@ -342,7 +342,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="yomama", description="Sends a random yo mama joke.", aliases=["yomoma", "yomomma", "yomamma", "yomom"])
+    @commands.command(name="yomama", description="Sends a random yo mama joke.",
+                      aliases=["yomoma", "yomomma", "yomamma", "yomom"], hidden=True)
     async def yomama(self, ctx):
         try:
             res = await funcs.getRequest("https://api.yomomma.info/")
@@ -351,7 +352,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="dog", description="Sends a random dog image.")
+    @commands.command(name="dog", description="Sends a random dog image.", hidden=True)
     async def dog(self, ctx):
         try:
             res = await funcs.getRequest("https://dog.ceo/api/breeds/image/random")
@@ -360,7 +361,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="cat", description="Sends a random cat image.")
+    @commands.command(name="cat", description="Sends a random cat image.", hidden=True)
     async def cat(self, ctx):
         try:
             res = await funcs.getRequest("https://api.thecatapi.com/v1/images/search")
@@ -429,7 +430,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 return
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="iq", description="Calculates your IQ. This is a joke command.", usage="[@mention]")
+    @commands.command(name="iq", description="Calculates your IQ. This is a joke command.", usage="[@mention]", hidden=True)
     async def iq(self, ctx, mention: User=None):
         if not mention:
             mention = ctx.author
@@ -462,8 +463,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(f"{mention.mention}'s IQ score is **{iqres}**.\n\n{choice(msg)}")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="lovecalc", description="Calculates the love percentage between two things or users.",
-                      aliases=["love", "lovecalculator", "calclove"], usage="<input> [input]")
+    @commands.command(name="lovecalc", description="Calculates the love percentage between two things or users with an algorithm.",
+                      aliases=["love", "lovecalculator", "calclove"], usage="<input> [input]", hidden=True)
     async def lovecalc(self, ctx, first: str="", second: str=""):
         if not first:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
@@ -569,9 +570,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             await ctx.reply(f"```{', '.join(coin for coin in coins)}\n{result}\n\nRequested by: {ctx.author}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="die", description="Rolls dice.", usage="[amount up to 100]",
-                      aliases=["dice", "roll", "rd", "rolldice", "rolldie", "diceroll", "dieroll"])
-    async def die(self, ctx, amount: str="1"):
+    @commands.command(name="dice", description="Rolls dice.", usage="[amount up to 100]",
+                      aliases=["die", "roll", "rd", "rolldice", "rolldie", "diceroll", "dieroll"])
+    async def dice(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
@@ -696,7 +697,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="glitchtext", usage="<input>", aliases=["glitch", "textglitch"], description="Glitches text.")
+    @commands.command(name="glitchtext", usage="<input>", aliases=["glitch", "textglitch"], description="Glitches text.", hidden=True)
     async def glitchtext(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Empty input.")

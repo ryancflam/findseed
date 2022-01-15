@@ -1,3 +1,5 @@
+# Hidden category
+
 import hashlib
 
 from discord import Embed
@@ -7,7 +9,8 @@ from other_utils import funcs
 from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
-class Conversion(commands.Cog, name="Conversion", description="Convert inputs from one unit or format to another."):
+class Conversion(commands.Cog, name="Conversion", description="Convert inputs from one unit or format to another.",
+                 command_attrs=dict(hidden=True)):
     MORSE = {
         "A": ".-",
         "B": "-...",

@@ -164,6 +164,12 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 e = funcs.errorEmbed(None, "Unknown command.")
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="hidden", description="Shows a list of public commands hidden from the main commands menu.",
+                      aliases=["hiddencommand", "hiddencommands", "hid", "hiddencmds", "hiddencmd"])
+    async def hidden(self, ctx):
+        await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=1))
+
     @commands.command(name="umenable", description="Enables unprompted messages for your server.",
                       aliases=["ume", "eum", "enableum"])
     @commands.guild_only()

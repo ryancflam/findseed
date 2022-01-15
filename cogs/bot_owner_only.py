@@ -421,14 +421,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="hiddencmds", description="Shows a list of public commands hidden from the main commands menu.",
-                      aliases=["hiddencommand", "hiddencommands", "hid", "hidden", "hiddencmd"])
-    @commands.is_owner()
-    async def hidden(self, ctx):
-        await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=1))
-
     @commands.command(name="ownercmds", description="Shows a list of bot owner commands.",
-                      aliases=["ownercommand", "ownercommands", "owner", "ownercmd"])
+                      aliases=["ownercommand", "ownercommands", "owner", "ownercmd", "botowner", "botowneronly", "botownercmds"])
     @commands.is_owner()
     async def ownercmds(self, ctx):
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=2))

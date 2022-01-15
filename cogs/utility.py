@@ -538,10 +538,10 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="dictionary", description="Returns the definition(s) of a word.",
-                      aliases=["dict", "def", "definition", "meaning", "define"],
+    @commands.command(name="dict", description="Returns the definition(s) of a word.",
+                      aliases=["dictionary", "def", "definition", "meaning", "define"],
                       usage="<language code> <word>")
-    async def dictionary(self, ctx, lang, *, word):
+    async def dict(self, ctx, lang, *, word):
         codes = ["en", "hi", "es", "fr", "ja", "ru", "de", "it", "ko", "pt-BR", "ar", "tr"]
         languages = [
             "English", "Hindi", "Spanish", "French", "Japanese", "Russian", "German",
@@ -818,7 +818,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="sqrt", usage="<input>",
+    @commands.command(name="sqrt", usage="<input>", hidden=True,
                       aliases=["square", "root"], description="Calculates the square root of a given value or math expession.")
     async def sqrt(self, ctx, *, val):
         try:
@@ -919,7 +919,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="normalbodytemp", description="Shows the normal body temperature range chart.",
-                      aliases=["bodytemp", "nbt"])
+                      aliases=["bodytemp", "nbt"], hidden=True)
     async def normalbodytemp(self, ctx):
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
 
@@ -1095,7 +1095,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.",
+    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.", hidden=True,
                       aliases=["starsign", "horoscope", "zs"], usage="[month] [day]\n\nAlternative usage(s):\n\n- <zodiac sign>")
     async def zodiac(self, ctx, month: str="", day: str=""):
         try:
@@ -1136,7 +1136,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.", usage="[year]",
-                      aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"])
+                      aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"], hidden=True)
     async def chinesezodiac(self, ctx, year: str=""):
         year = year or datetime.now().year
         try:
