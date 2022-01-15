@@ -25,8 +25,6 @@ HCF_LIMIT = 1000000
 
 
 class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
-    COPYPASTA = Path(f"{funcs.getPath()}/assets/random_stuff/copypasta.txt").read_text()
-
     def __init__(self, client: commands.Bot):
         self.client = client
         self.reddit = Reddit(client_id=config.redditClientID,
@@ -549,6 +547,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             "English", "Hindi", "Spanish", "French", "Japanese", "Russian", "German",
             "Italian", "Korean", "Brazilian Portuguese", "Arabic", "Turkish"
         ]
+        lang = lang.casefold() if lang != "pt-BR" else lang
         if lang not in codes:
             codesList = ", ".join(f"`{code}` ({languages[codes.index(code)]})" for code in codes)
             e = funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}")
@@ -770,8 +769,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         try:
             e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(SafeEval(inp).safeEval()))))
         except ZeroDivisionError:
-            answer = choice([
-                self.COPYPASTA.replace("\*", "*")[:1994],
+            answer = [
                 "Stop right there, that's illegal!",
                 "Wait hol up...",
                 "FBI OPEN UP!!!",
@@ -808,8 +806,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 "YOU! YOU TRIPLE GREASY WALKING SECOND DINING COURSE, YOU'RE JUST A PHONY! YOU'RE A GIANT, MORALIST" + \
                 " PHONY WHO CAN'T TAKE CARE OF ANYONE, ESPECIALLY HIMSELF! YOU HAVE YOUR OWN DISCIPLINE UP YOUR OWN" + \
                 " ARSE AND YOU DON'T EVEN SEE IT!"
-            ])
-            e = Embed(description=f"```{answer}```")
+            ]
+            try:
+                answer.append(Path(f"{funcs.getPath()}/assets/easter_eggs/copypasta.txt").read_text().replace("\*", "*")[:1994])
+            except:
+                pass
+            e = Embed(description=f"```{choice(answer)}```")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
