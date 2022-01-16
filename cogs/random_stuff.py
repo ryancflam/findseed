@@ -54,7 +54,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                                   "̼̭̯̈́̏͌̃̌̀̓́͂ǎ̸̰̥̠͙̃͂̕͘ ̷̡̢͍͚͈̜͈̻͚̯͖̯̙̖̖̽i̴̡͉͈̦̙̯̻̜̙͉̊͐͒̍̓ͅm̷̖̖͖̣̮͔͕͙̏̀́̅̀̈́̄͜͜͜m̵̯̫̋̆̍̒̽͗͋͌̔̑̓̈̍̕̕e̵̘̺̟̫̿̈̆͊͂͆͒̊̕͜d" +
                                   "̸͍͒́̂͗̏̔̇̓̊͂͘͠i̵̡̩͈̙̺͚̜̿̾͆̉̋̀̆̈́͛̕͠͝ă̵̛̬͓̤̠͈̝̮͑̀̔̌͊́̕̚͝͠͝t̵̟͛͛̆̀̑̓̇͆ḛ̵̢̺͖̺̒͝ḽ̵̡̢̡͈̮̤̲̖͍̺̦͖͘ͅỳ̵̖̰̟̦̑̈́̚.̸̛͔̠̬̱̭̭̞̟̦͂̆̿͋̌")
     async def oohasecretcommand(self, ctx):
-        if not ctx.guild or ctx.guild and ctx.guild.id in funcs.readJson("data/easter_eggs.json")["servers"]:
+        if await funcs.easterEggsPredicate(ctx):
             commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
             m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
         else:
