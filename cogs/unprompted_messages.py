@@ -16,7 +16,7 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"] \
+        if (not message.guild or message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"]) \
                 and funcs.userNotBlacklisted(self.client, message) \
                 and (not message.author.bot or (message.author.id in funcs.readJson("data/unprompted_bots.json")["ids"]
                                                 and message.author.id != self.client.user.id)):

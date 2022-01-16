@@ -54,8 +54,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                                   "̼̭̯̈́̏͌̃̌̀̓́͂ǎ̸̰̥̠͙̃͂̕͘ ̷̡̢͍͚͈̜͈̻͚̯͖̯̙̖̖̽i̴̡͉͈̦̙̯̻̜̙͉̊͐͒̍̓ͅm̷̖̖͖̣̮͔͕͙̏̀́̅̀̈́̄͜͜͜m̵̯̫̋̆̍̒̽͗͋͌̔̑̓̈̍̕̕e̵̘̺̟̫̿̈̆͊͂͆͒̊̕͜d" +
                                   "̸͍͒́̂͗̏̔̇̓̊͂͘͠i̵̡̩͈̙̺͚̜̿̾͆̉̋̀̆̈́͛̕͠͝ă̵̛̬͓̤̠͈̝̮͑̀̔̌͊́̕̚͝͠͝t̵̟͛͛̆̀̑̓̇͆ḛ̵̢̺͖̺̒͝ḽ̵̡̢̡͈̮̤̲̖͍̺̦͖͘ͅỳ̵̖̰̟̦̑̈́̚.̸̛͔̠̬̱̭̭̞̟̦͂̆̿͋̌")
     async def oohasecretcommand(self, ctx):
-        commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
-        m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+        if not ctx.guild or ctx.guild and ctx.guild.id in funcs.readJson("data/easter_eggs.json")["servers"]:
+            commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
+            m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+        else:
+            m = await ctx.reply(f"`{self.client.command_prefix}eeenable`")
         await sleep(1)
         await m.edit(content="Y̷o̸u̸ ̷d̴i̵d̶n̸'̷t̸ ̷s̶e̶e̶ ̸a̴n̵y̴t̷h̸i̸n̸g̵.̷")
         await sleep(0.5)

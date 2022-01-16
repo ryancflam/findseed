@@ -76,6 +76,7 @@ class BotInstance(Bot):
         self.generateJson("blacklist", {"servers": [], "users": []})
         self.generateJson("unprompted_bots", {"ids": []})
         self.generateJson("unprompted_messages", {"servers": []})
+        self.generateJson("easter_eggs", {"servers": []})
 
     def startup(self):
         for cog in listdir(f"{PATH}/cogs"):

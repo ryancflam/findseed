@@ -9,6 +9,7 @@ from re import split
 
 from dateutil import parser
 from discord import Embed, File, utils
+from discord.ext import commands
 from httpx import AsyncClient, get
 
 from other_utils.item_cycle import ItemCycle
@@ -533,6 +534,12 @@ def unloadCog(client, cog):
 def deleteTempFile(file: str):
     if path.exists(f"{getPath()}/temp/{file}"):
         remove(f"{getPath()}/temp/{file}")
+
+
+def easterEggsValidServer():
+    async def predicate(ctx):
+        return not ctx.guild or ctx.guild and ctx.guild.id in readJson("data/easter_eggs.json")["servers"]
+    return commands.check(predicate)
 
 
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):
