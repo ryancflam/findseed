@@ -85,7 +85,7 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
             await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="banlist", description="Returns a list of banned users on your server.", aliases=["bans"])
+    @commands.command(name="banlist", description="Returns a list of banned users on your server.", aliases=["bans", "bannedusers"])
     @commands.bot_has_permissions(manage_guild=True)
     @commands.has_permissions(manage_guild=True)
     async def banlist(self, ctx):
