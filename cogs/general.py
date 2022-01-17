@@ -139,8 +139,10 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     member = await ctx.guild.fetch_member(userID)
                     dt2 = member.joined_at
                     e.add_field(name="Joined Server At", value=funcs.dateBirthday(dt2.day, dt2.month, dt2.year))
-                    e.add_field(name="Nickname", value=f"`{member.nick}`")
-                    e.add_field(name="Activity", value=f"`{member.activity}`")
+                    if member.nick:
+                        e.add_field(name="Nickname", value=f"`{member.nick}`")
+                    if member.activity:
+                        e.add_field(name="Activity", value=f"`{member.activity}`")
                     e.add_field(name="Roles ({:,})".format(len(member.roles)),
                                 value="".join(f"{i.mention}, " for i in member.roles)[:800].rsplit(", ", 1)[0])
                 except:
