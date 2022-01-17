@@ -554,8 +554,11 @@ async def getImage(url, headers=None, params=None, timeout=None, verify=True):
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
     try:
         await ctx.reply(message, file=File(await getImage(url), name))
-    except Exception as ex:
-        printError(ctx, ex)
+    except:
+        try:
+            await ctx.send(message, file=File(await getImage(url), name))
+        except Exception as ex:
+            printError(ctx, ex)
 
 
 async def sendEmbedToChannels(embed: Embed, channellist: list):
