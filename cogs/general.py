@@ -84,6 +84,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
             dt = g.created_at
             members = g.members
             e.add_field(name="Owner", value=f"`{str(g.owner)}`")
+            e.add_field(name="Server ID", value=f"`{g.id}`")
             e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
             e.add_field(name="Premium Boosters", value="`{:,}`".format(g.premium_subscription_count))
             if g.premium_subscriber_role:
@@ -113,6 +114,39 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 e.set_image(url=g.banner_url)
         except:
             e = funcs.errorEmbed(None, "Unknown server.")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="userinfo", description="Shows information about a Discord user.",
+                      aliases=["member", "user", "memberinfo"], usage="[user ID]")
+    async def userinfo(self, ctx, *, userID=None):
+        try:
+            if not userID:
+                userID = str(ctx.author.id)
+            else:
+                if userID.startswith("<@!") and userID.endswith(">"):
+                    userID = userID[3:-1]
+                userID = userID.replace(" ", "")
+            u = self.client.get_user(int(userID))
+            dt = u.created_at
+            e = Embed(description=u.mention)
+            e.set_author(name=str(u), icon_url=u.avatar_url)
+            e.add_field(name="Is Bot", value=f"`{str(u.bot)}`")
+            e.add_field(name="User ID", value=f"`{u.id}`")
+            e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
+            if ctx.guild:
+                try:
+                    member = await ctx.guild.fetch_member(userID)
+                    dt2 = member.joined_at
+                    e.add_field(name="Joined Server At", value=funcs.dateBirthday(dt2.day, dt2.month, dt2.year))
+                    e.add_field(name="Nickname", value=f"`{member.nick}`")
+                    e.add_field(name="Activity", value=f"`{member.activity}`")
+                    e.add_field(name="Roles ({:,})".format(len(member.roles)),
+                                value="".join(f"{i.mention}, " for i in member.roles)[:800].rsplit(", ", 1)[0])
+                except:
+                    pass
+        except:
+            e = funcs.errorEmbed(None, "Unknown user.")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)

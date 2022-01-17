@@ -329,7 +329,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         )
 
     @commands.command(name="leaveserver", description="Makes the bot leave a given server.",
-                      aliases=["leaveguild", "serverleave", "guildleave"], usage="<server ID>")
+                      aliases=["leaveguild", "serverleave", "guildleave", "botleave", "botquit"], usage="<server ID>")
     @commands.is_owner()
     async def leaveserver(self, ctx, *, serverID=None):
         if not serverID:
@@ -337,6 +337,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         try:
             server = self.client.get_guild(int(serverID))
             if server:
+                await ctx.reply(":ok_hand:")
                 return await server.leave()
             await ctx.reply(embed=funcs.errorEmbed(None, "Unknown server."))
         except Exception as ex:
