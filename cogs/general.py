@@ -203,7 +203,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="miscellaneous", aliases=["hidden"],
+    @commands.command(name="miscellaneous", aliases=["hidden", "???????????"],
                       description="Shows a list of miscellaneous commands hidden from the main commands menu.")
     async def miscellaneous(self, ctx):
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=1))
