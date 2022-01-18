@@ -481,7 +481,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="cmtoft", description="Converts centimetres to feet and inches.", usage="<input>",
-                      aliases=["cmtoinch", "inch", "in", "ftinch", "ftin", "cm2ft", "cm2inch"])
+                      aliases=["cmtoinch", "inch", "in", "ftinch", "ftin", "cm2ft", "cm2inch", "cmtoin", "cm2in"])
     async def cmtoft(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
