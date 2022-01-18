@@ -14,6 +14,7 @@ from asyncpraw import Reddit
 from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
+from plotly import graph_objects as go
 from qrcode import QRCode
 
 import config
@@ -1023,10 +1024,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="quartile", usage="<numbers separated with ;>",
-                      aliases=["avg", "average", "mean", "median", "mode", "q1", "q2", "q3", "range", "sd", "iqr", "quartiles"],
+                      aliases=["avg", "average", "mean", "median", "mode", "q1", "q2",
+                               "q3", "range", "sd", "iqr", "quartiles", "boxplot", "box"],
                       description="Computes statistical data from a set of numerical values.")
     async def quartile(self, ctx, *, items):
+        imgName = f"{time()}.png"
+        image = None
         try:
+            if ";" not in items:
+                items = items.replace(",", ";")
             while items.startswith(";"):
                 items = items[1:]
             while items.endswith(";"):
@@ -1048,7 +1054,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             q1 = median(data[:halflist])
             e = Embed(title="Quartile Calculator",
                       description=f'Requested by: {ctx.author.mention}\n' + \
-                                  f'{funcs.formatting("; ".join(funcs.removeDotZero("{:,}".format(i)) for i in data), limit=2000)}')
+                                  f'{funcs.formatting("; ".join(funcs.removeDotZero("{:,}".format(i)) for i in data))}')
             e.add_field(name="Total Values", value="`{:,}`".format(len(data)))
             e.add_field(name="Mean", value=f'`{funcs.removeDotZero("{:,}".format(mean(data)))}`')
             try:
@@ -1065,10 +1071,19 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Minimum Value", value=f'`{funcs.removeDotZero("{:,}".format(min(data)))}`')
             e.add_field(name="Maximum Value", value=f'`{funcs.removeDotZero("{:,}".format(max(data)))}`')
             e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
+            fig = go.Figure()
+            fig.add_trace(go.Box(y=data, quartilemethod="linear", name="Linear Quartile"))
+            fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
+            fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
+            fig.update_traces(boxpoints="all", jitter=0)
+            fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
+            image = File(f"{funcs.getPath()}/temp/{imgName}")
+            e.set_image(url=f"attachment://{imgName}")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.reply(embed=e)
+        await ctx.reply(embed=e, file=image)
+        funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hcf", usage="<value #1 up to {:,}> <value #2 up to {:,}>".format(HCF_LIMIT, HCF_LIMIT),
