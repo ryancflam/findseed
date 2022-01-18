@@ -3,8 +3,8 @@ from time import time
 
 from discord import Colour, Embed, File
 from discord.ext import commands
-from mplfinance import make_marketcolors, make_mpf_style, plot
 from pandas import DataFrame, DatetimeIndex
+from plotly import graph_objects as go
 
 import config
 from other_utils import funcs
@@ -159,16 +159,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
                       aliases=["cp", "cmc", "price", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
-                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n" + \
-                            "Other - ma (moving averages), line (line graph)\n\n" + \
+                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\n" + \
                             "Any other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
         days = "1"
-        chartType = "candle"
         fiat = "USD"
-        mav = (0, 0)
         image = None
         data = []
         count = 0
@@ -194,10 +191,6 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     days = "365"
                 elif arg.startswith("max"):
                     days = "max"
-                elif arg.startswith("line"):
-                    chartType = "line"
-                elif arg == "ma" or arg == "mav":
-                    mav = (3, 6, 9)
                 else:
                     fiat = arg.upper()
         coinID = self.getCoinGeckoID(coin.casefold())
@@ -290,22 +283,23 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                                  icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" + \
                                           "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")
                 else:
-                    e.set_footer(text="What are you doing you socialite?")
+                    e.set_footer(text="What were you expecting?")
                 if chartData:
                     try:
-                        style = make_mpf_style(
-                            base_mpf_style="nightclouds", marketcolors=make_marketcolors(base_mpf_style="binance", inherit=True)
-                        )
                         df = DataFrame(
                             [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
                             index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
                         )
-                        plot(df, type=chartType, savefig=f"{funcs.getPath()}/temp/{imgName}", ylabel=f"Price ({fiat})", mav=mav,
-                             title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})", style=style)
+                        fig = go.Figure(
+                            data=[go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"])]
+                        )
+                        fig.update_layout(title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})",
+                                          yaxis_title=f"Price ({fiat})")
+                        fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
                         image = File(f"{funcs.getPath()}/temp/{imgName}")
                         e.set_image(url=f"attachment://{imgName}")
-                    except:
-                        pass
+                    except Exception as ex:
+                        funcs.printError(ctx, ex)
             elif not data:
                 e = funcs.errorEmbed(
                     "Invalid argument(s) and/or invalid currency!",

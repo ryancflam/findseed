@@ -10,6 +10,7 @@ from re import split
 from dateutil import parser
 from discord import Embed, File, utils
 from httpx import AsyncClient, get
+from plotly import graph_objects as go
 
 from other_utils.item_cycle import ItemCycle
 
@@ -20,6 +21,14 @@ def getPath():
 
 def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
+
+
+def testKaleido():
+    print("Testing Kaleido...")
+    imgName = f"{time.time()}.png"
+    go.Figure().write_image(f"{getPath()}/temp/{imgName}")
+    deleteTempFile(imgName)
+    print("Kaleido test complete.")
 
 
 def readTxtLines(pathstr):
@@ -94,8 +103,8 @@ def userNotBlacklisted(client, message):
             if member:
                 allowed = False
                 break
-    return allowed and message.author.id not in userList and \
-        (not message.guild or message.guild.id not in serverList)
+    return allowed and message.author.id not in userList \
+           and (not message.guild or message.guild.id not in serverList)
 
 
 def sign(value):

@@ -122,6 +122,7 @@ class BotInstance(Bot):
                 funcs.reloadCog(self, "github_webhooks")
             except:
                 pass
+        funcs.testKaleido()
         print(f"Logged in as: {self.user}")
         owner = (await self.application_info()).owner
         await owner.send("Bot is online.")

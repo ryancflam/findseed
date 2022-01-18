@@ -32,18 +32,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              client_secret=config.redditClientSecret,
                              user_agent="*")
         self.tickers = funcs.getTickers()
-        try:
-            self.testKaleido()
-        except Exception as ex:
-            print(f"Warning: {ex}")
-
-    @staticmethod
-    def testKaleido():
-        print("Testing Kaleido...")
-        imgName = f"{time()}.png"
-        go.Figure().write_image(f"{funcs.getPath()}/temp/{imgName}")
-        funcs.deleteTempFile(imgName)
-        print("Kaleido test complete.")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.",
@@ -1087,7 +1075,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig.add_trace(go.Box(y=data, quartilemethod="linear", name="Linear Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
-            fig.update_traces(boxpoints="all", jitter=0)
+            fig.update_traces(boxpoints="all", jitter=0.3)
             fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
             image = File(f"{funcs.getPath()}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
