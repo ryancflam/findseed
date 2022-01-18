@@ -304,7 +304,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
-                number = text.replace(" ", "")
+                number = text.replace(" ", "").replace(",", "")
                 e = Embed(
                     title="Binary to Decimal",
                     description=funcs.formatting(bin(int(number)).replace("0b", ""))
@@ -324,7 +324,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 binnumber = text.replace(" ", "")
                 e = Embed(
                     title="Binary to Decimal",
-                    description=funcs.formatting(str(int(binnumber, 2)))
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(int(binnumber, 2))))
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -376,7 +376,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 hexnumber = text.replace(" ", "")
                 e = Embed(
                     title="Hexadecimal to Decimal",
-                    description=funcs.formatting(str(int(hexnumber, 16)))
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(int(hexnumber, 16))))
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -390,7 +390,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
             e = funcs.errorEmbed(None, "Cannot process empty input.")
         else:
             try:
-                number = int(text.replace(" ", ""))
+                number = int(text.replace(" ", "").replace(",", ""))
                 e = Embed(
                     title="Decimal to Hexadecimal",
                     description=funcs.formatting(hex(number).split("x")[-1])
@@ -410,7 +410,9 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 number = float(text.replace(" ", "").replace(",", ""))
                 e = Embed(
                     title="Celsius to Fahrenheit",
-                    description=funcs.formatting(str(round(funcs.celsiusToFahrenheit(number), 3)) + "°F")
+                    description=funcs.formatting(
+                        funcs.removeDotZero("{:,}".format(round(funcs.celsiusToFahrenheit(number), 5))) + "°F"
+                    )
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -425,10 +427,10 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
         else:
             try:
                 number = float(text.replace(" ", "").replace(",", ""))
-                value = round((number - 32) * 5 / 9, 3)
+                value = round((number - 32) * 5 / 9, 5)
                 e = Embed(
                     title="Fahrenheit to Celsius",
-                    description=funcs.formatting(str(value) + "°C")
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + "°C")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -455,6 +457,92 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="fttocm", description="Converts feet and inches to centimetres.", usage="<feet> [inches]",
+                      aliases=["inchtocm", "cm", "feettocm", "foottocm", "inchestocm", "ft2cm", "intocm", "in2cm"])
+    async def fttocm(self, ctx, feet, inches=""):
+        try:
+            feet = feet.replace("′", "")
+            if not feet:
+                raise ValueError
+            feet = float(feet)
+            inches = inches.replace("″", "")
+            if not inches:
+                inches = 0
+            else:
+                inches = float(inches)
+            value = (feet * 12 + inches) * 2.54
+            e = Embed(
+                title="Feet & Inches to Centimetres",
+                description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " cm")
+            )
+        except ValueError:
+            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="cmtoft", description="Converts centimetres to feet and inches.", usage="<input>",
+                      aliases=["cmtoinch", "inch", "in", "ftinch", "ftin", "cm2ft", "cm2inch"])
+    async def cmtoft(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                totalinches = number / 2.54
+                totalfeet = totalinches / 12
+                feet = int(totalfeet)
+                e = Embed(
+                    title="Centimetres to Feet & Inches",
+                    description=funcs.formatting(
+                        "{} ft {} in ({} ft OR {} in)".format(
+                            funcs.removeDotZero("{:,}".format(feet)),
+                            funcs.removeDotZero("{:,}".format(round(totalinches - (feet * 12), 5))),
+                            funcs.removeDotZero("{:,}".format(round(totalfeet, 5))),
+                            funcs.removeDotZero("{:,}".format(round(totalinches, 5)))
+                        )
+                    )
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="kmtomiles", description="Converts kilometres to miles.", usage="<input>",
+                      aliases=["miles", "km2miles", "mile", "mi", "kmtomi", "km2mi", "kmtomile", "km2mile"])
+    async def kmtomiles(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                value = round(number / 1.609344, 5)
+                e = Embed(
+                    title="Kilometres to Miles",
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " mi")
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="milestokm", description="Converts miles to kilometres.", usage="<input>",
+                      aliases=["km", "miles2km", "mi2km", "mitokm"])
+    async def milestokm(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = float(text.replace(" ", "").replace(",", ""))
+                value = round(number * 1.609344, 5)
+                e = Embed(
+                    title="Miles to Kilometres",
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " km")
+                )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="lbstokg", description="Converts pounds to kilograms.", usage="<input>",
                       aliases=["kg", "kilogram", "kgs", "kilograms", "kilo", "kilos", "lbs2kg"])
     async def lbstokg(self, ctx, *, text: str=""):
@@ -463,10 +551,10 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
         else:
             try:
                 number = float(text.replace(" ", "").replace(",", ""))
-                value = round(number * 0.45359237, 3)
+                value = round(number * 0.45359237, 5)
                 e = Embed(
                     title="Pounds to Kilograms",
-                    description=funcs.formatting(str(value) + " kg")
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " kg")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -481,10 +569,10 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
         else:
             try:
                 number = float(text.replace(" ", "").replace(",", ""))
-                value = round(number * 2.2046226218, 3)
+                value = round(number * 2.2046226218, 5)
                 e = Embed(
                     title="Kilograms to Pounds",
-                    description=funcs.formatting(str(value) + " lbs")
+                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " lbs")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")

@@ -81,6 +81,8 @@ def commandsListEmbed(client, menu: int=0):
 
 
 def userNotBlacklisted(client, message):
+    if message.author.id in readJson("data/whitelist.json")["users"]:
+        return True
     data = readJson("data/blacklist.json")
     serverList = list(data["servers"])
     userList = list(data["users"])

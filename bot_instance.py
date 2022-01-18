@@ -8,9 +8,9 @@ from time import time
 from discord import Activity, Intents
 from discord.ext.commands import Bot
 
-from other_utils.funcs import getPath, getRequest, loadCog, reloadCog, userNotBlacklisted
+from other_utils import funcs
 
-PATH = getPath()
+PATH = funcs.getPath()
 
 try:
     import config
@@ -57,8 +57,8 @@ class BotInstance(Bot):
 
     def generateFiles(self):
         self.generateDir("data")
-        if path.exists(f"{getPath()}/temp"):
-            rmtree(f"{getPath()}/temp")
+        if path.exists(f"{funcs.getPath()}/temp"):
+            rmtree(f"{funcs.getPath()}/temp")
             print("Removed directory: temp")
         self.generateDir("temp")
         self.generateJson(
@@ -74,6 +74,7 @@ class BotInstance(Bot):
         )
         self.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
         self.generateJson("blacklist", {"servers": [], "users": []})
+        self.generateJson("whitelist", {"users": []})
         self.generateJson("unprompted_bots", {"ids": []})
         self.generateJson("unprompted_messages", {"servers": []})
         self.generateJson("easter_eggs", {"servers": []})
@@ -81,7 +82,7 @@ class BotInstance(Bot):
     def startup(self):
         for cog in listdir(f"{PATH}/cogs"):
             if cog.endswith(".py"):
-                loadCog(self, cog[:-3])
+                funcs.loadCog(self, cog[:-3])
         super().run(self.__token, bot=True, reconnect=True)
 
     def kill(self):
@@ -99,7 +100,7 @@ class BotInstance(Bot):
         btc = True
         while True:
             try:
-                res = await getRequest(
+                res = await funcs.getRequest(
                     "https://api.coingecko.com/api/v3/coins/markets",
                     params={"vs_currency": "usd", "ids": ("bitcoin" if btc else "ethereum")}
                 )
@@ -118,11 +119,18 @@ class BotInstance(Bot):
     async def on_ready(self):
         if config.githubWebhooks:
             try:
-                reloadCog(self, "github_webhooks")
+                funcs.reloadCog(self, "github_webhooks")
             except:
                 pass
         print(f"Logged in as: {self.user}")
-        await (await self.application_info()).owner.send("Bot is online.")
+        owner = (await self.application_info()).owner
+        await owner.send("Bot is online.")
+        data = funcs.readJson("data/whitelist.json")
+        wl = list(data["users"])
+        if owner.id not in wl:
+            wl.append(owner.id)
+            data["users"] = wl
+            funcs.dumpJson("data/whitelist.json", data)
         if self.__activityName.casefold() == "bitcoin":
             await self.loop.create_task(self.bitcoin())
         else:
@@ -130,9 +138,9 @@ class BotInstance(Bot):
 
     async def on_message(self, message):
         ctx = await self.get_context(message)
-        if ctx.valid and not self.is_ready() and userNotBlacklisted(self, message):
+        if ctx.valid and not self.is_ready() and funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
-        if self.is_ready() and userNotBlacklisted(self, message):
+        if self.is_ready() and funcs.userNotBlacklisted(self, message):
             while message.content.startswith(f"{self.command_prefix} "):
                 message.content = message.content.replace(f"{self.command_prefix} ", f"{self.command_prefix}", 1)
             if ctx.valid:

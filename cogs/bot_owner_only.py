@@ -268,6 +268,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             userID = int(userID)
             if userID == ctx.author.id:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Are you trying to blacklist yourself?"))
+            if userID in funcs.readJson("data/whitelist.json")["users"]:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "This user is whitelisted."))
             data = funcs.readJson("data/blacklist.json")
             userList = list(data["users"])
             if userID not in userList:
@@ -327,6 +329,56 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             f"```Servers: {'None' if not serverList else ', '.join(str(server) for server in serverList)}" + \
             f"\nUsers: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
+
+    @commands.command(name="whitelist", description="Gets the whitelist.", aliases=["wl"])
+    @commands.is_owner()
+    async def whitelist(self, ctx):
+        userList = list(funcs.readJson("data/whitelist.json")["users"])
+        await ctx.reply(
+            f"```Users: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
+        )
+
+    @commands.command(name="whitelistuser", description="Whitelists a user.",
+                      aliases=["wlu"], usage="<user ID>")
+    @commands.is_owner()
+    async def whitelistuser(self, ctx, *, userID=None):
+        if not userID:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        try:
+            userID = int(userID)
+            if userID in funcs.readJson("data/blacklist.json")["users"]:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "This user is blacklisted."))
+            data = funcs.readJson("data/whitelist.json")
+            userList = list(data["users"])
+            if userID not in userList:
+                userList.append(userID)
+                data["users"] = userList
+                funcs.dumpJson("data/whitelist.json", data)
+                return await ctx.reply("Added.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Already in whitelist."))
+        except ValueError:
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
+
+    @commands.command(name="unwhitelistuser", description="Unwhitelists a user.",
+                      aliases=["uwlu", "uwl", "unwhitelist"], usage="<user ID>")
+    @commands.is_owner()
+    async def unwhitelistuser(self, ctx, *, userID=None):
+        if not userID:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        try:
+            userID = int(userID)
+            data = funcs.readJson("data/whitelist.json")
+            userList = list(data["users"])
+            if ctx.author.id in userList:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Are you trying to unwhitelist yourself?"))
+            if userID in userList:
+                userList.remove(userID)
+                data["users"] = userList
+                funcs.dumpJson("data/whitelist.json", data)
+                return await ctx.reply("Removed.")
+            await ctx.reply(embed=funcs.errorEmbed(None, "Not in whitelist."))
+        except ValueError:
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
     @commands.command(name="leaveserver", description="Makes the bot leave a given server.",
                       aliases=["leaveguild", "serverleave", "guildleave", "botleave", "botquit"], usage="<server ID>")

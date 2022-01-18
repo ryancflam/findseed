@@ -1,7 +1,7 @@
 from datetime import datetime
 from time import time
 
-from discord import Embed, User, __version__
+from discord import Embed, __version__
 from discord.ext import commands
 from psutil import cpu_percent, disk_usage, virtual_memory
 
@@ -118,7 +118,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="userinfo", description="Shows information about a Discord user.",
-                      aliases=["member", "user", "memberinfo"], usage="[user ID]")
+                      aliases=["member", "user", "memberinfo"], usage="[user ID OR @mention]")
     async def userinfo(self, ctx, *, userID=None):
         try:
             if not userID:
@@ -182,7 +182,9 @@ class General(commands.Cog, name="General", description="Standard commands relat
             try:
                 prefix = self.client.command_prefix
                 command = self.client.get_command(cmd[0].replace(prefix, ""))
-                if funcs.commandIsOwnerOnly(command) and ctx.author != (await self.client.application_info()).owner:
+                cog = command.cog_name
+                if funcs.commandIsOwnerOnly(command) and ctx.author != (await self.client.application_info()).owner \
+                        or cog == "Easter Eggs" and not await funcs.easterEggsPredicate(ctx):
                     raise Exception()
                 name = command.name
                 usage = command.usage
@@ -195,7 +197,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     e.add_field(
                         name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
                     )
-                e.add_field(name="Category", value=f"`{command.cog_name}`")
+                e.add_field(name="Category", value=f"`{cog}`")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown command.")
         await ctx.reply(embed=e)
@@ -343,11 +345,20 @@ class General(commands.Cog, name="General", description="Standard commands relat
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="avatar", description="Shows the avatar of a user.",
-                      aliases=["pfp", "icon"], usage="[@mention]")
-    async def avatar(self, ctx, *, user: User=None):
-        user = user or ctx.author
-        ext = "gif" if user.is_avatar_animated() else "png"
-        await funcs.sendImage(ctx, str(user.avatar_url_as(format=ext if ext != "gif" else None)), name=f"avatar.{ext}")
+                      aliases=["pfp", "icon"], usage="[user ID OR @mention]")
+    async def avatar(self, ctx, *, userID=None):
+        if not userID:
+            userID = str(ctx.author.id)
+        else:
+            if userID.startswith("<@!") and userID.endswith(">"):
+                userID = userID[3:-1]
+            userID = userID.replace(" ", "")
+        try:
+            user = self.client.get_user(int(userID))
+            ext = "gif" if user.is_avatar_animated() else "png"
+            await funcs.sendImage(ctx, str(user.avatar_url_as(format=ext if ext != "gif" else None)), name=f"avatar.{ext}")
+        except:
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
 
 def setup(client: commands.Bot):

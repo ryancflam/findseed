@@ -581,7 +581,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             e.set_thumbnail(url=akimage)
         except Exception as ex:
             funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Server error")
+            e = funcs.errorEmbed(None, "Server error.")
         await ctx.send(embed=e)
         self.gameChannels.remove(ctx.channel.id)
 
@@ -1084,6 +1084,11 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
+    @staticmethod
+    def formatQuestion(q):
+        return q.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&').replace('<br>', '') \
+            .replace('&quot;', '"').replace('&#039;', "'").replace('&eacute;', 'é').replace("&prime;", "′").replace("&Prime;", "″")
+
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="trivia", description="Play Trivia.", aliases=["quiz"])
     async def trivia(self, ctx):
@@ -1114,18 +1119,14 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 answerindex = int(possibleanswers.index(correct)) + 1
                 e = Embed(
                     title=f"Trivia Question {str(rightcount + 1)} ({difficulty.title()})",
-                    description="```{}```".format(question.replace('&lt;', '<').replace(
-                    '&gt;', '>').replace('&amp;', '&').replace('<br>', '').replace(
-                    '&quot;', '"').replace('&#039;', "'").replace('&eacute;', 'é'))
+                    description="```{}```".format(self.formatQuestion(question))
                 )
                 answerchoices = ""
                 choiceno = 1
                 for i in possibleanswers:
                     answerchoices += f"{choiceno}) {i}\n"
                     choiceno += 1
-                e.add_field(name="Choices", value="```{}```".format(answerchoices[:-1].replace('&lt;', '<').replace(
-                    '&gt;', '>').replace('&amp;', '&').replace('<br>', '').replace(
-                    '&quot;', '"').replace('&#039;', "'").replace('&eacute;', 'é')))
+                e.add_field(name="Choices", value="```{}```".format(self.formatQuestion(answerchoices[:-1])))
                 e.add_field(name="Category", value=f"`{category.title()}`")
                 e.set_footer(text=f"Please enter a value between 1-{len(possibleanswers)} " + \
                                   "corresponding to an answer above. You have 30 seconds.")
@@ -1137,7 +1138,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                             check=lambda m: m.author == ctx.author and m.channel == ctx.channel
                         )
                     except TimeoutError:
-                        await ctx.send(f"`Inactivity; the correct answer was: {answerindex}) {correct}`")
+                        await ctx.send(f"`Inactivity; the correct answer was: {answerindex}) {self.formatQuestion(correct)}`")
                         await ctx.send(
                             "`Game over! You got {:,} question{} right in a row.`".format(
                                 rightcount, "" if rightcount == 1 else "s"
@@ -1157,7 +1158,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                             if intuserans == answerindex:
                                 await ctx.send("`Correct! Moving on to next question...`")
                             else:
-                                await ctx.send(f"`Incorrect! The correct answer was: {answerindex}) {correct}`")
+                                await ctx.send(f"`Incorrect! The correct answer was: {answerindex}) {self.formatQuestion(correct)}`")
                                 await ctx.send(
                                     "`Game over! You got {:,} question{} right in a row.`".format(
                                         rightcount, "" if rightcount == 1 else "s"
@@ -1168,16 +1169,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                 return await self.sendTime(ctx, m, s)
                             break
                     except ValueError:
-                        if useranswer.content.casefold() == correct.casefold() \
-                                or useranswer.content.casefold().startswith("t") and correct == "True" \
-                                or useranswer.content.casefold().startswith("f") and correct == "False":
-                            await ctx.send("`Correct! Moving on to next question...`")
-                            break
-                        else:
-                            await ctx.send(
-                                f"`{'' if useranswer.content.casefold().startswith('quit') else 'Incorrect! '}" + \
-                                f"The correct answer was: {answerindex}) {correct}`"
-                            )
+                        if useranswer.content.casefold() == "quit":
+                            await ctx.send(f"`The correct answer was: {answerindex}) {self.formatQuestion(correct)}`")
                             await ctx.send(
                                 "`Game over! You got {:,} question{} right in a row.`".format(
                                     rightcount, "" if rightcount == 1 else "s"
@@ -1186,6 +1179,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                             self.gameChannels.remove(ctx.channel.id)
                             _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
                             return await self.sendTime(ctx, m, s)
+                        await ctx.send(embed=funcs.errorEmbed(None, "Please enter a number only!"))
             except Exception as ex:
                 funcs.printError(ctx, ex)
                 self.gameChannels.remove(ctx.channel.id)
