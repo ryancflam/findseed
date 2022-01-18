@@ -32,6 +32,18 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              client_secret=config.redditClientSecret,
                              user_agent="*")
         self.tickers = funcs.getTickers()
+        try:
+            self.testKaleido()
+        except Exception as ex:
+            print(f"Warning: {ex}")
+
+    @staticmethod
+    def testKaleido():
+        print("Testing Kaleido...")
+        imgName = f"{time()}.png"
+        go.Figure().write_image(f"{funcs.getPath()}/temp/{imgName}")
+        funcs.deleteTempFile(imgName)
+        print("Kaleido test complete.")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.",
