@@ -16,6 +16,7 @@ from discord.ext import commands
 from googletrans import Translator, constants
 from plotly import graph_objects as go
 from qrcode import QRCode
+from textract import process
 
 import config
 from other_utils import funcs
@@ -833,13 +834,24 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="wordcount", description="Counts the number of words and characters in an input.",
                       aliases=["lettercount", "countletter", "countchar", "countletters", "char", "chars", "letters",
                                "charcount", "wc", "countword", "word", "words", "countwords", "letter"],
-                      usage="<input OR .txt attachment>")
+                      usage="<input OR attachment (<= 300 KB for documents)>")
     async def wordcount(self, ctx, *, inp=""):
+        filename = ""
         if ctx.message.attachments:
             try:
                 inp = await funcs.readTxtAttachment(ctx.message)
             except:
-                inp = inp
+                try:
+                    attach = ctx.message.attachments[0]
+                    if attach.size > 307200:
+                        return await ctx.reply(embed=funcs.errorEmbed(
+                            None, "Document size must be 300 KB or below. For larger documents, please use an online service."
+                        ))
+                    filename = f"{filename}-{attach.filename}"
+                    await attach.save(f"{funcs.getPath()}/temp/{filename}")
+                    inp = process(f"{funcs.getPath()}/temp/{filename}").decode("utf-8")
+                except:
+                    inp = inp
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         splt = "".join(ch for ch in inp if ch not in set(punctuation)).split()
@@ -849,6 +861,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         e.add_field(name="Unique Words", value="`{:,}`".format(len(set(splt))))
         e.set_footer(text="Note: This may not be 100% accurate.")
         await ctx.reply(embed=e)
+        funcs.deleteTempFile(filename)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.",
