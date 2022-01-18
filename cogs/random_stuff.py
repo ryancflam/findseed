@@ -393,7 +393,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="roast", description="Roasts a user.", aliases=["insult", "toast"],
-                      usage="[@mention]")
+                      usage="[@mention]", hidden=True)
     async def roast(self, ctx, member: User=None):
         member = member or ctx.message.author
         res = await funcs.getRequest("https://insult.mattbas.org/api/insult.json")
@@ -401,7 +401,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="fidgetspinner", description="Spins a fidget spinner.",
-                      aliases=["spin", "spinner", "youspinmerightround"])
+                      aliases=["spin", "spinner", "youspinmerightround"], hidden=True)
     async def fidgetspinner(self, ctx):
         if ctx.author.id in self.activeSpinners:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Your fidget spinner is still spinning, please wait!"))
@@ -535,10 +535,10 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="coin", description="Flips coins.", usage="[amount up to 100]",
-                      aliases=["coins", "flip", "fc", "flipcoin", "coinflip",
+    @commands.command(name="flipcoin", description="Flips coins.", usage="[amount up to 100]",
+                      aliases=["coins", "flip", "fc", "coin", "coinflip",
                                "flipcoins", "tosscoins", "cointoss", "tosscoin", "toss"])
-    async def coin(self, ctx, amount: str="1"):
+    async def flipcoin(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
@@ -573,9 +573,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             await ctx.reply(f"```{', '.join(coin for coin in coins)}\n{result}\n\nRequested by: {ctx.author}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="dice", description="Rolls dice.", usage="[amount up to 100]",
-                      aliases=["die", "roll", "rd", "rolldice", "rolldie", "diceroll", "dieroll"])
-    async def dice(self, ctx, amount: str="1"):
+    @commands.command(name="rolldice", description="Rolls dice.", usage="[amount up to 100]",
+                      aliases=["die", "roll", "rd", "dice", "rolldie", "diceroll", "dieroll"])
+    async def rolldice(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
@@ -604,9 +604,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="card", description="Deals cards.", usage="[amount up to 52]",
-                      aliases=["rc", "cards", "deal", "randomcard", "randomcards", "dc", "dealcard", "dealcards"])
-    async def card(self, ctx, amount: str="1"):
+    @commands.command(name="randomcard", description="Deals cards.", usage="[amount up to 52]",
+                      aliases=["rc", "cards", "deal", "card", "randomcards", "dc", "dealcard", "dealcards"])
+    async def randomcard(self, ctx, amount: str="1"):
         try:
             amount = int(amount)
         except ValueError:
@@ -628,9 +628,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="number", usage="[starting number] [range up to {:,}]".format(RN_RANGE),
-                      aliases=["rn", "numbers", "randomnumber", "rng"], description="Generates a random number.")
-    async def number(self, ctx, start: str= "1", rnrange: str=str(RN_RANGE)):
+    @commands.command(name="randomnumber", usage="[starting number] [range up to {:,}]".format(RN_RANGE),
+                      aliases=["rn", "numbers", "number", "rng"], description="Generates a random number.")
+    async def randomnumber(self, ctx, start: str= "1", rnrange: str=str(RN_RANGE)):
         try:
             rnrange = int(rnrange)
             if not 0 < rnrange < (RN_RANGE + 1):
@@ -646,9 +646,10 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         ))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="colour", usage="[colour hex OR R value] [G value] [B value]", description="Generates a random colour.",
-                      aliases=["color", "randomcolor", "randomcolour", "colors", "colours", "rgb"])
-    async def colour(self, ctx, r=None, g=None, b=None):
+    @commands.command(name="randomcolour", usage="[colour hex OR R value] [G value] [B value]",
+                      description="Generates a random colour.",
+                      aliases=["color", "randomcolor", "colour", "colors", "colours", "rgb"])
+    async def randomcolour(self, ctx, r=None, g=None, b=None):
         if r:
             colour = r[(1 if len(r) == 7 else 2 if r.casefold().startswith("0x") else 0):]
             if len(colour) == 6:

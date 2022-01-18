@@ -1038,7 +1038,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="quartile", usage="<numbers separated with ;>",
                       aliases=["avg", "average", "mean", "median", "mode", "q1", "q2",
-                               "q3", "range", "sd", "iqr", "quartiles", "boxplot", "box"],
+                               "q3", "range", "sd", "iqr", "quartiles", "boxplot", "box", "qir"],
                       description="Computes statistical data from a set of numerical values.")
     async def quartile(self, ctx, *, items):
         imgName = f"{time()}.png"
@@ -1046,6 +1046,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         try:
             if ";" not in items:
                 items = items.replace(",", ";")
+            else:
+                items = items.replace(",", "")
             while items.startswith(";"):
                 items = items[1:]
             while items.endswith(";"):
@@ -1315,7 +1317,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(usage="<note #1 with octave (e.g. G5)> <note #2 with octave (e.g. G5)>",
+    @commands.command(usage="<note #1 with octave (e.g. G5)> <note #2 with octave (e.g. G5)>", hidden=True,
                       aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "octaves", "notesrange"],
                       name="noterange", description="Shows the range in octaves and semitones between two given musical notes.")
     async def noterange(self, ctx, *, noterange):

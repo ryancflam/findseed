@@ -66,7 +66,7 @@ def commandIsOwnerOnly(command):
 
 
 def commandsListEmbed(client, menu: int=0):
-    e = Embed(title=f"{'Hidden' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands")
+    e = Embed(title=f"{'Miscellaneous' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands")
     cmds = 0
     for cog in sorted(client.cogs):
         commandsList = list(filter(
@@ -81,7 +81,7 @@ def commandsListEmbed(client, menu: int=0):
             cmds += len(commandsList)
     e.title += " ({:,})".format(cmds)
     if menu == 1:
-        e.description = "Public commands hidden from the main commands menu."
+        e.description = "Miscellaneous commands hidden from the main commands menu."
     elif menu == 2:
         e.description = "Bot owner commands."
     zero = f", or {client.command_prefix}category <category> for more information about a specific category"
