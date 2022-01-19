@@ -180,7 +180,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except:
             await ctx.reply(embed=funcs.errorEmbed(None, "Unknown server."))
 
-    @commands.command(name="reloadcog", description="Reloads a cog.", usage="<cog name>", aliases=["restartcog"])
+    @commands.command(name="reloadcog", description="Reloads a cog.", usage="<cog name>",
+                      aliases=["restartcog", "reload", "updatecog"])
     @commands.is_owner()
     async def reloadcog(self, ctx, *, cog: str=""):
         if cog == "":

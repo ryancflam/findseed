@@ -4,7 +4,7 @@ from time import time
 from discord import Colour, Embed, File
 from discord.ext import commands
 from pandas import DataFrame, DatetimeIndex
-from plotly import graph_objects as go
+from plotly import express, graph_objects
 
 import config
 from other_utils import funcs
@@ -160,8 +160,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                       aliases=["cp", "cmc", "price", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) separated with space]\n\n" +
                             "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\nOther - noma (no moving averages)" +
-                            ", Xma (replace X with number of days)\n\nAny other option will be counted as a comparing " +
-                            "currency (e.g. GBP, EUR...)")
+                            ", Xma (replace X with number of days), line (line graph)" +
+                            "\n\nAny other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
@@ -172,6 +172,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         count = 0
         noma = False
         mad = 7
+        line = False
         for arg in args:
             try:
                 days = "1" if int(arg) not in [1, 2, 3, 6, 7, 12, 14, 30, 90, 180, 365] else arg
@@ -201,6 +202,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                         mad = int(arg[:-2])
                     except:
                         pass
+                elif arg == "line":
+                    line = True
                 else:
                     fiat = arg.upper()
         coinID = self.getCoinGeckoID(coin.casefold())
@@ -301,15 +304,20 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                             [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
                             index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
                         )
-                        fig = go.Figure(
-                            data=[go.Candlestick(
-                                x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"
-                            )]
-                        )
+                        if line:
+                            fig = express.line(x=df.index, y=df["Open"], title="Price")
+                        else:
+                            fig = graph_objects.Figure(
+                                data=[graph_objects.Candlestick(
+                                    x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"
+                                )]
+                            )
                         if not noma:
                             df["ma"] = df["Close"].rolling(window=mad).mean()
                             fig.add_trace(
-                                go.Scatter(x=df.index, y=df["ma"], line=dict(color="#e0e0e0"), name="{:,}d MA".format(mad))
+                                graph_objects.Scatter(
+                                    x=df.index, y=df["ma"], line=dict(color="#e0e0e0"), name="{:,}d MA".format(mad)
+                                )
                             )
                         fig.update_layout(title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})",
                                           yaxis_title=f"Price ({fiat})",

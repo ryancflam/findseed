@@ -5,6 +5,7 @@ from discord import Embed, __version__
 from discord.ext import commands
 from psutil import cpu_percent, disk_usage, virtual_memory
 
+import config
 from other_utils import funcs
 
 
@@ -68,6 +69,17 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     value="`{:,} GB`".format(
                         round(float(dict(disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)
                     ))
+        try:
+            res = await funcs.getRequest(f"https://api.statcord.com/v3/{self.client.user.id}",
+                                         params={"Authorization": config.statcordKey})
+            statcord = res.json()
+            e.add_field(name="Bandwidth Usage",
+                        value="`{:,} MB`".format(round(int(statcord["data"][0]["bandwidth"]) / 1024 / 1024, 2)))
+            popular = statcord["popular"][0]
+            e.add_field(name="Most Popular Command",
+                        value="`{}{} ({:,})`".format(self.client.command_prefix, popular['name'], int(popular['count'])))
+        except:
+            pass
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.reply(embed=e)
@@ -301,7 +313,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         count = 0
         while count < 20:
             messages.append(
-                await messages[-1].reply("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
+                await ctx.send("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
             )
             try:
                 entry = await self.client.wait_for(
@@ -320,7 +332,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     count -= 1
                 else:
                     messages.append(
-                        await entry.reply(embed=funcs.errorEmbed(None, "No choices."))
+                        await ctx.send(embed=funcs.errorEmbed(None, "No choices."))
                     )
             else:
                 answers.append((chr(0x1f1e6 + count), entry.content))

@@ -7,6 +7,7 @@ from time import time
 
 from discord import Activity, Intents
 from discord.ext.commands import Bot
+from statcord import Client
 
 from other_utils import funcs
 
@@ -39,6 +40,8 @@ class BotInstance(Bot):
         self.__status = config.status
         self.remove_command("help")
         self.generateFiles()
+        self.__statcord = Client(self, config.statcordKey)
+        self.__statcord.start_loop()
 
     @staticmethod
     def generateJson(name, data: dict):
@@ -125,7 +128,7 @@ class BotInstance(Bot):
         try:
             funcs.testKaleido()
         except Exception as ex:
-            print(f"Warning: {ex}")
+            print(f"Warning - {ex}")
         print(f"Logged in as: {self.user}")
         owner = (await self.application_info()).owner
         await owner.send("Bot is online.")
@@ -150,3 +153,6 @@ class BotInstance(Bot):
             if ctx.valid:
                 await message.channel.trigger_typing()
             await self.process_commands(message)
+
+    async def on_command(self, ctx):
+        self.__statcord.command_run(ctx)

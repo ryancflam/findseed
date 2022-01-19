@@ -34,6 +34,171 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                              user_agent="*")
         self.tickers = funcs.getTickers()
 
+    async def gatherLabelsAndValues(self, ctx):
+        labels = []
+        values = []
+        while len(labels) < 25:
+            try:
+                await ctx.send(
+                    f"Enter name for label **{len(labels) + 1}**, `!undo` to delete previous entry, `!done` to move on to values, " +
+                    "or `!cancel` to cancel."
+                )
+                entry = await self.client.wait_for(
+                    "message",
+                    check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
+                    timeout=60
+                )
+            except TimeoutError:
+                break
+            content = entry.content
+            if content.casefold() == "!undo":
+                try:
+                    labels.pop(-1)
+                except:
+                    await ctx.send(embed=funcs.errorEmbed(None, "No entries."))
+            elif content.casefold() == "!done":
+                break
+            elif content.casefold() == "!cancel":
+                return 0, 0
+            else:
+                labels.append(content)
+        if len(labels) < 2:
+            raise Exception("Not enough labels.")
+        while len(values) != len(labels):
+            try:
+                await ctx.send(
+                    f'Enter value (NOT percentage) for label **{labels[len(values)]}**, `!undo` to delete previous entry, ' +
+                    'or `!cancel` to cancel.'
+                )
+                entry = await self.client.wait_for(
+                    "message",
+                    check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
+                    timeout=60
+                )
+            except TimeoutError:
+                raise Exception("Not enough values.")
+            content = entry.content
+            if content.casefold() == "!undo":
+                try:
+                    values.pop(-1)
+                except:
+                    await ctx.send(embed=funcs.errorEmbed(None, "No entries."))
+            elif content.casefold() == "!cancel":
+                return 0, 0
+            else:
+                try:
+                    values.append(float(content))
+                except:
+                    await ctx.send(embed=funcs.errorEmbed(None, "Invalid value."))
+        return labels, values
+
+    async def gatherXtitleAndYtitle(self, ctx):
+        xtitle, ytitle = "", ""
+        try:
+            await ctx.send('Enter your desired x-axis title, or `!na` if you wish to leave it blank.')
+            entry = await self.client.wait_for(
+                "message",
+                check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
+                timeout=60
+            )
+            if entry.content.casefold() != "!na":
+                xtitle = entry.content
+        except TimeoutError:
+            pass
+        try:
+            await ctx.send('Enter your desired y-axis title, or `!na` if you wish to leave it blank.')
+            entry = await self.client.wait_for(
+                "message",
+                check=lambda m: m.author == ctx.author and m.channel == ctx.channel and len(m.content) <= 100,
+                timeout=60
+            )
+            if entry.content.casefold() != "!na":
+                ytitle = entry.content
+        except TimeoutError:
+            pass
+        return xtitle, ytitle
+
+    @staticmethod
+    def makeChart(ctx, fig, labels, values, imgName):
+        e = Embed(title="Chart", description=f"Requested by: {ctx.author.mention}")
+        for i in range(len(labels)):
+            e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero("{:,}".format(values[i]))))
+        fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
+        image = File(f"{funcs.getPath()}/temp/{imgName}")
+        e.set_image(url=f"attachment://{imgName}")
+        return e, image
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="piechart", description="Generates a pie chart.", aliases=["pie", "piegraph"], usage="[title]")
+    async def piechart(self, ctx, *, title: str=""):
+        if len(title) > 100:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Title must be 100 characters or less."))
+        imgName = f"{time()}.png"
+        image = None
+        try:
+            labels, values = await self.gatherLabelsAndValues(ctx)
+            if labels == 0 and values == 0:
+                return await ctx.send("Cancelled chart generation.")
+        except Exception as ex:
+            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        try:
+            fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+            fig.update_layout(title=title)
+            e, image = self.makeChart(ctx, fig, labels, values, imgName)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "An error occurred, please try again later.")
+        await ctx.reply(embed=e, file=image)
+        funcs.deleteTempFile(imgName)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="linechart", description="Generates a line chart.", aliases=["line", "linegraph"], usage="[title]")
+    async def linechart(self, ctx, *, title: str=""):
+        if len(title) > 100:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Title must be 100 characters or less."))
+        imgName = f"{time()}.png"
+        image = None
+        try:
+            labels, values = await self.gatherLabelsAndValues(ctx)
+            if labels == 0 and values == 0:
+                return await ctx.send("Cancelled chart generation.")
+        except Exception as ex:
+            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        try:
+            fig = go.Figure(data=[go.Scatter(x=labels, y=values)])
+            xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
+            fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
+            e, image = self.makeChart(ctx, fig, labels, values, imgName)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "An error occurred, please try again later.")
+        await ctx.reply(embed=e, file=image)
+        funcs.deleteTempFile(imgName)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="barchart", description="Generates a bar chart.", aliases=["bar", "bargraph"], usage="[title]")
+    async def barchart(self, ctx, *, title: str=""):
+        if len(title) > 100:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Title must be 100 characters or less."))
+        imgName = f"{time()}.png"
+        image = None
+        try:
+            labels, values = await self.gatherLabelsAndValues(ctx)
+            if labels == 0 and values == 0:
+                return await ctx.send("Cancelled chart generation.")
+        except Exception as ex:
+            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        try:
+            fig = go.Figure(data=[go.Bar(x=labels, y=values)])
+            xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
+            fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
+            e, image = self.makeChart(ctx, fig, labels, values, imgName)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "An error occurred, please try again later.")
+        await ctx.reply(embed=e, file=image)
+        funcs.deleteTempFile(imgName)
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.",
                       aliases=["loc", "code", "linesofcode", "repository", "repo"], usage='[username/repository]')
@@ -1097,7 +1262,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig.add_trace(go.Box(y=data, quartilemethod="linear", name="Linear Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
-            fig.update_traces(boxpoints=boxpoints, jitter=0.3)
+            fig.update_traces(boxpoints=boxpoints, jitter=0.3, template="plotly_dark")
             fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
             image = File(f"{funcs.getPath()}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
