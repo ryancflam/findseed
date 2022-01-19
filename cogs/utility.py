@@ -15,8 +15,8 @@ from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
 from plotly import graph_objects as go
+from PyPDF2 import PdfFileReader
 from qrcode import QRCode
-from textract import process
 
 import config
 from other_utils import funcs
@@ -999,9 +999,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="wordcount", description="Counts the number of words and characters in an input.",
                       aliases=["lettercount", "countletter", "countchar", "countletters", "char", "chars", "letters",
                                "charcount", "wc", "countword", "word", "words", "countwords", "letter"],
-                      usage="<input OR attachment (<= 300 KB for documents)>")
+                      usage="<input OR .PDF/.TXT (<= 300 KB for PDF)>")
     async def wordcount(self, ctx, *, inp=""):
-        filename = ""
+        filename = f"{time()}"
         if ctx.message.attachments:
             try:
                 inp = await funcs.readTxtAttachment(ctx.message)
@@ -1010,11 +1010,18 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     attach = ctx.message.attachments[0]
                     if attach.size > 307200:
                         return await ctx.reply(embed=funcs.errorEmbed(
-                            None, "Document size must be 300 KB or below. For larger documents, please use an online service."
+                            None, "PDF size must be 300 KB or below. For larger files, please use an online service."
                         ))
                     filename = f"{filename}-{attach.filename}"
-                    await attach.save(f"{funcs.getPath()}/temp/{filename}")
-                    inp = process(f"{funcs.getPath()}/temp/{filename}").decode("utf-8")
+                    filepath = f"{funcs.getPath()}/temp/{filename}"
+                    await attach.save(filepath)
+                    pdf = open(filepath, "rb")
+                    reader = PdfFileReader(pdf)
+                    inp = ""
+                    for page in range(reader.numPages):
+                        pageobj = reader.getPage(page - 1)
+                        inp += pageobj.extractText()
+                    pdf.close()
                 except Exception as ex:
                     funcs.printError(ctx, ex)
                     inp = inp

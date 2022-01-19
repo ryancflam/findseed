@@ -8,7 +8,7 @@ kaleido==0.2.1
 pandas==1.1.5
 plotly==5.5.0
 psutil==5.9.0
+pypdf2==1.26.0
 python-dateutil==2.8.2
 qrcode[pil]==7.3.1
 statcord.py==3.1.0
-textract==1.6.4
