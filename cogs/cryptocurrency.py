@@ -158,9 +158,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
                       aliases=["cp", "cmc", "price", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
-                      usage="[coin symbol OR CoinGecko ID] [chart option(s) (separated with space)]\n\n" + \
-                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\n" + \
-                            "Any other option will be counted as a comparing currency (e.g. GBP, EUR...)")
+                      usage="[coin symbol OR CoinGecko ID] [chart option(s) separated with space]\n\n" +
+                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\nOther - noma (no moving averages)" +
+                            ", Xma (replace X with number of days)\n\nAny other option will be counted as a comparing " +
+                            "currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
         imgName = f"{time()}.png"
@@ -169,6 +170,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         image = None
         data = []
         count = 0
+        noma = False
+        mad = 7
         for arg in args:
             try:
                 days = "1" if int(arg) not in [1, 2, 3, 6, 7, 12, 14, 30, 90, 180, 365] else arg
@@ -191,6 +194,13 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     days = "365"
                 elif arg.startswith("max"):
                     days = "max"
+                elif arg.replace("-", "") == "noma":
+                    noma = True
+                elif arg.endswith("ma"):
+                    try:
+                        mad = int(arg[:-2])
+                    except:
+                        pass
                 else:
                     fiat = arg.upper()
         coinID = self.getCoinGeckoID(coin.casefold())
@@ -279,8 +289,9 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     if totalSupply:
                         e.add_field(name="Fully Diluted Valuation",
                                     value="`{:,} {}`".format(int(totalSupply * currentPrice), fiat))
-                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC",
-                                 icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" + \
+                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC | Chart " +
+                                      f"options: {self.client.command_prefix}help cp",
+                                 icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" +
                                           "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")
                 else:
                     e.set_footer(text="What were you expecting?")
@@ -291,10 +302,20 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                             index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
                         )
                         fig = go.Figure(
-                            data=[go.Candlestick(x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"])]
+                            data=[go.Candlestick(
+                                x=df.index, open=df["Open"], high=df["High"], low=df["Low"], close=df["Close"], name="Price"
+                            )]
                         )
+                        if not noma:
+                            df["ma"] = df["Close"].rolling(window=mad).mean()
+                            fig.add_trace(
+                                go.Scatter(x=df.index, y=df["ma"], line=dict(color="#e0e0e0"), name="{:,}d MA".format(mad))
+                            )
                         fig.update_layout(title=f"{days.title()}{'d' if days != 'max' else ''} Chart ({data['name']})",
-                                          yaxis_title=f"Price ({fiat})")
+                                          yaxis_title=f"Price ({fiat})",
+                                          xaxis_rangeslider_visible=False,
+                                          xaxis_title="Date",
+                                          template="plotly_dark")
                         fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
                         image = File(f"{funcs.getPath()}/temp/{imgName}")
                         e.set_image(url=f"attachment://{imgName}")
