@@ -28,7 +28,7 @@ def testKaleido():
     try:
         go.Figure().write_image(f"{getPath()}/temp/test.png")
         deleteTempFile("test.png")
-        print("Kaleido is installed.")
+        print("Kaleido installed and ready")
     except:
         raise Exception("Kaleido is not installed!")
 

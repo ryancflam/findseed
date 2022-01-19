@@ -16,3 +16,8 @@ redditClientID = "" # https://www.reddit.com/prefs/apps/
 redditClientSecret = "" # https://www.reddit.com/prefs/apps/
 deepAIKey = "" # https://deepai.org/dashboard/profile
 wolframID = "" # https://developer.wolframalpha.com/portal/myapps/
+
+
+def ready():
+    return bool(botToken and statcordKey and owmKey and fixerKey and rapidApiKey and glotIoKey and blockCypherKey
+                and ethGasStationKey and redditClientID and redditClientSecret and deepAIKey and wolframID)

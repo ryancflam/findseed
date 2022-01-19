@@ -15,6 +15,12 @@ PATH = funcs.getPath()
 
 try:
     import config
+    try:
+        if not config.ready():
+            raise Exception
+    except:
+        print("Warning - config.py is not ready, please check for missing fields")
+        exit()
 except ModuleNotFoundError:
     f = open(f"{PATH}/config.py", "w")
     if path.exists(f"{PATH}/config.py.template"):
@@ -22,7 +28,7 @@ except ModuleNotFoundError:
         f.write(template.read())
         template.close()
     f.close()
-    print("Generated file: config.py [please modify before using]")
+    print("Generated file: config.py - please fill in the fields before using")
     exit()
 
 
@@ -129,15 +135,15 @@ class BotInstance(Bot):
             funcs.testKaleido()
         except Exception as ex:
             print(f"Warning - {ex}")
-        print(f"Logged in as: {self.user}")
         owner = (await self.application_info()).owner
-        await owner.send("Bot is online.")
         data = funcs.readJson("data/whitelist.json")
         wl = list(data["users"])
         if owner.id not in wl:
             wl.append(owner.id)
             data["users"] = wl
             funcs.dumpJson("data/whitelist.json", data)
+        print(f"Logged in as Discord user: {self.user}")
+        await owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
             await self.loop.create_task(self.bitcoin())
         else:
