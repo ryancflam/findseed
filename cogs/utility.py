@@ -1270,7 +1270,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig.add_trace(go.Box(y=data, quartilemethod="linear", name="Linear Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
-            fig.update_traces(boxpoints=boxpoints, jitter=0.3, template="plotly_dark")
+            fig.update_traces(boxpoints=boxpoints, jitter=0.3)
             fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
             image = File(f"{funcs.getPath()}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
