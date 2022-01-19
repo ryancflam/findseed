@@ -9,69 +9,11 @@ from other_utils import funcs
 from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
-class Conversion(commands.Cog, name="Conversion", description="Convert inputs from one unit or format to another.",
-                 command_attrs=dict(hidden=True)):
-    MORSE = {
-        "A": ".-",
-        "B": "-...",
-        "C": "-.-.",
-        "D": "-..",
-        "E": ".",
-        "F": "..-.",
-        "G": "--.",
-        "H": "....",
-        "I": "..",
-        "J": ".---",
-        "K": "-.-",
-        "L": ".-..",
-        "M": "--",
-        "N": "-.",
-        "O": "---",
-        "P": ".--.",
-        "Q": "--.-",
-        "R": ".-.",
-        "S": "...",
-        "T": "-",
-        "U": "..-",
-        "V": "...-",
-        "W": ".--",
-        "X": "-..-",
-        "Y": "-.--",
-        "Z": "--..",
-        "0": "-----",
-        "1": ".----",
-        "2": "..---",
-        "3": "...--",
-        "4": "....-",
-        "5": ".....",
-        "6": "-....",
-        "7": "--...",
-        "8": "---..",
-        "9": "----.",
-        " ": "/",
-        ".": ".-.-.-",
-        ",": "--..--",
-        ":": "---...",
-        "?": "..--..",
-        '"':".-..-.",
-        "'": ".----.",
-        "-": "-....-",
-        "/": "-..-.",
-        "@": ".--.-.",
-        "=": "-...-",
-        "(": "-.--.",
-        ")": "-.--.-",
-        "+": ".-.-.",
-        "&": ".-...",
-        ";": "-.-.-.",
-        "_": "..--.-",
-        "$": "...-..-",
-        "¿": "..-.-",
-        "¡": "--...-"
-    }
-
+class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(hidden=True),
+                      description="Convert inputs from one unit or format to another."):
     def __init__(self, client: commands.Bot):
         self.client = client
+        self.morsecode = funcs.readJson("assets/conversion_tools/morse_code.json")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
@@ -182,7 +124,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                 output = ""
                 for char in text:
                     try:
-                        output += self.MORSE[char.upper()] + " "
+                        output += self.morsecode[char.upper()] + " "
                     except:
                         continue
                 output = output[:-1]
@@ -220,7 +162,7 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
                         if spaces == 2:
                             output += " "
                         else:
-                            output += list(self.MORSE.keys())[list(self.MORSE.values()).index(ctext)]
+                            output += list(self.morsecode.keys())[list(self.morsecode.values()).index(ctext)]
                             ctext = ""
                 e = Embed(
                     title="Text to Morse Code",
@@ -580,4 +522,4 @@ class Conversion(commands.Cog, name="Conversion", description="Convert inputs fr
 
 
 def setup(client: commands.Bot):
-    client.add_cog(Conversion(client))
+    client.add_cog(ConversionTools(client))
