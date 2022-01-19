@@ -1,4 +1,5 @@
 from datetime import datetime
+from sys import version
 from time import time
 
 from discord import Embed, __version__
@@ -51,7 +52,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
         dt = self.client.user.created_at
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         e.add_field(name="Owner", value=f"`{appinfo.owner}`")
-        e.add_field(name="Library", value=f"`discord.py {__version__}`")
+        e.add_field(name="Python", value=f"`{version.split(' ')[0]}`")
+        e.add_field(name="Library", value=f"`py-cord {__version__}`")
         e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
         e.add_field(name="Servers", value="`{:,}`".format(len(self.client.guilds)))
         e.add_field(name="Users (Excluding Bots)", value="`{:,} ({:,})`".format(
