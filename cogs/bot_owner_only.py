@@ -159,7 +159,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     async def servers(self, ctx):
         serverList = ""
         for server in sorted(self.client.guilds, key=lambda x: x.member_count, reverse=True):
-            serverList += f"- {str(server.id)}: " + str(server) + f" ({server.member_count})\n"
+            serverList += f"- {str(server.id)}: " + str(server) + " ({:,})\n".format(server.member_count)
         serverList = serverList[:-1]
         newList = serverList[:1998]
         await ctx.reply(f"`{newList}`")
@@ -333,8 +333,10 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         serverList = list(data["servers"])
         userList = list(data["users"])
         await ctx.reply(
-            f"```Servers: {'None' if not serverList else ', '.join(str(server) for server in serverList)}" + \
-            f"\nUsers: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
+            "```Servers ({:,}): ".format(len(serverList)) +
+            f"{'None' if not serverList else ', '.join(str(server) for server in serverList)}" + \
+            "\nUsers ({:,}): ".format(len(userList)) +
+            f"{'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
 
     @commands.command(name="whitelist", description="Gets the whitelist.", aliases=["wl"])
@@ -342,7 +344,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     async def whitelist(self, ctx):
         userList = list(funcs.readJson("data/whitelist.json")["users"])
         await ctx.reply(
-            f"```Users: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
+            "```Users ({:,}): ".format(len(userList)) +
+            f"{'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
 
     @commands.command(name="eastereggservers", description="Gets all servers that have easter eggs enabled.", aliases=["ees"])
@@ -350,7 +353,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     async def eastereggservers(self, ctx):
         serverList = list(funcs.readJson("data/easter_eggs.json")["servers"])
         await ctx.reply(
-            f"```Servers: {'None' if not serverList else ', '.join(str(s) for s in serverList)}```"
+            "```Servers ({:,}): ".format(len(serverList)) +
+            f"{'None' if not serverList else ', '.join(str(s) for s in serverList)}```"
         )
 
     @commands.command(name="whitelistuser", description="Whitelists a user.",
