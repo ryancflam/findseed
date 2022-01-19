@@ -1015,7 +1015,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     filename = f"{filename}-{attach.filename}"
                     await attach.save(f"{funcs.getPath()}/temp/{filename}")
                     inp = process(f"{funcs.getPath()}/temp/{filename}").decode("utf-8")
-                except:
+                except Exception as ex:
+                    funcs.printError(ctx, ex)
                     inp = inp
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
