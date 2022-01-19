@@ -1036,7 +1036,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="quartile", usage="<numbers separated with ;>",
+    @commands.command(name="quartile", usage='<numbers separated with ;> ["all" to show all points]',
                       aliases=["avg", "average", "mean", "median", "mode", "q1", "q2",
                                "q3", "range", "sd", "iqr", "quartiles", "boxplot", "box", "qir"],
                       description="Computes statistical data from a set of numerical values.")
@@ -1048,6 +1048,13 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 items = items.replace(",", ";")
             else:
                 items = items.replace(",", "")
+            if items.casefold().endswith("all"):
+                boxpoints = "all"
+                items = items[:-3]
+                while items.endswith(" "):
+                    items = items[:-1]
+            else:
+                boxpoints = False
             while items.startswith(";"):
                 items = items[1:]
             while items.endswith(";"):
@@ -1090,7 +1097,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig.add_trace(go.Box(y=data, quartilemethod="linear", name="Linear Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
-            fig.update_traces(boxpoints="all", jitter=0.3)
+            fig.update_traces(boxpoints=boxpoints, jitter=0.3)
             fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
             image = File(f"{funcs.getPath()}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")

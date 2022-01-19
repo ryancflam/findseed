@@ -25,10 +25,12 @@ def printError(ctx, error):
 
 def testKaleido():
     print("Testing Kaleido...")
-    imgName = f"{time.time()}.png"
-    go.Figure().write_image(f"{getPath()}/temp/{imgName}")
-    deleteTempFile(imgName)
-    print("Kaleido test complete.")
+    try:
+        go.Figure().write_image(f"{getPath()}/temp/test.png")
+        deleteTempFile("test.png")
+        print("Kaleido is installed.")
+    except:
+        raise Exception("Kaleido is not installed!")
 
 
 def readTxtLines(pathstr):

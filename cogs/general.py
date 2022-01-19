@@ -129,7 +129,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 userID = userID.replace(" ", "")
             u = self.client.get_user(int(userID))
             dt = u.created_at
-            e = Embed(description=u.mention)
+            e = Embed(description=u.mention if u != self.client.user else "That's me!")
             e.set_author(name=str(u), icon_url=u.avatar_url)
             e.add_field(name="Is Bot", value=f"`{str(u.bot)}`")
             e.add_field(name="User ID", value=f"`{u.id}`")
