@@ -187,11 +187,11 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     days = "14"
                 elif arg == "m" or arg.startswith("30d"):
                     days = "30"
-                elif arg.startswith(("3m", "90d")):
+                elif arg.startswith(("3m", "90d")) and arg != "3ma":
                     days = "90"
-                elif arg.startswith(("6m", "180d")):
+                elif arg.startswith(("6m", "180d")) and arg != "6ma":
                     days = "180"
-                elif arg == "y" or arg.startswith(("365d", "12m", "1y")):
+                elif arg == "y" or arg.startswith(("365d", "12m", "1y")) and arg != "12ma":
                     days = "365"
                 elif arg.startswith("max"):
                     days = "max"
