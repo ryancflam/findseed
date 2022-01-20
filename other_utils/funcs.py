@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 from io import BytesIO
 from json import JSONDecodeError, dump, load
 from os import path, remove
+from random import randint
 from re import split
 
 from dateutil import parser
@@ -107,6 +108,13 @@ def userNotBlacklisted(client, message):
                 break
     return allowed and message.author.id not in userList \
            and (not message.guild or message.guild.id not in serverList)
+
+
+def weirdCase(text):
+    res = ""
+    for char in text.casefold():
+        res += char.upper() if randint(0, 1) else char
+    return res
 
 
 def kelvin():

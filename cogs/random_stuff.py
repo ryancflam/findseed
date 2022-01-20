@@ -735,10 +735,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.command(name="weirdcase", usage="<input>", aliases=["mixedcase", "weird"],
                       description="MakEs yOuR TExT lOok sOmEthInG LikE tHiS.", hidden=True)
     async def weirdcase(self, ctx, *, text: str=""):
-        res = ""
-        for char in text.casefold():
-            res += char.upper() if randint(0, 1) else char
-        await ctx.reply(res)
+        if not text:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        await ctx.reply(funcs.weirdCase(text))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="glitchtext", usage="<input>", aliases=["glitch", "textglitch"], description="Glitches text.", hidden=True)
