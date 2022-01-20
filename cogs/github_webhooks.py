@@ -17,24 +17,12 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                      description="Receive webhooks about your GitHub repository push activity."):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.host = "0.0.0.0"
-        self.port = 8080
         if RIDICULOUS_CHANNEL_LIST[:-1]:
-            self.startServer()
+            Thread(target=self.startFlaskApp).start()
 
-    @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
-                      aliases=["gitlog", "gitchannels", "gitchannel", "gitlogs", "gitlogchannel"])
-    @commands.is_owner()
-    async def gitlogchannels(self, ctx):
-        msg = ""
-        for channel in RIDICULOUS_CHANNEL_LIST[:-1]:
-            if channel:
-                try:
-                    name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
-                except:
-                    name = "DM"
-                msg += f"- {channel.id} ({name})\n"
-        await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
+    @staticmethod
+    def startFlaskApp(host: str="0.0.0.0", port: int=8080):
+        FLASK_APP.run(host=host, port=port)
 
     @staticmethod
     @FLASK_APP.route("/")
@@ -67,11 +55,19 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
             return "success", 200
         abort(400)
 
-    def run(self):
-        FLASK_APP.run(host=self.host, port=self.port)
-
-    def startServer(self):
-        Thread(target=self.run).start()
+    @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
+                      aliases=["gitlog", "gitchannels", "gitchannel", "gitlogs", "gitlogchannel"])
+    @commands.is_owner()
+    async def gitlogchannels(self, ctx):
+        msg = ""
+        for channel in RIDICULOUS_CHANNEL_LIST[:-1]:
+            if channel:
+                try:
+                    name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
+                except:
+                    name = "DM"
+                msg += f"- {channel.id} ({name})\n"
+        await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
 
 def setup(client: commands.Bot):
