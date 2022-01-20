@@ -1117,7 +1117,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Region", value=f"`{data['regionName']}`")
             e.add_field(name="Country", value=f"`{data['country']} ({data['countryCode']})`")
             e.add_field(name="Location", value=f"`{data['lat']}, {data['lon']}`")
-            e.add_field(name="Zip", value=f"`{data['zip']}`")
+            if data['zip']:
+                e.add_field(name="Zip", value=f"`{data['zip']}`")
             e.add_field(name="Time Zone", value=f"`{data['timezone']}`")
             e.add_field(name="ISP", value=f"`{data['isp']}`")
         except Exception as ex:
