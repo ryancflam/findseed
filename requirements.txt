@@ -1,5 +1,6 @@
 akinator.py[async]==5.0.0
 asyncpraw==7.5.0
+evalidate==0.7.8
 flask==2.0.2
 googletrans==3.1.0a0
 httpx==0.13.3

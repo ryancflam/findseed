@@ -10,6 +10,7 @@ from re import split
 
 from dateutil import parser
 from discord import Embed, File, utils
+from evalidate import safeeval
 from httpx import AsyncClient, get
 from plotly import graph_objects as go
 
@@ -32,6 +33,18 @@ def testKaleido():
         print("Kaleido installed and ready")
     except:
         raise Exception("Kaleido is not installed!")
+
+
+def evalMath(inp: str):
+    ans = safeeval(
+        inp.replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100").replace("×", "*").replace(" ", ""),
+        addnodes=["FloorDiv", "Pow", "UAdd", "USub", "Mult", "Div"]
+    )
+    if ans[0]:
+        return ans[1]
+    elif "ZeroDivisionError" in ans[1]:
+        raise ZeroDivisionError
+    raise ValueError("Invalid input.")
 
 
 def readTxtLines(pathstr):

@@ -21,7 +21,6 @@ from qrcode import QRCode
 
 import config
 from other_utils import funcs
-from other_utils.safe_eval import SafeEval
 
 DEFAULT_REPO = "ryancflam/findseed"
 HCF_LIMIT = 1000000
@@ -935,7 +934,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                       aliases=["calculate", "calculator", "cal", "math", "maths", "safeeval"], usage="<input>")
     async def calc(self, ctx, *, inp):
         try:
-            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(SafeEval(inp).safeEval()))))
+            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(funcs.evalMath(inp)))))
         except ZeroDivisionError:
             answer = [
                 "Stop right there, that's illegal!",
@@ -990,7 +989,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                       aliases=["square", "root"], description="Calculates the square root of a given value or math expession.")
     async def sqrt(self, ctx, *, val):
         try:
-            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(sqrt(SafeEval(val).safeEval())))))
+            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(sqrt(funcs.evalMath(val))))))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
