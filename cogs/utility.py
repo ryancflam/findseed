@@ -14,6 +14,7 @@ from asyncpraw import Reddit
 from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
+from mendeleev import element
 from plotly import graph_objects as go
 from PyPDF2 import PdfFileReader
 from qrcode import QRCode
@@ -403,7 +404,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="weather", description="Finds the current weather of a location.",
                       aliases=["w"], usage="<location>")
     async def weather(self, ctx, *, location: str=""):
-        zero = -273.15
+        zero = -funcs.kelvin()
         url = f"http://api.openweathermap.org/data/2.5/weather?q={location.casefold().replace(' ', '%20')}" + \
               f"&APPID={config.owmKey}"
         try:
@@ -1105,6 +1106,101 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await msg.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="ip", description="Shows information about an IP address.",
+                      aliases=["ipaddress"], hidden=True, usage="<IP address>")
+    async def ip(self, ctx, ip):
+        try:
+            res = await funcs.getRequest(f"http://ip-api.com/json/{ip}")
+            data = res.json()
+            e = Embed(title=data["query"])
+            e.add_field(name="City", value=f"`{data['city']}`")
+            e.add_field(name="Region", value=f"`{data['regionName']}`")
+            e.add_field(name="Country", value=f"`{data['country']} ({data['countryCode']})`")
+            e.add_field(name="Location", value=f"`{data['lat']}, {data['lon']}`")
+            e.add_field(name="Zip", value=f"`{data['zip']}`")
+            e.add_field(name="Time Zone", value=f"`{data['timezone']}`")
+            e.add_field(name="ISP", value=f"`{data['isp']}`")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Invalid input or server error.")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="element", description="Shows information about a chemical element.",
+                      aliases=["elem", "chem", "chemical"], hidden=True, usage="<element symbol or name>")
+    async def chemical(self, ctx, elementname):
+        try:
+            elementobj = element(elementname)
+        except:
+            try:
+                elementobj = element(elementname.title())
+            except:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid element."))
+        try:
+            name = elementobj.name
+            group = elementobj.group
+            mp = elementobj.melting_point
+            bp = elementobj.boiling_point
+            desc = elementobj.description
+            ar = elementobj.atomic_radius
+            en = elementobj.electronegativity()
+            try:
+                fi = elementobj.ionenergies[1]
+            except:
+                fi = None
+            roomtemp = funcs.kelvin() + 25
+            if not mp or not bp:
+                state = "Artificial"
+            elif mp > roomtemp:
+                state = "Solid"
+            elif mp < roomtemp and bp > roomtemp:
+                state = "Liquid"
+            else:
+                state = "Gas"
+            e = Embed(title=f"{name} ({elementobj.symbol})", description=desc if desc else "")
+            e.set_thumbnail(url=f"https://images-of-elements.com/t/{name.casefold()}.png")
+            e.add_field(name="Protons", value=f"`{elementobj.protons}`")
+            e.add_field(name="Neutrons", value=f"`{elementobj.neutrons}`")
+            e.add_field(name="Electrons", value=f"`{elementobj.electrons}`")
+            e.add_field(name="Atomic Mass", value=f"`{elementobj.atomic_weight}`")
+            e.add_field(name="Period", value=f"`{elementobj.period}`")
+            try:
+                gn = group.name
+                e.add_field(name="Group", value=f"`{group.symbol}{(' - ' + gn) if gn else ''}`")
+            except:
+                pass
+            if ar:
+                e.add_field(name="Atomic Radius", value="`{:,}`".format(ar))
+            if en:
+                e.add_field(name="Electronegativity", value=f"`{en}`")
+            if fi:
+                e.add_field(name="First Ionisation", value=f"`{fi}`")
+            if mp:
+                e.add_field(name="Melting Point", value="`{:,} K`".format(mp))
+            if bp:
+                e.add_field(name="Boiling Point", value="`{:,} K`".format(bp))
+            e.add_field(name="State", value=f"`{state}`")
+            e.add_field(name="Config", value=f"`{elementobj.econf}`")
+            e.add_field(name="Discoverer", value=f"`{elementobj.discoverers}`")
+            discoveryear = elementobj.discovery_year
+            discoverlocation = elementobj.discovery_location
+            if discoveryear or discoverlocation:
+                both = bool(discoveryear and discoverlocation)
+                e.add_field(name="Discovered In",
+                            value=f"`{discoveryear if discoveryear else ''}{' in ' if both else ''}" +
+                                  f"{discoverlocation if discoverlocation else ''}`")
+            await ctx.reply(embed=e)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid element."))
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="periodic", description="Shows the periodic table.",
+                      aliases=["periotictable", "elements"], hidden=True)
+    async def periodic(self, ctx):
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/871621453521485864/882103596563431424/table.jpg")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="normalbodytemp", description="Shows the normal body temperature range chart.",
                       aliases=["bodytemp", "nbt"], hidden=True)
     async def normalbodytemp(self, ctx):
@@ -1560,20 +1656,22 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             await ctx.send("Querying. Please wait...")
             try:
                 params = {"appid": config.wolframID, "output": "json", "lang": "en", "input": inp}
-                data = await funcs.getRequest("http://api.wolframalpha.com/v2/query", params=params)
-                res = data.json()["queryresult"]
+                res = await funcs.getRequest("http://api.wolframalpha.com/v2/query", params=params)
+                data = res.json()["queryresult"]
                 e = Embed()
                 e.set_author(icon_url="https://media.discordapp.net/attachments/771404776410972161/929386312765669376/wolfram.png",
                              name="Wolfram|Alpha Query")
-                if res["success"]:
-                    for i in res["pods"][:25]:
+                img = False
+                if data["success"]:
+                    for i in data["pods"][:25]:
                         if i["subpods"][0]["plaintext"]:
                             e.add_field(name=i["title"], value=funcs.formatting(i["subpods"][0]["plaintext"], limit=200))
-                        elif "plot" in i["title"].casefold():
+                        if not img and (i["title"] == "Result" and i["scanner"] == "Expand" or "plot" in i["title"].casefold()):
                             e.set_image(url=i["subpods"][0]["img"]["src"])
+                            img = True
                 else:
                     try:
-                        e.add_field(name="Did You Mean", value=", ".join(f"`{i['val']}`" for i in res["didyoumeans"][:20]))
+                        e.add_field(name="Did You Mean", value=", ".join(f"`{i['val']}`" for i in data["didyoumeans"][:20]))
                     except:
                         e.add_field(name="Tips", value=funcs.formatting("Check your spelling, and use English"))
                 e.set_footer(text="Note: Results may be cut-off due to Discord's limit.")

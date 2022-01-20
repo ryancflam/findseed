@@ -109,6 +109,10 @@ def userNotBlacklisted(client, message):
            and (not message.guild or message.guild.id not in serverList)
 
 
+def kelvin():
+    return 273.15
+
+
 def sign(value):
     return -1 if value < 0 else 0 if not value else 1
 

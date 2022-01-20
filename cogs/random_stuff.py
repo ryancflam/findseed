@@ -355,6 +355,32 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="food", description="Sends a random food image.", hidden=True, aliases=["foodpic", "foodporn"])
+    async def food(self, ctx):
+        try:
+            res = await funcs.getRequest("https://foodish-api.herokuapp.com/api/")
+            await funcs.sendImage(ctx, res.json()["image"])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="bird", description="Sends a random bird image.", hidden=True, aliases=["birb"])
+    async def bird(self, ctx):
+        try:
+            res = await funcs.getRequest("https://some-random-api.ml/img/birb")
+            await funcs.sendImage(ctx, res.json()["link"])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="coffee", description="Sends a random coffee image.", hidden=True)
+    async def coffee(self, ctx):
+        try:
+            await funcs.sendImage(ctx, "https://coffee.alexflipnote.dev/random")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="dog", description="Sends a random dog image.", hidden=True)
     async def dog(self, ctx):
         try:
@@ -700,33 +726,45 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="shrek", description="Shrek.", hidden=True)
+    async def shrek(self, ctx):
+        await ctx.reply("https://imgur.com/gallery/IsWDJWa")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="weirdcase", usage="<input>", aliases=["mixedcase", "weird"],
+                      description="MakEs yOuR TExT lOok sOmEthInG LikE tHiS.", hidden=True)
+    async def weirdcase(self, ctx, *, text: str=""):
+        res = ""
+        for char in text.casefold():
+            res += char.upper() if randint(0, 1) else char
+        await ctx.reply(res)
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="glitchtext", usage="<input>", aliases=["glitch", "textglitch"], description="Glitches text.", hidden=True)
     async def glitchtext(self, ctx, *, text: str=""):
         if text == "":
-            e = funcs.errorEmbed(None, "Empty input.")
-        else:
-            top = ["\u030d", "\u030e", "\u0304", "\u0305", "\u033f", "\u0311", "\u0306", "\u0310", "\u0352", "\u0357",
-                   "\u0351", "\u0307", "\u0308", "\u030a", "\u0342", "\u0343", "\u0344", "\u034a", "\u034b", "\u034c",
-                   "\u0303", "\u0302", "\u030c", "\u0350", "\u0300", "\u0301", "\u030b", "\u030f", "\u0312", "\u0313",
-                   "\u0314", "\u033d", "\u0309", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367", "\u0368", "\u0369",
-                   "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f", "\u033e", "\u035b", "\u0346", "\u031a"]
-            mid = ["\u0315", "\u031b", "\u0340", "\u0341", "\u0358", "\u0321", "\u0322", "\u0327", "\u0328", "\u0334",
-                   "\u0335", "\u0336", "\u034f", "\u035c", "\u035d", "\u035e", "\u035f", "\u0360", "\u0362", "\u0338",
-                   "\u0337", "\u0361", "\u0489", "\u20DE", "\u20DF", "\u20E0", "\u20E2", "\u20E4"]
-            bottom = ["\u0316", "\u0317", "\u0318", "\u0319", "\u031c", "\u031d", "\u031e", "\u031f", "\u0320", "\u0324",
-                      "\u0325", "\u0326", "\u0329", "\u032a", "\u032b", "\u032c", "\u032d", "\u032e", "\u032f", "\u0330",
-                      "\u0331", "\u0332", "\u0333", "\u0339", "\u033a", "\u033b", "\u033c", "\u0345", "\u0347", "\u0348",
-                      "\u0349", "\u034d", "\u034e", "\u0353", "\u0354", "\u0355", "\u0356", "\u0359", "\u035a", "\u0323"]
-            res = ""
-            for char in text:
-                ranlevel = randint(20, 80)
-                glitch = choices(bottom, k=ranlevel)
-                glitch += choices(top, k=ranlevel)
-                glitch += choice(mid)
-                res += char + "".join(glitch)
-            e = Embed(title="Glitch Text", description=funcs.formatting(res))
-        await ctx.reply(embed=e)
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        top = ["\u030d", "\u030e", "\u0304", "\u0305", "\u033f", "\u0311", "\u0306", "\u0310", "\u0352", "\u0357",
+               "\u0351", "\u0307", "\u0308", "\u030a", "\u0342", "\u0343", "\u0344", "\u034a", "\u034b", "\u034c",
+               "\u0303", "\u0302", "\u030c", "\u0350", "\u0300", "\u0301", "\u030b", "\u030f", "\u0312", "\u0313",
+               "\u0314", "\u033d", "\u0309", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367", "\u0368", "\u0369",
+               "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f", "\u033e", "\u035b", "\u0346", "\u031a"]
+        mid = ["\u0315", "\u031b", "\u0340", "\u0341", "\u0358", "\u0321", "\u0322", "\u0327", "\u0328", "\u0334",
+               "\u0335", "\u0336", "\u034f", "\u035c", "\u035d", "\u035e", "\u035f", "\u0360", "\u0362", "\u0338",
+               "\u0337", "\u0361", "\u0489", "\u20DE", "\u20DF", "\u20E0", "\u20E2", "\u20E4"]
+        bottom = ["\u0316", "\u0317", "\u0318", "\u0319", "\u031c", "\u031d", "\u031e", "\u031f", "\u0320", "\u0324",
+                  "\u0325", "\u0326", "\u0329", "\u032a", "\u032b", "\u032c", "\u032d", "\u032e", "\u032f", "\u0330",
+                  "\u0331", "\u0332", "\u0333", "\u0339", "\u033a", "\u033b", "\u033c", "\u0345", "\u0347", "\u0348",
+                  "\u0349", "\u034d", "\u034e", "\u0353", "\u0354", "\u0355", "\u0356", "\u0359", "\u035a", "\u0323"]
+        res = ""
+        for char in text:
+            ranlevel = randint(20, 80)
+            glitch = choices(bottom, k=ranlevel)
+            glitch += choices(top, k=ranlevel)
+            glitch += choice(mid)
+            res += char + "".join(glitch)
+        await ctx.reply(res[:2000])
 
     @commands.cooldown(1, 20, commands.BucketType.user)
     @commands.command(name="gentext", description="Generates text based on your input.",
