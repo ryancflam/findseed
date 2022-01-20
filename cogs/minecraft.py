@@ -614,11 +614,11 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid arguments."))
         await ctx.reply(
             "The distance between (**{}**; **{}**) and (**{}**; **{}**) is: ".format(
-                funcs.removeDotZero("{:,}".format(round(x1, 5))),
-                funcs.removeDotZero("{:,}".format(round(z1, 5))),
-                funcs.removeDotZero("{:,}".format(round(x2, 5))),
-                funcs.removeDotZero("{:,}".format(round(z2, 5)))
-            ) + f"**{funcs.removeDotZero('{:,}'.format(round(self.coordsDifference((x1, z1), (x2, z2)), 5)))}**"
+                funcs.removeDotZero(round(x1, 5)),
+                funcs.removeDotZero(round(z1, 5)),
+                funcs.removeDotZero(round(x2, 5)),
+                funcs.removeDotZero(round(z2, 5))
+            ) + f"**{funcs.removeDotZero(round(self.coordsDifference((x1, z1), (x2, z2)), 5))}**"
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)

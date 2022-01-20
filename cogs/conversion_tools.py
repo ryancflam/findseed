@@ -266,7 +266,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 binnumber = text.replace(" ", "")
                 e = Embed(
                     title="Binary to Decimal",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(int(binnumber, 2))))
+                    description=funcs.formatting(funcs.removeDotZero(int(binnumber, 2)))
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -318,7 +318,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 hexnumber = text.replace(" ", "")
                 e = Embed(
                     title="Hexadecimal to Decimal",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(int(hexnumber, 16))))
+                    description=funcs.formatting(funcs.removeDotZero(int(hexnumber, 16)))
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -353,7 +353,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 e = Embed(
                     title="Celsius to Fahrenheit",
                     description=funcs.formatting(
-                        funcs.removeDotZero("{:,}".format(round(funcs.celsiusToFahrenheit(number), 5))) + "°F"
+                        funcs.removeDotZero(round(funcs.celsiusToFahrenheit(number), 5)) + "°F"
                     )
                 )
             except ValueError:
@@ -372,7 +372,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 value = round((number - 32) * 5 / 9, 5)
                 e = Embed(
                     title="Fahrenheit to Celsius",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + "°C")
+                    description=funcs.formatting(funcs.removeDotZero(value) + "°C")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -415,7 +415,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
             value = (feet * 12 + inches) * 2.54
             e = Embed(
                 title="Feet & Inches to Centimetres",
-                description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " cm")
+                description=funcs.formatting(funcs.removeDotZero(value) + " cm")
             )
         except ValueError:
             e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -437,10 +437,10 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                     title="Centimetres to Feet & Inches",
                     description=funcs.formatting(
                         "{} ft {} in ({} ft OR {} in)".format(
-                            funcs.removeDotZero("{:,}".format(feet)),
-                            funcs.removeDotZero("{:,}".format(round(totalinches - (feet * 12), 5))),
-                            funcs.removeDotZero("{:,}".format(round(totalfeet, 5))),
-                            funcs.removeDotZero("{:,}".format(round(totalinches, 5)))
+                            funcs.removeDotZero(feet),
+                            funcs.removeDotZero(round(totalinches - (feet * 12), 5)),
+                            funcs.removeDotZero(round(totalfeet, 5)),
+                            funcs.removeDotZero(round(totalinches, 5))
                         )
                     )
                 )
@@ -460,7 +460,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 value = round(number / 1.609344, 5)
                 e = Embed(
                     title="Kilometres to Miles",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " mi")
+                    description=funcs.formatting(funcs.removeDotZero(value) + " mi")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -478,7 +478,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 value = round(number * 1.609344, 5)
                 e = Embed(
                     title="Miles to Kilometres",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " km")
+                    description=funcs.formatting(funcs.removeDotZero(value) + " km")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -496,7 +496,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 value = round(number * 0.45359237, 5)
                 e = Embed(
                     title="Pounds to Kilograms",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " kg")
+                    description=funcs.formatting(funcs.removeDotZero(value) + " kg")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -514,7 +514,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 value = round(number * 2.2046226218, 5)
                 e = Embed(
                     title="Kilograms to Pounds",
-                    description=funcs.formatting(funcs.removeDotZero("{:,}".format(value)) + " lbs")
+                    description=funcs.formatting(funcs.removeDotZero(value) + " lbs")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")

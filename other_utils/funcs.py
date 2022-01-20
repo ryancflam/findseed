@@ -138,8 +138,11 @@ def sign(value):
     return -1 if value < 0 else 0 if not value else 1
 
 
-def removeDotZero(valuestr):
-    valuestr = str(valuestr)
+def removeDotZero(value):
+    try:
+        valuestr = "{:,}".format(value)
+    except:
+        valuestr = str(value)
     while valuestr.endswith(".0"):
         valuestr = valuestr[:-2]
     return valuestr
@@ -219,7 +222,7 @@ def btcOrSat(sats):
     else:
         sats = round(sats * 0.00000001, 8)
         unit = " BTC"
-    return removeDotZero("{:,}".format(sats)) + unit
+    return removeDotZero(sats) + unit
 
 
 def dateDifference(dateobj, dateobj2):

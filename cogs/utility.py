@@ -122,7 +122,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     def makeChart(ctx, fig, labels, values, imgName):
         e = Embed(title="Chart", description=f"Requested by: {ctx.author.mention}")
         for i in range(len(labels)):
-            e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero("{:,}".format(values[i]))))
+            e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero(values[i])))
         fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
         image = File(f"{funcs.getPath()}/temp/{imgName}")
         e.set_image(url=f"attachment://{imgName}")
@@ -830,8 +830,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             icon_url = "https://www.redditinc.com/assets/images/site/reddit-logo.png"
             if inp.startswith("r") and "/" in inp:
                 subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
-                if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) \
-                        and not ctx.channel.is_nsfw():
+                if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this community in an NSFW channel.")
                 else:
                     tags = [
@@ -881,8 +880,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         ] if i
                     ]
                     nickname = redditor.subreddit["title"]
-                if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) \
-                        and not ctx.channel.is_nsfw():
+                if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
                 else:
                     e = Embed(description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
@@ -936,7 +934,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                       aliases=["calculate", "calculator", "cal", "math", "maths", "safeeval"], usage="<input>")
     async def calc(self, ctx, *, inp):
         try:
-            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(funcs.evalMath(inp)))))
+            e = Embed(description=funcs.formatting(funcs.removeDotZero(funcs.evalMath(inp))))
         except ZeroDivisionError:
             answer = [
                 "Stop right there, that's illegal!",
@@ -991,7 +989,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                       aliases=["square", "root"], description="Calculates the square root of a given value or math expession.")
     async def sqrt(self, ctx, *, val):
         try:
-            e = Embed(description=funcs.formatting(funcs.removeDotZero("{:,}".format(sqrt(funcs.evalMath(val))))))
+            e = Embed(description=funcs.formatting(funcs.removeDotZero(sqrt(funcs.evalMath(val)))))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
@@ -1347,23 +1345,23 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             q1 = median(data[:halflist])
             e = Embed(title="Quartile Calculator",
                       description=f'Requested by: {ctx.author.mention}\n' + \
-                                  f'{funcs.formatting("; ".join(funcs.removeDotZero("{:,}".format(i)) for i in data))}')
+                                  f'{funcs.formatting("; ".join(funcs.removeDotZero(i)) for i in data)}')
             e.add_field(name="Total Values", value="`{:,}`".format(len(data)))
-            e.add_field(name="Mean", value=f'`{funcs.removeDotZero("{:,}".format(mean(data)))}`')
+            e.add_field(name="Mean", value=f'`{funcs.removeDotZero(mean(data))}`')
             try:
-                e.add_field(name="Mode", value=f'`{funcs.removeDotZero("{:,}".format(mode(data)))}`')
+                e.add_field(name="Mode", value=f'`{funcs.removeDotZero(mode(data))}`')
             except:
                 e.add_field(name="Mode", value="`None`")
-            e.add_field(name="Q1", value=f'`{funcs.removeDotZero("{:,}".format(q1))}`')
-            e.add_field(name="Median (Q2)", value=f'`{funcs.removeDotZero("{:,}".format(median(data)))}`')
-            e.add_field(name="Q3", value=f'`{funcs.removeDotZero("{:,}".format(q3))}`')
-            e.add_field(name="Interquartile Range", value=f'`{funcs.removeDotZero("{:,}".format(q3 - q1))}`')
-            e.add_field(name="Range", value=f'`{funcs.removeDotZero("{:,}".format(max(data) - min(data)))}`')
-            e.add_field(name="Population SD", value=f'`{funcs.removeDotZero("{:,}".format(pstdev(data)))}`')
-            e.add_field(name="Sample SD", value=f'`{funcs.removeDotZero("{:,}".format(stdev(data)))}`')
-            e.add_field(name="Minimum Value", value=f'`{funcs.removeDotZero("{:,}".format(min(data)))}`')
-            e.add_field(name="Maximum Value", value=f'`{funcs.removeDotZero("{:,}".format(max(data)))}`')
-            e.add_field(name="Sum", value=f'`{funcs.removeDotZero("{:,}".format(sum(data)))}`')
+            e.add_field(name="Q1", value=f'`{funcs.removeDotZero(q1)}`')
+            e.add_field(name="Median (Q2)", value=f'`{funcs.removeDotZero(median(data))}`')
+            e.add_field(name="Q3", value=f'`{funcs.removeDotZero(q3)}`')
+            e.add_field(name="Interquartile Range", value=f'`{funcs.removeDotZero(q3 - q1)}`')
+            e.add_field(name="Range", value=f'`{funcs.removeDotZero(max(data) - min(data))}`')
+            e.add_field(name="Population SD", value=f'`{funcs.removeDotZero(pstdev(data))}`')
+            e.add_field(name="Sample SD", value=f'`{funcs.removeDotZero(stdev(data))}`')
+            e.add_field(name="Minimum Value", value=f'`{funcs.removeDotZero(min(data))}`')
+            e.add_field(name="Maximum Value", value=f'`{funcs.removeDotZero(max(data))}`')
+            e.add_field(name="Sum", value=f'`{funcs.removeDotZero(sum(data))}`')
             fig = go.Figure()
             fig.add_trace(go.Box(y=data, quartilemethod="linear", name="Linear Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
@@ -1395,10 +1393,10 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 if not a % i and not b % i:
                     hcf = i
             lcm = int((a * b) / hcf)
-            await ctx.reply(f'The HCF of {funcs.removeDotZero("{:,}".format(a))} and ' + \
-                           f'{funcs.removeDotZero("{:,}".format(b))} is: **{funcs.removeDotZero("{:,}".format(hcf))}' + \
-                           f'**\nThe LCM of {funcs.removeDotZero("{:,}".format(a))} and ' + \
-                           f'{funcs.removeDotZero("{:,}".format(b))} is: **{funcs.removeDotZero("{:,}".format(lcm))}**')
+            await ctx.reply(f'The HCF of {funcs.removeDotZero(a)} and ' + \
+                           f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(hcf)}' + \
+                           f'**\nThe LCM of {funcs.removeDotZero(a)} and ' + \
+                           f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(lcm)}**')
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 

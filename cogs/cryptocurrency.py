@@ -75,7 +75,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                             round(neobtc * amount, 6), round(neousd * amount, 2), round(neousd / gasusd * amount, 3)
                         ), inline=False)
             e.add_field(name="NEO Market Cap", value="`{:,} USD (Rank #{:,})`".format(neomc, neorank))
-            e.add_field(name="{}GAS".format("" if gasamount == 1 else funcs.removeDotZero("{:,}".format(gasamount)) + " "),
+            e.add_field(name="{}GAS".format("" if gasamount == 1 else funcs.removeDotZero(gasamount) + " "),
                         value="`{:,} BTC | {:,} USD | {:,} NEO`".format(
                             round(gasbtc * gasamount, 6), round(gasusd * gasamount, 2), int(gasusd / neousd * gasamount)
                         ), inline=False)
