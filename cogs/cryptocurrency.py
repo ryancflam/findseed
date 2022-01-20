@@ -292,7 +292,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     if totalSupply:
                         e.add_field(name="Fully Diluted Valuation",
                                     value="`{:,} {}`".format(int(totalSupply * currentPrice), fiat))
-                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC | Chart " +
+                    e.set_footer(text=f"Last updated: {funcs.timeStrToDatetime(data['last_updated'])} UTC\nChart " +
                                       f"options: {self.client.command_prefix}help cp",
                                  icon_url="https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b" +
                                           "8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png")

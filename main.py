@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
 from asyncio import new_event_loop as loop
+from logging import basicConfig, INFO
 
 from bot_instance import BotInstance
 
 if __name__ == "__main__":
+    basicConfig(level=INFO)
     client = BotInstance(loop())
     try:
         task = loop().create_task(client.startup())

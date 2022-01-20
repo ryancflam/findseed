@@ -59,7 +59,6 @@ class General(commands.Cog, name="General", description="Standard commands relat
         e.add_field(name="Users (Excluding Bots)", value="`{:,} ({:,})`".format(
             len(self.client.users), len(set([i for i in self.client.users if not i.bot]))
         ))
-        e.add_field(name="!findseed Calls", value="`{:,}`".format(funcs.readJson("data/findseed.json")['calls']))
         e.add_field(name="CPU Usage", value=f"`{cpu_percent()}%`")
         e.add_field(name="Memory Usage", value=f"`{dict(virtual_memory()._asdict())['percent']}%`")
         e.add_field(name="Memory Available",
@@ -82,6 +81,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                         value="`{}{} ({:,})`".format(self.client.command_prefix, popular['name'], int(popular['count'])))
         except:
             pass
+        e.add_field(name="!findseed Calls", value="`{:,}`".format(funcs.readJson("data/findseed.json")['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
         await ctx.reply(embed=e)

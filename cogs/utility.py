@@ -772,11 +772,11 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         e.set_footer(
                             text=f"Approval rate: " + \
                                  f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                                 "% ({:,} 👍 - {:,} 👎) | ".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
+                                 "% ({:,} 👍 - {:,} 👎)\n".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
                                  "Page 1 of {:,}".format(len(terms))
                         )
                     except ZeroDivisionError:
-                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page 1 of {:,}".format(len(terms)))
+                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage 1 of {:,}".format(len(terms)))
                     msg = await ctx.reply(embed=e)
                     await funcs.nextPrevPageOptions(msg, len(terms))
                     page = 1
@@ -803,11 +803,11 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                                 )
                                 e.set_footer(
                                     text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[page - 1]['thumbs_up']) + \
-                                         "{:,} 👎) | ".format(terms[page - 1]['thumbs_down']) + \
+                                         "{:,} 👎)\n".format(terms[page - 1]['thumbs_down']) + \
                                          "Page {:,} of {:,}".format(page, len(terms))
                                 )
                             except ZeroDivisionError:
-                                e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎) | Page {:,} of {:,}".format(page, len(terms)))
+                                e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(page, len(terms)))
                             await msg.edit(embed=e)
                         elif success is None:
                             return
