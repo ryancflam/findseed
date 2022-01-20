@@ -14,7 +14,7 @@ RIDICULOUS_CHANNEL_LIST = []
 
 
 class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
-                     description="Receive webhooks about your GitHub repository push activity."):
+                     description="Cog for receiving GitHub push webhooks."):
     def __init__(self, client: commands.Bot):
         self.client = client
         if RIDICULOUS_CHANNEL_LIST[:-1]:

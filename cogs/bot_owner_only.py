@@ -218,7 +218,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.is_owner()
     async def activecogs(self, ctx):
         cogs = self.client.cogs
-        await ctx.reply(funcs.formatting("Total: {:,}\n\n".format(len(cogs)) + ", ".join(str(cog) for cog in sorted(cogs))))
+        await ctx.reply(funcs.formatting("Total: {:,}\n\n- ".format(len(cogs)) + "\n- ".join(str(cog) for cog in sorted(cogs))))
 
     @commands.command(name="eval", description="Evaluates Python code. Proceed with caution.",
                       aliases=["evaluate"], usage="<code>")

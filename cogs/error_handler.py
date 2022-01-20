@@ -5,16 +5,18 @@ from discord.ext import commands
 from other_utils import funcs
 
 
-class Errors(commands.Cog, name="Errors", description="Error handler category.", command_attrs=dict(hidden=True)):
+class ErrorHandler(commands.Cog, name="Error Handler", description="Cog for handling errors.",
+                   command_attrs=dict(hidden=True)):
     def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
+            retry = round(error.retry_after, 2)
             await ctx.reply(
                 embed=funcs.errorEmbed(f"Slow down, {ctx.message.author.name}!",
-                                        f"Please try again in {round(error.retry_after, 2)} seconds.")
+                                       f"Please try again in {retry} second{'' if retry == 1 else 's'}.")
             )
         elif isinstance(error, commands.NotOwner):
             await ctx.reply(
@@ -38,8 +40,8 @@ class Errors(commands.Cog, name="Errors", description="Error handler category.",
         elif isinstance(error, commands.MissingPermissions):
             await ctx.reply(
                 embed=funcs.errorEmbed(
-                    "Insufficient privileges!", "You are missing the following permission(s): " + \
-                                                ", ".join(f"`{perm}`" for perm in error.missing_perms)
+                    "Insufficient privileges!",
+                    "You are missing the following permission(s): " + ", ".join(f"`{perm}`" for perm in error.missing_perms)
                 )
             )
         elif isinstance(error, commands.BotMissingPermissions):
@@ -49,4 +51,4 @@ class Errors(commands.Cog, name="Errors", description="Error handler category.",
 
 
 def setup(client: commands.Bot):
-    client.add_cog(Errors(client))
+    client.add_cog(ErrorHandler(client))
