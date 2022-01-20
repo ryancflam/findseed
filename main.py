@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from asyncio import get_event_loop as loop
+from asyncio import new_event_loop as loop
 
 from bot_instance import BotInstance
 
