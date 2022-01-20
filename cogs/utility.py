@@ -216,7 +216,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             for i in sorted(res.json(), reverse=True, key=lambda x: x["linesOfCode"])[:24]:
                 if i["language"] == "Total":
                     e.add_field(name="Total Files", value="`{:,}`".format(i["files"]))
-                e.add_field(name=f"{i['language']} Lines", value="`{:,}`".format(i["linesOfCode"]))
+                    e.add_field(name="Total Lines", value="`{:,}`".format(i["linesOfCode"]))
+                else:
+                    e.add_field(name=f"{i['language']} Lines (Files)", value="`{:,} ({:,})`".format(i["linesOfCode"], i["files"]))
             e.set_footer(text="Note: Lines of code do not include comment or blank lines.")
             e.set_image(
                 url="https://opengraph.githubassets.com/80a30c53eedf18f870a1779deaa8a7a60553494e284d23664c5bd983fa063d8e/" + repo
@@ -1153,7 +1155,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 state = "Artificial"
             elif mp > roomtemp:
                 state = "Solid"
-            elif mp < roomtemp and bp > roomtemp:
+            elif mp < roomtemp < bp:
                 state = "Liquid"
             else:
                 state = "Gas"
