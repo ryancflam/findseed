@@ -37,7 +37,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS-to-NEO ratio.",
-                      aliases=["n3", "n3o", "noe", "n30", "n", "n**"], usage="[amount of NEO or GAS]", name="neo")
+                      aliases=["n3", "n3o", "noe", "n30", "n", "n**"], usage="[amount of NEO or GAS]", name="neo", hidden=True)
     async def neo(self, ctx, amount="1"):
         try:
             gasamount = float(amount)
@@ -88,7 +88,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="gas", description="Calculates N3 GAS earnings based on the amount of NEO you hold.",
-                      usage="[amount of NEO]", aliases=["gc", "gascalc", "calcgas", "g"])
+                      usage="[amount of NEO]", aliases=["gc", "gascalc", "calcgas", "g"], hidden=True)
     async def gas(self, ctx, amount="1"):
         try:
             amount = int(amount.rsplit(".")[0])

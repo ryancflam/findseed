@@ -586,7 +586,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="guessthenumber", description="Play Guess the Number.", aliases=["gtn", "gn"])
+    @commands.command(name="guessthenumber", description="Play Guess the Number.", aliases=["gtn", "gn"], hidden=True)
     async def guessthenumber(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
@@ -987,7 +987,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="rps", description="Play Rock Paper Scissors.",
+    @commands.command(name="rps", description="Play Rock Paper Scissors.", hidden=True,
                       aliases=["rockpaperscissors", "rsp", "psr", "prs", "srp", "spr"])
     async def rps(self, ctx):
         if await self.checkGameInChannel(ctx):

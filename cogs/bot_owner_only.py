@@ -472,7 +472,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
-    @commands.command(name="reply", description="Replies to a user message.", usage="<message ID> <channel ID> <message>")
+    @commands.command(name="reply", description="Replies to a `msgbotowner` message.", usage="<message ID> <channel ID> <message>")
     @commands.is_owner()
     async def reply(self, ctx, msgid, cid, *, output: str=""):
         try:

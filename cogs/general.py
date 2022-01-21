@@ -280,7 +280,9 @@ class General(commands.Cog, name="General", description="Standard commands relat
         await ctx.reply(embed=funcs.errorEmbed(None, "E̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ are not enabled."))
 
     @commands.cooldown(1, 180, commands.BucketType.user)
-    @commands.command(description="Sends a message to the bot owner. Feel free to say hi, but spam may result in a blacklist.",
+    @commands.command(description="Feel free to use this to send a message to the bot owner, whether it be to report " +
+                                  "bugs (please do) or to simply say hi. The bot owner won't bite (probably), but " +
+                                  "spam will result in a blacklist.",
                       usage="<message>", name="msgbotowner")
     async def msgbotowner(self, ctx, *, output: str=""):
         try:
