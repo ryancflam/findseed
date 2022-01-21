@@ -51,14 +51,14 @@ class General(commands.Cog, name="General", description="Standard commands relat
         e = Embed(description=appinfo.description)
         dt = self.client.user.created_at
         e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
-        e.add_field(name="Owner", value=f"`{appinfo.owner}`")
-        e.add_field(name="Python", value=f"`{version.split(' ')[0]}`")
-        e.add_field(name="Library", value=f"`Pycord {__version__}`")
+        e.set_thumbnail(url=self.client.user.avatar_url)
+        e.add_field(name="Bot Owner", value=f"`{appinfo.owner}`")
+        e.add_field(name="Python Version", value=f"`{version.split(' ')[0]}`")
+        e.add_field(name="Library Version", value=f"`Pycord {__version__}`")
         e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
         e.add_field(name="Servers", value="`{:,}`".format(len(self.client.guilds)))
-        e.add_field(name="Users (Excluding Bots)", value="`{:,} ({:,})`".format(
-            len(self.client.users), len(set([i for i in self.client.users if not i.bot]))
-        ))
+        e.add_field(name="Users (Excluding Bots)",
+                    value="`{:,} ({:,})`".format(len(self.client.users), len([i for i in self.client.users if not i.bot])))
         e.add_field(name="CPU Usage", value=f"`{funcs.removeDotZero(cpu_percent())}%`")
         e.add_field(name="Memory Usage", value=f"`{funcs.removeDotZero(dict(virtual_memory()._asdict())['percent'])}%`")
         e.add_field(name="Memory Available",
@@ -83,7 +83,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
             pass
         e.add_field(name="!findseed Calls", value="`{:,}`".format(funcs.readJson("data/findseed.json")['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
-        e.set_footer(text=f"Bot has been up for {funcs.timeDifferenceStr(time(), self.starttime)}.")
+        e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.starttime)}")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -132,7 +132,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="userinfo", description="Shows information about a Discord user.",
-                      aliases=["member", "user", "memberinfo"], usage="[user ID OR @mention]")
+                      aliases=["member", "user", "memberinfo", "whois"], usage="[user ID OR @mention]")
     async def userinfo(self, ctx, *, userID=None):
         try:
             if not userID:
@@ -145,6 +145,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
             dt = u.created_at
             e = Embed(description=u.mention if u != self.client.user else "That's me!")
             e.set_author(name=str(u), icon_url=u.avatar_url)
+            e.set_thumbnail(url=u.avatar_url)
             e.add_field(name="Is Bot", value=f"`{str(u.bot)}`")
             e.add_field(name="User ID", value=f"`{u.id}`")
             e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))

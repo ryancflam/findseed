@@ -1187,7 +1187,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="whosthatpokemon", description="Who's that Pokémon? First to guess it wins!",
-                      aliases=["wtp", "pokemon", "whosthatpokémon", "pokémon"])
+                      aliases=["wtp", "whosthatpokémon"])
     async def whosthatpokemon(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
