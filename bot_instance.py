@@ -39,54 +39,15 @@ class BotInstance(Bot):
             intents=Intents.all(),
             case_insensitive=True
         )
+        self.remove_command("help")
         self.__loop = loop
         self.__token = config.botToken
         self.__activityName = config.activityName
         self.__activityType = config.activityType
         self.__status = config.status
-        self.remove_command("help")
-        self.generateFiles()
+        self.__generateFiles()
         self.__statcord = Client(self, config.statcordKey)
         self.__statcord.start_loop()
-
-    @staticmethod
-    def generateJson(name, data: dict):
-        file = f"{PATH}/data/{name}.json"
-        if not path.exists(file):
-            fobj = open(file, "w")
-            dump(data, fobj, sort_keys=True, indent=4)
-            fobj.close()
-            print(f"Generated file: {name}.json")
-
-    @staticmethod
-    def generateDir(name):
-        if not path.exists(f"{PATH}/{name}"):
-            makedirs(f"{PATH}/{name}")
-            print("Generated directory: " + name)
-
-    def generateFiles(self):
-        self.generateDir("data")
-        if path.exists(f"{funcs.getPath()}/temp"):
-            rmtree(f"{funcs.getPath()}/temp")
-            print("Removed directory: temp")
-        self.generateDir("temp")
-        self.generateJson(
-            "findseed",
-            {
-                "calls": 0,
-                "highest": {
-                    "found": 0,
-                    "number": 0,
-                    "time": int(time())
-                }
-            }
-        )
-        self.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
-        self.generateJson("blacklist", {"servers": [], "users": []})
-        self.generateJson("whitelist", {"users": []})
-        self.generateJson("unprompted_bots", {"ids": []})
-        self.generateJson("unprompted_messages", {"servers": []})
-        self.generateJson("easter_eggs", {"servers": []})
 
     def startup(self):
         for cog in listdir(f"{PATH}/cogs"):
@@ -105,7 +66,46 @@ class BotInstance(Bot):
         except Exception as ex:
             return ex
 
-    async def bitcoin(self):
+    @staticmethod
+    def __generateJson(name, data: dict):
+        file = f"{PATH}/data/{name}.json"
+        if not path.exists(file):
+            fobj = open(file, "w")
+            dump(data, fobj, sort_keys=True, indent=4)
+            fobj.close()
+            print(f"Generated file: {name}.json")
+
+    @staticmethod
+    def __generateDir(name):
+        if not path.exists(f"{PATH}/{name}"):
+            makedirs(f"{PATH}/{name}")
+            print("Generated directory: " + name)
+
+    def __generateFiles(self):
+        self.__generateDir("data")
+        if path.exists(f"{funcs.getPath()}/temp"):
+            rmtree(f"{funcs.getPath()}/temp")
+            print("Removed directory: temp")
+        self.__generateDir("temp")
+        self.__generateJson(
+            "findseed",
+            {
+                "calls": 0,
+                "highest": {
+                    "found": 0,
+                    "number": 0,
+                    "time": int(time())
+                }
+            }
+        )
+        self.__generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
+        self.__generateJson("blacklist", {"servers": [], "users": []})
+        self.__generateJson("whitelist", {"users": []})
+        self.__generateJson("unprompted_bots", {"ids": []})
+        self.__generateJson("unprompted_messages", {"servers": []})
+        self.__generateJson("easter_eggs", {"servers": []})
+
+    async def __bitcoin(self):
         btc = True
         while True:
             try:
@@ -118,11 +118,11 @@ class BotInstance(Bot):
                 msg = " @ ${:,}{}".format(data["current_price"], ext)
             except:
                 msg = ""
-            await self.presence(("BTC" if btc else "ETH") + msg)
+            await self.__presence(("BTC" if btc else "ETH") + msg)
             await asyncio.sleep(60)
             btc = not btc
 
-    async def presence(self, name):
+    async def __presence(self, name):
         await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
 
     async def on_ready(self):
@@ -145,9 +145,9 @@ class BotInstance(Bot):
         print(f"Logged in as Discord user: {self.user}")
         await owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
-            await self.loop.create_task(self.bitcoin())
+            await self.loop.create_task(self.__bitcoin())
         else:
-            await self.presence(self.__activityName)
+            await self.__presence(self.__activityName)
 
     async def on_message(self, message):
         ctx = await self.get_context(message)

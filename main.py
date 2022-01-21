@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 
 from asyncio import new_event_loop as loop
-from logging import basicConfig, INFO
+from logging import StreamHandler, getLogger, INFO
+from sys import stdout
 
 from bot_instance import BotInstance
 
 if __name__ == "__main__":
-    basicConfig(level=INFO)
+    handler = StreamHandler(stream=stdout)
+    handler.setLevel(INFO)
+    getLogger().addHandler(handler)
     client = BotInstance(loop())
     try:
         task = loop().create_task(client.startup())
