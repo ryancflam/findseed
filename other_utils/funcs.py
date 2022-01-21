@@ -21,6 +21,20 @@ def getPath():
     return path.dirname(path.realpath(__file__)).rsplit("other_utils", 1)[0][:-1]
 
 
+def getTickers():
+    while True:
+        try:
+            tickers = {}
+            res = get("https://api.coingecko.com/api/v3/coins/list")
+            data = res.json()
+            for i in data:
+                if i["symbol"] not in tickers:
+                    tickers[i["symbol"]] = i["id"]
+            return tickers
+        except JSONDecodeError:
+            time.sleep(30)
+
+
 def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
 
@@ -274,30 +288,29 @@ def monthNumberToName(number):
 def monthNameToNumber(name: str):
     if name.casefold().startswith("ja"):
         return "1"
-    elif name.casefold().startswith("f"):
+    if name.casefold().startswith("f"):
         return "2"
-    elif name.casefold().startswith("mar"):
+    if name.casefold().startswith("mar"):
         return "3"
-    elif name.casefold().startswith("ap"):
+    if name.casefold().startswith("ap"):
         return "4"
-    elif name.casefold().startswith("may"):
+    if name.casefold().startswith("may"):
         return "5"
-    elif name.casefold().startswith("jun"):
+    if name.casefold().startswith("jun"):
         return "6"
-    elif name.casefold().startswith("jul"):
+    if name.casefold().startswith("jul"):
         return "7"
-    elif name.casefold().startswith("au"):
+    if name.casefold().startswith("au"):
         return "8"
-    elif name.casefold().startswith("s"):
+    if name.casefold().startswith("s"):
         return "9"
-    elif name.casefold().startswith("o"):
+    if name.casefold().startswith("o"):
         return "10"
-    elif name.casefold().startswith("n"):
+    if name.casefold().startswith("n"):
         return "11"
-    elif name.casefold().startswith("d"):
+    if name.casefold().startswith("d"):
         return "12"
-    else:
-        raise Exception("Invalid month.")
+    raise Exception("Invalid month.")
 
 
 def valueToOrdinal(n):
@@ -313,41 +326,40 @@ def getZodiacInfo(zodiac: str):
     if zodiac.casefold().startswith("cap"):
         return "https://cdn.discordapp.com/attachments/771698457391136798/927265871024513034/unknown.png", \
             "December 22nd to January 19th", "Capricorn"
-    elif zodiac.casefold().startswith("aq"):
+    if zodiac.casefold().startswith("aq"):
         return "https://cdn.discordapp.com/attachments/771698457391136798/927266052985978960/unknown.png", \
             "January 20th to February 18th", "Aquarius"
-    elif zodiac.casefold().startswith("p"):
+    if zodiac.casefold().startswith("p"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266217725657128/unknown.png", \
             "February 19th to March 20th", "Pisces"
-    elif zodiac.casefold().startswith("ar"):
+    if zodiac.casefold().startswith("ar"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266309664825374/unknown.png", \
             "March 21st to April 19th", "Aries"
-    elif zodiac.casefold().startswith("t"):
+    if zodiac.casefold().startswith("t"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266400807030854/unknown.png", \
             "April 20th to May 20th", "Taurus"
-    elif zodiac.casefold().startswith("g"):
+    if zodiac.casefold().startswith("g"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266546101928056/unknown.png", \
             "May 21st to June 20th", "Gemini"
-    elif zodiac.casefold().startswith("can"):
+    if zodiac.casefold().startswith("can"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266890823401542/unknown.png", \
             "June 21st to July 22nd", "Cancer"
-    elif zodiac.casefold().startswith("le"):
+    if zodiac.casefold().startswith("le"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266982846427176/unknown.png", \
             "July 23rd to August 22nd", "Leo"
-    elif zodiac.casefold().startswith("v"):
+    if zodiac.casefold().startswith("v"):
         return "https://media.discordapp.net/attachments/771698457391136798/927267049380651078/unknown.png", \
             "August 23rd to September 22nd", "Virgo"
-    elif zodiac.casefold().startswith("li"):
+    if zodiac.casefold().startswith("li"):
         return "https://cdn.discordapp.com/attachments/771698457391136798/927267136232128552/unknown.png", \
             "September 23rd to October 22nd", "Libra"
-    elif zodiac.casefold().startswith("sc"):
+    if zodiac.casefold().startswith("sc"):
         return "https://media.discordapp.net/attachments/771698457391136798/927267220839596032/unknown.png", \
             "October 23rd to November 21st", "Scorpio"
-    elif zodiac.casefold().startswith("sa"):
+    if zodiac.casefold().startswith("sa"):
         return "https://media.discordapp.net/attachments/771698457391136798/927267312246075392/unknown.png", \
             "November 22nd to December 21st", "Sagittarius"
-    else:
-        raise Exception("Valid options:\n\n" + ", ".join(f"`{dateToZodiac(monthNumberToName(i) + ' 1')}`" for i in range(1, 13)))
+    raise Exception("Valid options:\n\n" + ", ".join(f"`{dateToZodiac(monthNumberToName(i) + ' 1')}`" for i in range(1, 13)))
 
 
 def dateToZodiac(datestr: str, ac=False):
@@ -430,6 +442,10 @@ def celsiusToFahrenheit(value):
     return value * 9 / 5 + 32
 
 
+def fahrenheitToCelsius(value):
+    return (value - 32) * 5 / 9
+
+
 def timeStrToDatetime(datestr: str):
     datestr = datestr.split(" ", 1)
     if len(datestr) > 1:
@@ -477,17 +493,36 @@ def noteFinder(rawNote):
     return musicalNotes()[cycle.getIndex()] + str(octave), cycle.getIndex() + octave * 12
 
 
-def getTickers():
-    while True:
-        try:
-            tickers = {}
-            res = get("https://api.coingecko.com/api/v3/coins/list")
-            data = res.json()
-            for i in data:
-                tickers[i["symbol"]] = i["id"]
-            return tickers
-        except JSONDecodeError:
-            time.sleep(30)
+def reloadCog(client, cog):
+    try:
+        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        client.reload_extension(f"cogs.{cog}")
+        print(f"Reloaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def loadCog(client, cog):
+    try:
+        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        client.load_extension(f"cogs.{cog}")
+        print(f"Loaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def unloadCog(client, cog):
+    try:
+        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        client.unload_extension(f"cogs.{cog}")
+        print(f"Unloaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def deleteTempFile(file: str):
+    if path.exists(f"{getPath()}/temp/{file}"):
+        remove(f"{getPath()}/temp/{file}")
 
 
 async def readTxtAttachment(message):
@@ -542,38 +577,6 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
         await msg.delete()
         success = None
     return success, page
-
-
-def reloadCog(client, cog):
-    try:
-        cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.reload_extension(f"cogs.{cog}")
-        print(f"Reloaded cog: {cog}")
-    except Exception as ex:
-        raise Exception(ex)
-
-
-def loadCog(client, cog):
-    try:
-        cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.load_extension(f"cogs.{cog}")
-        print(f"Loaded cog: {cog}")
-    except Exception as ex:
-        raise Exception(ex)
-
-
-def unloadCog(client, cog):
-    try:
-        cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.unload_extension(f"cogs.{cog}")
-        print(f"Unloaded cog: {cog}")
-    except Exception as ex:
-        raise Exception(ex)
-
-
-def deleteTempFile(file: str):
-    if path.exists(f"{getPath()}/temp/{file}"):
-        remove(f"{getPath()}/temp/{file}")
 
 
 async def easterEggsPredicate(ctx):

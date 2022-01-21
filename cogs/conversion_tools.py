@@ -352,9 +352,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                 number = float(text.replace(" ", "").replace(",", ""))
                 e = Embed(
                     title="Celsius to Fahrenheit",
-                    description=funcs.formatting(
-                        funcs.removeDotZero(round(funcs.celsiusToFahrenheit(number), 5)) + "°F"
-                    )
+                    description=funcs.formatting(funcs.removeDotZero(round(funcs.celsiusToFahrenheit(number), 5)) + "°F")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
@@ -369,10 +367,9 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
         else:
             try:
                 number = float(text.replace(" ", "").replace(",", ""))
-                value = round((number - 32) * 5 / 9, 5)
                 e = Embed(
                     title="Fahrenheit to Celsius",
-                    description=funcs.formatting(funcs.removeDotZero(value) + "°C")
+                    description=funcs.formatting(funcs.removeDotZero(round(funcs.fahrenheitToCelsius(number), 5)) + "°C")
                 )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
