@@ -1162,7 +1162,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e.add_field(name="Protons", value=f"`{elementobj.protons}`")
             e.add_field(name="Neutrons", value=f"`{elementobj.neutrons}`")
             e.add_field(name="Electrons", value=f"`{elementobj.electrons}`")
-            e.add_field(name="Atomic Mass", value=f"`{elementobj.atomic_weight}`")
+            e.add_field(name="Atomic Mass", value=f"`{funcs.removeDotZero(elementobj.atomic_weight)}`")
             e.add_field(name="Period", value=f"`{elementobj.period}`")
             try:
                 gn = group.name
@@ -1170,15 +1170,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             except:
                 pass
             if ar:
-                e.add_field(name="Atomic Radius", value="`{:,}`".format(ar))
+                e.add_field(name="Atomic Radius", value=f"`{funcs.removeDotZero(ar)}`")
             if en:
-                e.add_field(name="Electronegativity", value=f"`{en}`")
+                e.add_field(name="Electronegativity", value=f"`{funcs.removeDotZero(en)}`")
             if fi:
-                e.add_field(name="First Ionisation", value=f"`{fi}`")
+                e.add_field(name="First Ionisation", value=f"`{funcs.removeDotZero(fi)}`")
             if mp:
-                e.add_field(name="Melting Point", value="`{:,} K`".format(mp))
+                e.add_field(name="Melting Point", value=f"`{funcs.removeDotZero(mp)}`")
             if bp:
-                e.add_field(name="Boiling Point", value="`{:,} K`".format(bp))
+                e.add_field(name="Boiling Point", value=f"`{funcs.removeDotZero(bp)}`")
             e.add_field(name="State", value=f"`{state}`")
             e.add_field(name="Config", value=f"`{elementobj.econf}`")
             e.add_field(name="Discoverer", value=f"`{elementobj.discoverers}`")
@@ -1623,7 +1623,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Adds a timestamp to a YouTube video link, " +
-                                  "useful for mobile users who cannot copy links with timestamps.",
+                                  "useful for mobile users who cannot copy links with timestamps.", hidden=True,
                       aliases=["yt", "timestamp", "youtube"], usage="<YouTube video link> <timestamp>", name="yttimestamp")
     async def yttimestamp(self, ctx, link, timestamp):
         if "youtu" not in link.casefold():

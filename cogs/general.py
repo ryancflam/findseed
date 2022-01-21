@@ -59,23 +59,23 @@ class General(commands.Cog, name="General", description="Standard commands relat
         e.add_field(name="Users (Excluding Bots)", value="`{:,} ({:,})`".format(
             len(self.client.users), len(set([i for i in self.client.users if not i.bot]))
         ))
-        e.add_field(name="CPU Usage", value=f"`{cpu_percent()}%`")
-        e.add_field(name="Memory Usage", value=f"`{dict(virtual_memory()._asdict())['percent']}%`")
+        e.add_field(name="CPU Usage", value=f"`{funcs.removeDotZero(cpu_percent())}%`")
+        e.add_field(name="Memory Usage", value=f"`{funcs.removeDotZero(dict(virtual_memory()._asdict())['percent'])}%`")
         e.add_field(name="Memory Available",
-                    value="`{:,} MB`".format(
-                        round(float(dict(virtual_memory()._asdict())['available']) / 1024 / 1024, 2)
+                    value="`{} MB`".format(
+                        funcs.removeDotZero(round(float(dict(virtual_memory()._asdict())['available']) / 1024 / 1024, 2))
                     ))
-        e.add_field(name="Disk Usage", value=f"`{dict(disk_usage('/')._asdict())['percent']}%`")
+        e.add_field(name="Disk Usage", value=f"`{funcs.removeDotZero(dict(disk_usage('/')._asdict())['percent'])}%`")
         e.add_field(name="Disk Space Available",
-                    value="`{:,} GB`".format(
-                        round(float(dict(disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2)
+                    value="`{} GB`".format(
+                        funcs.removeDotZero(round(float(dict(disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2))
                     ))
         try:
             res = await funcs.getRequest(f"https://api.statcord.com/v3/{self.client.user.id}",
                                          params={"Authorization": config.statcordKey})
             statcord = res.json()
             e.add_field(name="Bandwidth Usage",
-                        value="`{:,} MB`".format(round(int(statcord["data"][0]["bandwidth"]) / 1024 / 1024, 2)))
+                        value="`{} MB`".format(funcs.removeDotZero(round(int(statcord["data"][0]["bandwidth"]) / 1024 / 1024, 2))))
             popular = statcord["popular"][0]
             e.add_field(name="Most Popular Command",
                         value="`{}{} ({:,})`".format(self.client.command_prefix, popular['name'], int(popular['count'])))
@@ -152,7 +152,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 try:
                     member = await ctx.guild.fetch_member(userID)
                     dt2 = member.joined_at
-                    e.add_field(name="Joined Server At", value=funcs.dateBirthday(dt2.day, dt2.month, dt2.year))
+                    e.add_field(name="Joined Server On", value=funcs.dateBirthday(dt2.day, dt2.month, dt2.year))
                     if member.nick:
                         e.add_field(name="Nickname", value=f"`{member.nick}`")
                     if member.activity:
