@@ -502,7 +502,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="wiki", description="Returns a Wikipedia article.",
-                      aliases=["wikipedia"], usage="<article title (case sensitive)>")
+                      aliases=["wikipedia"], usage="<article title (case-sensitive)>")
     async def wiki(self, ctx, *, page: str=""):
         if page == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
@@ -1593,7 +1593,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(usage="<note #1 with octave (e.g. G5)> <note #2 with octave (e.g. G5)>", hidden=True,
+    @commands.command(usage="<note #1 with octave (e.g. F#2)> <note #2 with octave (e.g. G5)>", hidden=True,
                       aliases=["octave", "note", "notes", "semitone", "semitones", "vocalrange", "octaves", "notesrange"],
                       name="noterange", description="Shows the range in octaves and semitones between two given musical notes.")
     async def noterange(self, ctx, *, noterange):

@@ -13,6 +13,9 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="Cog for hand
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
+            if ctx.author.id in funcs.readJson("data/whitelist.json")["users"]:
+                ctx.command.reset_cooldown(ctx)
+                return await self.client.process_commands(ctx.message)
             retry = round(error.retry_after, 2)
             await ctx.reply(
                 embed=funcs.errorEmbed(f"Slow down, {ctx.message.author.name}!",
@@ -46,7 +49,7 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="Cog for hand
             )
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.reply(
-                embed=funcs.errorEmbed(None, "Bot does not have permission to perform such action.")
+                embed=funcs.errorEmbed(None, f"{self.client.user.name} does not have permission to perform such action.")
             )
 
 

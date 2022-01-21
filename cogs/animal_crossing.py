@@ -31,7 +31,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         with open(f"{funcs.getPath()}/assets/animal_crossing/species.txt", "r") as f:
             lines = f.readlines()
         f.close()
-        return [x.strip() for x in lines]
+        return [i.strip() for i in lines]
 
     @staticmethod
     def findData(data: dict, name: str):

@@ -40,7 +40,7 @@ class BotInstance(Bot):
             case_insensitive=True
         )
         self.remove_command("help")
-        self.__loop = loop
+        self.__eventLoop = loop
         self.__token = config.botToken
         self.__activityName = config.activityName
         self.__activityType = config.activityType
@@ -57,12 +57,12 @@ class BotInstance(Bot):
 
     def kill(self):
         try:
-            self.__loop.stop()
-            tasks = asyncio.gather(*asyncio.Task.all_tasks(), loop=self.__loop)
+            self.__eventLoop.stop()
+            tasks = asyncio.gather(*asyncio.Task.all_tasks(), loop=self.__eventLoop)
             tasks.cancel()
-            self.__loop.run_forever()
+            self.__eventLoop.run_forever()
             tasks.exception()
-            return None
+            return "Success"
         except Exception as ex:
             return ex
 
@@ -129,8 +129,8 @@ class BotInstance(Bot):
         if config.githubWebhooks:
             try:
                 funcs.reloadCog(self, "github_webhooks")
-            except:
-                pass
+            except Exception as ex:
+                print(f"Warning - {ex}")
         try:
             funcs.testKaleido()
         except Exception as ex:

@@ -223,62 +223,6 @@ class General(commands.Cog, name="General", description="Standard commands relat
     async def miscellaneous(self, ctx):
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=1))
 
-    @commands.command(name="umenable", description="Enables unprompted messages for your server.",
-                      aliases=["ume", "eum", "enableum"], hidden=True)
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def umenable(self, ctx):
-        data = funcs.readJson("data/unprompted_messages.json")
-        serverList = list(data["servers"])
-        if ctx.guild.id not in serverList:
-            serverList.append(ctx.guild.id)
-            data["servers"] = serverList
-            funcs.dumpJson("data/unprompted_messages.json", data)
-            return await ctx.reply("`Enabled unprompted messages for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
-
-    @commands.command(name="umdisable", description="Disables unprompted messages for your server.",
-                      aliases=["umd", "dum", "disableum"], hidden=True)
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def umdisable(self, ctx):
-        data = funcs.readJson("data/unprompted_messages.json")
-        serverList = list(data["servers"])
-        if ctx.guild.id in serverList:
-            serverList.remove(ctx.guild.id)
-            data["servers"] = serverList
-            funcs.dumpJson("data/unprompted_messages.json", data)
-            return await ctx.reply("`Disabled unprompted messages for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
-
-    @commands.command(name="eeenable", description="Enables e̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ for your server.",
-                      aliases=["eee", "enableee"], hidden=True)
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def eeenable(self, ctx):
-        data = funcs.readJson("data/easter_eggs.json")
-        serverList = list(data["servers"])
-        if ctx.guild.id not in serverList:
-            serverList.append(ctx.guild.id)
-            data["servers"] = serverList
-            funcs.dumpJson("data/easter_eggs.json", data)
-            return await ctx.reply("`Enabled e̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "E̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ are already enabled."))
-
-    @commands.command(name="eedisable", description="Disables e̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ for your server.",
-                      aliases=["eed", "dee", "disableee"], hidden=True)
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def eedisable(self, ctx):
-        data = funcs.readJson("data/easter_eggs.json")
-        serverList = list(data["servers"])
-        if ctx.guild.id in serverList:
-            serverList.remove(ctx.guild.id)
-            data["servers"] = serverList
-            funcs.dumpJson("data/easter_eggs.json", data)
-            return await ctx.reply("`Disabled e̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "E̴̝͆ͅà̶̙̫s̵̥̈͠͠t̵̟̓̔ȩ̴͎̅̚͠ṛ̴̖̻̕ ̶̯̰͇͂̈́̐͝e̴̹̰̦͑͝ġ̶͖͖̘̏̌g̴̱̬̈͒̃s̴͉̣̙̻̆̇͠ are not enabled."))
-
     @commands.cooldown(1, 180, commands.BucketType.user)
     @commands.command(description="Feel free to use this to send a message to the bot owner, whether it be to report " +
                                   "bugs (please do) or to simply say hi. The bot owner won't bite (probably), but " +

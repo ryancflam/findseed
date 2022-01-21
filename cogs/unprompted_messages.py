@@ -14,6 +14,50 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
         self.client = client
         self.lastthreemsgs = {}
 
+    @commands.command(name="umenable", description="Enables unprompted messages for your server.",
+                      aliases=["ume", "eum", "enableum"])
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def umenable(self, ctx):
+        data = funcs.readJson("data/unprompted_messages.json")
+        serverList = list(data["servers"])
+        if ctx.guild.id not in serverList:
+            serverList.append(ctx.guild.id)
+            data["servers"] = serverList
+            funcs.dumpJson("data/unprompted_messages.json", data)
+            return await ctx.reply("`Enabled unprompted messages for this server.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
+
+    @commands.command(name="umdisable", description="Disables unprompted messages for your server.",
+                      aliases=["umd", "dum", "disableum"])
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def umdisable(self, ctx):
+        data = funcs.readJson("data/unprompted_messages.json")
+        serverList = list(data["servers"])
+        if ctx.guild.id in serverList:
+            serverList.remove(ctx.guild.id)
+            data["servers"] = serverList
+            funcs.dumpJson("data/unprompted_messages.json", data)
+            return await ctx.reply("`Disabled unprompted messages for this server.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="unpromptedmessages", description="Shows the unprompted messages menu.", aliases=["um"])
+    async def unpromptedmessages(self, ctx):
+        msg = f'`"@{self.client.user.name} <input>"` - Has a cleverbot respond to user input\n' + \
+              f'`"I\'m <input>"` - "Hi <input>, I\'m {self.client.user.name}!"\n' + \
+              '`"netvigator" in input` - "notvogotor"\n' + \
+              '`"h"` - Responds with a gif (1 in 10), or "h"\n' + \
+              '`"f"` - Responds with an image (1 in 10), or "f"\n' + \
+              '`"staying alive" in input` - Responds with a gif\n' + \
+              '`"hkeaa" in input` - Responds with an image\n' + \
+              '`"hmmm (or with more m\'s)"` - Responds with a random gif\n' + \
+              '`"gordon ramsay" in input` - Responds with a gif'
+        await ctx.reply(
+            f"{msg}\n\nUser inputs are case-insensitive. Use `{self.client.command_prefix}umenable` to enable unprompted messages."
+        )
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if (not message.guild or message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"]) \
