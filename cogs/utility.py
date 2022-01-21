@@ -1567,7 +1567,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="iss", description="Gets information about the International Space Station and all humans in space.",
-                      aliases=["space"])
+                      aliases=["space"], hidden=True)
     async def iss(self, ctx):
         try:
             issdata = await funcs.getRequest("http://api.open-notify.org/iss-now.json", verify=False)

@@ -163,7 +163,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findcleric", description="Will you get the ender pearl trade from the cleric, " + \
                                                      "or will you get one-thirded? Test your luck using this command!",
-                      aliases=["cleric", "stupidvillager"])
+                      aliases=["cleric", "stupidvillager"], hidden=True)
     async def findcleric(self, ctx):
         e = Embed(
             title=f"{self.client.command_prefix}findcleric",
@@ -180,7 +180,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findgravel", description="Will you get flint from gravel? Test your luck using this command!",
-                      aliases=["gravel", "flint", "findflint"])
+                      aliases=["gravel", "flint", "findflint"], hidden=True)
     async def findgravel(self, ctx):
         e = Embed(
             title=f"{self.client.command_prefix}findgravel",
@@ -198,7 +198,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findperch", description="You are in insane pace and about to kill the dragon..." + \
                                                     "but does it perch instantly? Test your luck using this command!",
-                      aliases=["perch", "dragon", "fp", "finddragon"])
+                      aliases=["perch", "dragon", "fp", "finddragon"], hidden=True)
     async def findperch(self, ctx):
         e = Embed(
             title=f"{self.client.command_prefix}findperch",
@@ -216,7 +216,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findblaze", description="You kill a blaze...but does it drop a rod? Test your luck using this command!",
-                      aliases=["blaze", "rod", "blazerod", "findrod", "findblazerod"])
+                      aliases=["blaze", "rod", "blazerod", "findrod", "findblazerod"], hidden=True)
     async def findblaze(self, ctx):
         e = Embed(
             title=f"{self.client.command_prefix}findblaze",
