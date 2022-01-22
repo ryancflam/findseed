@@ -1674,6 +1674,35 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             link = link.split('&')[0] + "&"
         await ctx.reply(f"<{link}t={s}>")
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(description="Shows the age timeline of a hypothetical person born in a certain year up until adulthood.",
+                      usage="[year (1500-2500)]\n\nAlternative usage(s):\n\n- <age (0-100)>", name="agelist", hidden=True)
+    async def agelist(self, ctx, year=""):
+        nowyear = datetime.today().year
+        if not year:
+            year = str(nowyear - 18)
+        try:
+            year = funcs.evalMath(year.replace(",", ""))
+            if not 1500 <= year <= 2500 and not 0 <= year <= 100:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Year must be 1500-2500 inclusive."))
+            if 0 <= year <= 100:
+                year = nowyear - year
+        except:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid year."))
+        notableyears = {1: "infant", 2: "toddler", 4: "young child", 7: "child", 10: "older child", 13: "teenager", 18: "adult"}
+        res = f"Born in {year}:\n"
+        isfuture = False
+        for age in range(0, 21):
+            currentyear = year + age
+            if currentyear > nowyear and not isfuture:
+                res += "\n" if age else ""
+                res += "\n== Future ==\n"
+                isfuture = True
+            res += f"\n- {currentyear}: {'baby' if not age else f'{age - 1}-{age}'}"
+            if age in notableyears:
+                res += f" ({notableyears[age]})"
+        await ctx.reply(funcs.formatting(res))
+
     @commands.cooldown(1, 20, commands.BucketType.user)
     @commands.command(name="wolfram", description="Queries things using the Wolfram|Alpha API.",
                       aliases=["wolf", "wa", "wolframalpha", "query"], usage="<input>")
