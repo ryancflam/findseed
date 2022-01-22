@@ -10,11 +10,11 @@ from re import split
 
 from dateutil import parser
 from discord import Embed, File, utils
-from evalidate import safeeval
 from httpx import AsyncClient, get
 from plotly import graph_objects as go
 
 from other_utils.item_cycle import ItemCycle
+from other_utils.safe_eval import SafeEval
 
 
 def getPath():
@@ -50,15 +50,12 @@ def testKaleido():
 
 
 def evalMath(inp: str):
-    ans = safeeval(
-        inp.replace("^", "**").replace("x", "*").replace(",", "").replace("%", "/100").replace("×", "*").replace(" ", ""),
-        addnodes=["FloorDiv", "Pow", "UAdd", "USub", "Mult", "Div"]
-    )
+    ans = SafeEval(inp).result()
     if ans[0]:
         return ans[1]
     elif "ZeroDivisionError" in ans[1]:
-        raise ZeroDivisionError
-    raise ValueError("Invalid input.")
+        raise ZeroDivisionError("You cannot divide by zero!")
+    raise Exception(ans[1])
 
 
 def readTxtLines(pathstr):

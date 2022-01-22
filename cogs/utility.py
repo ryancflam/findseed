@@ -981,7 +981,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=f"```{choice(answer)}```")
         except Exception as ex:
             funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Invalid input.")
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -992,7 +992,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=funcs.formatting(funcs.removeDotZero(sqrt(funcs.evalMath(val)))))
         except Exception as ex:
             funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Invalid input.")
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
