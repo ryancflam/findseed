@@ -159,8 +159,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
     @commands.command(name="cryptoprice", description="Shows the current price of a cryptocurrency with a price chart.",
                       aliases=["cp", "cmc", "price", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) separated with space]\n\n" +
-                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\nOther - noma (no moving averages)" +
-                            ", Xma (replace X with number of days), line (line graph)" +
+                            "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\nOther - " +
+                            "Xma (moving average, replace X with number of days), line (line graph)" +
                             "\n\nAny other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
@@ -170,7 +170,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         image = None
         data = []
         count = 0
-        noma = False
+        noma = True
         mad = 7
         line = False
         for arg in args:
@@ -195,11 +195,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     days = "365"
                 elif arg.startswith("max"):
                     days = "max"
-                elif arg.replace("-", "") == "noma":
-                    noma = True
                 elif arg.endswith("ma"):
                     try:
                         mad = int(arg[:-2])
+                        noma = False
                     except:
                         pass
                 elif arg == "line":
