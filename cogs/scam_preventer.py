@@ -26,15 +26,17 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", description="Prevents D
     async def deleteEmbedOrAttachment(message, qrlink):
         qr = await funcs.decodeQR(qrlink)
         for url in SCAM_URLS:
-            if url in qr:
+            if url in qr.casefold():
                 await message.delete()
                 return True
-            else:
+            try:
                 res = await funcs.getRequest(qr)
                 qr = res.url
-                if url in qr:
+                if url in qr.casefold():
                     await message.delete()
                     return True
+            except:
+                continue
         return False
 
     @commands.Cog.listener()
