@@ -14,6 +14,7 @@ from asyncpraw import Reddit
 from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
+from lyricsgenius import Genius
 from mendeleev import element
 from plotly import graph_objects as go
 from PyPDF2 import PdfFileReader
@@ -32,6 +33,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         self.reddit = Reddit(client_id=config.redditClientID,
                              client_secret=config.redditClientSecret,
                              user_agent="*")
+        self.genius = Genius(config.geniusToken)
         self.tickers = funcs.getTickers()
 
     async def gatherLabelsAndValues(self, ctx):
@@ -555,20 +557,39 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             await ctx.send("Getting lyrics. Please wait...")
             res = await funcs.getRequest("https://some-random-api.ml/lyrics", params={"title": keywords})
             data = res.json()
+            genius = False
+            originallyric, author, title, link, thumbnail = None, None, None, None, None
             try:
-                return await ctx.send(embed=funcs.errorEmbed(None, data["error"]))
+                error = data["error"]
+                try:
+                    res = await funcs.getRequest("https://api.genius.com/search",
+                                                 params={"q": keywords, "access_token": config.geniusToken})
+                    data2 = res.json()["response"]["hits"][0]["result"]
+                except:
+                    return await ctx.send(embed=funcs.errorEmbed(None, error))
+                author = data2["artist_names"]
+                title = data2["title_with_featured"]
+                link = data2["url"]
+                thumbnail = data2["song_art_image_thumbnail_url"]
+                originallyric = funcs.multiString(
+                    self.genius.search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), n=2048
+                )
+                genius = True
+                raise Exception()
             except:
                 try:
                     thumbnail = data["thumbnail"]["genius"]
                 except:
-                    thumbnail = None
-                link = data["links"]["genius"]
-                originallyric = funcs.multiString(
-                    data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n"), n=2048
-                )
+                    if not genius:
+                        thumbnail = None
+                if not genius:
+                    originallyric = funcs.multiString(
+                        data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n"), n=2048
+                    )
+                    link = data["links"]["genius"]
+                    title = data["title"].replace("*", "\*").replace("_", "\_")
+                    author = data["author"].replace("*", "\*").replace("_", "\_")
                 allpages = len(originallyric)
-                title = data["title"].replace("*", "\*").replace("_", "\_")
-                author = data["author"].replace("*", "\*").replace("_", "\_")
                 e = Embed(description=originallyric[0], title=f"{author} - {title}")
                 e.set_thumbnail(url=thumbnail)
                 e.add_field(name="Genius Link", value=link)
@@ -588,7 +609,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         return
         except Exception as ex:
             funcs.printError(ctx, ex)
-            await ctx.reply(embed=funcs.errorEmbed(None, "Server error."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Server error or song doesn't have lyrics."))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr", "qrc"],
