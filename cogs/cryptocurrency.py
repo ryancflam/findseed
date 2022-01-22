@@ -160,7 +160,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                       aliases=["cp", "cmc", "price", "coingecko", "cg", "coinprice", "coinchart", "chart", "cryptochart", "co"],
                       usage="[coin symbol OR CoinGecko ID] [chart option(s) separated with space]\n\n" +
                             "Valid options:\n\nTime intervals - d, w, 2w, m, 3m, 6m, y, max\n\nOther - " +
-                            "Xma (moving average, replace X with number of days), line (line graph)" +
+                            "line (line graph), Xma (moving average, replace X with number of days)" +
                             "\n\nAny other option will be counted as a comparing currency (e.g. GBP, EUR...)")
     async def cryptoprice(self, ctx, coin: str="btc", *args):
         await ctx.send("Getting cryptocurrency market information. Please wait...")
@@ -787,7 +787,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr"],
+    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr", "addrg"],
                       description="Generates a Bitcoin address. This command should only be used purely for fun.")
     async def btcaddrgen(self, ctx):
         address = BitcoinAddress()
@@ -801,10 +801,12 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         e.add_field(name="Private Key",value=f"```{swif}```")
         e.add_field(name="Private Key in Hex",value=f"```{shex}```")
         e.set_footer(text=f"Requested by: {ctx.author.name}")
-        await ctx.reply("```WARNING: It is recommended that you do NOT use any Bitcoin address generated via this " + \
-                       "bot due to security reasons; this command was simply made for fun to demonstrate the " + \
-                       "capabilities of the Python programming language. If you wish to generate a new Bitcoin " + \
-                       "address for actual use, please use proper wallets like Electrum instead.```", embed=e)
+        await ctx.reply("```== WARNING == \n\nIt is critical that you do NOT use any Bitcoin address generated via this bot " +
+                        "due to security reasons. This command was simply created for fun and to demonstrate the capabilities" +
+                        " of the Python programming language.\n\nIf you wish to generate a new Bitcoin address for actual" +
+                        " use, it is always best to do so OFFLINE. You should also use a proper wallet like Electrum.\n\n" +
+                        "The bot owner is not responsible for any funds lost via any address generated using this command.```",
+                        embed=e)
 
 
 def setup(client: commands.Bot):

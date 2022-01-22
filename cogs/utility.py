@@ -119,7 +119,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         return xtitle, ytitle
 
     @staticmethod
-    def makeChart(ctx, fig, labels, values, imgName):
+    def makeChartEmbed(ctx, fig, labels, values, imgName):
         e = Embed(title="Chart", description=f"Requested by: {ctx.author.mention}")
         for i in range(len(labels)):
             e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero(values[i])))
@@ -144,7 +144,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         try:
             fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
             fig.update_layout(title=title)
-            e, image = self.makeChart(ctx, fig, labels, values, imgName)
+            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName)
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -168,7 +168,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig = go.Figure(data=[go.Scatter(x=labels, y=values)])
             xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
             fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
-            e, image = self.makeChart(ctx, fig, labels, values, imgName)
+            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName)
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -192,7 +192,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig = go.Figure(data=[go.Bar(x=labels, y=values)])
             xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
             fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
-            e, image = self.makeChart(ctx, fig, labels, values, imgName)
+            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName)
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -553,35 +553,42 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     async def lyrics(self, ctx, *, keywords):
         try:
             await ctx.send("Getting lyrics. Please wait...")
-            url = "https://some-random-api.ml/lyrics"
-            res = await funcs.getRequest(url, params={"title": keywords})
+            res = await funcs.getRequest("https://some-random-api.ml/lyrics", params={"title": keywords})
             data = res.json()
-            thumbnail = data["thumbnail"]["genius"]
-            link = data["links"]["genius"]
-            originallyric = funcs.multiString(data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n"), n=2048)
-            allpages = len(originallyric)
-            title = data["title"].replace("*", "\*").replace("_", "\_")
-            author = data["author"].replace("*", "\*").replace("_", "\_")
-            e = Embed(description=originallyric[0], title=f"{author} - {title}")
-            e.set_thumbnail(url=thumbnail)
-            e.add_field(name="Genius Link", value=link)
-            e.set_footer(text="Page 1 of {:,}".format(allpages))
-            msg = await ctx.reply(embed=e)
-            await funcs.nextPrevPageOptions(msg, allpages)
-            page = 1
-            while True:
-                success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
-                if success:
-                    edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
-                    edited.set_thumbnail(url=thumbnail)
-                    edited.add_field(name="Genius Link", value=link)
-                    edited.set_footer(text="Page {:,} of {:,}".format(page, allpages))
-                    await msg.edit(embed=edited)
-                elif success is None:
-                    return
+            try:
+                return await ctx.send(embed=funcs.errorEmbed(None, data["error"]))
+            except:
+                try:
+                    thumbnail = data["thumbnail"]["genius"]
+                except:
+                    thumbnail = None
+                link = data["links"]["genius"]
+                originallyric = funcs.multiString(
+                    data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n"), n=2048
+                )
+                allpages = len(originallyric)
+                title = data["title"].replace("*", "\*").replace("_", "\_")
+                author = data["author"].replace("*", "\*").replace("_", "\_")
+                e = Embed(description=originallyric[0], title=f"{author} - {title}")
+                e.set_thumbnail(url=thumbnail)
+                e.add_field(name="Genius Link", value=link)
+                e.set_footer(text="Page 1 of {:,}".format(allpages))
+                msg = await ctx.reply(embed=e)
+                await funcs.nextPrevPageOptions(msg, allpages)
+                page = 1
+                while True:
+                    success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
+                    if success:
+                        edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
+                        edited.set_thumbnail(url=thumbnail)
+                        edited.add_field(name="Genius Link", value=link)
+                        edited.set_footer(text="Page {:,} of {:,}".format(page, allpages))
+                        await msg.edit(embed=edited)
+                    elif success is None:
+                        return
         except Exception as ex:
             funcs.printError(ctx, ex)
-            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid keywords or server error."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Server error."))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr", "qrc"],
