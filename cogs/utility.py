@@ -1,4 +1,5 @@
 from asyncio import TimeoutError, sleep
+from calendar import timegm
 from datetime import datetime, timedelta
 from json import JSONDecodeError, dumps
 from math import sqrt
@@ -770,15 +771,16 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         td = timedelta(hours=int(tz), minutes=mins)
         if not timestamp:
             timestamp = mktime(gmtime())
-            gmt = str(datetime.fromtimestamp(timestamp) + td)
+            dt = datetime.fromtimestamp(timestamp) + td
+            timestamp = timegm((dt - td).timetuple())
         else:
             try:
-                timestamp = int(timestamp)
-                gmt = str(datetime.utcfromtimestamp(timestamp) + td)
+                timestamp = int(float(timestamp))
+                dt = datetime.utcfromtimestamp(timestamp) + td
             except:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid timestamp."))
         timezone = "" if not tz and not mins else f"{'+' if tz > 0 else ''}{int(tz)}{f':{abs(mins)}' if mins else ''}"
-        await ctx.reply(funcs.formatting(str(gmt) + f" (GMT{timezone})"))
+        await ctx.reply(funcs.formatting(str(dt) + f" (GMT{timezone})\n\nTimestamp: {int(timestamp)}"))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="scisum", aliases=["science", "sci"], hidden=True,
