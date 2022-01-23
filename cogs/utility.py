@@ -732,8 +732,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="unix", description="Converts a unix timestamp to a proper date format in GMT.",
-                      aliases=["time", "timestamp", "epoch"], usage="[timestamp value] [time zone (-12-14)]")
-    async def unix(self, ctx, timestamp=None, tz=None):
+                      aliases=["time", "timestamp", "epoch", "gmt", "utc", "timezone"],
+                      usage="[time zone (-12-14)] [timestamp value]")
+    async def unix(self, ctx, tz=None, timestamp=None):
         mins = 0
         if not tz:
             tz = 0
