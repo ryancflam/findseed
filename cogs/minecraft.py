@@ -198,7 +198,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findperch", description="You are in insane pace and about to kill the dragon..." + \
                                                     "but does it perch instantly? Test your luck using this command!",
-                      aliases=["perch", "dragon", "fp", "finddragon"], hidden=True)
+                      aliases=["dragon", "fp", "finddragon"], hidden=True)
     async def findperch(self, ctx):
         e = Embed(
             title=f"{self.client.command_prefix}findperch",
@@ -232,6 +232,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="perchcmd", description="Shows the command to force the the ender dragon perch.", aliases=["perch"])
+    async def perchcmd(self, ctx):
+        await ctx.reply("```1.13+: /data merge entity @e[type=ender_dragon,limit=1] {DragonPhase:2}\n\n" +
+                        "1.9-1.12: /entitydata @e[type=ender_dragon] {DragonPhase:2}```")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="anchors", description="Calculates how many chargeable respawn anchors you can craft based on how " + \
                                                   "much glowstone dust and crying obsidian you have.",
                       aliases=["anchor"], usage="<amount of glowstone dust> <amount of crying obdisian>")
@@ -256,7 +262,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(description="Simulates *Minecraft* 1.16.1 piglin bartering. Test your luck using this command!",
+    @commands.command(description="Simulates *Minecraft: Java Edition* 1.16.1 piglin bartering. Test your luck using this command!",
                       aliases=["barter", "piglin", "poglin", "bartering", "barteringsim"], name="bartersim",
                       usage=f"[gold ingots up to 10,000]\n\nAlternative usage(s):\n\n- <gold blocks up to 1,111 (ending with b)>")
     async def bartersim(self, ctx, goldingots: str="1"):
@@ -467,7 +473,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                         "ted coordinates in the Nether. This command is for v" + \
                                                         "ersions 1.13+ and may not be 100% accurate. This com" + \
                                                         "mand may not be used in a real speedrun if calculation is enabled.",
-                      aliases=["perfectt", "perfect", "ptravel", "ptrav", "ptr"], usage='<F3+C data> ["calc"]\n\n' + \
+                      aliases=["perfectt", "perfect", "ptravel", "ptrav", "ptr", "pt"], usage='<F3+C data> ["calc"]\n\n' + \
                       'Note: Add "calc" at the end if you do not want to manually calculate the portal coordinates yourself.')
     async def perfecttravel(self, ctx, *, f3c):
         calc = True if f3c.casefold().split()[-1] == "calc" else False
@@ -509,6 +515,24 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 await ctx.reply(f"Cannot find ideal coordinates...")
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="bedtiming", description="Shows the bed timing for one-cycling.",
+                      aliases=["bedtimings", "onecycle"])
+    async def bedtiming(self, ctx):
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/934727945589760020/unknown.png")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="eray", aliases=["eraying", "microlensing"],
+                      description="Shows the microlensing tutorial for *Minecraft: Java Edition* speedrunning.")
+    async def eray(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=jvTfMLPnMSw")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="blindtravelcoords", aliases=["rings", "strongholdrings", "strongholdring"],
+                      description="Shows the idea blind travel coordinates for the first to third stronghold rings.")
+    async def blindtravelcoords(self, ctx):
+        await ctx.reply("https://imgur.com/gallery/i3fIanf")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
@@ -745,8 +769,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
         await funcs.sendImage(
             ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
-                              "818310310153814056/Fossil_origin_identification_1.pdf" + \
-                              "\n\nCredit:\n<https://twitter.com/olive_was_here>\n<https://twitter.com/beljelb>"
+                              "818310310153814056/Fossil_origin_identification_1.pdf"
         )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -766,14 +789,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 )
             await ctx.reply(embed=e)
         else:
-            url = "https://cdn.discordapp.com/attachments/771404776410972161/842022236432236574/divinetravel.jpg"
-            await funcs.sendImage(
-                ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
-                                  "841792714822909972/divine_travel_stuff_.pdf" + \
-                                  "\n\nMore info:\n<https://www.youtube.com/watch?v=IKo-jrZSgWU>\n<https://www.youtube.com" + \
-                                  "/watch?v=SXem01c44-I>\n\nCredit:\n<https://twitter.com/olive_was_here>" + \
-                                  "\n<https://twitter.com/beljelb>"
-            )
+            url = "https://media.discordapp.net/attachments/771698457391136798/934726825811275816/unknown.png"
+            await funcs.sendImage(ctx, url)
 
 
 def setup(client: commands.Bot):

@@ -243,7 +243,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",
-                      aliases=["pt", "mbti", "personality", "personalities", "16p", "16personalities"])
+                      aliases=["mbti", "personality", "personalities", "16p", "16personalities"])
     async def personalitytest(self, ctx):
         await ctx.reply("```== Please Read ==\n\nYou are about to take a low-level personality test consisting of 88 q" + \
                        "uestions. The test should take around 20 to 30 minutes to complete. To select an answer, inpu" + \
