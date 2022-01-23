@@ -204,13 +204,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="tts", description="Converts text to speech.", aliases=["texttospeech", "speech"],
-                      usage='<language code> <input>')
+                      usage='<language code> <input>', hidden=True)
     async def tts(self, ctx, langcode, *, text):
         langs = lang.tts_langs()
         if langcode not in langs:
-            return await ctx.reply(embed=funcs.errorEmbed(
-                "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
-            ))
+            langcode = langcode.casefold()
+            if langcode not in langs:
+                return await ctx.reply(embed=funcs.errorEmbed(
+                    "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
+                ))
         if len(text) > 500:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Text must be 500 characters or less."))
         myobj = gTTS(text=text, lang=langcode, slow=False)
