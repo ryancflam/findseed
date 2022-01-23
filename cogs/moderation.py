@@ -41,6 +41,8 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         try:
             if member == self.client.user:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "I don't want to kick myself, so I won't do it."))
+            if member == ctx.author:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
             await member.kick(reason=reason)
             try:
                 await member.send(f"You have been kicked from **{ctx.guild.name}**" + \
@@ -59,6 +61,8 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         try:
             if member == self.client.user:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "I don't want to ban myself, so I won't do it."))
+            if member == ctx.author:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
             await member.ban(reason=reason)
             try:
                 await member.send(f"You have been banned from **{ctx.guild.name}**" + \

@@ -760,6 +760,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         timezone = "" if not tz and not mins else f"{'+' if tz > 0 else ''}{int(tz)}{f':{abs(mins)}' if mins else ''}"
         await ctx.reply(funcs.formatting(str(gmt) + f" (GMT{timezone})"))
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="scisum", aliases=["science", "sci"], hidden=True,
+                      description="Shows the science summary for the last month.")
+    async def scisum(self, ctx):
+        await ctx.reply("https://tiny.cc/sci-sum")
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="dict", description="Returns the definition(s) of a word.",
                       aliases=["dictionary", "def", "definition", "meaning", "define"],
