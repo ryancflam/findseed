@@ -217,7 +217,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             while resetTime < 30 and not hangup and otherParty in self.phoneCallChannels:
                 try:
                     msg = await self.client.wait_for(
-                        "message", timeout=1, check=lambda m: m.channel == ctx.channel and m.author != self.client.user
+                        "message", timeout=1, check=lambda mm: mm.channel == ctx.channel and mm.author != self.client.user
                     )
                     if msg.content.casefold() == "!hangup":
                         relay = ":telephone: The other party has hung up the phone."

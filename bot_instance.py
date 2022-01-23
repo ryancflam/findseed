@@ -1,9 +1,7 @@
 import asyncio
-from json import dump
 from os import listdir, makedirs, path
 from shutil import rmtree
 from sys import exit
-from time import time
 
 from discord import Activity, Intents
 from discord.ext.commands import Bot
@@ -67,15 +65,6 @@ class BotInstance(Bot):
             return ex
 
     @staticmethod
-    def __generateJson(name, data: dict):
-        file = f"{PATH}/data/{name}.json"
-        if not path.exists(file):
-            fobj = open(file, "w")
-            dump(data, fobj, sort_keys=True, indent=4)
-            fobj.close()
-            print(f"Generated file: {name}.json")
-
-    @staticmethod
     def __generateDir(name):
         if not path.exists(f"{PATH}/{name}"):
             makedirs(f"{PATH}/{name}")
@@ -87,23 +76,8 @@ class BotInstance(Bot):
             rmtree(f"{funcs.getPath()}/temp")
             print("Removed directory: temp")
         self.__generateDir("temp")
-        self.__generateJson(
-            "findseed",
-            {
-                "calls": 0,
-                "highest": {
-                    "found": 0,
-                    "number": 0,
-                    "time": int(time())
-                }
-            }
-        )
-        self.__generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
-        self.__generateJson("blacklist", {"servers": [], "users": []})
-        self.__generateJson("whitelist", {"users": []})
-        self.__generateJson("unprompted_bots", {"ids": []})
-        self.__generateJson("unprompted_messages", {"servers": []})
-        self.__generateJson("easter_eggs", {"servers": []})
+        funcs.generateJson("blacklist", {"servers": [], "users": []})
+        funcs.generateJson("whitelist", {"users": []})
 
     async def __bitcoin(self):
         btc = True

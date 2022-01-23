@@ -21,6 +21,16 @@ def getPath():
     return path.dirname(path.realpath(__file__)).rsplit("other_utils", 1)[0][:-1]
 
 
+def testKaleido():
+    print("Testing Kaleido...")
+    try:
+        go.Figure().write_image(f"{getPath()}/temp/test.png")
+        deleteTempFile("test.png")
+        print("Kaleido installed and ready")
+    except:
+        raise Exception("Kaleido is not installed!")
+
+
 def getTickers():
     while True:
         try:
@@ -35,18 +45,16 @@ def getTickers():
             time.sleep(30)
 
 
+def kelvin():
+    return 273.15
+
+
+def musicalNotes():
+    return ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
+
+
 def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
-
-
-def testKaleido():
-    print("Testing Kaleido...")
-    try:
-        go.Figure().write_image(f"{getPath()}/temp/test.png")
-        deleteTempFile("test.png")
-        print("Kaleido installed and ready")
-    except:
-        raise Exception("Kaleido is not installed!")
 
 
 def evalMath(inp: str):
@@ -70,6 +78,15 @@ def readJson(pathstr):
         data = load(f)
     f.close()
     return data
+
+
+def generateJson(name, data: dict):
+    file = f"{getPath()}/data/{name}.json"
+    if not path.exists(file):
+        fobj = open(file, "w")
+        dump(data, fobj, sort_keys=True, indent=4)
+        fobj.close()
+        print(f"Generated file: {name}.json")
 
 
 def dumpJson(pathstr, data):
@@ -139,10 +156,6 @@ def weirdCase(text):
     for char in text.casefold():
         res += char.upper() if randint(0, 1) else char
     return res
-
-
-def kelvin():
-    return 273.15
 
 
 def sign(value):
@@ -462,10 +475,6 @@ def timeStrToDatetime(datestr: str):
     timezone = (int(hour) * 3600 + int(minute) * 60) * (1 if neg else -1)
     dateObj = parser.parse(datestr) + timedelta(seconds=timezone)
     return dateObj.strftime("%Y-%m-%d %H:%M:%S")
-
-
-def musicalNotes():
-    return ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
 
 
 def noteFinder(rawNote):

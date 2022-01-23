@@ -4,7 +4,8 @@ from sys import stdout
 
 from bot_instance import BotInstance
 
-if __name__ == "__main__":
+
+def main():
     handler = StreamHandler(stream=stdout)
     handler.setLevel(INFO)
     getLogger().addHandler(handler)
@@ -19,3 +20,7 @@ if __name__ == "__main__":
         print(f"Error - {ex}")
     finally:
         loop().close()
+
+
+if __name__ == "__main__":
+    main()

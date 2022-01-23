@@ -11,10 +11,39 @@ SCAM_URLS = ["discord.com/ra", "discordc.gift/", "discord.gifts/"]
 IMGUR_URL = "imgur.com"
 
 
-class ScamPreventer(commands.Cog, name="Scam Preventer", description="Prevents Discord scams.",
-                    command_attrs=dict(hidden=True)):
+class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidden=True),
+                    description="A cog that tries to remove messages with Discord scam links."):
     def __init__(self, client: commands.Bot):
         self.client = client
+        funcs.generateJson("scam_preventer", {"disallowed_servers": []})
+
+    @commands.command(name="spdisable", description="Disables the scam preventer for your server, which is enabled by default.",
+                      aliases=["spd", "dsp", "disablesp"])
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def spdisable(self, ctx):
+        data = funcs.readJson("data/scam_preventer.json")
+        serverList = list(data["disallowed_servers"])
+        if ctx.guild.id not in serverList:
+            serverList.append(ctx.guild.id)
+            data["disallowed_servers"] = serverList
+            funcs.dumpJson("data/scam_preventer.json", data)
+            return await ctx.reply("`Disabled the scam preventer for this server.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "The scam preventer is not enabled."))
+
+    @commands.command(name="spenable", description="Enables the scam preventer for your server.",
+                      aliases=["spe", "esp", "enablesp"])
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def spenable(self, ctx):
+        data = funcs.readJson("data/scam_preventer.json")
+        serverList = list(data["disallowed_servers"])
+        if ctx.guild.id in serverList:
+            serverList.remove(ctx.guild.id)
+            data["disallowed_servers"] = serverList
+            funcs.dumpJson("data/scam_preventer.json", data)
+            return await ctx.reply("`Enabled the scam preventer for this server.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "The scam preventer is already enabled."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="scamurls", description="Shows the scam URLs that the bot tries to remove.",
@@ -41,7 +70,8 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", description="Prevents D
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author != self.client.user and message.author.id not in funcs.readJson("data/unprompted_bots.json")["ids"]:
+        if message.author != self.client.user and message.author.id not in funcs.readJson("data/unprompted_bots.json")["ids"] \
+                and message.guild and message.guild.id not in funcs.readJson("data/scam_preventer.json")["disallowed_servers"]:
             urls = findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", message.content)
             for link in urls:
                 try:

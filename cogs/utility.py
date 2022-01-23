@@ -14,6 +14,7 @@ from asyncpraw import Reddit
 from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
+from gtts import gTTS, lang
 from lyricsgenius import Genius
 from mendeleev import element
 from plotly import graph_objects as go
@@ -200,6 +201,24 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
         await ctx.reply(embed=e, file=image)
         funcs.deleteTempFile(imgName)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="tts", description="Converts text to speech.", aliases=["texttospeech", "speech"],
+                      usage='<language code> <input>')
+    async def tts(self, ctx, langcode, *, text):
+        langs = lang.tts_langs()
+        if langcode not in langs:
+            return await ctx.reply(embed=funcs.errorEmbed(
+                "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
+            ))
+        if len(text) > 500:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Text must be 500 characters or less."))
+        myobj = gTTS(text=text, lang=langcode, slow=False)
+        location = f"{int(time())}.mp3"
+        myobj.save(f"{funcs.getPath()}/temp/" + location)
+        file = File(f"{funcs.getPath()}/temp/" + location)
+        await ctx.reply(file=file)
+        funcs.deleteTempFile(location)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.",
@@ -445,8 +464,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         try:
             if dest.casefold() not in constants.LANGUAGES.keys():
                 e = funcs.errorEmbed(
-                    "Invalid language code!",
-                    f"Valid options:\n\n{', '.join(f'`{i}`' for i in constants.LANGUAGES.keys())}"
+                    "Invalid language code!", f"Valid options:\n\n{', '.join(f'`{i}`' for i in constants.LANGUAGES.keys())}"
                 )
             else:
                 output = Translator().translate(text.casefold(), dest=dest.casefold()).text
@@ -770,19 +788,19 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="dict", description="Returns the definition(s) of a word.",
                       aliases=["dictionary", "def", "definition", "meaning", "define"],
                       usage="<language code> <word>")
-    async def dict(self, ctx, lang, *, word):
+    async def dict(self, ctx, langcode, *, word):
         codes = ["en", "hi", "es", "fr", "ja", "ru", "de", "it", "ko", "pt-BR", "ar", "tr"]
         languages = [
             "English", "Hindi", "Spanish", "French", "Japanese", "Russian", "German",
             "Italian", "Korean", "Brazilian Portuguese", "Arabic", "Turkish"
         ]
-        lang = lang.casefold() if lang != "pt-BR" else lang
-        if lang not in codes:
+        langcode = langcode.casefold() if langcode != "pt-BR" else langcode
+        if langcode not in codes:
             codesList = ", ".join(f"`{code}` ({languages[codes.index(code)]})" for code in codes)
             e = funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}")
         else:
             try:
-                res = await funcs.getRequest(f"https://api.dictionaryapi.dev/api/v2/entries/{lang}/{word}")
+                res = await funcs.getRequest(f"https://api.dictionaryapi.dev/api/v2/entries/{langcode}/{word}")
                 data = res.json()
                 word = data[0]["word"].title()
                 output = ""

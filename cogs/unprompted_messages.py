@@ -13,6 +13,8 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
     def __init__(self, client: commands.Bot):
         self.client = client
         self.lastthreemsgs = {}
+        funcs.generateJson("unprompted_bots", {"ids": []})
+        funcs.generateJson("unprompted_messages", {"servers": []})
 
     @commands.command(name="umenable", description="Enables unprompted messages for your server.",
                       aliases=["ume", "eum", "enableum"])

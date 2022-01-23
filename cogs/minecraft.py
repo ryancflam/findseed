@@ -25,6 +25,18 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         self.perfecttravel = funcs.readJson("assets/minecraft/perfect_travel.json")
         self.eyedata = funcs.readJson("assets/minecraft/eye_data.json")
         self.loottable = self.piglinLootTable()
+        funcs.generateJson(
+            "findseed",
+            {
+                "calls": 0,
+                "highest": {
+                    "found": 0,
+                    "number": 0,
+                    "time": int(time())
+                }
+            }
+        )
+        funcs.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
 
     @staticmethod
     def randomEyes():
