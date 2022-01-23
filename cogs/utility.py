@@ -757,7 +757,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 gmt = str(datetime.utcfromtimestamp(timestamp) + td)
             except:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid timestamp."))
-        timezone = "" if not tz and not mins else f"{'+' if tz > 0 else ''}{int(tz)}{f':{mins}' if mins else ''}"
+        timezone = "" if not tz and not mins else f"{'+' if tz > 0 else ''}{int(tz)}{f':{abs(mins)}' if mins else ''}"
         await ctx.reply(funcs.formatting(str(gmt) + f" (GMT{timezone})"))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
