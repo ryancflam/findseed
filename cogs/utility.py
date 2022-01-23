@@ -203,7 +203,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.",
-                      aliases=["loc", "code", "linesofcode", "repository", "repo"], usage='[username/repository]')
+                      aliases=["loc", "code", "linesofcode", "repository", "repo", "git"], usage='[username/repository]')
     async def repository(self, ctx, *, repo: str=""):
         await ctx.send("Getting repository statistics. Please wait...")
         try:
@@ -215,12 +215,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=f"https://github.com/{repo}")
             e.set_author(name=repo,
                          icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
-            for i in sorted(res.json(), reverse=True, key=lambda x: x["linesOfCode"])[:24]:
-                if i["language"] == "Total":
-                    e.add_field(name="Total Files", value="`{:,}`".format(i["files"]))
-                    e.add_field(name="Total Lines", value="`{:,}`".format(i["linesOfCode"]))
-                else:
-                    e.add_field(name=f"{i['language']} Lines (Files)", value="`{:,} ({:,})`".format(i["linesOfCode"], i["files"]))
+            for i in sorted(res.json(), reverse=True, key=lambda x: x["linesOfCode"])[:25]:
+                e.add_field(name=f"{i['language']} Lines (Files)", value="`{:,} ({:,})`".format(i["linesOfCode"], i["files"]))
             e.set_footer(text="Note: Lines of code do not include comment or blank lines.")
             e.set_image(
                 url="https://opengraph.githubassets.com/80a30c53eedf18f870a1779deaa8a7a60553494e284d23664c5bd983fa063d8e/" + repo
@@ -1683,16 +1679,19 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             year = str(nowyear - 18)
         try:
             year = funcs.evalMath(year.replace(",", ""))
-            if not 1500 <= year <= 2500 and not 0 <= year <= 100:
-                return await ctx.reply(embed=funcs.errorEmbed(None, "Year must be 1500-2500 inclusive."))
-            if 0 <= year <= 100:
+            isage = 0 <= year <= 100
+            if not 1500 <= year <= 2500 and not isage:
+                return await ctx.reply(
+                    embed=funcs.errorEmbed(None, "Year must be 1500-2500 inclusive, and age must be 0-100 inclusive.")
+                )
+            if isage:
                 year = nowyear - year
         except:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid year."))
         notableyears = {1: "infant", 2: "toddler", 4: "young child", 7: "child", 10: "older child", 13: "teenager", 18: "adult"}
         res = f"Born in {year}:\n"
         isfuture = False
-        for age in range(0, 21):
+        for age in range(0, 26):
             currentyear = year + age
             if currentyear > nowyear and not isfuture:
                 res += "\n" if age else ""
