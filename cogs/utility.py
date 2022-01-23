@@ -8,7 +8,7 @@ from random import choice
 from statistics import mean, median, mode, pstdev, stdev
 from string import punctuation
 from subprocess import PIPE, Popen, STDOUT
-from time import time
+from time import gmtime, mktime, time
 
 from asyncpraw import Reddit
 from discord import Embed, File, channel
@@ -729,6 +729,35 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 await option.reply(embed=funcs.errorEmbed(None, "Code exceeded the maximum allowed running time."))
         except Exception as ex:
             funcs.printError(ctx, ex)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="unix", description="Converts a unix timestamp to a proper date format in GMT.",
+                      aliases=["time", "timestamp", "epoch"], usage="[timestamp value] [time zone (-12-14)]")
+    async def unix(self, ctx, timestamp=None, tz=None):
+        mins = 0
+        if not tz:
+            tz = 0
+        else:
+            try:
+                tz = float(tz)
+                if not -12 <= tz <= 14:
+                    raise Exception
+                if tz != int(tz):
+                    mins = int((tz - int(tz)) * 60)
+            except:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Time zone must be -12-14 inclusive."))
+        td = timedelta(hours=int(tz), minutes=mins)
+        if not timestamp:
+            timestamp = mktime(gmtime())
+            gmt = str(datetime.fromtimestamp(timestamp) + td)
+        else:
+            try:
+                timestamp = int(timestamp)
+                gmt = str(datetime.utcfromtimestamp(timestamp) + td)
+            except:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid timestamp."))
+        timezone = "" if not tz and not mins else f"{'+' if tz > 0 else ''}{int(tz)}{f':{mins}' if mins else ''}"
+        await ctx.reply(funcs.formatting(str(gmt) + f" (GMT{timezone})"))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="dict", description="Returns the definition(s) of a word.",
@@ -1648,7 +1677,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Adds a timestamp to a YouTube video link, " +
                                   "useful for mobile users who cannot copy links with timestamps.", hidden=True,
-                      aliases=["yt", "timestamp", "youtube"], usage="<YouTube video link> <timestamp>", name="yttimestamp")
+                      aliases=["yt", "youtube"], usage="<YouTube video link> <timestamp>", name="yttimestamp")
     async def yttimestamp(self, ctx, link, timestamp):
         if "youtu" not in link.casefold():
             return await ctx.reply(embed=funcs.errorEmbed(None, "Not a YouTube link."))
