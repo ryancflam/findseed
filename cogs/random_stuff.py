@@ -364,7 +364,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                        "Thank you for trying out this test!```")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="dadjoke", description="Sends a random dad joke.", aliases=["dj", "joke"])
+    @commands.command(name="dadjoke", description="Sends a random dad joke.", aliases=["dj", "joke"], hidden=True)
     async def dadjoke(self, ctx):
         try:
             res = await funcs.getRequest("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
@@ -725,9 +725,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="choice", usage="<items separated with ;>",
-                      aliases=["shuffle", "list", "choose"], description="Picks a random item from a given list.")
-    async def choice(self, ctx, *, items):
+    @commands.command(name="randomchoice", usage="<items separated with ;>",
+                      aliases=["shuffle", "list", "choose", "choice"], description="Picks a random item from a given list.")
+    async def randomchoice(self, ctx, *, items):
         try:
             while items.startswith(";"):
                 items = items[1:]

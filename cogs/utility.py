@@ -325,9 +325,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="flight", description="Gets information about a flight.",
-                      aliases=["flightinfo", "flightradar"], usage="<flight number>")
-    async def flight(self, ctx, *, flightstr: str=""):
+    @commands.command(name="flightinfo", description="Gets information about a flight.",
+                      aliases=["flight", "flightradar"], usage="<flight number>")
+    async def flightinfo(self, ctx, *, flightstr: str=""):
         if flightstr == "":
             e = funcs.errorEmbed(None, "Empty input.")
         else:

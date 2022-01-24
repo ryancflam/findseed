@@ -706,7 +706,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="skin", description="Gets the skin of a *Minecraft: Java Edition* user.", aliases=["mcskin"],
-                      usage="[username]")
+                      usage="[username]", hidden=True)
     async def skin(self, ctx, username: str=""):
         if username == "":
             username = ctx.message.author.name
