@@ -15,7 +15,6 @@ from asyncpraw import Reddit
 from discord import Embed, File, channel
 from discord.ext import commands
 from googletrans import Translator, constants
-from gtts import gTTS, lang
 from lyricsgenius import Genius
 from mendeleev import element
 from plotly import graph_objects as go
@@ -202,26 +201,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
         await ctx.reply(embed=e, file=image)
         funcs.deleteTempFile(imgName)
-
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="tts", description="Converts text to speech.", aliases=["texttospeech", "speech"],
-                      usage='<language code> <input>', hidden=True)
-    async def tts(self, ctx, langcode, *, text):
-        langs = lang.tts_langs()
-        if langcode not in langs:
-            langcode = langcode.casefold()
-            if langcode not in langs:
-                return await ctx.reply(embed=funcs.errorEmbed(
-                    "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
-                ))
-        if len(text) > 500:
-            return await ctx.reply(embed=funcs.errorEmbed(None, "Text must be 500 characters or less."))
-        myobj = gTTS(text=text, lang=langcode, slow=False)
-        location = f"{int(time())}.mp3"
-        myobj.save(f"{funcs.getPath()}/temp/" + location)
-        file = File(f"{funcs.getPath()}/temp/" + location)
-        await ctx.reply(file=file)
-        funcs.deleteTempFile(location)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.",
@@ -568,7 +547,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
-                      aliases=["lyric"], usage="<song keywords>")
+                      aliases=["lyric", "song"], usage="<song keywords>")
     async def lyrics(self, ctx, *, keywords):
         try:
             await ctx.send("Getting lyrics. Please wait...")
@@ -607,7 +586,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     title = data["title"].replace("*", "\*").replace("_", "\_")
                     author = data["author"].replace("*", "\*").replace("_", "\_")
                 allpages = len(originallyric)
-                e = Embed(description=originallyric[0], title=f"{author} - {title}")
+                e = Embed(description=originallyric[0], title=f"{author} - {title}"[:256])
                 e.set_thumbnail(url=thumbnail)
                 e.add_field(name="Genius Link", value=link)
                 e.set_footer(text="Page 1 of {:,}".format(allpages))
@@ -617,7 +596,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 while True:
                     success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
                     if success:
-                        edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}")
+                        edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}"[:256])
                         edited.set_thumbnail(url=thumbnail)
                         edited.add_field(name="Genius Link", value=link)
                         edited.set_footer(text="Page {:,} of {:,}".format(page, allpages))

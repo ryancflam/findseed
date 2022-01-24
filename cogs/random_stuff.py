@@ -2,9 +2,10 @@ from asyncio import TimeoutError, sleep
 from random import choice, choices, randint, shuffle
 from time import time
 
-from discord import Colour, Embed, User
+from discord import Colour, Embed, File, User
 from discord.ext import commands
 from googletrans import Translator
+from gtts import gTTS, lang
 
 import config
 from other_utils import funcs
@@ -147,11 +148,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     async def dare(self, ctx):
         await ctx.send(embed=self.todEmbed(dare=1))
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.cooldown(1, 60, commands.BucketType.user)
     @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
                       description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
                                   "Translation may sometimes fail due to rate limit.",
-                      aliases=["lc", "lj", "lk", "literaljapanese", "literalkorean"], hidden=True)
+                      aliases=["lc", "literaljapanese", "literalkorean"], hidden=True)
     async def literalchinese(self, ctx, *, inp):
         res = ""
         try:
@@ -165,7 +166,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.cooldown(1, 60, commands.BucketType.user)
     @commands.command(name="literalenglish", aliases=["le"], usage="<English text (10 words or less)>",
                       description="Literally translates English words to Chinese one by one. " + \
                                   "Translation may sometimes fail due to rate limit.", hidden=True)
@@ -587,6 +588,26 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(
             f":8ball: {mention}: `{choice(['Empty input...', 'I cannot hear you.']) if not msg else choice(responses)}`"
         )
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="tts", description="Converts text to speech.", aliases=["texttospeech", "speech"],
+                      usage='<language code> <input>', hidden=True)
+    async def tts(self, ctx, langcode, *, text):
+        langs = lang.tts_langs()
+        if langcode not in langs:
+            langcode = langcode.casefold()
+            if langcode not in langs:
+                return await ctx.reply(embed=funcs.errorEmbed(
+                    "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
+                ))
+        if len(text) > 500:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Text must be 500 characters or less."))
+        myobj = gTTS(text=text, lang=langcode, slow=False)
+        location = f"{int(time())}.mp3"
+        myobj.save(f"{funcs.getPath()}/temp/" + location)
+        file = File(f"{funcs.getPath()}/temp/" + location)
+        await ctx.reply(file=file)
+        funcs.deleteTempFile(location)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="flipcoin", description="Flips coins.", usage="[amount up to 100]",
