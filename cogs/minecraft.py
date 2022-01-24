@@ -227,6 +227,25 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="findskull", description="You kill a wither skeleton...but does it drop a wither skull?" + \
+                                                    " Test your luck using this command!",
+                      aliases=["skull", "witherskull", "findwitherskull", "findwither"], hidden=True)
+    async def findskull(self, ctx):
+        e = Embed(
+            title=f"{self.client.command_prefix}findskull",
+            description=f"Requested by: {ctx.message.author.mention}"
+        )
+        goodluckonein = 40
+        badluck = randint(0, goodluckonein - 1)
+        e.add_field(name="Result", value=f"`{'No Skull' if badluck else 'Skull'}{'...' if badluck else '!'}`")
+        e.set_thumbnail(url="https://cdn.discordapp.com/attachments/771404776410972161/935204890639233054/unknown.png")
+        e.set_image(
+            url="" if badluck else "https://cdn.discordapp.com/attachments/771404776410972161/935204919651205250/unknown.png"
+        )
+        e.set_footer(text=f"Odds: {str(goodluckonein - 1) if badluck else '1'}/{str(goodluckonein)}")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findblaze", description="You kill a blaze...but does it drop a rod? Test your luck using this command!",
                       aliases=["blaze", "rod", "blazerod", "findrod", "findblazerod"], hidden=True)
     async def findblaze(self, ctx):
@@ -351,7 +370,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                       "d as an argument for the command, and then build " + \
                                                       "your portal at the suggested coordinates in the N" + \
                                                       "ether. This command is for versions 1.13+ and may " + \
-                                                      "not be 100% accurate. This command may not be used" + \
+                                                      "not be 100% accurate. This command MAY not be used" + \
                                                       " in a real speedrun.",
                       aliases=["bt", "blind", "blindtrav"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
@@ -384,7 +403,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                          "t for the command, and then build your portal " + \
                                                          "at the suggested coordinates in the Nether. Th" + \
                                                          "is command is for versions 1.13+ and may not be" + \
-                                                         " 100% accurate. This command may not be used in" + \
+                                                         " 100% accurate. This command MAY not be used in" + \
                                                          " a real speedrun.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
@@ -417,7 +436,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                        "hould do a good job of getting you to the right " + \
                                                        "spot in the Nether to build your second portal. " + \
                                                        "This command is for versions 1.13+ and may not be" + \
-                                                       " 100% accurate. This command may not be used in a " + \
+                                                       " 100% accurate. This command MAY not be used in a " + \
                                                        "real speedrun.",
                       aliases=["double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
@@ -449,7 +468,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                     "te your clipboard as an argument for the command, a" + \
                                                     "nd then build your portal at the suggested coordina" + \
                                                     "tes in the Nether. This command is for versions 1.13" + \
-                                                    "+ and may not be 100% accurate. This command may not" + \
+                                                    "+ and may not be 100% accurate. This command MAY not" + \
                                                     " be used in a real speedrun.",
                       aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>", hidden=True)
     async def safeblind(self, ctx, *, f3c):
@@ -484,7 +503,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                         "her, and then build your second portal at the sugges" + \
                                                         "ted coordinates in the Nether. This command is for v" + \
                                                         "ersions 1.13+ and may not be 100% accurate. This com" + \
-                                                        "mand may not be used in a real speedrun if calculation is enabled.",
+                                                        "mand MAY not be used in a real speedrun.",
                       aliases=["perfectt", "perfect", "ptravel", "ptrav", "ptr", "pt"], usage='<F3+C data> ["calc"]\n\n' + \
                       'Note: Add "calc" at the end if you do not want to manually calculate the portal coordinates yourself.')
     async def perfecttravel(self, ctx, *, f3c):
@@ -514,7 +533,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 if calc:
                     await ctx.reply(
                         f"Build your second portal at: **" + \
-                        f"{round(nx + (1 if nx < 0 else 0))}, 30, {round(nz + (1 if nz < 0 else 0))}** " + \
+                        f"{round(nx + (1 if nx < 0 else 0))}, {round(nz + (1 if nz < 0 else 0))}** " + \
                         "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
                     )
                 else:
@@ -561,7 +580,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                         "the stronghold. Once the program knows you are " + \
                                                         "fairly close to the stronghold, it will automat" + \
                                                         "ically stop. This command is for versions 1.13+" + \
-                                                        " and may not be 100% accurate. This command may" + \
+                                                        " and may not be 100% accurate. This command MAY" + \
                                                         " not be used in a real speedrun.",
                       aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
                       usage="<F3+C data>")
