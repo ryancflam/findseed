@@ -31,11 +31,8 @@ HCF_LIMIT = 1000000
 class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.reddit = Reddit(client_id=config.redditClientID,
-                             client_secret=config.redditClientSecret,
-                             user_agent="*")
+        self.reddit = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
         self.genius = Genius(config.geniusToken)
-        self.tickers = funcs.getTickers()
 
     async def gatherLabelsAndValues(self, ctx):
         labels = []
@@ -43,8 +40,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         while len(labels) < 25:
             try:
                 await ctx.send(
-                    f"Enter name for label **{len(labels) + 1}**, `!undo` to delete previous entry, `!done` to move on to values, " +
-                    "or `!cancel` to cancel."
+                    f"Enter name for label **{len(labels) + 1}**, `!undo` to delete previous entry, `!done` to move on to values," +
+                    " or `!cancel` to cancel."
                 )
                 entry = await self.client.wait_for(
                     "message",
@@ -474,7 +471,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     amount /= data["rates"][fromCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": self.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": funcs.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     amount *= cgData[0]["current_price"]
@@ -483,7 +480,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     amount *= data["rates"][toCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": self.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": funcs.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     if fromCurrency.upper() == toCurrency.upper():

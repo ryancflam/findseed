@@ -16,6 +16,18 @@ from plotly import graph_objects as go
 from other_utils.item_cycle import ItemCycle
 from other_utils.safe_eval import SafeEval
 
+tickers = {}
+while True:
+    try:
+        res = get("https://api.coingecko.com/api/v3/coins/list")
+        data = res.json()
+        for i in data:
+            if i["symbol"] not in tickers:
+                tickers[i["symbol"]] = i["id"]
+        break
+    except JSONDecodeError:
+        time.sleep(30)
+
 
 def getPath():
     return path.dirname(path.realpath(__file__)).rsplit("other_utils", 1)[0][:-1]
@@ -29,20 +41,6 @@ def testKaleido():
         print("Kaleido installed and ready")
     except:
         raise Exception("Kaleido is not installed!")
-
-
-def getTickers():
-    while True:
-        try:
-            tickers = {}
-            res = get("https://api.coingecko.com/api/v3/coins/list")
-            data = res.json()
-            for i in data:
-                if i["symbol"] not in tickers:
-                    tickers[i["symbol"]] = i["id"]
-            return tickers
-        except JSONDecodeError:
-            time.sleep(30)
 
 
 def kelvin():
@@ -586,7 +584,7 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
 
 
 async def easterEggsPredicate(ctx):
-    return not ctx.guild or ctx.guild and ctx.guild.id in readJson("data/easter_eggs.json")["servers"]
+    return ctx.guild and ctx.guild.id in readJson("data/easter_eggs.json")["servers"]
 
 
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):

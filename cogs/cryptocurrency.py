@@ -21,13 +21,13 @@ BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.tickers = funcs.getTickers()
 
-    def getCoinGeckoID(self, coin):
+    @staticmethod
+    def getCoinGeckoID(coin):
         joke = "neo" if coin.casefold() == "neo" \
                or coin.casefold().startswith(("noeo", "ronneo", "neoo", "n*", "neoe", "noee", "ronnoe")) else coin
         try:
-            return self.tickers[joke]
+            return funcs.tickers[joke]
         except KeyError:
             return joke
 
@@ -787,8 +787,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr", "addrg"],
-                      description="Generates a Bitcoin address. This command should only be used purely for fun.")
+    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr", "addrg"], hidden=True,
+                      description="Generates a Bitcoin address. This command should only be used for fun.")
     async def btcaddrgen(self, ctx):
         address = BitcoinAddress()
         pk, swif, shex = address.getAddr()
