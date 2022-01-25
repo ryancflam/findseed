@@ -140,6 +140,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
             else:
                 if userID.startswith("<@!") and userID.endswith(">"):
                     userID = userID[3:-1]
+                elif userID.startswith("<@") and userID.endswith(">"):
+                    userID = userID[2:-1]
                 userID = userID.replace(" ", "")
             u = self.client.get_user(int(userID))
             dt = u.created_at

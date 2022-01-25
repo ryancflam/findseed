@@ -19,11 +19,11 @@ from other_utils.safe_eval import SafeEval
 tickers = {}
 while True:
     try:
-        res = get("https://api.coingecko.com/api/v3/coins/list")
-        data = res.json()
-        for i in data:
-            if i["symbol"] not in tickers:
-                tickers[i["symbol"]] = i["id"]
+        cgres = get("https://api.coingecko.com/api/v3/coins/list")
+        cgdata = cgres.json()
+        for coin in cgdata:
+            if coin["symbol"] not in tickers:
+                tickers[coin["symbol"]] = coin["id"]
         break
     except JSONDecodeError:
         time.sleep(30)
