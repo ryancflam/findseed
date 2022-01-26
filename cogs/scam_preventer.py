@@ -7,8 +7,9 @@ from discord.ext import commands
 
 from other_utils import funcs
 
-SCAM_URLS = ["discord.com/ra", "discordc.gift/", "discord.gifts/"]
 IMGUR_URL = "imgur.com"
+SCAM_URLS = ["discord.com/ra", "discordc.gift/", "discord.gifts/", "discordgifts.com/",
+             "discord.birth/", "dicsord.gq/", "discond.gift/", "discord.help/"]
 
 
 class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidden=True),
