@@ -42,7 +42,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     def randomEyes():
         eyes = 0
         for _ in range(12):
-            eyes += 1 if not randint(0, 9) else 0
+            eyes += 1 if funcs.oneIn(10) else 0
         return eyes
 
     @staticmethod
@@ -152,7 +152,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         for _ in range(dpearls):
             pearls += 1 if randint(0, 422) < 20 else 0
         for _ in range(drods):
-            rods += 1 if randint(0, 1) else 0
+            rods += 1 if funcs.oneIn(2) else 0
         data["mostPearls"] = pearls if pearls >= mostPearls else mostPearls
         data["mostRods"] = rods if rods >= mostRods else mostRods
         data["iteration"] += 1
@@ -182,7 +182,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             description=f"Requested by: {ctx.message.author.mention}"
         )
         badluckonein = 3
-        goodluck = randint(0, badluckonein - 1)
+        goodluck = not funcs.oneIn(badluckonein)
         e.add_field(name="Result", value=f"`{'Pearl' if goodluck else 'Bottle'} Trade{'!' if goodluck else '...'}`")
         e.set_thumbnail(url="https://media.discordapp.net/attachments/771404776410972161/856203578615529532/cleric.png")
         e.set_image(url="https://media.discordapp.net/attachments/771404776410972161/856203574337601536/pearl.png" if goodluck else
@@ -199,7 +199,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             description=f"Requested by: {ctx.message.author.mention}"
         )
         goodluckonein = 10
-        badluck = randint(0, goodluckonein - 1)
+        badluck = not funcs.oneIn(goodluckonein)
         e.add_field(name="Result", value=f"`{'Gravel' if badluck else 'Flint'}{'...' if badluck else '!'}`")
         e.set_thumbnail(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png")
         e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856209821383917608/gravel.png" if badluck else
@@ -217,7 +217,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             description=f"Requested by: {ctx.message.author.mention}"
         )
         goodluckonein = 13
-        badluck = randint(0, goodluckonein - 1)
+        badluck = not funcs.oneIn(goodluckonein)
         e.add_field(name="Result", value=f"`{'No Perch' if badluck else 'Perch'}{'...' if badluck else '!'}`")
         e.set_thumbnail(url="https://media.discordapp.net/attachments/771404776410972161/928297045486370857/dragon.png")
         e.set_image(url="https://media.discordapp.net/attachments/771404776410972161/928299016259776613/2022-01-05_22.48.45.png"
@@ -236,7 +236,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             description=f"Requested by: {ctx.message.author.mention}"
         )
         goodluckonein = 40
-        badluck = randint(0, goodluckonein - 1)
+        badluck = not funcs.oneIn(goodluckonein)
         e.add_field(name="Result", value=f"`{'No Skull' if badluck else 'Skull'}{'...' if badluck else '!'}`")
         e.set_thumbnail(url="https://cdn.discordapp.com/attachments/771404776410972161/935204890639233054/unknown.png")
         e.set_image(
@@ -254,7 +254,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             description=f"Requested by: {ctx.message.author.mention}"
         )
         badluckonein = 2
-        goodluck = randint(0, badluckonein - 1)
+        goodluck = not funcs.oneIn(badluckonein)
         e.add_field(name="Result", value=f"`{'Rod' if goodluck else 'No Rod'} Drop{'!' if goodluck else '...'}`")
         e.set_thumbnail(url="https://media.discordapp.net/attachments/771698457391136798/856213640809414666/blaze.png")
         e.set_image(url="https://media.discordapp.net/attachments/771698457391136798/856213641020178472/rod.png" if goodluck else

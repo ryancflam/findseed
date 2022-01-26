@@ -925,7 +925,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             return
         computer1, computer2 = False, False
         player1, player2 = None, None
-        rdn = randint(0, 1)
+        rdn = funcs.oneIn(2)
         if rdn:
             player1 = ctx.author
         else:

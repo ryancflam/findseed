@@ -55,6 +55,10 @@ def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
 
 
+def oneIn(odds: int):
+    return not bool(randint(0, odds - 1))
+
+
 def evalMath(inp: str):
     ans = SafeEval(inp).result()
     if ans[0]:
@@ -152,7 +156,7 @@ def userNotBlacklisted(client, message):
 def weirdCase(text):
     res = ""
     for char in text.casefold():
-        res += char.upper() if randint(0, 1) else char
+        res += char.upper() if oneIn(2) else char
     return res
 
 

@@ -1,6 +1,6 @@
 # Hidden category
 
-from random import choice, randint
+from random import choice
 from re import sub
 
 from discord.ext import commands
@@ -117,7 +117,7 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                 elif "netvigator" in lowercase:
                     await message.channel.send("notvogotor")
                 elif lowercase == "h":
-                    if not randint(0, 9):
+                    if funcs.oneIn(10):
                         await funcs.sendImage(
                             message.channel,
                             "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
@@ -126,7 +126,7 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                     else:
                         await message.channel.send("h")
                 elif lowercase == "f":
-                    if not randint(0, 9):
+                    if funcs.oneIn(10):
                         await funcs.sendImage(
                             message.channel,
                             "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
