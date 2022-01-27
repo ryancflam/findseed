@@ -56,7 +56,7 @@ def printError(ctx, error):
 
 
 def oneIn(odds: int):
-    return not bool(randint(0, odds - 1))
+    return False if odds < 1 else not randint(0, odds - 1)
 
 
 def evalMath(inp: str):

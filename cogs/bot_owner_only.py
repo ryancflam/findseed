@@ -387,7 +387,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             userID = int(userID)
             data = funcs.readJson("data/whitelist.json")
             userList = list(data["users"])
-            if ctx.author.id in userList:
+            if ctx.author.id == userID:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Are you trying to unwhitelist yourself?"))
             if userID in userList:
                 userList.remove(userID)

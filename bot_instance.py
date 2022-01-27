@@ -1,4 +1,4 @@
-import asyncio
+from asyncio import Task, gather, sleep
 from os import listdir, makedirs, path
 from shutil import rmtree
 from sys import exit
@@ -31,7 +31,7 @@ except ModuleNotFoundError:
 
 
 class BotInstance(Bot):
-    def __init__(self, loop: asyncio.AbstractEventLoop):
+    def __init__(self, loop):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
             intents=Intents.all(),
@@ -56,7 +56,7 @@ class BotInstance(Bot):
     def kill(self):
         try:
             self.__eventLoop.stop()
-            tasks = asyncio.gather(*asyncio.Task.all_tasks(), loop=self.__eventLoop)
+            tasks = gather(*Task.all_tasks(), loop=self.__eventLoop)
             tasks.cancel()
             self.__eventLoop.run_forever()
             tasks.exception()
@@ -93,7 +93,7 @@ class BotInstance(Bot):
             except:
                 msg = ""
             await self.__presence(("BTC" if btc else "ETH") + msg)
-            await asyncio.sleep(60)
+            await sleep(120)
             btc = not btc
 
     async def __presence(self, name):

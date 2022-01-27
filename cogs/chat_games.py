@@ -12,6 +12,7 @@ from discord.ext import commands, tasks
 from game_models.battleship import Battleship
 from game_models.bulls_and_cows import BullsAndCows
 from game_models.card_trick import CardTrick
+from game_models.connect_four import ConnectFour
 from game_models.hangman import Hangman
 from game_models.minesweeper import Minesweeper
 from game_models.no_thanks import NoThanks
@@ -696,7 +697,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="21cardtrick", description="Play the 21 Card Trick.", aliases=["ct", "21", "cardtrick"])
+    @commands.command(name="21cardtrick", description="Play the 21 Card Trick.", aliases=["ct", "21", "cardtrick"], hidden=True)
     async def cardtrick(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
@@ -917,31 +918,38 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await self.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
+    def playerOneAndTwo(self, ctx, user):
+        computer1, computer2 = False, False
+        player1, player2 = None, None
+        isplayerone = funcs.oneIn(2)
+        if isplayerone:
+            player1 = ctx.author
+        else:
+            player2 = ctx.author
+        if user == self.client.user or not user:
+            if isplayerone:
+                computer2 = True
+            else:
+                computer1 = True
+        elif user == ctx.author or ctx.guild and not user.bot and user in ctx.guild.members:
+            if isplayerone:
+                player2 = user
+            else:
+                player1 = user
+        else:
+            raise Exception("Invalid user.")
+        return player1, player2, computer1, computer2
+
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="tictactoe", description="Play Tic-Tac-Toe. Mention someone to play with them.",
                       aliases=["ttt", "tictac", "noughtsandcrosses", "nc"], usage="[@mention]")
     async def tictactoe(self, ctx, *, user: User=None):
         if await self.checkGameInChannel(ctx):
             return
-        computer1, computer2 = False, False
-        player1, player2 = None, None
-        rdn = funcs.oneIn(2)
-        if rdn:
-            player1 = ctx.author
-        else:
-            player2 = ctx.author
-        if user == self.client.user or not user:
-            if rdn:
-                computer2 = True
-            else:
-                computer1 = True
-        elif user == ctx.author or ctx.guild and not user.bot and user in ctx.guild.members:
-            if rdn:
-                player2 = user
-            else:
-                player1 = user
-        else:
-            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
+        try:
+            player1, player2, computer1, computer2 = self.playerOneAndTwo(ctx, user)
+        except Exception as ex:
+            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
         self.gameChannels.append(ctx.channel.id)
         game = TicTacToe(player1=player1, player2=player2)
         if player1 == player2:
@@ -973,6 +981,60 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
                 continue
             await ctx.send(funcs.formatting(game.displayBoard()))
+            if game.getWinner():
+                try:
+                    winner = game.getWinner().getPlayer().name + " wins"
+                except:
+                    winner = "I win"
+                await ctx.send(f"`{winner}! Game over!`")
+                break
+        if not game.getEmptySlots() and not game.getWinner():
+            await ctx.send("`Draw! Game over!`")
+        m, s = game.getTime()
+        await self.sendTime(ctx, m, s)
+        self.gameChannels.remove(ctx.channel.id)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="connectfour", description="Play Connect Four. Mention someone to play with them.",
+                      aliases=["c4", "connect4", "4inarow", "fourinarow", "4", "bitconnect"], usage="[@mention]")
+    async def connectfour(self, ctx, *, user: User=None):
+        if await self.checkGameInChannel(ctx):
+            return
+        try:
+            player1, player2, computer1, computer2 = self.playerOneAndTwo(ctx, user)
+        except Exception as ex:
+            return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+        self.gameChannels.append(ctx.channel.id)
+        game = ConnectFour(player1=player1, player2=player2)
+        if player1 == player2:
+            msg = f"Both **Player 1 ({game.RED})** and **Player 2 ({game.YELLOW})** are {player1.mention}."
+        else:
+            msg = f"**Player 1 ({game.RED})** is {'me' if computer1 else player1.mention}.\n**Player 2 ({game.YELLOW}" + \
+                  f")** is {'me' if computer2 else player2.mention}."
+        await ctx.send(f"**Welcome to Connect Four. Input `quit` to quit the game.**\n\n{msg}")
+        await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
+        if computer1:
+            game.place(randint(1, 7))
+            await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
+        while game.getEmptySlots():
+            currentPlayer = game.getCurrentPlayer()
+            await ctx.send(f"`It is {currentPlayer.name}'s turn! Please select a column number between 1-7.`")
+            try:
+                move = await self.client.wait_for(
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer, timeout=120
+                )
+            except TimeoutError:
+                await ctx.send(f"`{currentPlayer.name} has left Connect Four for idling for too long. Game over!`")
+                break
+            if move.content.casefold() == "quit":
+                await ctx.send(f"`{currentPlayer.name} has left Connect Four. Game over!`")
+                break
+            try:
+                game.place(move.content)
+            except Exception as ex:
+                await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
+                continue
+            await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
             if game.getWinner():
                 try:
                     winner = game.getWinner().getPlayer().name + " wins"

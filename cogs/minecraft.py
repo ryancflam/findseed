@@ -566,6 +566,13 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply("https://imgur.com/gallery/i3fIanf")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="mcspeedrunning", aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning"],
+                      description="Shows the Minecraft Speedrunning website.")
+    async def mcspeedrunning(self, ctx):
+        await ctx.reply("https://www.minecraftspeedrunning.com/")
+
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
                                                         "t attempts to locate the stronghold using both " + \
                                                         'the "8, 8" rule and triangulation. To use this ' + \

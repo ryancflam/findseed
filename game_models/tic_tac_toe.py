@@ -31,19 +31,17 @@ class TicTacToe:
     def __switchPlayer(self):
         self.__currentPlayer = self.__player1 if self.__currentPlayer == self.__player2 else self.__player2
 
-    def __computerMinimax(self, player, bot):
+    def __computerMove(self, player, bot):
         otherPlayer = self.CROSS if player == self.NOUGHT else self.NOUGHT
         try:
             if self.__winner.getLetter() == otherPlayer:
                 return [None, (1 if otherPlayer == bot else -1) * (self.getEmptySlots() + 1)]
-            elif not self.getEmptySlots():
-                return [None, 0]
         except:
             pass
         best = [None, -inf if player == bot else inf]
         for move in [i for i, j in enumerate(self.__board) if j == " "]:
             self.move(move + 1, computerSim=True)
-            score = self.__computerMinimax(otherPlayer, bot)
+            score = self.__computerMove(otherPlayer, bot)
             self.__board[move] = " "
             self.__winner = None
             self.__switchPlayer()
@@ -67,7 +65,7 @@ class TicTacToe:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer() and not computerSim:
-            self.move(self.__computerMinimax(self.__currentPlayer.getLetter(), self.__currentPlayer.getLetter())[0] + 1)
+            self.move(self.__computerMove(self.__currentPlayer.getLetter(), self.__currentPlayer.getLetter())[0] + 1)
             if not self.__currentPlayer.getPlayer():
                 self.__switchPlayer()
 
