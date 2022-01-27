@@ -1013,7 +1013,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                   f")** is {'me' if computer2 else player2.mention}."
         await ctx.send(f"**Welcome to Connect Four. Input `quit` to quit the game.**\n\n{msg}")
         if computer1:
-            game.place(randint(1, 7))
+            game.insert(randint(1, 7))
         await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
@@ -1029,7 +1029,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 await ctx.send(f"`{currentPlayer.name} has left Connect Four. Game over!`")
                 break
             try:
-                game.place(move.content)
+                game.insert(move.content)
             except Exception as ex:
                 await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
                 continue

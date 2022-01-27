@@ -48,7 +48,7 @@ class ConnectFour:
     def __computerMove(self):
         return choice(self.__validColumns())
 
-    def place(self, col):
+    def insert(self, col):
         try:
             col = int(col) - 1
         except:
@@ -66,7 +66,7 @@ class ConnectFour:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer():
-            self.place(self.__computerMove() + 1)
+            self.insert(self.__computerMove() + 1)
             if not self.__currentPlayer.getPlayer():
                 self.__switchPlayer()
 
