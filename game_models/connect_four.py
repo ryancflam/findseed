@@ -8,7 +8,7 @@ from other_utils.funcs import timeDifferenceStr
 
 
 class ConnectFour:
-    EMPTY = "🔲 "
+    EMPTY = "⬛ "
     RED = "🔴 "
     YELLOW = "🟡 "
 
@@ -19,7 +19,6 @@ class ConnectFour:
         self.__winner = None
         self.__board = [[self.EMPTY] * 6 for _ in range(7)]
         self.__currentPlayer = self.__player1
-        self.__computerMoves = []
 
     def __diagonalsPos(self, cols: int=7, rows: int=6):
         for di in ([(j, i - j) for j in range(cols)] for i in range(cols + rows -1)):
@@ -46,7 +45,7 @@ class ConnectFour:
         rdn = choice(self.__validColumns())
         return [rdn]
 
-    def place(self, col, computerSim=False):
+    def place(self, col):
         try:
             col = int(col) - 1
         except:
@@ -60,12 +59,10 @@ class ConnectFour:
             i -= 1
         self.__board[col][i] = self.__currentPlayer.getColour()
         self.__checkWinner()
-        if computerSim:
-            self.__computerMoves.append((col, i))
-        if self.__winner and not computerSim:
+        if self.__winner:
             return
         self.__switchPlayer()
-        if not self.__currentPlayer.getPlayer() and not computerSim:
+        if not self.__currentPlayer.getPlayer():
             self.place(self.__computerMove()[0] + 1)
             if not self.__currentPlayer.getPlayer():
                 self.__switchPlayer()
