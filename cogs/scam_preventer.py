@@ -14,8 +14,8 @@ SCAM_URLS = ["discord.com/ra", "discordc.gift/", "discord.gifts/", "discordgifts
 
 class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidden=True),
                     description="A cog that tries to remove messages with Discord scam links."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         funcs.generateJson("scam_preventer", {"disallowed_servers": []})
 
     @commands.command(name="spdisable", description="Disables the scam preventer for your server, which is enabled by default.",
@@ -122,5 +122,5 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
                     pass
 
 
-def setup(client: commands.Bot):
-    client.add_cog(ScamPreventer(client))
+def setup(botInstance):
+    botInstance.add_cog(ScamPreventer(botInstance))

@@ -15,8 +15,8 @@ BD_KEY = "LOL"
 
 class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands relating to *Animal Crossing: New Horizons*.",
                      command_attrs=dict(hidden=True)):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.art = funcs.readJson("assets/animal_crossing/art.json")
         self.bugs = funcs.readJson("assets/animal_crossing/bugs.json")
         self.fish = funcs.readJson("assets/animal_crossing/fish.json")
@@ -571,5 +571,5 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg", message="Credit:\n<https://twitter.com/MadzMasc>")
 
 
-def setup(client: commands.Bot):
-    client.add_cog(AnimalCrossing(client))
+def setup(botInstance):
+    botInstance.add_cog(AnimalCrossing(botInstance))

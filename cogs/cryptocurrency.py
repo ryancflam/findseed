@@ -19,8 +19,8 @@ BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 
 
 class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
 
     @staticmethod
     def getCoinGeckoID(coin):
@@ -809,5 +809,5 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                         embed=e)
 
 
-def setup(client: commands.Bot):
-    client.add_cog(Cryptocurrency(client))
+def setup(botInstance):
+    botInstance.add_cog(Cryptocurrency(botInstance))

@@ -1,4 +1,4 @@
-from asyncio import Task, gather, sleep
+from asyncio import sleep
 from os import listdir, makedirs, path
 from shutil import rmtree
 from sys import exit
@@ -56,11 +56,7 @@ class BotInstance(Bot):
     def kill(self):
         try:
             self.__eventLoop.stop()
-            tasks = gather(*Task.all_tasks(), loop=self.__eventLoop)
-            tasks.cancel()
-            self.__eventLoop.run_forever()
-            tasks.exception()
-            return "Success"
+            return exit()
         except Exception as ex:
             return ex
 

@@ -16,8 +16,8 @@ RN_RANGE = 999999999999
 
 
 class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fun commands for you to kill time."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.activeSpinners = []
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
@@ -833,5 +833,5 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(embed=e)
 
 
-def setup(client: commands.Bot):
-    client.add_cog(RandomStuff(client))
+def setup(botInstance):
+    botInstance.add_cog(RandomStuff(botInstance))

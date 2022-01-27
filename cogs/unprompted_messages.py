@@ -10,8 +10,8 @@ from other_utils import funcs
 
 class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True),
                          description="Funny bot responses that are not command-invoked."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.lastthreemsgs = {}
         funcs.generateJson("unprompted_bots", {"ids": []})
         funcs.generateJson("unprompted_messages", {"servers": []})
@@ -158,5 +158,5 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                         )
 
 
-def setup(client: commands.Bot):
-    client.add_cog(UnpromptedMessages(client))
+def setup(botInstance):
+    botInstance.add_cog(UnpromptedMessages(botInstance))

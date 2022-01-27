@@ -15,8 +15,8 @@ RIDICULOUS_CHANNEL_LIST = []
 
 class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
                      description="A cog for handling push webhooks from GitHub."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         if RIDICULOUS_CHANNEL_LIST[:-1]:
             Thread(target=self.startFlaskApp).start()
 
@@ -70,11 +70,11 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
 
-def setup(client: commands.Bot):
+def setup(botInstance):
     global RIDICULOUS_CHANNEL_LIST
     for channelID in githubWebhooks:
-        channel = client.get_channel(channelID)
+        channel = botInstance.get_channel(channelID)
         if channel:
             RIDICULOUS_CHANNEL_LIST.append(channel)
-    RIDICULOUS_CHANNEL_LIST.append(client)
-    client.add_cog(GitHubWebhooks(client))
+    RIDICULOUS_CHANNEL_LIST.append(botInstance)
+    botInstance.add_cog(GitHubWebhooks(botInstance))

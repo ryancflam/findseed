@@ -7,8 +7,8 @@ from other_utils import funcs
 
 class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for handling errors.",
                    command_attrs=dict(hidden=True)):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -53,5 +53,5 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for ha
             )
 
 
-def setup(client: commands.Bot):
-    client.add_cog(ErrorHandler(client))
+def setup(botInstance):
+    botInstance.add_cog(ErrorHandler(botInstance))

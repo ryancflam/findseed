@@ -19,8 +19,8 @@ BARTER_LIMIT = 896
 
 
 class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to *Minecraft* and *Minecraft* speedrunning."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.divinetravel = funcs.readJson("assets/minecraft/divine_travel.json")
         self.perfecttravel = funcs.readJson("assets/minecraft/perfect_travel.json")
         self.eyedata = funcs.readJson("assets/minecraft/eye_data.json")
@@ -831,5 +831,5 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await funcs.sendImage(ctx, url)
 
 
-def setup(client: commands.Bot):
-    client.add_cog(Minecraft(client))
+def setup(botInstance):
+    botInstance.add_cog(Minecraft(botInstance))

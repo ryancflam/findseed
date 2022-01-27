@@ -11,8 +11,8 @@ from other_utils import funcs
 
 
 class General(commands.Cog, name="General", description="Standard commands relating to this bot, its features, or Discord."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.starttime = time()
 
     @commands.command(name="ping", description="Tests the latency of the bot.", aliases=["p", "pong", "latency"])
@@ -324,5 +324,5 @@ class General(commands.Cog, name="General", description="Standard commands relat
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
 
-def setup(client: commands.Bot):
-    client.add_cog(General(client))
+def setup(botInstance):
+    botInstance.add_cog(General(botInstance))

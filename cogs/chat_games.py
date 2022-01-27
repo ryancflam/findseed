@@ -25,8 +25,8 @@ TETRIS_REACTIONS = {"left": "◀️", "right": "▶️", "rotate": "🔄", "soft
 
 
 class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for you to kill time."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.gameChannels = []
         self.tetrisGames = {}
         self.tetrisTick.start()
@@ -1286,5 +1286,5 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
 
-def setup(client: commands.Bot):
-    client.add_cog(ChatGames(client))
+def setup(botInstance):
+    botInstance.add_cog(ChatGames(botInstance))

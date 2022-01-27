@@ -29,8 +29,8 @@ HCF_LIMIT = 1000000
 
 
 class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.reddit = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
         self.genius = Genius(config.geniusToken)
 
@@ -1771,5 +1771,5 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
 
-def setup(client: commands.Bot):
-    client.add_cog(Utility(client))
+def setup(botInstance):
+    botInstance.add_cog(Utility(botInstance))

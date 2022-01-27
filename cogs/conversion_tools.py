@@ -11,8 +11,8 @@ from other_utils.brainfuck_interpreter import BrainfuckInterpreter
 
 class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(hidden=True),
                       description="Convert inputs from one unit or format to another."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.morsecode = funcs.readJson("assets/conversion_tools/morse_code.json")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -518,5 +518,5 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
         await ctx.reply(embed=e)
 
 
-def setup(client: commands.Bot):
-    client.add_cog(ConversionTools(client))
+def setup(botInstance):
+    botInstance.add_cog(ConversionTools(botInstance))

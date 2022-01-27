@@ -5,8 +5,8 @@ from other_utils import funcs
 
 
 class Moderation(commands.Cog, name="Moderation", description="Simple moderation and member-management commands for server staff."):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="clear", description="Clears channel messages.", usage="<amount>", aliases=["prune", "purge"])
@@ -103,5 +103,5 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         await ctx.reply(funcs.formatting(string))
 
 
-def setup(client: commands.Bot):
-    client.add_cog(Moderation(client))
+def setup(botInstance):
+    botInstance.add_cog(Moderation(botInstance))

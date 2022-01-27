@@ -12,8 +12,8 @@ from other_utils import funcs
 
 
 class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
-    def __init__(self, client: commands.Bot):
-        self.client = client
+    def __init__(self, botInstance):
+        self.client = botInstance
         self.botDisguise = False
         self.destChannel = None
         self.originChannel = None
@@ -52,6 +52,25 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                     self.__disableBotDisguise()
             except TimeoutError:
                 continue
+
+    @commands.command(name="killbot", description="Kills the bot. This command is very dangerous.")
+    @commands.is_owner()
+    async def killbot(self, ctx):
+        msg = ctx.message
+        await msg.reply("Are you sure? You have 10 seconds to confirm by typing `yes`.")
+        try:
+            _ = await self.client.wait_for(
+                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author \
+                                           and m.content.casefold() == "yes",
+                timeout=10
+            )
+        except TimeoutError:
+            return await ctx.send("Cancelling.")
+        await ctx.reply("Stopping bot...")
+        try:
+            self.client.kill()
+        except Exception as ex:
+            funcs.printError(ctx, ex)
 
     @commands.command(name="resetbotdisguise", description="Resets bot disguise mode.", aliases=["rbd"])
     @commands.is_owner()
@@ -499,5 +518,5 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=2))
 
 
-def setup(client: commands.Bot):
-    client.add_cog(BotOwnerOnly(client))
+def setup(botInstance):
+    botInstance.add_cog(BotOwnerOnly(botInstance))
