@@ -49,7 +49,7 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
     @commands.command(name="scamurls", description="Shows the scam URLs that the bot tries to remove.",
                       aliases=["scam", "scamlinks", "scamlink", "scamurl"])
     async def scamurls(self, ctx):
-        await ctx.reply(funcs.formatting("- " + "\n- ".join(self.scamlinks), limit=2000))
+        await ctx.reply("<https://github.com/ryancflam/findseed/blob/master/assets/scam_preventer/scam_links.txt>")
 
     async def deleteEmbedOrAttachment(self, message, qrlink):
         qr = await funcs.decodeQR(qrlink)
