@@ -1012,10 +1012,9 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             msg = f"**Player 1 ({game.RED})** is {'me' if computer1 else player1.mention}.\n**Player 2 ({game.YELLOW}" + \
                   f")** is {'me' if computer2 else player2.mention}."
         await ctx.send(f"**Welcome to Connect Four. Input `quit` to quit the game.**\n\n{msg}")
-        await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
         if computer1:
             game.place(randint(1, 7))
-            await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
+        await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
             await ctx.send(f"`It is {currentPlayer.name}'s turn! Please select a column number between 1-7.`")
