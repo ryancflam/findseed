@@ -55,16 +55,11 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
         qr = await funcs.decodeQR(qrlink)
         for url in self.scamlinks:
             if url in qr.casefold():
-                await message.delete()
-                return True
-            try:
-                res = await funcs.getRequest(qr)
-                qr = res.url
-                if url in qr.casefold():
+                try:
                     await message.delete()
                     return True
-            except:
-                continue
+                except:
+                    break
         return False
 
     @commands.Cog.listener()
