@@ -42,8 +42,7 @@ class ConnectFour:
         return [i for i in range(7) if self.__board[i][0] == self.EMPTY]
 
     def __computerMove(self):
-        rdn = choice(self.__validColumns())
-        return [rdn]
+        return choice(self.__validColumns())
 
     def place(self, col):
         try:
@@ -63,7 +62,7 @@ class ConnectFour:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer():
-            self.place(self.__computerMove()[0] + 1)
+            self.place(self.__computerMove() + 1)
             if not self.__currentPlayer.getPlayer():
                 self.__switchPlayer()
 
