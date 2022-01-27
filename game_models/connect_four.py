@@ -1,4 +1,4 @@
-# Credit - https://gist.github.com/rex8312/c7640c96430af5209e1a
+# Credit - https://gist.github.com/poke/6934842
 
 from itertools import chain, groupby
 from random import choice
@@ -12,7 +12,7 @@ EMOJIS = ":one: :two: :three: :four: :five: :six: :seven:"
 
 
 class ConnectFour:
-    EMPTY = "⬛ "
+    NONE = "⬛ "
     RED = "🔴 "
     YELLOW = "🟡 "
 
@@ -21,7 +21,7 @@ class ConnectFour:
         self.__player2 = ConnectFourPlayer(colour=self.YELLOW, user=player2)
         self.__startTime = time()
         self.__winner = None
-        self.__board = [[self.EMPTY] * ROWS for _ in range(COLS)]
+        self.__board = [[self.NONE] * ROWS for _ in range(COLS)]
         self.__currentPlayer = self.__player1
 
     def __diagonalsPos(self):
@@ -35,7 +35,7 @@ class ConnectFour:
     def __checkWinner(self):
         for line in chain(*(self.__board, zip(*self.__board), self.__diagonalsPos(), self.__diagonalsNeg())):
             for colour, group in groupby(line):
-                if colour != self.EMPTY and len(list(group)) > 3:
+                if colour != self.NONE and len(list(group)) > 3:
                     self.__winner = self.__currentPlayer
                     return
 
@@ -43,7 +43,7 @@ class ConnectFour:
         self.__currentPlayer = self.__player1 if self.__currentPlayer == self.__player2 else self.__player2
 
     def __validColumns(self):
-        return [i for i in range(COLS) if self.__board[i][0] == self.EMPTY]
+        return [i for i in range(COLS) if self.__board[i][0] == self.NONE]
 
     def __computerMove(self):
         return choice(self.__validColumns())
@@ -58,7 +58,7 @@ class ConnectFour:
         if col not in self.__validColumns():
             raise Exception("This column is full!")
         i = -1
-        while self.__board[col][i] != self.EMPTY:
+        while self.__board[col][i] != self.NONE:
             i -= 1
         self.__board[col][i] = self.__currentPlayer.getColour()
         self.__checkWinner()
@@ -85,7 +85,7 @@ class ConnectFour:
     def getEmptySlots(self):
         empty = 0
         for row in self.__board:
-            empty += row.count(self.EMPTY)
+            empty += row.count(self.NONE)
         return empty
 
     def getCurrentPlayer(self):
