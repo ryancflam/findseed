@@ -8,14 +8,13 @@ from discord.ext import commands
 from other_utils import funcs
 
 IMGUR_URL = "imgur.com"
-SCAM_URLS = ["discord.com/ra", "discordc.gift/", "discord.gifts/", "discordgifts.com/",
-             "discord.birth/", "dicsord.gq/", "discond.gift/", "discord.help/"]
 
 
 class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidden=True),
                     description="A cog that tries to remove messages with Discord scam links."):
     def __init__(self, botInstance):
         self.client = botInstance
+        self.scamlinks = funcs.readTxtLines("assets/scam_preventer/scam_links.txt")
         funcs.generateJson("scam_preventer", {"disallowed_servers": []})
 
     @commands.command(name="spdisable", description="Disables the scam preventer for your server, which is enabled by default.",
@@ -50,12 +49,11 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
     @commands.command(name="scamurls", description="Shows the scam URLs that the bot tries to remove.",
                       aliases=["scam", "scamlinks", "scamlink", "scamurl"])
     async def scamurls(self, ctx):
-        await ctx.reply(funcs.formatting("- " + "\n- ".join(SCAM_URLS), limit=2000))
+        await ctx.reply(funcs.formatting("- " + "\n- ".join(self.scamlinks), limit=2000))
 
-    @staticmethod
-    async def deleteEmbedOrAttachment(message, qrlink):
+    async def deleteEmbedOrAttachment(self, message, qrlink):
         qr = await funcs.decodeQR(qrlink)
-        for url in SCAM_URLS:
+        for url in self.scamlinks:
             if url in qr.casefold():
                 await message.delete()
                 return True
@@ -92,14 +90,14 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
                         tryscam = res.url
                     except:
                         pass
-                    for url in SCAM_URLS:
+                    for url in self.scamlinks:
                         if url in tryscam.casefold().replace(" ", ""):
                             await message.delete()
                             return
                 except:
                     pass
             msg = message.content.casefold().replace(" ", "")
-            for url in SCAM_URLS:
+            for url in self.scamlinks:
                 if url in msg:
                     try:
                         await message.delete()
