@@ -960,16 +960,17 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             await ctx.send(funcs.formatting(game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
-            await ctx.send(f"`It is {currentPlayer.name}'s turn! Please select a slot number between 1-9.`")
+            await ctx.send(f"**[{currentPlayer.getLetter()}]** `It is {currentPlayer.getPlayer().name}'s turn! " +
+                           "Please select a slot number between 1-9.`")
             try:
                 move = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer, timeout=120
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer.getPlayer(), timeout=120
                 )
             except TimeoutError:
-                await ctx.send(f"`{currentPlayer.name} has left Tic-Tac-Toe for idling for too long. Game over!`")
+                await ctx.send(f"`{currentPlayer.getPlayer().name} has left Tic-Tac-Toe for idling for too long. Game over!`")
                 break
             if move.content.casefold() == "quit":
-                await ctx.send(f"`{currentPlayer.name} has left Tic-Tac-Toe. Game over!`")
+                await ctx.send(f"`{currentPlayer.getPlayer().name} has left Tic-Tac-Toe. Game over!`")
                 break
             try:
                 game.move(move.content)
@@ -982,7 +983,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     winner = game.getWinner().getPlayer().name + " wins"
                 except:
                     winner = "I win"
-                await ctx.send(f"`{winner}! Game over!`")
+                await ctx.send(f"**[{game.getWinner().getLetter()}]** `{winner}! Game over!`")
                 break
         if not game.getEmptySlots() and not game.getWinner():
             await ctx.send("`Draw! Game over!`")
@@ -1013,16 +1014,17 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
-            await ctx.send(f"`It is {currentPlayer.name}'s turn! Please select a column number between 1-7.`")
+            await ctx.send(f"**[{currentPlayer.getColour()}]** `It is {currentPlayer.getPlayer().name}'s turn! " +
+                           "Please select a column number between 1-7.`")
             try:
                 move = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer, timeout=120
+                    "message", check=lambda m: m.channel == ctx.channel and m.author == currentPlayer.getPlayer(), timeout=120
                 )
             except TimeoutError:
-                await ctx.send(f"`{currentPlayer.name} has left Connect Four for idling for too long. Game over!`")
+                await ctx.send(f"`{currentPlayer.getPlayer().name} has left Connect Four for idling for too long. Game over!`")
                 break
             if move.content.casefold() == "quit":
-                await ctx.send(f"`{currentPlayer.name} has left Connect Four. Game over!`")
+                await ctx.send(f"`{currentPlayer.getPlayer().name} has left Connect Four. Game over!`")
                 break
             try:
                 game.insert(move.content)
@@ -1035,7 +1037,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     winner = game.getWinner().getPlayer().name + " wins"
                 except:
                     winner = "I win"
-                await ctx.send(f"`{winner}! Game over!`")
+                await ctx.send(f"**[{game.getWinner().getColour()}]** `{winner}! Game over!`")
                 break
         if not game.getEmptySlots() and not game.getWinner():
             await ctx.send("`Draw! Game over!`")

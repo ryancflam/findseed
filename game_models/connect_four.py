@@ -120,7 +120,7 @@ class ConnectFour:
         return empty
 
     def getCurrentPlayer(self):
-        return self.__currentPlayer.getPlayer()
+        return self.__currentPlayer
 
     def getWinner(self):
         return self.__winner
