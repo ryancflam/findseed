@@ -542,7 +542,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 60, commands.BucketType.user)
+    @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="srcqueue", aliases=["queue", "speedrunqueue", "speedruncom", "src"], hidden=True,
                       description="Shows the run queue for speedrun.com games.", usage="[game abbreviation]")
     async def srcqueue(self, ctx, *, game: str="mc"):
@@ -576,29 +576,27 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             categories[cat] = catres.json()["data"]["name"]
             output = ""
             outputlist = []
-            count = 0
-            total = 0
+            count, total = 0, 0
             for i in queue:
                 total += 1
                 d, h, m, s, ms = funcs.timeDifferenceStr(i["times"]["primary_t"], 0, noStr=True)
                 names = ""
-                for player in i['players']['data']:
+                for player in i["players"]["data"]:
                     try:
                         names += player["names"]["international"]
                     except:
                         names += player["name"]
-                    names = names.replace("_", "\_") + ", "
-                while "\\\\" in names:
-                    names = names.replace("\\\\", "\\")
+                    names += ", "
+                names = names.replace("_", "\_")
                 output += f"{'{:,}'.format(total)}. [{categories[i['category']]}]({i['weblink']}) " + \
                           f"in `{funcs.timeStr(d, h, m, s, ms)}` by {names[:-2]}\n"
                 count += 1
                 if count == 15:
-                    outputlist.append(output[:-1])
+                    outputlist.append(output[:2048])
                     output = ""
                     count = 0
             if output:
-                outputlist.append(output)
+                outputlist.append(output[:2048])
             pages = len(outputlist)
             try:
                 firstpage = outputlist[0]
@@ -900,6 +898,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     definition = terms[0]["definition"].replace("[", "").replace("]", "")
                     permalink = terms[0]["permalink"]
                     word = terms[0]["word"]
+                    author = terms[0]["author"]
                     writtenon = funcs.timeStrToDatetime(terms[0]["written_on"])
                     e = Embed(description=permalink)
                     e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
@@ -907,7 +906,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                     if example:
                         e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                    e.add_field(name="Author", value=f"`{terms[0]['author']}`")
+                    if author:
+                        e.add_field(name="Author", value=f"`{author}`")
                     e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
                     try:
                         e.set_footer(
@@ -928,6 +928,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
                             permalink = terms[page - 1]["permalink"]
                             word = terms[page - 1]["word"]
+                            author = terms[page - 1]["author"]
                             writtenon = funcs.timeStrToDatetime(terms[page - 1]["written_on"])
                             e = Embed(description=permalink)
                             e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
@@ -935,7 +936,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                             if example:
                                 e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                            e.add_field(name="Author", value=f"`{terms[page - 1]['author']}`")
+                            if author:
+                                e.add_field(name="Author", value=f"`{author}`")
                             e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
                             try:
                                 ar = round(
