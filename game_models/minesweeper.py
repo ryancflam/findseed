@@ -1,7 +1,7 @@
 from random import randint
 from time import time
 
-from other_utils.funcs import timeDifferenceStr
+from other_utils.funcs import minSecs
 
 
 class Minesweeper:
@@ -82,8 +82,7 @@ class Minesweeper:
         return output
 
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
     def getUncovered(self):
         return self.__uncovered

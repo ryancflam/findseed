@@ -1,7 +1,7 @@
 from random import sample
 from time import time
 
-from other_utils.funcs import replaceCharacters, timeDifferenceStr
+from other_utils.funcs import minSecs, replaceCharacters
 
 
 class BullsAndCows:
@@ -21,8 +21,7 @@ class BullsAndCows:
         return self.__gameEnd
 
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
     def guess(self, value: str):
         value = replaceCharacters(value, [" ", ",", "-"]).casefold()

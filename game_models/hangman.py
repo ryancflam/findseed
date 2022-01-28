@@ -1,7 +1,7 @@
 from random import choice
 from time import time
 
-from other_utils.funcs import readTxtLines, timeDifferenceStr
+from other_utils.funcs import minSecs, readTxtLines
 
 
 class Hangman:
@@ -42,8 +42,7 @@ class Hangman:
         return self.__lives
     
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
     def hangmanPic(self):
         return self.HANGMAN_STATES[self.__lives]

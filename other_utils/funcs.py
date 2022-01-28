@@ -195,6 +195,11 @@ def timeStr(d, h, m, s, ms):
            f"{m}m {s}s {ms if ms else ''}{'ms ' if ms else ''}".strip()
 
 
+def minSecs(now, before):
+    d, h, m, s, _ = timeDifferenceStr(now, before, noStr=True)
+    return m + (h * 60) + (d * 1440), s
+
+
 def timeDifferenceStr(newTime, oldTime, noStr=False):
     seconds = newTime - oldTime
     days = seconds // 86400
@@ -596,7 +601,7 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
         while True:
             try:
                 userm = await client.wait_for(
-                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=30
+                    "message", check=lambda umsg: umsg.author == ctx.author and umsg.channel == ctx.channel, timeout=30
                 )
                 mlist.append(userm)
                 try:
@@ -656,6 +661,12 @@ async def sendEmbedToChannels(embed: Embed, channellist: list):
                 await channel.send(embed=embed)
             except:
                 pass
+
+
+async def sendTime(ctx, mins, secs):
+    await ctx.send(
+        "`Elapsed time: {:,} minute{} and {} second{}.`".format(mins, "" if mins == 1 else "s", secs, "" if secs == 1 else "s")
+    )
 
 
 async def postRequest(url, data=None, headers=None, timeout=None, verify=True, json=None):

@@ -1,7 +1,7 @@
 from random import randint, shuffle
 from time import time
 
-from other_utils.funcs import timeDifferenceStr
+from other_utils.funcs import minSecs
 from other_utils.item_cycle import ItemCycle
 
 
@@ -339,8 +339,7 @@ class Uno:
         return self.__callout
 
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
 
 class UnoPlayer:

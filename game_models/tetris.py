@@ -1,7 +1,7 @@
 from random import randint
 from time import time
 
-from other_utils.funcs import removeReactionsFromCache, timeDifferenceStr
+from other_utils.funcs import minSecs, removeReactionsFromCache
 
 TETRIS_BLOCKS = [
     [
@@ -250,8 +250,7 @@ class Tetris:
         return self.__bnw
 
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
     def getLinesLevelScore(self):
         return self.__lines, self.__level, self.__score

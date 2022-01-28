@@ -3,7 +3,7 @@
 from math import floor, inf
 from time import time
 
-from other_utils.funcs import timeDifferenceStr
+from other_utils.funcs import minSecs
 
 
 class TicTacToe:
@@ -58,7 +58,7 @@ class TicTacToe:
         if not 0 <= slot <= 8:
             raise Exception("Slot number must be 1-9 inclusive.")
         if self.__board[slot] != " ":
-            raise Exception("Slot already occupied!")
+            raise Exception("This slot is already occupied!")
         self.__board[slot] = self.__currentPlayer.getLetter()
         self.__checkWinner(slot, self.__board[slot])
         if self.__winner and not computerSim:
@@ -80,8 +80,7 @@ class TicTacToe:
         return output[:-1]
 
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
     def getEmptySlots(self):
         return self.__board.count(" ")

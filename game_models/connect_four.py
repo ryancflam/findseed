@@ -4,7 +4,7 @@ from itertools import chain, groupby
 from math import inf
 from time import time
 
-from other_utils.funcs import numberEmojis, timeDifferenceStr
+from other_utils.funcs import minSecs, numberEmojis
 
 ROWS = 6
 COLS = 7
@@ -22,7 +22,7 @@ class ConnectFour:
         self.__winner = None
         self.__board = [[self.NONE] * ROWS for _ in range(COLS)]
         self.__currentPlayer = self.__player1
-        self.__computerMoves = []
+        self.__pseudoMove = (None, None)
 
     def __diagonalsPos(self):
         for di in ([(j, i - j) for j in range(COLS)] for i in range(COLS + ROWS - 1)):
@@ -40,9 +40,7 @@ class ConnectFour:
         return False
 
     def __checkWinner(self):
-        if self.__checkInARow():
-            self.__winner = self.__currentPlayer
-            return
+        self.__winner = self.__currentPlayer if self.__checkInARow() else None
 
     def __switchPlayer(self):
         self.__currentPlayer = self.__player1 if self.__currentPlayer == self.__player2 else self.__player2
@@ -65,9 +63,8 @@ class ConnectFour:
                 scores[col] += 5
             elif self.__checkInARow(2):
                 scores[col] += 2
-            for move in self.__computerMoves:
-                self.__board[move[0]][move[1]] = self.NONE
-                self.__computerMoves.remove(move)
+            self.__board[self.__pseudoMove[0]][self.__pseudoMove[1]] = self.NONE
+            self.__pseudoMove = (None, None)
             self.__switchPlayer()
         self.__switchPlayer()
         for col in self.__validColumns():
@@ -76,12 +73,11 @@ class ConnectFour:
                 scores[col] += 10000
                 self.__winner = None
             elif self.__checkInARow(3):
-                scores[col] += 3
+                scores[col] += 4
             elif self.__checkInARow(2):
                 scores[col] += 2
-            for move in self.__computerMoves:
-                self.__board[move[0]][move[1]] = self.NONE
-                self.__computerMoves.remove(move)
+            self.__board[self.__pseudoMove[0]][self.__pseudoMove[1]] = self.NONE
+            self.__pseudoMove = (None, None)
             self.__switchPlayer()
         self.__switchPlayer()
         return sorted(scores.keys(), key=lambda x: scores[x], reverse=True)[0]
@@ -100,15 +96,13 @@ class ConnectFour:
             i -= 1
         self.__board[col][i] = self.__currentPlayer.getColour()
         if computerSim:
-            self.__computerMoves.append([col, i])
+            self.__pseudoMove = (col, i)
         self.__checkWinner()
         if self.__winner and not computerSim:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer() and not computerSim:
             self.insert(self.__computerMove() + 1)
-            if not self.__currentPlayer.getPlayer():
-                self.__switchPlayer()
 
     def displayBoard(self):
         output = " ".join(numberEmojis()[i] for i in range(1, COLS + 1)) + "\n"
@@ -117,8 +111,7 @@ class ConnectFour:
         return output[:-1]
 
     def getTime(self):
-        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m + (h * 60) + (d * 1440), s
+        return minSecs(time(), self.__startTime)
 
     def getEmptySlots(self):
         empty = 0
