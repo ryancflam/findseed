@@ -566,13 +566,14 @@ async def nextPrevPageOptions(msg, allpages: int):
     if allpages > 1:
         await msg.add_reaction("⏮")
         await msg.add_reaction("⏭")
+        await msg.add_reaction("❓")
 
 
 async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
     try:
         reaction, user = await client.wait_for(
             "reaction_add",
-            check=lambda r, u: (str(r.emoji) == "⏮" or str(r.emoji) == "⏭" or str(r.emoji) == "🚫")
+            check=lambda r, u: (str(r.emoji) == "⏮" or str(r.emoji) == "⏭" or str(r.emoji) == "🚫" or str(r.emoji) == "❓")
                                and u == ctx.author and r.message == msg, timeout=300
         )
     except TimeoutError:
@@ -589,6 +590,31 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
         if page > 1:
             page -= 1
             success = True
+    elif str(reaction.emoji) == "❓":
+        await reactionRemove(reaction, user)
+        mlist = [await ctx.send(f"{user.mention} Which page would you like to go to? (1-{'{:,}'.format(allpages)})")]
+        while True:
+            try:
+                userm = await client.wait_for(
+                    "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=30
+                )
+                mlist.append(userm)
+                try:
+                    page = int(userm.content.replace(",", "").replace(" ", ""))
+                    if not 1 <= page <= allpages:
+                        raise Exception
+                    break
+                except:
+                    mlist.append(await ctx.send(embed=errorEmbed(None, "Invalid page.")))
+            except TimeoutError:
+                page = 1
+                break
+        success = True
+        for m in mlist:
+            try:
+                await m.delete()
+            except:
+                pass
     else:
         await msg.edit(content="Deleting message...", embed=None)
         await sleep(1)
