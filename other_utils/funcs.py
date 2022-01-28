@@ -51,6 +51,11 @@ def musicalNotes():
     return ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
 
 
+def numberEmojis():
+    return {0: ":zero:", 1: ":one:", 2: ":two:", 3: ":three:", 4: ":four:",
+            5: ":five:", 6: ":six:", 7: ":seven:", 8: ":eight:", 9: ":nine:"}
+
+
 def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
 
@@ -185,6 +190,11 @@ def formatting(text, limit: int=2048):
     return output
 
 
+def timeStr(d, h, m, s, ms):
+    return f"{d if d else ''}{'d ' if d else ''}{h if h else ''}{'h ' if h else ''}" + \
+           f"{m}m {s}s {ms if ms else ''}{'ms ' if ms else ''}".strip()
+
+
 def timeDifferenceStr(newTime, oldTime, noStr=False):
     seconds = newTime - oldTime
     days = seconds // 86400
@@ -195,7 +205,7 @@ def timeDifferenceStr(newTime, oldTime, noStr=False):
     seconds = seconds - (minutes * 60)
     if noStr:
         milli = (seconds - int(seconds)) * 1000
-        return int(hours), int(minutes), int(seconds), int(round(milli, 0))
+        return int(days), int(hours), int(minutes), int(seconds), int(round(milli, 0))
     days, hours, minutes, seconds = int(days), int(hours), int(minutes), int(seconds)
     return "{:,} day{}, {} hour{}".format(days, "" if days == 1 else "s", hours, "" if hours == 1 else "s") + \
            f", {minutes} minute{'' if minutes == 1 else 's'}, and {seconds} second{'' if seconds == 1 else 's'}"

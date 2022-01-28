@@ -250,8 +250,8 @@ class Tetris:
         return self.__bnw
 
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m, s
+        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
+        return m + (h * 60) + (d * 1440), s
 
     def getLinesLevelScore(self):
         return self.__lines, self.__level, self.__score

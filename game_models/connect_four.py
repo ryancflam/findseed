@@ -4,17 +4,16 @@ from itertools import chain, groupby
 from random import choice
 from time import time
 
-from other_utils.funcs import timeDifferenceStr
+from other_utils.funcs import numberEmojis, timeDifferenceStr
 
 ROWS = 6
 COLS = 7
-EMOJIS = ":one: :two: :three: :four: :five: :six: :seven:"
 
 
 class ConnectFour:
-    NONE = "⬛ "
-    RED = "🔴 "
-    YELLOW = "🟡 "
+    NONE = "⬛"
+    RED = "🔴"
+    YELLOW = "🟡"
 
     def __init__(self, player1=None, player2=None):
         self.__player1 = ConnectFourPlayer(colour=self.RED, user=player1)
@@ -53,8 +52,8 @@ class ConnectFour:
             col = int(col) - 1
         except:
             raise Exception("Invalid input.")
-        if not 0 <= col <= (COLS - 1):
-            raise Exception(f"Slot number must be 1-{COLS} inclusive.")
+        if not 0 <= col < COLS:
+            raise Exception(f"Column number must be 1-{COLS} inclusive.")
         if col not in self.__validColumns():
             raise Exception("This column is full!")
         i = -1
@@ -71,16 +70,14 @@ class ConnectFour:
                 self.__switchPlayer()
 
     def displayBoard(self):
-        output = f"{EMOJIS}\n"
+        output = " ".join(numberEmojis()[i] for i in range(1, COLS + 1)) + "\n"
         for i in range(ROWS):
-            for j in range(COLS):
-                output += self.__board[j][i]
-            output += "\n"
+            output += " ".join(self.__board[j][i] for j in range(COLS)) + "\n"
         return output[:-1]
 
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m, s
+        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
+        return m + (h * 60) + (d * 1440), s
 
     def getEmptySlots(self):
         empty = 0

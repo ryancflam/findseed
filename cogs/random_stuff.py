@@ -234,7 +234,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                     if resetTime == 30:
                         await ctx.send(":telephone: You have been idling for too long. Hanging up the phone...")
                         await otherParty.send(":telephone: The other party has hung up the phone.")
-            _, m, s, _ = funcs.timeDifferenceStr(time(), startCall, noStr=True)
+            d, h, m, s, _ = funcs.timeDifferenceStr(time(), startCall, noStr=True)
+            m += (h * 60) + (d * 1440)
             self.phoneCallChannels.remove(ctx.channel)
             return await ctx.send(
                 "`Elapsed time: {:,} minute{} and {} second{}.`".format(m, "" if m == 1 else "s", s, "" if s == 1 else "s")

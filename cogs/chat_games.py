@@ -625,14 +625,14 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                         or message.content.casefold() == "stop":
                     break
                 elif message.content.casefold() == "time":
-                    _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                    await self.sendTime(ctx, m, s)
+                    d, h, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                    await self.sendTime(ctx, m + (h * 60) + (d * 1440), s)
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
         await ctx.send("```The number was {:,}.\n\nTotal attempts: {:,}\n\n".format(number, attempts) + \
                        f"Thanks for playing, {ctx.author.name}!```")
-        _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-        await self.sendTime(ctx, m, s)
+        d, h, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+        await self.sendTime(ctx, m + (h * 60) + (d * 1440), s)
         self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -1206,8 +1206,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                             )
                         )
                         self.gameChannels.remove(ctx.channel.id)
-                        _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                        return await self.sendTime(ctx, m, s)
+                        d, h, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                        return await self.sendTime(ctx, m + (h * 60) + (d * 1440), s)
                     try:
                         intuserans = int(useranswer.content)
                         if intuserans < 1 or intuserans > len(possibleanswers):
@@ -1226,8 +1226,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                     )
                                 )
                                 self.gameChannels.remove(ctx.channel.id)
-                                _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                                return await self.sendTime(ctx, m, s)
+                                d, h, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                                return await self.sendTime(ctx, m + (h * 60) + (d * 1440), s)
                             break
                     except ValueError:
                         if useranswer.content.casefold() == "quit":
@@ -1238,8 +1238,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                 )
                             )
                             self.gameChannels.remove(ctx.channel.id)
-                            _, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
-                            return await self.sendTime(ctx, m, s)
+                            d, h, m, s, _ = funcs.timeDifferenceStr(time(), starttime, noStr=True)
+                            return await self.sendTime(ctx, m + (h * 60) + (d * 1440), s)
                         await ctx.send(embed=funcs.errorEmbed(None, "Please enter a number only!"))
             except Exception as ex:
                 funcs.printError(ctx, ex)

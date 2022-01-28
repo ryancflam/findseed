@@ -534,13 +534,13 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                     await ctx.reply(
                         f"Build your second portal at: **" + \
                         f"{round(nx + (1 if nx < 0 else 0))}, {round(nz + (1 if nz < 0 else 0))}** " + \
-                        "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
+                        "\n\nMore info: https://youtu.be/YpV7I9X-Jso"
                     )
                 else:
                     await ctx.reply(
                         f"Offset: **{nx}, {nz}**\n\nYour current chunk for reference: **" + \
                         f"{px}, {pz}**" + \
-                        "\n\nMore info: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>"
+                        "\n\nMore info: https://youtu.be/YpV7I9X-Jso"
                     )
             else:
                 await ctx.reply(f"Cannot find ideal coordinates...")
@@ -566,11 +566,15 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply("https://imgur.com/gallery/i3fIanf")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="mcspeedrunning", aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning"],
-                      description="Shows the Minecraft Speedrunning website.")
+    @commands.command(name="mcspeedrunning", aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning", "mcsr"],
+                      description="Shows the Minecraft Speedrunning website.", hidden=True)
     async def mcspeedrunning(self, ctx):
         await ctx.reply("https://www.minecraftspeedrunning.com/")
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="speedrunigt", aliases=["igt"], description="Shows the SpeedRunIGT mod website.", hidden=True)
+    async def speedrunigt(self, ctx):
+        await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
@@ -686,7 +690,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="speedrunwr", description="Shows the current world records for the solo Any% Glitchless " + \
                                                      "*Minecraft: Java Edition* speedrun categories.",
-                      aliases=["worldrecord", "wr", "src", "speedrun", "mcwr", "any", "ssg", "rsg"])
+                      aliases=["worldrecord", "wr", "mcwr", "ssg", "rsg"])
     async def speedrunwr(self, ctx):
         await ctx.send("Getting speedrun.com data. Please wait...")
         try:
@@ -715,13 +719,12 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                     "https://www.speedrun.com/api/v1/leaderboards/j1npme6p/category/mkeyl926?var-r8rg67rn=" + category
                 )
                 wrdata = res.json()["data"]["runs"][0]["run"]
-                igt = wrdata["times"]["ingame_t"]
+                igt = wrdata["times"]["primary_t"]
                 res = await funcs.getRequest(wrdata["players"][0]["uri"])
                 runner = res.json()["data"]["names"]["international"]
-                h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
+                d, h, m, s, ms = funcs.timeDifferenceStr(igt, 0, noStr=True)
                 e.add_field(name=categories[count], inline=False,
-                            value=f"`{h if h != 0 else ''}{'h ' if h != 0 else ''}{m}m {s}s " + \
-                            f"{ms if ms != 0 else ''}{'ms ' if ms != 0 else ''}({runner})`")
+                            value=f"`{funcs.timeStr(d, h, m, s, ms)} ({runner})`")
                 count += 1
             e.set_footer(text="Click the link above for more speedrun categories.",
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")

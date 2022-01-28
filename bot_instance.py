@@ -47,19 +47,6 @@ class BotInstance(Bot):
         self.__statcord = Client(self, config.statcordKey)
         self.__statcord.start_loop()
 
-    def startup(self):
-        for cog in listdir(f"{PATH}/cogs"):
-            if cog.endswith(".py"):
-                funcs.loadCog(self, cog[:-3])
-        super().run(self.__token, bot=True, reconnect=True)
-
-    def kill(self):
-        try:
-            self.__eventLoop.stop()
-            return exit()
-        except Exception as ex:
-            return ex
-
     @staticmethod
     def __generateDir(name):
         if not path.exists(f"{PATH}/{name}"):
@@ -74,6 +61,22 @@ class BotInstance(Bot):
         self.__generateDir("temp")
         funcs.generateJson("blacklist", {"servers": [], "users": []})
         funcs.generateJson("whitelist", {"users": []})
+
+    def startup(self):
+        for cog in listdir(f"{PATH}/cogs"):
+            if cog.endswith(".py"):
+                funcs.loadCog(self, cog)
+        super().run(self.__token, bot=True, reconnect=True)
+
+    async def kill(self):
+        print("Stopping bot...")
+        try:
+            for cog in sorted(self.cogs):
+                funcs.unloadCog(self, cog)
+            self.__eventLoop.stop()
+            return exit()
+        except Exception as ex:
+            return ex
 
     async def __bitcoin(self):
         btc = True

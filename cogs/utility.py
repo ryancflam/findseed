@@ -542,6 +542,84 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 60, commands.BucketType.user)
+    @commands.command(name="srcqueue", aliases=["queue", "speedrunqueue", "speedruncom", "src"], hidden=True,
+                      description="Shows the run queue for speedrun.com games.", usage="[game abbreviation]")
+    async def srcqueue(self, ctx, *, game: str="mc"):
+        await ctx.send("Getting speedrun.com data. Please wait...")
+        try:
+            gameres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/games/{game.casefold().replace(' ', '')}")
+            game = gameres.json()["data"]
+            gameID = game["id"]
+            gameName = game["names"]["international"]
+            queue = []
+            categories = {}
+            queueres = await funcs.getRequest(
+                f"https://www.speedrun.com/api/v1/runs?game={gameID}&status=new&embed=players&max=200"
+            )
+            queuedata = queueres.json()
+            for i in queuedata["data"]:
+                queue.append(i)
+                cat = i["category"]
+                if cat not in categories:
+                    catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
+                    categories[cat] = catres.json()["data"]["name"]
+            if queuedata["pagination"]["links"]:
+                while queuedata["pagination"]["links"][-1]["rel"] == "next":
+                    queueres = await funcs.getRequest(queuedata["pagination"]["links"][-1]["uri"])
+                    queuedata = queueres.json()
+                    for i in queuedata["data"]:
+                        queue.append(i)
+                        cat = i["category"]
+                        if cat not in categories:
+                            catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
+                            categories[cat] = catres.json()["data"]["name"]
+            output = ""
+            outputlist = []
+            count = 0
+            for i in queue:
+                d, h, m, s, ms = funcs.timeDifferenceStr(i["times"]["primary_t"], 0, noStr=True)
+                names = ""
+                for player in i['players']['data']:
+                    try:
+                        names += player["names"]["international"]
+                    except:
+                        names += player["name"]
+                    names = names.replace("_", "\_") + ", "
+                while "\\\\" in names:
+                    names = names.replace("\\\\", "\\")
+                output += f"[{categories[i['category']]}]({i['weblink']}) in `{funcs.timeStr(d, h, m, s, ms)}` by {names[:-2]}\n"
+                count += 1
+                if count == 15:
+                    outputlist.append(output[:-1])
+                    output = ""
+                    count = 0
+            if output:
+                outputlist.append(output)
+            pages = len(outputlist)
+            try:
+                firstpage = outputlist[0]
+            except IndexError:
+                firstpage = "No runs found."
+            e = Embed(description=firstpage)
+            e.set_author(name=f"Unverified Runs ({'{:,}'.format(len(queue))}) - {gameName}",
+                         icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
+            e.set_footer(text="Page 1 of {:,}".format(pages))
+            msg = await ctx.reply(embed=e)
+            await funcs.nextPrevPageOptions(msg, pages)
+            page = 1
+            while True:
+                success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, pages, page)
+                if success:
+                    e.description = outputlist[page - 1]
+                    e.set_footer(text="Page {:,} of {:,}".format(page, pages))
+                    await msg.edit(embed=e)
+                elif success is None:
+                    return
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, "Server error."))
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
                       aliases=["lyric", "song"], usage="<song keywords>")
@@ -1769,7 +1847,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Server error or query limit reached.")
         await ctx.reply(embed=e)
-
 
 def setup(botInstance):
     botInstance.add_cog(Utility(botInstance))

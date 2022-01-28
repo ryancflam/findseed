@@ -42,8 +42,8 @@ class Hangman:
         return self.__lives
     
     def getTime(self):
-        _, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
-        return m, s
+        d, h, m, s, _ = timeDifferenceStr(time(), self.__startTime, noStr=True)
+        return m + (h * 60) + (d * 1440), s
 
     def hangmanPic(self):
         return self.HANGMAN_STATES[self.__lives]

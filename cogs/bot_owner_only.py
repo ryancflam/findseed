@@ -68,7 +68,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.send("Cancelling.")
         await ctx.reply("Stopping bot...")
         try:
-            self.client.kill()
+            await self.client.kill()
         except Exception as ex:
             funcs.printError(ctx, ex)
 
