@@ -992,7 +992,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="connectfour", description="Play Connect Four. Mention someone to play with them.",
-                      aliases=["c4", "connect4", "4inarow", "fourinarow", "4", "bitconnect"], usage="[@mention]")
+                      aliases=["c4", "connect4", "4inarow", "fourinarow", "4", "bitconnect", "four"], usage="[@mention]")
     async def connectfour(self, ctx, *, user: User=None):
         if await self.checkGameInChannel(ctx):
             return

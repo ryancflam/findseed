@@ -40,8 +40,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         while len(labels) < 25:
             try:
                 await ctx.send(
-                    f"Enter name for label **{len(labels) + 1}**, `!undo` to delete previous entry, `!done` to move on to values," +
-                    " or `!cancel` to cancel."
+                    f"Enter name for label **{len(labels) + 1}**, `!undo` to delete previous entry," +
+                    " `!done` to move on to values, or `!cancel` to cancel."
                 )
                 entry = await self.client.wait_for(
                     "message",
@@ -67,8 +67,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         while len(values) != len(labels):
             try:
                 await ctx.send(
-                    f'Enter value (NOT percentage) for label **{labels[len(values)]}**, `!undo` to delete previous entry, ' +
-                    'or `!cancel` to cancel.'
+                    f'Enter value (NOT percentage) for label **{labels[len(values)]}**, ' +
+                    '`!undo` to delete previous entry, or `!cancel` to cancel.'
                 )
                 entry = await self.client.wait_for(
                     "message",
@@ -577,7 +577,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             output = ""
             outputlist = []
             count = 0
+            total = 0
             for i in queue:
+                total += 1
                 d, h, m, s, ms = funcs.timeDifferenceStr(i["times"]["primary_t"], 0, noStr=True)
                 names = ""
                 for player in i['players']['data']:
@@ -588,7 +590,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     names = names.replace("_", "\_") + ", "
                 while "\\\\" in names:
                     names = names.replace("\\\\", "\\")
-                output += f"[{categories[i['category']]}]({i['weblink']}) in `{funcs.timeStr(d, h, m, s, ms)}` by {names[:-2]}\n"
+                output += f"{'{:,}'.format(total)}. [{categories[i['category']]}]({i['weblink']}) " + \
+                          f"in `{funcs.timeStr(d, h, m, s, ms)}` by {names[:-2]}\n"
                 count += 1
                 if count == 15:
                     outputlist.append(output[:-1])
@@ -602,7 +605,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             except IndexError:
                 firstpage = "No runs found."
             e = Embed(description=firstpage)
-            e.set_author(name=f"Unverified Runs ({'{:,}'.format(len(queue))}) - {gameName}",
+            e.set_author(name=f"Unverified Runs ({'{:,}'.format(total)}) - {gameName}",
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
             e.set_footer(text="Page 1 of {:,}".format(pages))
             msg = await ctx.reply(embed=e)

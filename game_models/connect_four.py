@@ -48,26 +48,29 @@ class ConnectFour:
     def __validColumns(self):
         return [i for i in range(COLS) if self.__board[i][0] == self.NONE]
 
+    def __resetMove(self, switch=False):
+        self.__board[self.__pseudoMove[0]][self.__pseudoMove[1]] = self.NONE
+        self.__pseudoMove = (None, None)
+        if switch:
+            self.__switchPlayer()
+
     def __computerMove(self):
-        centre = COLS // 2
         scores = {}
         for col in self.__validColumns():
             scores[col] = 0
             self.insert(col + 1, computerSim=True)
-            if col == centre:
+            if col == COLS // 2:
                 scores[col] += 4
             if self.__winner:
                 scores[col] += inf
                 self.__winner = None
+                self.__resetMove(switch=True)
+                break
             elif self.__checkInARow(3):
                 scores[col] += 5
             elif self.__checkInARow(2):
                 scores[col] += 2
-            self.__board[self.__pseudoMove[0]][self.__pseudoMove[1]] = self.NONE
-            self.__pseudoMove = (None, None)
-            self.__switchPlayer()
-        self.__switchPlayer()
-        for col in self.__validColumns():
+            self.__resetMove()
             self.insert(col + 1, computerSim=True)
             if self.__winner:
                 scores[col] += 10000
@@ -76,10 +79,7 @@ class ConnectFour:
                 scores[col] += 4
             elif self.__checkInARow(2):
                 scores[col] += 2
-            self.__board[self.__pseudoMove[0]][self.__pseudoMove[1]] = self.NONE
-            self.__pseudoMove = (None, None)
-            self.__switchPlayer()
-        self.__switchPlayer()
+            self.__resetMove()
         return sorted(scores.keys(), key=lambda x: scores[x], reverse=True)[0]
 
     def insert(self, col, computerSim=False):
