@@ -4,6 +4,7 @@ from io import StringIO
 from platform import system
 from subprocess import PIPE, Popen, STDOUT
 from textwrap import indent
+from time import time
 
 import discord
 from discord.ext import commands
@@ -70,7 +71,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         try:
             await self.client.kill()
         except Exception as ex:
-            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.command(name="resetbotdisguise", description="Resets bot disguise mode.", aliases=["rbd"])
     @commands.is_owner()
@@ -155,6 +156,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         )
         await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
         obj.kill()
+        await self.client.kill()
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
     @commands.is_owner()
@@ -508,6 +510,36 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}` ({men})")
             await ctx.reply(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" + \
                            f" `{msgid}`\nChannel ID: `{cid}`\nMessage: `{original}`")
+        except Exception as ex:
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="changename", description="Changes the username of the bot.",
+                      usage="<new username>", aliases=["namechange"])
+    @commands.is_owner()
+    async def _changename(self, ctx, *, username):
+        try:
+            await self.client.user.edit(username=username)
+            await ctx.reply(":ok_hand:")
+        except Exception as ex:
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="changepfp", description="Changes the profile picture of the bot.",
+                      usage="<image attachment>", aliases=["pfpchange"])
+    @commands.is_owner()
+    async def _changepfp(self, ctx):
+        try:
+            if ctx.message.attachments:
+                filename = f"{time()}"
+                attach = ctx.message.attachments[0]
+                filename = f"{filename}-{attach.filename}"
+                filepath = f"{funcs.getPath()}/temp/{filename}"
+                await attach.save(filepath)
+                with open(filepath, "rb") as image:
+                    await self.client.user.edit(avatar=image.read())
+                funcs.deleteTempFile(filename)
+                await ctx.reply(":ok_hand:")
+            else:
+                await ctx.reply(embed=funcs.errorEmbed(None, "No attachment detected."))
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
