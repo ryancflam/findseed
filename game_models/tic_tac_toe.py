@@ -61,7 +61,7 @@ class TicTacToe:
             raise Exception("This slot is already occupied!")
         self.__board[slot] = self.__currentPlayer.getLetter()
         self.__checkWinner(slot, self.__board[slot])
-        if self.__winner and not computerSim:
+        if (self.__winner or not self.getEmptySlots()) and not computerSim:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer() and not computerSim:

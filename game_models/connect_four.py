@@ -55,7 +55,7 @@ class ConnectFour:
             self.__switchPlayer()
 
     def __computerMove(self):
-        scores = {}
+        scores = {0: 0}
         for col in self.__validColumns():
             scores[col] = 0
             self.insert(col + 1, computerSim=True)
@@ -98,7 +98,7 @@ class ConnectFour:
         if computerSim:
             self.__pseudoMove = (col, i)
         self.__checkWinner()
-        if self.__winner and not computerSim:
+        if (self.__winner or not self.getEmptySlots()) and not computerSim:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer() and not computerSim:
