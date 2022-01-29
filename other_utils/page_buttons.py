@@ -1,12 +1,16 @@
 from asyncio import TimeoutError, sleep
 
-from discord import ButtonStyle
-from discord.ui import View, button
+from discord import ButtonStyle, ui
 
 from other_utils.funcs import errorEmbed, printError
 
+DELETE = "🗑️"
+PREV = "⏮"
+NEXT = "⏭"
+GO_TO_PAGE = "❓"
 
-class PageButtons(View):
+
+class PageButtons(ui.View):
     def __init__(self, ctx, client, msg, embeds: list, timeout: int=300):
         super().__init__(timeout=timeout)
         self.__ctx = ctx
@@ -28,25 +32,25 @@ class PageButtons(View):
     async def on_error(self, error, item, interaction):
         printError(self.__ctx, error)
 
-    @button(emoji="🗑️", style=ButtonStyle.danger)
+    @ui.button(emoji=DELETE, style=ButtonStyle.danger)
     async def delete(self, button, interaction):
         await self.__msg.edit(content="Deleting this message...", embed=None)
         await sleep(1)
         await self.__msg.delete()
 
-    @button(emoji="⏮", style=ButtonStyle.primary)
+    @ui.button(emoji=PREV, style=ButtonStyle.primary)
     async def prev(self, button, interaction):
         if self.__page > 1:
             self.__page -= 1
             await self.__edit()
 
-    @button(emoji="⏭", style=ButtonStyle.primary)
+    @ui.button(emoji=NEXT, style=ButtonStyle.primary)
     async def next(self, button, interaction):
         if self.__page < self.__allpages:
             self.__page += 1
             await self.__edit()
 
-    @button(emoji="❓", style=ButtonStyle.secondary)
+    @ui.button(emoji=GO_TO_PAGE, style=ButtonStyle.secondary)
     async def gotopage(self, button, interaction):
         if self.__allpages > 1:
             mlist = [

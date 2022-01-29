@@ -15,48 +15,10 @@ from other_utils import funcs
 class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
     def __init__(self, botInstance):
         self.client = botInstance
-        self.botDisguise = False
-        self.destChannel = None
-        self.originChannel = None
-        self.bdReminder = 0
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if (message.channel == self.destChannel
-                or message.author == self.destChannel and isinstance(message.channel, discord.DMChannel)) \
-                and self.botDisguise and message.author != self.client.user:
-            self.bdReminder = 0
-            await self.originChannel.send(f"**{message.author}** » {message.content}" + \
-                                          f"{message.attachments[0].url if message.attachments else ''}")
-
-    def __disableBotDisguise(self):
-        self.botDisguise = False
-        self.destChannel = None
-        self.originChannel = None
-        self.bdReminder = 0
-
-    async def __awaitBDStop(self, ctx):
-        while self.botDisguise:
-            self.bdReminder += 1
-            if self.bdReminder == 120:
-                await ctx.send("Friendly reminder that you are still in bot disguise mode!")
-                self.bdReminder = 0
-            try:
-                msg = await self.client.wait_for(
-                    "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
-                    timeout=1
-                )
-                self.bdReminder = 0
-                prefix = self.client.command_prefix
-                if msg.content.casefold().startswith(("!q", f"{prefix}bd", f"{prefix}botdisguise")):
-                    await msg.reply("Exiting bot disguise mode.")
-                    self.__disableBotDisguise()
-            except TimeoutError:
-                continue
 
     @commands.command(name="killbot", description="Kills the bot. This command is very dangerous.")
     @commands.is_owner()
-    async def killbot(self, ctx):
+    async def _killbot(self, ctx):
         msg = ctx.message
         await msg.reply("Are you sure? You have 10 seconds to confirm by typing `yes`.")
         try:
@@ -72,57 +34,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             await self.client.kill()
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
-
-    @commands.command(name="resetbotdisguise", description="Resets bot disguise mode.", aliases=["rbd"])
-    @commands.is_owner()
-    async def _resetbotdisguise(self, ctx):
-        self.__disableBotDisguise()
-        await ctx.reply(":ok_hand:")
-
-    @commands.command(name="botdisguise", description="Enables bot disguise mode.", aliases=["bd"],
-                      usage="[anything to enable stealth mode]")
-    @commands.is_owner()
-    async def _botdisguise(self, ctx, *, stealth: str=""):
-        if self.botDisguise:
-            return
-        await ctx.reply("Please enter channel ID, or `cancel` to cancel." + \
-                       f"{' Stealth mode enabled (you cannot send messages).' if stealth else ''}")
-        try:
-            msg = await self.client.wait_for(
-                "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=30
-            )
-            content = msg.content
-            if content.casefold().startswith(("c", self.client.command_prefix)):
-                return await msg.reply("Cancelling.")
-            channelID = int(content)
-            self.destChannel = self.client.get_channel(channelID)
-            if not self.destChannel:
-                self.destChannel = self.client.get_user(channelID)
-                if not self.destChannel:
-                    return await msg.reply(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
-            self.botDisguise = True
-            self.originChannel = ctx.channel
-            self.client.loop.create_task(self.__awaitBDStop(ctx))
-            await msg.reply(f"You are now in bot disguise mode! Channel: #{self.destChannel.name} " + \
-                           f"({self.destChannel.guild.name}). Type `!q` to quit.")
-            while self.botDisguise:
-                try:
-                    msg = await self.client.wait_for(
-                        "message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
-                        timeout=1
-                    )
-                except TimeoutError:
-                    continue
-                if not msg.content.casefold().startswith(("!q", self.client.command_prefix)) and not stealth:
-                    try:
-                        await self.destChannel.send(f"{msg.content}" + \
-                                                    f"{msg.attachments[0].url if msg.attachments else ''}")
-                    except Exception as ex:
-                        await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
-        except TimeoutError:
-            return await ctx.send("Cancelling.")
-        except ValueError:
-            return await ctx.send(embed=funcs.errorEmbed(None, "Invalid channel. Cancelling."))
 
     @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
     @commands.is_owner()
@@ -174,31 +85,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         if output == "":
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot send empty message."))
         await ctx.send(output.replace("@everyone", "everyone").replace("@here", "here"))
-
-    @commands.command(name="servers", description="Returns a list of servers the bot is in.", aliases=["sl", "serverlist"])
-    @commands.is_owner()
-    async def _servers(self, ctx):
-        serverList = ""
-        for server in sorted(self.client.guilds, key=lambda x: x.member_count, reverse=True):
-            serverList += f"- {str(server.id)}: " + str(server) + " ({:,})\n".format(server.member_count)
-        serverList = serverList[:-1]
-        await ctx.reply(f"`{serverList[:1998]}`")
-
-    @commands.command(name="channels", description="Returns a list of text channels a server the bot is in has.",
-                      aliases=["cl", "channellist"], usage="[server ID]")
-    @commands.is_owner()
-    async def _channels(self, ctx, *, serverID: str=""):
-        try:
-            serverID = serverID.replace(" ", "") or str(ctx.guild.id)
-            g = self.client.get_guild(int(serverID))
-            st = ""
-            for channel in g.text_channels:
-                st += f"- {str(channel.id)}: {channel.name}\n"
-            st = st[:-1]
-            newList = st[:1998]
-            await ctx.reply(f"`{newList}`")
-        except:
-            await ctx.reply(embed=funcs.errorEmbed(None, "Unknown server."))
 
     @commands.command(name="reloadcog", description="Reloads a cog.", usage="<cog name>",
                       aliases=["restartcog", "reload", "updatecog"])
@@ -366,15 +252,6 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         await ctx.reply(
             "```Users ({:,}): ".format(len(userList)) +
             f"{'None' if not userList else ', '.join(str(user) for user in userList)}```"
-        )
-
-    @commands.command(name="eastereggservers", description="Gets all servers that have easter eggs enabled.", aliases=["ees"])
-    @commands.is_owner()
-    async def _eastereggservers(self, ctx):
-        serverList = list(funcs.readJson("data/easter_eggs.json")["servers"])
-        await ctx.reply(
-            "```Servers ({:,}): ".format(len(serverList)) +
-            f"{'None' if not serverList else ', '.join(str(s) for s in serverList)}```"
         )
 
     @commands.command(name="whitelistuser", description="Whitelists a user.",

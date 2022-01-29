@@ -56,7 +56,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                                   "̸͍͒́̂͗̏̔̇̓̊͂͘͠i̵̡̩͈̙̺͚̜̿̾͆̉̋̀̆̈́͛̕͠͝ă̵̛̬͓̤̠͈̝̮͑̀̔̌͊́̕̚͝͠͝t̵̟͛͛̆̀̑̓̇͆ḛ̵̢̺͖̺̒͝ḽ̵̡̢̡͈̮̤̲̖͍̺̦͖͘ͅỳ̵̖̰̟̦̑̈́̚.̸̛͔̠̬̱̭̭̞̟̦͂̆̿͋̌")
     async def oohasecretcommand(self, ctx):
         if await funcs.easterEggsPredicate(ctx):
-            commandsList = list(sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name))
+            commandsList = list(filter(lambda x: not funcs.commandIsOwnerOnly(x),
+                                       sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name)))
             m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
         else:
             m = await ctx.reply(f"`{self.client.command_prefix}eeenable`")

@@ -2,11 +2,16 @@ from asyncio import sleep
 from random import randint
 from time import time
 
-from discord import ButtonStyle
-from discord.ui import View, button
+from discord import ButtonStyle, ui
 
 from other_utils.funcs import minSecs, printError
 
+LEFT = "◀️"
+RIGHT = "▶️"
+ROTATE = "🔄"
+SOFT_DROP = "🔽"
+HARD_DROP = "⏬"
+QUIT = "🗑️"
 TETRIS_BLOCKS = [
     [
         [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
@@ -66,7 +71,7 @@ class Tetris:
         self.__level = 0
         self.__gameEnd = False
         self.__message = None
-        self.__nextBlock = TetrisBlock(self, randint(0, 6))
+        self.__nextBlock = TetrisBlock(self, randint(0, len(TETRIS_BLOCKS) - 1))
         self.__currentBlock = None
         self.__score = 0
         self.__tempPoints = 0
@@ -95,7 +100,7 @@ class Tetris:
     async def updateBoard(self):
         e = self.__message.embeds[0]
         e.description = self.__endScreen() if self.__gameEnd else self.gameBoard()
-        e.set_thumbnail(url=self.NEXT_BLOCK_IMAGES[7 if self.__gameEnd else self.__nextBlock.getBlockType()])
+        e.set_thumbnail(url=self.NEXT_BLOCK_IMAGES[-1 if self.__gameEnd else self.__nextBlock.getBlockType()])
         e.clear_fields()
         e.add_field(name="Lines", value="`{:,}`".format(self.__lines))
         e.add_field(name="Level", value="`{:,}`".format(self.__level))
@@ -160,7 +165,7 @@ class Tetris:
             if self.isOccupied(self.__currentBlock):
                 self.__gameEnd = True
         self.placeBlock(self.__currentBlock)
-        self.__nextBlock = TetrisBlock(self, randint(0, 6))
+        self.__nextBlock = TetrisBlock(self, randint(0, len(TETRIS_BLOCKS) - 1))
 
     def placeBlock(self, blockObject):
         blockObject2 = TetrisBlock(
@@ -347,8 +352,8 @@ class TetrisBlock:
         self.__game.addTempPoints()
 
 
-class TetrisButtons(View):
-    def __init__(self, ctx, client, game):
+class TetrisButtons(ui.View):
+    def __init__(self, ctx, client, game: Tetris):
         super().__init__()
         self.__ctx = ctx
         self.__client = client
@@ -361,32 +366,32 @@ class TetrisButtons(View):
     async def on_error(self, error, item, interaction):
         printError(self.__ctx, error)
 
-    @button(emoji="◀️", style=ButtonStyle.primary)
+    @ui.button(emoji=LEFT, style=ButtonStyle.primary)
     async def left(self, button, interaction):
         self.__game.getCurrentBlock().move(-1)
         await self.__game.updateBoard()
 
-    @button(emoji="▶️", style=ButtonStyle.primary)
+    @ui.button(emoji=RIGHT, style=ButtonStyle.primary)
     async def right(self, button, interaction):
         self.__game.getCurrentBlock().move(1)
         await self.__game.updateBoard()
 
-    @button(emoji="🔄", style=ButtonStyle.primary)
+    @ui.button(emoji=ROTATE, style=ButtonStyle.primary)
     async def rotate(self, button, interaction):
         self.__game.getCurrentBlock().rotate()
         await self.__game.updateBoard()
 
-    @button(emoji="🔽", style=ButtonStyle.primary)
+    @ui.button(emoji=SOFT_DROP, style=ButtonStyle.primary)
     async def softdrop(self, button, interaction):
         self.__game.getCurrentBlock().fall(manual=True)
         await self.__game.updateBoard()
 
-    @button(emoji="⏬", style=ButtonStyle.primary)
+    @ui.button(emoji=HARD_DROP, style=ButtonStyle.primary)
     async def harddrop(self, button, interaction):
         self.__game.getCurrentBlock().drop()
         await self.__game.updateBoard()
 
-    @button(emoji="🗑️", style=ButtonStyle.danger)
+    @ui.button(emoji=QUIT, style=ButtonStyle.danger)
     async def quit(self, button, interaction):
         self.__game.gameEnd()
         await self.__ctx.send(f"`{self.__ctx.author.name} has left Tetris.`")
