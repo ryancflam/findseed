@@ -44,6 +44,7 @@ class PageButtons(View):
     async def next(self, button, interaction):
         if self.page < self.allpages:
             self.page += 1
+            await self.edit()
 
     @button(emoji="❓", style=ButtonStyle.secondary)
     async def gotopage(self, button, interaction):
