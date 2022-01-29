@@ -577,6 +577,19 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True)
+    async def zerocycle(self, ctx):
+        await ctx.reply("https://zerocycle.repl.co/")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="fsg", description="Shows a list of FSG seed generators.", hidden=True, aliases=["fsgseed", "fsgseeds"])
+    async def fsg(self, ctx):
+        await ctx.reply("Use one of the allowed generators: " +
+                        "<https://docs.google.com/spreadsheets/d/1ilu72GJ-vJZq2LFU68rycGMeTbWPjHJnO8PGfp4QjA8/edit#gid=0>\n\n" +
+                        "If you would like to use the generator locally for shorter wait times, follow this: " +
+                        "<https://youtu.be/Gl7zOn2lLo4>\n\nPlease play the seed within 30 seconds after it has been generated.")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
                                                         "t attempts to locate the stronghold using both " + \
                                                         'the "8, 8" rule and triangulation. To use this ' + \

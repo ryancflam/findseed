@@ -610,7 +610,7 @@ async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
                         raise Exception
                     break
                 except:
-                    mlist.append(await ctx.send(embed=errorEmbed(None, "Invalid page.")))
+                    mlist.append(await ctx.send(embed=errorEmbed(None, "Invalid page, please try again.")))
             except TimeoutError:
                 page = 1
                 break

@@ -32,7 +32,7 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
                     description=f"Removed {success} message{'' if success == 1 else 's'} " + \
                                 f"with {fails} fail{'' if fails == 1 else 's'}."
                 )
-        await ctx.reply(embed=e)
+        await ctx.send(embed=e)
 
     @commands.command(name="kick", description="Kicks a user from your server.", usage="<@mention> [reason]")
     @commands.bot_has_permissions(kick_members=True)

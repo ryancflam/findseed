@@ -35,7 +35,8 @@ class BotInstance(Bot):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
             intents=Intents.all(),
-            case_insensitive=True
+            case_insensitive=True,
+            strip_after_prefix=True
         )
         self.remove_command("help")
         self.__eventLoop = loop
@@ -66,7 +67,7 @@ class BotInstance(Bot):
         for cog in listdir(f"{PATH}/cogs"):
             if cog.endswith(".py"):
                 funcs.loadCog(self, cog)
-        super().run(self.__token, bot=True, reconnect=True)
+        super().run(self.__token, reconnect=True)
 
     async def kill(self):
         print("Stopping bot...")
@@ -127,8 +128,6 @@ class BotInstance(Bot):
         if ctx.valid and not self.is_ready() and funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
         if self.is_ready() and funcs.userNotBlacklisted(self, message):
-            while message.content.startswith(f"{self.command_prefix} "):
-                message.content = message.content.replace(f"{self.command_prefix} ", f"{self.command_prefix}", 1)
             if ctx.valid:
                 await message.channel.trigger_typing()
             await self.process_commands(message)

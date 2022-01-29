@@ -50,8 +50,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
         appinfo = await self.client.application_info()
         e = Embed(description=appinfo.description)
         dt = self.client.user.created_at
-        e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
-        e.set_thumbnail(url=self.client.user.avatar_url)
+        e.set_author(name=self.client.user.name, icon_url=self.client.user.avatar)
+        e.set_thumbnail(url=self.client.user.avatar)
         e.add_field(name="Bot Owner", value=f"`{appinfo.owner}`")
         e.add_field(name="Python Version", value=f"`{version.split(' ')[0]}`")
         e.add_field(name="Library Version", value=f"`Pycord {__version__}`")
@@ -94,7 +94,10 @@ class General(commands.Cog, name="General", description="Standard commands relat
             serverID = serverID.replace(" ", "") or str(ctx.guild.id)
             g = self.client.get_guild(int(serverID))
             e = Embed(description=g.description or "")
-            e.set_author(name=g.name, icon_url=g.icon_url)
+            if g.icon:
+                e.set_author(name=g.name, icon_url=g.icon.url)
+            else:
+                e.set_author(name=g.name)
             dt = g.created_at
             members = g.members
             e.add_field(name="Owner", value=f"`{str(g.owner)}`")
@@ -124,9 +127,10 @@ class General(commands.Cog, name="General", description="Standard commands relat
             if emojis:
                 emojistxt1, _ = "".join(str(i) for i in emojis)[:800].rsplit(">", 1)
                 e.add_field(name="Emojis ({:,})".format(len(emojis)), value=emojistxt1 + ">")
-            if g.banner_url:
-                e.set_image(url=g.banner_url)
-        except:
+            if g.banner:
+                e.set_image(url=g.banner.url)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown server.")
         await ctx.reply(embed=e)
 
@@ -146,8 +150,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
             u = self.client.get_user(int(userID))
             dt = u.created_at
             e = Embed(description=u.mention if u != self.client.user else "That's me!")
-            e.set_author(name=str(u), icon_url=u.avatar_url)
-            e.set_thumbnail(url=u.avatar_url)
+            e.set_author(name=str(u), icon_url=u.avatar)
+            e.set_thumbnail(url=u.avatar)
             e.add_field(name="Is Bot", value=f"`{str(u.bot)}`")
             e.add_field(name="User ID", value=f"`{u.id}`")
             e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
@@ -164,7 +168,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
                                 value="".join(f"{i.mention}, " for i in member.roles)[:800].rsplit(", ", 1)[0])
                 except:
                     pass
-        except:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown user.")
         await ctx.reply(embed=e)
 
@@ -317,9 +322,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 userID = userID[3:-1]
             userID = userID.replace(" ", "")
         try:
-            user = self.client.get_user(int(userID))
-            ext = "gif" if user.is_avatar_animated() else "png"
-            await funcs.sendImage(ctx, str(user.avatar_url_as(format=ext if ext != "gif" else None)), name=f"avatar.{ext}")
+            avatar = self.client.get_user(int(userID)).avatar
+            await funcs.sendImage(ctx, avatar.url, name=f"avatar.{'gif' if avatar.is_animated() else 'png'}")
         except:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
