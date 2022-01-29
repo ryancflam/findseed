@@ -49,7 +49,6 @@ class PageButtons(View):
     @button(emoji="❓", style=ButtonStyle.secondary)
     async def gotopage(self, button, interaction):
         if self.__allpages > 1:
-            await self.__edit()
             mlist = [
                 await self.__ctx.send(
                     f"{self.__ctx.author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__allpages)})"

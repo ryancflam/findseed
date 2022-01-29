@@ -665,8 +665,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="lyrics", description="Gets the lyrics of a song.",
-                      aliases=["lyric", "song"], usage="<song keywords>")
+    @commands.command(name="lyrics", description="Gets the lyrics of a song.", aliases=["lyric", "song"], usage="<song keywords>")
     async def lyrics(self, ctx, *, keywords):
         try:
             await ctx.send("Getting lyrics. Please wait...")
@@ -698,7 +697,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Server error or song doesn't have lyrics."))
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrgen", description="Generates a QR code.", aliases=["qrg", "genqr", "qr", "qrc"],
                       usage='<input> ["QRcolour=black"]\n\nNote: Add "QRcolour=black" at the end to make the QR code black.')
     async def qrgen(self, ctx, *, text):
