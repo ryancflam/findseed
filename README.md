@@ -14,9 +14,9 @@ A *(mostly)* Minecraft-centred bot, [!findseed](https://discord.com/oauth2/autho
 
 Miscellaneous features also include **Conversion Tools**, **Animal Crossing**, along with various, less significant commands, which can be accessed via `!miscellaneous`.
 
-**Unprompted Messages** that trigger funny bot responses (which are disabled by default and can be enabled with `!umenable`) include "hmmmm" and "I'm !findseed" (`!unpromptedmessages`).
+**Unprompted Messages** that trigger funny bot responses (disabled by default; enable with `!umenable`) include "hmmmm" and "I'm !findseed"—see `!unpromptedmessages`.
 
-The bot also attempts to remove any scam links which can be seen in `!scamurls` (enabled by default, disable with `!spdisable`).
+The bot also attempts to remove any scam links which can be seen in `!scamurls` (enabled by default; disable with `!spdisable`).
 
 **Developer Team**:
 - ryancflam
