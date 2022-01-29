@@ -9,66 +9,66 @@ from other_utils.funcs import errorEmbed, printError
 class PageButtons(View):
     def __init__(self, ctx, client, msg, embeds: list, timeout: int=300):
         super().__init__(timeout=timeout)
-        self.ctx = ctx
-        self.client = client
-        self.msg = msg
-        self.embeds = embeds
-        self.page = 1
-        self.allpages = len(self.embeds)
+        self.__ctx = ctx
+        self.__client = client
+        self.__msg = msg
+        self.__embeds = embeds
+        self.__page = 1
+        self.__allpages = len(self.__embeds)
+
+    async def __edit(self):
+        await self.__msg.edit(embed=self.__embeds[self.__page - 1])
 
     async def interaction_check(self, interaction):
-        return interaction.user == self.ctx.author
+        return interaction.user == self.__ctx.author
 
     async def on_timeout(self):
-        await self.msg.edit(view=None)
+        await self.__msg.edit(view=None)
 
     async def on_error(self, error, item, interaction):
-        printError(self.ctx, error)
-
-    async def edit(self):
-        await self.msg.edit(embed=self.embeds[self.page - 1])
+        printError(self.__ctx, error)
 
     @button(emoji="🗑️", style=ButtonStyle.danger)
     async def delete(self, button, interaction):
-        await self.msg.edit(content="Deleting this message...", embed=None)
+        await self.__msg.edit(content="Deleting this message...", embed=None)
         await sleep(1)
-        await self.msg.delete()
+        await self.__msg.delete()
 
     @button(emoji="⏮", style=ButtonStyle.primary)
     async def prev(self, button, interaction):
-        if self.page > 1:
-            self.page -= 1
-            await self.edit()
+        if self.__page > 1:
+            self.__page -= 1
+            await self.__edit()
 
     @button(emoji="⏭", style=ButtonStyle.primary)
     async def next(self, button, interaction):
-        if self.page < self.allpages:
-            self.page += 1
-            await self.edit()
+        if self.__page < self.__allpages:
+            self.__page += 1
+            await self.__edit()
 
     @button(emoji="❓", style=ButtonStyle.secondary)
     async def gotopage(self, button, interaction):
-        if self.allpages > 1:
-            await self.edit()
+        if self.__allpages > 1:
+            await self.__edit()
             mlist = [
-                await self.ctx.send(
-                    f"{self.ctx.author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.allpages)})"
+                await self.__ctx.send(
+                    f"{self.__ctx.author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__allpages)})"
                 )
             ]
             while True:
                 try:
-                    userm = await self.client.wait_for(
-                        "message", check=lambda umsg: umsg.author == self.ctx.author
-                                                      and umsg.channel == self.ctx.channel, timeout=30
+                    userm = await self.__client.wait_for(
+                        "message", check=lambda umsg: umsg.author == self.__ctx.author
+                                                      and umsg.channel == self.__ctx.channel, timeout=30
                     )
                     mlist.append(userm)
                     try:
                         page = int(userm.content.replace(",", "").replace(" ", ""))
-                        if not 1 <= page <= self.allpages:
+                        if not 1 <= page <= self.__allpages:
                             raise Exception
                         break
                     except:
-                        mlist.append(await self.ctx.send(embed=errorEmbed(None, "Invalid page, please try again.")))
+                        mlist.append(await self.__ctx.send(embed=errorEmbed(None, "Invalid page, please try again.")))
                 except TimeoutError:
                     page = 1
                     break
@@ -77,5 +77,5 @@ class PageButtons(View):
                     await m.delete()
                 except:
                     pass
-            self.page = page
-            await self.edit()
+            self.__page = page
+            await self.__edit()

@@ -142,11 +142,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
             if not userID:
                 userID = str(ctx.author.id)
             else:
-                if userID.startswith("<@!") and userID.endswith(">"):
-                    userID = userID[3:-1]
-                elif userID.startswith("<@") and userID.endswith(">"):
-                    userID = userID[2:-1]
-                userID = userID.replace(" ", "")
+                userID = funcs.removeMention(userID).replace(" ", "")
             u = self.client.get_user(int(userID))
             dt = u.created_at
             e = Embed(description=u.mention if u != self.client.user else "That's me!")
@@ -318,13 +314,12 @@ class General(commands.Cog, name="General", description="Standard commands relat
         if not userID:
             userID = str(ctx.author.id)
         else:
-            if userID.startswith("<@!") and userID.endswith(">"):
-                userID = userID[3:-1]
-            userID = userID.replace(" ", "")
+            userID = funcs.removeMention(userID).replace(" ", "")
         try:
             avatar = self.client.get_user(int(userID)).avatar
             await funcs.sendImage(ctx, avatar.url, name=f"avatar.{'gif' if avatar.is_animated() else 'png'}")
-        except:
+        except Exception as ex:
+            funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
 

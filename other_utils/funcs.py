@@ -182,6 +182,15 @@ def errorEmbed(error, message):
     return Embed(title=f":no_entry: {error or 'Error'}", colour=0xe74c3c, description=message)
 
 
+def removeMention(userID):
+    userID = str(userID)
+    if userID.startswith("<@!") and userID.endswith(">"):
+        userID = userID[3:-1]
+    elif userID.startswith("<@") and userID.endswith(">"):
+        userID = userID[2:-1]
+    return userID
+
+
 def formatting(text, limit: int=2048):
     output = "```\n" + text[:limit - 7] + "```"
     if output == "``````":

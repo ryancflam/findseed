@@ -350,48 +350,48 @@ class TetrisBlock:
 class TetrisButtons(View):
     def __init__(self, ctx, client, game):
         super().__init__()
-        self.ctx = ctx
-        self.client = client
-        self.game = game
-        self.client.loop.create_task(self.whileNotGameEnd())
-
-    async def whileNotGameEnd(self):
-        while not self.game.getGameEnd():
-            await sleep(1)
-        await self.game.message.edit(view=None)
+        self.__ctx = ctx
+        self.__client = client
+        self.__game = game
+        self.__client.loop.create_task(self.__whileNotGameEnd())
 
     async def interaction_check(self, interaction):
-        return interaction.user == self.ctx.author
+        return interaction.user == self.__ctx.author
 
     async def on_error(self, error, item, interaction):
-        printError(self.ctx, error)
+        printError(self.__ctx, error)
 
     @button(emoji="◀️", style=ButtonStyle.primary)
     async def left(self, button, interaction):
-        self.game.getCurrentBlock().move(-1)
-        await self.game.updateBoard()
+        self.__game.getCurrentBlock().move(-1)
+        await self.__game.updateBoard()
 
     @button(emoji="▶️", style=ButtonStyle.primary)
     async def right(self, button, interaction):
-        self.game.getCurrentBlock().move(1)
-        await self.game.updateBoard()
+        self.__game.getCurrentBlock().move(1)
+        await self.__game.updateBoard()
 
     @button(emoji="🔄", style=ButtonStyle.primary)
     async def rotate(self, button, interaction):
-        self.game.getCurrentBlock().rotate()
-        await self.game.updateBoard()
+        self.__game.getCurrentBlock().rotate()
+        await self.__game.updateBoard()
 
     @button(emoji="🔽", style=ButtonStyle.primary)
     async def softdrop(self, button, interaction):
-        self.game.getCurrentBlock().fall(manual=True)
-        await self.game.updateBoard()
+        self.__game.getCurrentBlock().fall(manual=True)
+        await self.__game.updateBoard()
 
     @button(emoji="⏬", style=ButtonStyle.primary)
     async def harddrop(self, button, interaction):
-        self.game.getCurrentBlock().drop()
-        await self.game.updateBoard()
+        self.__game.getCurrentBlock().drop()
+        await self.__game.updateBoard()
 
     @button(emoji="🗑️", style=ButtonStyle.danger)
     async def quit(self, button, interaction):
-        self.game.gameEnd()
-        await self.ctx.send(f"`{self.ctx.author.name} has left Tetris.`")
+        self.__game.gameEnd()
+        await self.__ctx.send(f"`{self.__ctx.author.name} has left Tetris.`")
+
+    async def __whileNotGameEnd(self):
+        while not self.__game.getGameEnd():
+            await sleep(1)
+        await self.__game.message.edit(view=None)
