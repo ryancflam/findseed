@@ -543,9 +543,70 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="srcqueue", aliases=["queue", "speedrunqueue", "speedruncom", "src"], hidden=True,
-                      description="Shows the run queue for speedrun.com games.", usage="[game abbreviation]")
+    @commands.cooldown(1, 45, commands.BucketType.user)
+    @commands.command(name="srctop10", aliases=["top10", "src", "speedruncom", "leaderboard", "lb", "sr"], hidden=True,
+                      description="Shows the top 10 leaderboard for speedrun.com games.", usage="[speedrun.com game abbreviation]")
+    async def srctop10(self, ctx, *, game: str="mc"):
+        await ctx.send("Getting speedrun.com data. Please wait...")
+        try:
+            gameres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/games/{game.casefold().replace(' ', '')}")
+            game = gameres.json()["data"]
+            gameName = game["names"]["international"]
+            categories = None
+            for i in game["links"]:
+                if i["rel"] == "categories":
+                    categories = i["uri"]
+                    break
+            if not categories:
+                raise Exception
+            catres = await funcs.getRequest(categories)
+            cat = catres.json()["data"]
+            lb = None
+            catID, catName, catURL = None, None, None
+            for i in cat:
+                catName = i["name"]
+                catURL = i["weblink"]
+                for j in i["links"]:
+                    if j["rel"] == "leaderboard":
+                        lb = j["uri"]
+                        break
+                if lb:
+                    break
+            if not lb:
+                raise Exception
+            output = f"{catURL}\n\n"
+            catres = await funcs.getRequest(lb)
+            runs = catres.json()["data"]["runs"][:10]
+            count = 0
+            for i in runs:
+                run = i["run"]
+                count += 1
+                d, h, m, s, ms = funcs.timeDifferenceStr(run["times"]["primary_t"], 0, noStr=True)
+                names = ""
+                for p in run["players"]:
+                    try:
+                        names += p["name"]
+                    except:
+                        pres = await funcs.getRequest(p["uri"])
+                        player = pres.json()["data"]
+                        names += player["names"]["international"]
+                    names += ", "
+                names = names.replace("_", "\_")
+                output += f"{count}. `{funcs.timeStr(d, h, m, s, ms)}` by [{names[:-2]}]({run['weblink']})\n"
+            if not count:
+                output += "No runs found."
+            top = f"Top {count} - " if count else ""
+            e = Embed(description=output)
+            e.set_author(name=f"{top}{gameName} - {catName}",
+                         icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
+            await ctx.reply(embed=e)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, "Server error or unknown game."))
+
+    @commands.cooldown(1, 45, commands.BucketType.user)
+    @commands.command(name="srcqueue", aliases=["queue", "speedrunqueue", "srqueue"], hidden=True,
+                      description="Shows the run queue for speedrun.com games.", usage="[speedrun.com game abbreviation]")
     async def srcqueue(self, ctx, *, game: str="mc"):
         await ctx.send("Getting speedrun.com data. Please wait...")
         try:
@@ -612,7 +673,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 await ctx.reply(embed=e)
         except Exception as ex:
             funcs.printError(ctx, ex)
-            await ctx.reply(embed=funcs.errorEmbed(None, "Server error."))
+            await ctx.reply(embed=funcs.errorEmbed(None, "Server error or unknown game."))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",

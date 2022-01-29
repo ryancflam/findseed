@@ -116,10 +116,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 foundTime = f"{timestr_0} days"
             else:
                 foundTime = timestr
-        e = Embed(
-            title=f"{self.client.command_prefix}findseed",
-            description=f"Requested by: {ctx.message.author.mention}"
-        )
+        e = Embed(title=f"{self.client.command_prefix}findseed",
+                  description=f"Requested by: {ctx.message.author.mention}")
         e.add_field(name="Your Eyes", value=f"`{eyes}`")
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
         e.add_field(name="Most Eyes Found", inline=False,
@@ -177,10 +175,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                      "or will you get one-thirded? Test your luck using this command!",
                       aliases=["cleric", "stupidvillager"], hidden=True)
     async def findcleric(self, ctx):
-        e = Embed(
-            title=f"{self.client.command_prefix}findcleric",
-            description=f"Requested by: {ctx.message.author.mention}"
-        )
+        e = Embed(title=f"{self.client.command_prefix}findcleric",
+                  description=f"Requested by: {ctx.message.author.mention}")
         badluckonein = 3
         goodluck = not funcs.oneIn(badluckonein)
         e.add_field(name="Result", value=f"`{'Pearl' if goodluck else 'Bottle'} Trade{'!' if goodluck else '...'}`")
@@ -194,10 +190,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.command(name="findgravel", description="Will you get flint from gravel? Test your luck using this command!",
                       aliases=["gravel", "flint", "findflint"], hidden=True)
     async def findgravel(self, ctx):
-        e = Embed(
-            title=f"{self.client.command_prefix}findgravel",
-            description=f"Requested by: {ctx.message.author.mention}"
-        )
+        e = Embed(title=f"{self.client.command_prefix}findgravel",
+                  description=f"Requested by: {ctx.message.author.mention}")
         goodluckonein = 10
         badluck = not funcs.oneIn(goodluckonein)
         e.add_field(name="Result", value=f"`{'Gravel' if badluck else 'Flint'}{'...' if badluck else '!'}`")
@@ -212,10 +206,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                     "but does it perch instantly? Test your luck using this command!",
                       aliases=["dragon", "fp", "finddragon"], hidden=True)
     async def findperch(self, ctx):
-        e = Embed(
-            title=f"{self.client.command_prefix}findperch",
-            description=f"Requested by: {ctx.message.author.mention}"
-        )
+        e = Embed(title=f"{self.client.command_prefix}findperch",
+                  description=f"Requested by: {ctx.message.author.mention}")
         goodluckonein = 13
         badluck = not funcs.oneIn(goodluckonein)
         e.add_field(name="Result", value=f"`{'No Perch' if badluck else 'Perch'}{'...' if badluck else '!'}`")
@@ -231,10 +223,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                     " Test your luck using this command!",
                       aliases=["skull", "witherskull", "findwitherskull", "findwither"], hidden=True)
     async def findskull(self, ctx):
-        e = Embed(
-            title=f"{self.client.command_prefix}findskull",
-            description=f"Requested by: {ctx.message.author.mention}"
-        )
+        e = Embed(title=f"{self.client.command_prefix}findskull",
+                  description=f"Requested by: {ctx.message.author.mention}")
         goodluckonein = 40
         badluck = not funcs.oneIn(goodluckonein)
         e.add_field(name="Result", value=f"`{'No Skull' if badluck else 'Skull'}{'...' if badluck else '!'}`")
@@ -249,10 +239,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     @commands.command(name="findblaze", description="You kill a blaze...but does it drop a rod? Test your luck using this command!",
                       aliases=["blaze", "rod", "blazerod", "findrod", "findblazerod"], hidden=True)
     async def findblaze(self, ctx):
-        e = Embed(
-            title=f"{self.client.command_prefix}findblaze",
-            description=f"Requested by: {ctx.message.author.mention}"
-        )
+        e = Embed(title=f"{self.client.command_prefix}findblaze",
+                  description=f"Requested by: {ctx.message.author.mention}")
         badluckonein = 2
         goodluck = not funcs.oneIn(badluckonein)
         e.add_field(name="Result", value=f"`{'Rod' if goodluck else 'No Rod'} Drop{'!' if goodluck else '...'}`")
@@ -374,8 +362,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                       " in a real speedrun.",
                       aliases=["bt", "blind", "blindtrav"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
-        await ctx.send("**Note:** This command, along with other " + \
-                       "speedrunning calculators, may not be used in a real speedrun.")
+        await ctx.send("**Note:** This command, along with other speedrunning calculators, MAY not be used in a real speedrun.")
         try:
             x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsDist(x, z)
@@ -407,8 +394,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                          " a real speedrun.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
-        await ctx.send("**Note:** This command, along with other " + \
-                       "speedrunning calculators, may not be used in a real speedrun.")
+        await ctx.send("**Note:** This command, along with other speedrunning calculators, MAY not be used in a real speedrun.")
         try:
             x, z, f = self.f3cProcessing(f3c)
             f = (360 + f if f < 0 else f) - 180
@@ -440,8 +426,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                        "real speedrun.",
                       aliases=["double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
-        await ctx.send("**Note:** This command, along with other " + \
-                       "speedrunning calculators, may not be used in a real speedrun.")
+        await ctx.send("**Note:** This command, along with other speedrunning calculators, MAY not be used in a real speedrun.")
         try:
             x, z, _ = self.f3cProcessing(f3c)
             o = 520
@@ -472,8 +457,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                                                     " be used in a real speedrun.",
                       aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>", hidden=True)
     async def safeblind(self, ctx, *, f3c):
-        await ctx.send("**Note:** This command, along with other " + \
-                       "speedrunning calculators, may not be used in a real speedrun.")
+        await ctx.send("**Note:** This command, along with other speedrunning calculators, MAY not be used in a real speedrun.")
         try:
             x, z, _ = self.f3cProcessing(f3c)
             dist = self.coordsDist(x, z)
@@ -609,8 +593,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                       aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
                       usage="<F3+C data>")
     async def triangulation(self, ctx, *, f3c):
-        await ctx.send("**Note:** This command, along with other " + \
-                       "speedrunning calculators, may not be used in a real speedrun.")
+        await ctx.send("**Note:** This command, along with other speedrunning calculators, MAY not be used in a real speedrun.")
         try:
             x, z, f = self.f3cProcessing(f3c)
             x0, z0, f0 = x, z, f
@@ -632,10 +615,9 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             xp, zp = l[0]["k"], l[0]["r"]
             blocks = round(self.coordsDifference((x0, z0), (xp, zp)))
             await ctx.reply(
-                f"The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
-                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\nMethod: 8, 8\n\nPaste your F3+" + \
-                "C clipboard here once you are ready. The program will stop after 20 minutes of inactivity. " + \
-                "Type `!cancel` to cancel."
+                f"The stronghold could be at: **{round(xp)}, {round(zp)}** ({'{:,}'.format(blocks)} block" +
+                f"{'' if blocks == 1 else 's'} away)\n\nMethod: 8, 8\n\nPaste your F3+C clipboard here once " +
+                "you are ready. The program will stop after 20 minutes of inactivity. Type `!cancel` to cancel."
             )
         except Exception as ex:
             return await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
@@ -666,10 +648,9 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 except:
                     continue
                 await msg.reply(
-                    f"The stronghold could be at: **{round(xp)}, {round(zp)}** " + \
-                    f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\nMethod: Triangulation\n\n" + \
-                    "Paste your F3+C clipboard here once you are ready. The program will stop after 20 minutes of " + \
-                    "inactivity. Type `!cancel` to cancel."
+                    f"The stronghold could be at: **{round(xp)}, {round(zp)}** ({'{:,}'.format(blocks)} block" +
+                    f"{'' if blocks == 1 else 's'} away)\n\nMethod: Triangulation\n\nPaste your F3+C clipboard here once " +
+                    "you are ready. The program will stop after 20 minutes of inactivity. Type `!cancel` to cancel."
                 )
                 x0, z0, f0 = x1, z1, f1
             await ctx.send("You are close to the stronghold, stopping triangulation program.")
@@ -776,10 +757,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     async def mcserver(self, ctx, *, ipaddress: str=""):
         ipaddress = ipaddress.casefold().replace(" ", "") or "mc.hypixel.net"
         try:
-            res = await funcs.getRequest(
-                f"https://api.mcsrvstat.us/2/{ipaddress}",
-                headers={"accept": "application/json"}
-            )
+            res = await funcs.getRequest(f"https://api.mcsrvstat.us/2/{ipaddress}", headers={"accept": "application/json"})
             data = res.json()
             status = data["online"]
             e = Embed(title="Minecraft Server Status", colour=Colour.green() if status else Colour.red())
@@ -838,8 +816,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                     e.add_field(name=f"Stronghold {str(i + 1)}", value=f"`{res[i].split(': ')[1]}`")
             except KeyError:
                 e = funcs.errorEmbed(
-                        "Invalid option!",
-                        "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.divinetravel.keys()))
+                    "Invalid option!",
+                    "Valid options:\n\n{}".format(", ".join(f"`{opt}`" for opt in self.divinetravel.keys()))
                 )
             await ctx.reply(embed=e)
         else:
