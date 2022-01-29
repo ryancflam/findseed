@@ -16,7 +16,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     def __init__(self, botInstance):
         self.client = botInstance
 
-    @commands.command(name="killbot", description="Kills the bot. This command is very dangerous.")
+    @commands.command(name="killbot", description="Kills the bot. Proceed with caution.")
     @commands.is_owner()
     async def _killbot(self, ctx):
         msg = ctx.message
@@ -35,7 +35,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="restart", description="Restarts the host server.", aliases=["res", "reboot"])
+    @commands.command(name="restart", description="Restarts the host server. Proceed with caution", aliases=["res", "reboot"])
     @commands.is_owner()
     async def _restart(self, ctx):
         msg = ctx.message

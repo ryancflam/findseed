@@ -548,10 +548,10 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bedtiming", description="Shows the bed timing for one-cycling.",
-                      aliases=["bedtimings", "onecycle"])
+    @commands.command(name="bedtiming", description="Shows the bed timing for end fights.",
+                      aliases=["bedtimings", "onecycle", "timingbed", "bedtime"])
     async def bedtiming(self, ctx):
-        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/934727945589760020/unknown.png")
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/937014270187675749/unknown.png")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="eray", aliases=["eraying", "microlensing"],
