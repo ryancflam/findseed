@@ -265,7 +265,9 @@ class General(commands.Cog, name="General", description="Standard commands relat
         count = 0
         while count < 20:
             messages.append(
-                await ctx.send("Enter poll choice, `!undo` to delete previous choice, or `!done` to publish poll.")
+                await ctx.send(
+                    "Enter poll choice, `!undo` to delete previous choice, `!done` to publish poll, or `!cancel` to cancel."
+                )
             )
             try:
                 entry = await self.client.wait_for(
@@ -286,6 +288,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     messages.append(
                         await ctx.send(embed=funcs.errorEmbed(None, "No choices."))
                     )
+            elif entry.content.casefold() == "!cancel":
+                return await ctx.reply("Cancelling poll.")
             else:
                 answers.append((chr(0x1f1e6 + count), entry.content))
                 count += 1
