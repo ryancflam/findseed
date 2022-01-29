@@ -1,8 +1,6 @@
 # !findseed Discord Bot
 
-### == [Bot invite link](https://discord.com/oauth2/authorize?client_id=771403225840222238&permissions=473196598&scope=bot) ==
-
-A *(mostly)* Minecraft-centred bot, !findseed provides not only Minecraft speedrunning tools such as `!blindtravel`, `!educatedtravel`, and `!triangulation`, but also a lot of random commands and utility features like `!flipcoin`, `!randomnumber`, `!flightinfo`, `!covid`, `!weather`, etc.
+A *(mostly)* Minecraft-centred bot, [!findseed](https://discord.com/oauth2/authorize?client_id=771403225840222238&permissions=473196598&scope=bot) provides not only Minecraft speedrunning tools such as `!blindtravel`, `!educatedtravel`, and `!triangulation`, but also a lot of random commands and utility features like `!flipcoin`, `!randomnumber`, `!flightinfo`, `!covid`, `!weather`, etc.
 
 **Main Command Categories** (excluding miscellaneous commands):
 
