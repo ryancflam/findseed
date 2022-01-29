@@ -5,7 +5,7 @@ from time import time
 from discord import ButtonStyle
 from discord.ui import View, button
 
-from other_utils.funcs import minSecs, printError, removeReactionsFromCache
+from other_utils.funcs import minSecs, printError
 
 TETRIS_BLOCKS = [
     [
@@ -101,8 +101,6 @@ class Tetris:
         e.add_field(name="Level", value="`{:,}`".format(self.__level))
         e.add_field(name="Score", value="`{:,}`".format(self.__score))
         await self.__message.edit(embed=e)
-        if self.__gameEnd:
-            await removeReactionsFromCache(self.__client, self.__message)
 
     def __endScreen(self):
         endScreen = "```"

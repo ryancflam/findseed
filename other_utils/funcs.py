@@ -8,7 +8,7 @@ from random import randint
 from re import split
 
 from dateutil import parser
-from discord import Embed, File, utils
+from discord import Embed, File
 from httpx import AsyncClient, get
 from plotly import graph_objects as go
 
@@ -550,19 +550,6 @@ def deleteTempFile(file: str):
 async def readTxtAttachment(message):
     attachment = await message.attachments[0].read()
     return attachment.decode("utf-8")
-
-
-async def reactionRemove(reaction, user):
-    try:
-        await reaction.remove(user)
-    except:
-        return
-
-
-async def removeReactionsFromCache(client, msg):
-    for reaction in list(utils.get(client.cached_messages, id=msg.id).reactions):
-        async for user in reaction.users():
-            await reactionRemove(reaction, user)
 
 
 async def easterEggsPredicate(ctx):
