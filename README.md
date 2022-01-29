@@ -1,4 +1,4 @@
-# !findseed Discord Bot
+# !findseed
 
 A *(mostly)* Minecraft-centred bot, [!findseed](https://discord.com/oauth2/authorize?client_id=771403225840222238&permissions=473196598&scope=bot) provides not only Minecraft speedrunning tools such as `!blindtravel`, `!educatedtravel`, and `!triangulation`, but also a lot of random commands and utility features like `!flipcoin`, `!randomnumber`, `!flightinfo`, `!covid`, `!weather`, etc.
 
@@ -12,7 +12,11 @@ A *(mostly)* Minecraft-centred bot, [!findseed](https://discord.com/oauth2/autho
 - **Random Stuff** (`!8ball`, `!randomchoice`, `!trumpthinks`...)
 - **Utility** (`!article`, `!wiki`, `!date`...)
 
-Miscellaneous features also include **Conversion Tools**, **Animal Crossing**, along with various, less significant commands, which can be accessed via `!miscellaneous`. **Unprompted Messages** that trigger funny bot responses (which are disabled by default) include "hmmmmm" and "I'm !findseed" (`!unpromptedmessages`). The bot also attempts to remove any scam links which can be seen in `!scamurls`.
+Miscellaneous features also include **Conversion Tools**, **Animal Crossing**, along with various, less significant commands, which can be accessed via `!miscellaneous`.
+
+**Unprompted Messages** that trigger funny bot responses (which are disabled by default and can be enabled with `!umenable`) include "hmmmm" and "I'm !findseed" (`!unpromptedmessages`).
+
+The bot also attempts to remove any scam links which can be seen in `!scamurls` (enabled by default, disable with `!spdisable`).
 
 **Developer Team**:
 - ryancflam
