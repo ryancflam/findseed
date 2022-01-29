@@ -23,6 +23,7 @@ from qrcode import QRCode
 
 import config
 from other_utils import funcs
+from other_utils.page_buttons import PageButtons
 
 DEFAULT_REPO = "ryancflam/findseed"
 HCF_LIMIT = 1000000
@@ -574,52 +575,94 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         if cat not in categories:
                             catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
                             categories[cat] = catres.json()["data"]["name"]
-            output = ""
-            outputlist = []
-            count, total = 0, 0
-            for i in queue:
-                total += 1
-                d, h, m, s, ms = funcs.timeDifferenceStr(i["times"]["primary_t"], 0, noStr=True)
-                names = ""
-                for player in i["players"]["data"]:
-                    try:
-                        names += player["names"]["international"]
-                    except:
-                        names += player["name"]
-                    names += ", "
-                names = names.replace("_", "\_")
-                output += f"{'{:,}'.format(total)}. [{categories[i['category']]}]({i['weblink']}) " + \
-                          f"in `{funcs.timeStr(d, h, m, s, ms)}` by {names[:-2]}\n"
-                count += 1
-                if count == 15:
-                    outputlist.append(output[:2048])
-                    output = ""
-                    count = 0
-            if output:
-                outputlist.append(output[:2048])
-            pages = len(outputlist)
-            try:
-                firstpage = outputlist[0]
-            except IndexError:
-                firstpage = "No runs found."
-            e = Embed(description=firstpage)
-            e.set_author(name=f"Unverified Runs ({'{:,}'.format(total)}) - {gameName}",
-                         icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
-            e.set_footer(text="Page 1 of {:,}".format(pages))
-            msg = await ctx.reply(embed=e)
-            await funcs.nextPrevPageOptions(msg, pages)
-            page = 1
-            while True:
-                success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, pages, page)
-                if success:
-                    e.description = outputlist[page - 1]
-                    e.set_footer(text="Page {:,} of {:,}".format(page, pages))
-                    await msg.edit(embed=e)
-                elif success is None:
-                    return
+            if queue:
+                output = ""
+                outputlist = []
+                pagecount, count, run = 0, 0, 0
+                total = len(queue) / 15
+                for i in queue:
+                    run += 1
+                    d, h, m, s, ms = funcs.timeDifferenceStr(i["times"]["primary_t"], 0, noStr=True)
+                    names = ""
+                    for player in i["players"]["data"]:
+                        try:
+                            names += player["names"]["international"]
+                        except:
+                            names += player["name"]
+                        names += ", "
+                    names = names.replace("_", "\_")
+                    output += f"{'{:,}'.format(run)}. [{categories[i['category']]}]({i['weblink']}) " + \
+                              f"in `{funcs.timeStr(d, h, m, s, ms)}` by {names[:-2]}\n"
+                    count += 1
+                    if count == 15 or run == len(queue):
+                        pagecount += 1
+                        e = Embed(description=output)
+                        e.set_author(name=f"Unverified Runs ({'{:,}'.format(len(queue))}) - {gameName}",
+                                     icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
+                        e.set_footer(text="Page {:,} of {:,}".format(pagecount, int(total) + (0 if total == int(total) else 1)))
+                        outputlist.append(e)
+                        output = ""
+                        count = 0
+                m = await ctx.reply(embed=outputlist[0])
+                await m.edit(view=PageButtons(ctx, self.client, m, outputlist))
+            else:
+                e = Embed(description="No runs found.")
+                e.set_author(name=f"Unverified Runs ({'{:,}'.format(len(queue))}) - {gameName}",
+                             icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
+                await ctx.reply(embed=e)
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Server error."))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
+                      aliases=["ud", "urbandictionary"], usage="<term>")
+    async def urban(self, ctx, *, term=""):
+        if term == "":
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        else:
+            try:
+                res = await funcs.getRequest("http://api.urbandictionary.com/v0/define", params={"term": term})
+                data = res.json()
+                terms = data["list"]
+                if not terms:
+                    return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
+                embeds = []
+                pagecount = 0
+                for t in range(len(terms)):
+                    pagecount += 1
+                    example = terms[t]["example"].replace("[", "").replace("]", "")
+                    definition = terms[t]["definition"].replace("[", "").replace("]", "")
+                    permalink = terms[t]["permalink"]
+                    word = terms[t]["word"]
+                    author = terms[t]["author"]
+                    writtenon = funcs.timeStrToDatetime(terms[t]["written_on"])
+                    e = Embed(description=permalink)
+                    e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                                                            "669142387330777115/urban-dictionary-android.png")
+                    e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
+                    if example:
+                        e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
+                    if author:
+                        e.add_field(name="Author", value=f"`{author}`")
+                    e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
+                    try:
+                        ar = round(
+                            terms[t]['thumbs_up'] / (terms[t]['thumbs_up'] + terms[t]['thumbs_down'])
+                            * 100, 2
+                        )
+                        e.set_footer(
+                            text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[t]['thumbs_up']) + \
+                                 "{:,} 👎)\n".format(terms[t]['thumbs_down']) + \
+                                 "Page {:,} of {:,}".format(t + 1, len(terms))
+                        )
+                    except ZeroDivisionError:
+                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(t + 1, len(terms)))
+                    embeds.append(e)
+                m = await ctx.reply(embed=embeds[0])
+                await m.edit(view=PageButtons(ctx, self.client, m, embeds))
+            except Exception as ex:
+                funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song.",
@@ -661,24 +704,17 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     link = data["links"]["genius"]
                     title = data["title"].replace("*", "\*").replace("_", "\_")
                     author = data["author"].replace("*", "\*").replace("_", "\_")
-                allpages = len(originallyric)
-                e = Embed(description=originallyric[0], title=f"{author} - {title}"[:256])
-                e.set_thumbnail(url=thumbnail)
-                e.add_field(name="Genius Link", value=link)
-                e.set_footer(text="Page 1 of {:,}".format(allpages))
-                msg = await ctx.reply(embed=e)
-                await funcs.nextPrevPageOptions(msg, allpages)
-                page = 1
-                while True:
-                    success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, allpages, page)
-                    if success:
-                        edited = Embed(description=originallyric[page - 1], title=f"{author} - {title}"[:256])
-                        edited.set_thumbnail(url=thumbnail)
-                        edited.add_field(name="Genius Link", value=link)
-                        edited.set_footer(text="Page {:,} of {:,}".format(page, allpages))
-                        await msg.edit(embed=edited)
-                    elif success is None:
-                        return
+                embeds = []
+                pagecount = 0
+                for p in originallyric:
+                    pagecount += 1
+                    e = Embed(description=p, title=f"{author} - {title}"[:256])
+                    e.set_thumbnail(url=thumbnail)
+                    e.add_field(name="Genius Link", value=link)
+                    e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(originallyric)))
+                    embeds.append(e)
+                m = await ctx.reply(embed=embeds[0])
+                await m.edit(view=PageButtons(ctx, self.client, m, embeds))
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Server error or song doesn't have lyrics."))
@@ -879,83 +915,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Unknown word.")
         await ctx.reply(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="urban", description="Looks up a term on Urban Dictionary.",
-                      aliases=["ud", "urbandictionary"], usage="<term>")
-    async def urban(self, ctx, *, term=""):
-        if term == "":
-            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
-        else:
-            try:
-                res = await funcs.getRequest("http://api.urbandictionary.com/v0/define", params={"term": term})
-                data = res.json()
-                terms = data["list"]
-                if not terms:
-                    return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
-                else:
-                    example = terms[0]["example"].replace("[", "").replace("]", "")
-                    definition = terms[0]["definition"].replace("[", "").replace("]", "")
-                    permalink = terms[0]["permalink"]
-                    word = terms[0]["word"]
-                    author = terms[0]["author"]
-                    writtenon = funcs.timeStrToDatetime(terms[0]["written_on"])
-                    e = Embed(description=permalink)
-                    e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                            "669142387330777115/urban-dictionary-android.png")
-                    e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                    if example:
-                        e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                    if author:
-                        e.add_field(name="Author", value=f"`{author}`")
-                    e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
-                    try:
-                        e.set_footer(
-                            text=f"Approval rate: " + \
-                                 f"{round(terms[0]['thumbs_up'] / (terms[0]['thumbs_up'] + terms[0]['thumbs_down']) * 100, 2)}" + \
-                                 "% ({:,} 👍 - {:,} 👎)\n".format(terms[0]['thumbs_up'], terms[0]['thumbs_down']) +
-                                 "Page 1 of {:,}".format(len(terms))
-                        )
-                    except ZeroDivisionError:
-                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage 1 of {:,}".format(len(terms)))
-                    msg = await ctx.reply(embed=e)
-                    await funcs.nextPrevPageOptions(msg, len(terms))
-                    page = 1
-                    while True:
-                        success, page = await funcs.nextOrPrevPage(self.client, ctx, msg, len(terms), page)
-                        if success:
-                            example = terms[page - 1]["example"].replace("[", "").replace("]", "")
-                            definition = terms[page - 1]["definition"].replace("[", "").replace("]", "")
-                            permalink = terms[page - 1]["permalink"]
-                            word = terms[page - 1]["word"]
-                            author = terms[page - 1]["author"]
-                            writtenon = funcs.timeStrToDatetime(terms[page - 1]["written_on"])
-                            e = Embed(description=permalink)
-                            e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
-                                                                    "669142387330777115/urban-dictionary-android.png")
-                            e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
-                            if example:
-                                e.add_field(name="Example", value=funcs.formatting(example, limit=1000))
-                            if author:
-                                e.add_field(name="Author", value=f"`{author}`")
-                            e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
-                            try:
-                                ar = round(
-                                    terms[page - 1]['thumbs_up'] / (terms[page - 1]['thumbs_up'] + terms[page - 1]['thumbs_down'])
-                                    * 100, 2
-                                )
-                                e.set_footer(
-                                    text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[page - 1]['thumbs_up']) + \
-                                         "{:,} 👎)\n".format(terms[page - 1]['thumbs_down']) + \
-                                         "Page {:,} of {:,}".format(page, len(terms))
-                                )
-                            except ZeroDivisionError:
-                                e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(page, len(terms)))
-                            await msg.edit(embed=e)
-                        elif success is None:
-                            return
-            except Exception as ex:
-                funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",

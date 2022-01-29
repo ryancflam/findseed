@@ -21,8 +21,6 @@ from game_models.tic_tac_toe import TicTacToe
 from game_models.uno import Uno
 from other_utils import funcs
 
-TETRIS_REACTIONS = {"left": "◀️", "right": "▶️", "rotate": "🔄", "softDrop": "🔽", "hardDrop": "⏬"}
-
 
 class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for you to kill time."):
     def __init__(self, botInstance):
@@ -53,44 +51,17 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         for game in list(self.tetrisGames.values()):
             await game.tick()
 
-    async def tetrisAwaitReaction(self, ctx, game):
-        while not game.getGameEnd():
-            try:
-                r, u = await self.client.wait_for(
-                    "reaction_add",
-                    check=lambda reaction, user: reaction.emoji in list(TETRIS_REACTIONS.values())
-                                                 and reaction.message == game.message and user != self.client.user,
-                    timeout=10
-                )
-            except TimeoutError:
-                continue
-            if game.getGameEnd():
-                return
-            await funcs.reactionRemove(r, u)
-            if u == ctx.author:
-                if r.emoji == TETRIS_REACTIONS["rotate"]:
-                    game.getCurrentBlock().rotate()
-                elif r.emoji == TETRIS_REACTIONS["left"]:
-                    game.getCurrentBlock().move(-1)
-                elif r.emoji == TETRIS_REACTIONS["right"]:
-                    game.getCurrentBlock().move(1)
-                elif r.emoji == TETRIS_REACTIONS["softDrop"]:
-                    game.getCurrentBlock().fall(manual=True)
-                elif r.emoji == TETRIS_REACTIONS["hardDrop"]:
-                    game.getCurrentBlock().drop()
-                await game.updateBoard()
-
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="tetris", description="Play Tetris.")
     async def tetris(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
         await ctx.send(
-            "**Welcome to Tetris. Use the provided reactions to play, input `time` to see total elapsed time" + \
+            "**Welcome to Tetris. Use the provided buttons to play, input `time` to see total elapsed time" + \
             ", `bnw` to enable black-and-white mode, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
-        self.tetrisGames[ctx.channel] = Tetris(self.client)
+        self.tetrisGames[ctx.channel] = Tetris(ctx, self.client)
         game = self.tetrisGames[ctx.channel]
         game.newBlock()
         e = Embed(title="Tetris", description=game.gameBoard())
@@ -99,11 +70,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         e.add_field(name="Lines", value="`0`")
         e.add_field(name="Level", value="`0`")
         e.add_field(name="Score", value="`0`")
-        msg = await ctx.send(embed=e)
-        game.message = msg
-        for reaction in list(TETRIS_REACTIONS.values()):
-            await msg.add_reaction(reaction)
-        self.client.loop.create_task(self.tetrisAwaitReaction(ctx, game))
+        game.message = await ctx.send(embed=e)
         while not game.getGameEnd():
             try:
                 nmsg = await self.client.wait_for(

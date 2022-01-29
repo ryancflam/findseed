@@ -1,5 +1,4 @@
 import time
-from asyncio import TimeoutError, sleep
 from calendar import monthrange
 from datetime import date, datetime, timedelta
 from io import BytesIO
@@ -564,68 +563,6 @@ async def removeReactionsFromCache(client, msg):
     for reaction in list(utils.get(client.cached_messages, id=msg.id).reactions):
         async for user in reaction.users():
             await reactionRemove(reaction, user)
-
-
-async def nextPrevPageOptions(msg, allpages: int):
-    await msg.add_reaction("🚫")
-    if allpages > 1:
-        await msg.add_reaction("⏮")
-        await msg.add_reaction("⏭")
-        await msg.add_reaction("❓")
-
-
-async def nextOrPrevPage(client, ctx, msg, allpages: int, page: int):
-    try:
-        reaction, user = await client.wait_for(
-            "reaction_add",
-            check=lambda r, u: (str(r.emoji) == "⏮" or str(r.emoji) == "⏭" or str(r.emoji) == "🚫" or str(r.emoji) == "❓")
-                               and u == ctx.author and r.message == msg, timeout=300
-        )
-    except TimeoutError:
-        await removeReactionsFromCache(client, msg)
-        return None, 0
-    success = False
-    if str(reaction.emoji) == "⏭":
-        await reactionRemove(reaction, user)
-        if page < allpages:
-            page += 1
-            success = True
-    elif str(reaction.emoji) == "⏮":
-        await reactionRemove(reaction, user)
-        if page > 1:
-            page -= 1
-            success = True
-    elif str(reaction.emoji) == "❓":
-        await reactionRemove(reaction, user)
-        mlist = [await ctx.send(f"{user.mention} Which page would you like to go to? (1-{'{:,}'.format(allpages)})")]
-        while True:
-            try:
-                userm = await client.wait_for(
-                    "message", check=lambda umsg: umsg.author == ctx.author and umsg.channel == ctx.channel, timeout=30
-                )
-                mlist.append(userm)
-                try:
-                    page = int(userm.content.replace(",", "").replace(" ", ""))
-                    if not 1 <= page <= allpages:
-                        raise Exception
-                    break
-                except:
-                    mlist.append(await ctx.send(embed=errorEmbed(None, "Invalid page, please try again.")))
-            except TimeoutError:
-                page = 1
-                break
-        success = True
-        for m in mlist:
-            try:
-                await m.delete()
-            except:
-                pass
-    else:
-        await msg.edit(content="Deleting message...", embed=None)
-        await sleep(1)
-        await msg.delete()
-        success = None
-    return success, page
 
 
 async def easterEggsPredicate(ctx):
