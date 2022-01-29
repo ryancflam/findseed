@@ -670,51 +670,30 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     async def lyrics(self, ctx, *, keywords):
         try:
             await ctx.send("Getting lyrics. Please wait...")
-            res = await funcs.getRequest("https://some-random-api.ml/lyrics", params={"title": keywords})
-            data = res.json()
-            genius = False
-            originallyric, author, title, link, thumbnail = None, None, None, None, None
             try:
-                error = data["error"]
-                try:
-                    res = await funcs.getRequest("https://api.genius.com/search",
-                                                 params={"q": keywords, "access_token": config.geniusToken})
-                    data2 = res.json()["response"]["hits"][0]["result"]
-                except:
-                    return await ctx.send(embed=funcs.errorEmbed(None, error))
-                author = data2["artist_names"]
-                title = data2["title_with_featured"]
-                link = data2["url"]
-                thumbnail = data2["song_art_image_thumbnail_url"]
-                originallyric = funcs.multiString(
-                    self.genius.search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), n=2048
-                )
-                genius = True
-                raise Exception()
+                res = await funcs.getRequest("https://api.genius.com/search",
+                                             params={"q": keywords, "access_token": config.geniusToken})
+                data2 = res.json()["response"]["hits"][0]["result"]
             except:
-                try:
-                    thumbnail = data["thumbnail"]["genius"]
-                except:
-                    if not genius:
-                        thumbnail = None
-                if not genius:
-                    originallyric = funcs.multiString(
-                        data["lyrics"].replace("*", "\*").replace("_", "\_").replace("\n\n", "\n"), n=2048
-                    )
-                    link = data["links"]["genius"]
-                    title = data["title"].replace("*", "\*").replace("_", "\_")
-                    author = data["author"].replace("*", "\*").replace("_", "\_")
-                embeds = []
-                pagecount = 0
-                for p in originallyric:
-                    pagecount += 1
-                    e = Embed(description=p, title=f"{author} - {title}"[:256])
-                    e.set_thumbnail(url=thumbnail)
-                    e.add_field(name="Genius Link", value=link)
-                    e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(originallyric)))
-                    embeds.append(e)
-                m = await ctx.reply(embed=embeds[0])
-                await m.edit(view=PageButtons(ctx, self.client, m, embeds))
+                return await ctx.send(embed=funcs.errorEmbed(None, "Unknown song."))
+            author = data2["artist_names"]
+            title = data2["title_with_featured"]
+            link = data2["url"]
+            thumbnail = data2["song_art_image_thumbnail_url"]
+            originallyric = funcs.multiString(
+                self.genius.search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), n=2048
+            )
+            embeds = []
+            pagecount = 0
+            for p in originallyric:
+                pagecount += 1
+                e = Embed(description=p, title=f"{author} - {title}"[:256])
+                e.set_thumbnail(url=thumbnail)
+                e.add_field(name="Genius Link", value=link)
+                e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(originallyric)))
+                embeds.append(e)
+            m = await ctx.reply(embed=embeds[0])
+            await m.edit(view=PageButtons(ctx, self.client, m, embeds))
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Server error or song doesn't have lyrics."))
