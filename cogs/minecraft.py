@@ -257,6 +257,50 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                         "1.9-1.12: /entitydata @e[type=ender_dragon] {DragonPhase:2}```")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="logs", description="Calculates how many logs you will need to trade for a certain number of emeralds.",
+                      aliases=["log", "wood"], usage="<amount of emeralds needed>")
+    async def logs(self, ctx, emeralds):
+        try:
+            emeralds = int(emeralds)
+            if emeralds < 1:
+                raise Exception
+            log = emeralds * 4
+            stacks = log / 64
+            excess = int((stacks - int(stacks)) * 64)
+            stacksandexcess = int(stacks) and excess
+            excessres = "" if not int(stacks) and excess == log \
+                        else f" ({'{:,} stack{}'.format(int(stacks), '' if int(stacks) == 1 else 's') if int(stacks) else ''}" + \
+                             f"{' and ' if stacksandexcess else ''}{'{} logs'.format(excess) if excess else ''})"
+            await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** logs{}.".format(
+                emeralds, "" if emeralds == 1 else "s", int(log), excessres
+            ))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(
+                embed=funcs.errorEmbed(None, "Invalid input. Please make sure you are entering positive, non-zero integers.")
+            )
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="haybales", aliases=["hay", "haybale"], usage="<amount of emeralds needed>",
+                      description="Calculates how many hay bales you will need to trade for a certain number of emeralds.")
+    async def haybales(self, ctx, emeralds):
+        try:
+            emeralds = int(emeralds)
+            if emeralds < 1:
+                raise Exception
+            hay = 20 * emeralds / 9
+            if int(hay) != hay:
+                hay = int(hay) + 1
+            await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** hay bales.".format(
+                emeralds, "" if emeralds == 1 else "s", int(hay)
+            ))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(
+                embed=funcs.errorEmbed(None, "Invalid input. Please make sure you are entering positive, non-zero integers.")
+            )
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="anchors", description="Calculates how many chargeable respawn anchors you can craft based on how " + \
                                                   "much glowstone dust and crying obsidian you have.",
                       aliases=["anchor"], usage="<amount of glowstone dust> <amount of crying obdisian>")
@@ -265,18 +309,16 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             glowdust = int(glowdust)
             cryobby = int(cryobby)
             if glowdust < 1 or cryobby < 1:
-                raise ValueError
+                raise Exception
             anchors = self.chargeableAnchors(glowdust, cryobby)
             charge = " and sufficiently charge {}".format("it" if anchors == 1 else "them") if anchors else ""
-            try:
-                await ctx.reply(
-                    "You have **{:,}** glowstone dust and **{:,}** crying obsidian.\n\nYou can make **".format(glowdust, cryobby) +
-                    "{:,}** respawn anchor{}{}.".format(anchors, "" if anchors == 1 else "s", charge)
-                )
-            except:
-                raise ValueError
-        except ValueError:
-            return await ctx.reply(
+            await ctx.reply(
+                "You have **{:,}** glowstone dust and **{:,}** crying obsidian.\n\nYou can make **".format(glowdust, cryobby) +
+                "{:,}** respawn anchor{}{}.".format(anchors, "" if anchors == 1 else "s", charge)
+            )
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(
                 embed=funcs.errorEmbed(None, "Invalid input. Please make sure you are entering positive, non-zero integers.")
             )
 
@@ -533,9 +575,9 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bedtiming", description="Shows the bed timing for end fights.",
-                      aliases=["bedtimings", "onecycle", "timingbed", "bedtime"])
+                      aliases=["bedtimings", "onecycle", "timingbed", "bedtime", "bed", "beds"])
     async def bedtiming(self, ctx):
-        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/937014270187675749/unknown.png")
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/937078099789635614/unknown.png")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="eray", aliases=["eraying", "microlensing"],
