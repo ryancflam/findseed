@@ -23,4 +23,4 @@ Miscellaneous features also include **Conversion Tools**, **Animal Crossing**, a
 
 !findseed does not store any personal data or personally identifying information. Discord user IDs and server IDs are stored, however, only to record the preferences of the bot's users and servers. The data stored are in no way used maliciously, personally, or financially—as with anything else with regard to this bot.
 
-Users may be subject to being blocked from using the bot if found excessively spamming commands or using them in a malicious or exploitative manner.
+Users may be subject to being blocked from interacting with the bot in any way if found excessively spamming commands or using them in a malicious or exploitative manner.
