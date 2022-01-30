@@ -63,6 +63,15 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         return ltnew
 
     @staticmethod
+    def getExcess(item):
+        stacks = item / 64
+        excess = int((stacks - int(stacks)) * 64)
+        stacksandexcess = int(stacks) and excess
+        return "" if not int(stacks) and excess == item \
+               else f" ({'{:,} stack{}'.format(int(stacks), '' if int(stacks) == 1 else 's') if int(stacks) else ''}" + \
+                    f"{' + ' if stacksandexcess else ''}{str(excess) if excess else ''})"
+
+    @staticmethod
     def chargeableAnchors(glowdust: int, cryobby: int):
         return min([glowdust // 16, cryobby // 6])
 
@@ -265,14 +274,8 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             if emeralds < 1:
                 raise Exception
             log = emeralds * 4
-            stacks = log / 64
-            excess = int((stacks - int(stacks)) * 64)
-            stacksandexcess = int(stacks) and excess
-            excessres = "" if not int(stacks) and excess == log \
-                        else f" ({'{:,} stack{}'.format(int(stacks), '' if int(stacks) == 1 else 's') if int(stacks) else ''}" + \
-                             f"{' and ' if stacksandexcess else ''}{'{} logs'.format(excess) if excess else ''})"
             await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** logs{}.".format(
-                emeralds, "" if emeralds == 1 else "s", int(log), excessres
+                emeralds, "" if emeralds == 1 else "s", int(log), self.getExcess(log)
             ))
         except Exception as ex:
             funcs.printError(ctx, ex)
@@ -289,10 +292,9 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             if emeralds < 1:
                 raise Exception
             hay = 20 * emeralds / 9
-            if int(hay) != hay:
-                hay = int(hay) + 1
-            await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** hay bales.".format(
-                emeralds, "" if emeralds == 1 else "s", int(hay)
+            hay = funcs.strictRounding(hay)
+            await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** hay bales{}.".format(
+                emeralds, "" if emeralds == 1 else "s", int(hay), self.getExcess(hay)
             ))
         except Exception as ex:
             funcs.printError(ctx, ex)

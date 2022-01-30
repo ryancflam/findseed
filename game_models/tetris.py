@@ -363,36 +363,36 @@ class TetrisButtons(ui.View):
     async def interaction_check(self, interaction):
         return interaction.user == self.__ctx.author
 
-    async def on_error(self, error, item, interaction):
+    async def on_error(self, error, _, __):
         printError(self.__ctx, error)
 
     @ui.button(emoji=LEFT, style=ButtonStyle.primary)
-    async def left(self, button, interaction):
+    async def left(self, _, __):
         self.__game.getCurrentBlock().move(-1)
         await self.__game.updateBoard()
 
     @ui.button(emoji=RIGHT, style=ButtonStyle.primary)
-    async def right(self, button, interaction):
+    async def right(self, _, __):
         self.__game.getCurrentBlock().move(1)
         await self.__game.updateBoard()
 
     @ui.button(emoji=ROTATE, style=ButtonStyle.primary)
-    async def rotate(self, button, interaction):
+    async def rotate(self, _, __):
         self.__game.getCurrentBlock().rotate()
         await self.__game.updateBoard()
 
     @ui.button(emoji=SOFT_DROP, style=ButtonStyle.primary)
-    async def softdrop(self, button, interaction):
+    async def softdrop(self, _, __):
         self.__game.getCurrentBlock().fall(manual=True)
         await self.__game.updateBoard()
 
     @ui.button(emoji=HARD_DROP, style=ButtonStyle.primary)
-    async def harddrop(self, button, interaction):
+    async def harddrop(self, _, __):
         self.__game.getCurrentBlock().drop()
         await self.__game.updateBoard()
 
     @ui.button(emoji=QUIT, style=ButtonStyle.danger)
-    async def quit(self, button, interaction):
+    async def quit(self, _, __):
         self.__game.gameEnd()
         await self.__ctx.send(f"`{self.__ctx.author.name} has left Tetris.`")
 

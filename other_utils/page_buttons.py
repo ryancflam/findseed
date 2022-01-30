@@ -29,29 +29,29 @@ class PageButtons(ui.View):
     async def on_timeout(self):
         await self.__msg.edit(view=None)
 
-    async def on_error(self, error, item, interaction):
+    async def on_error(self, error, _, __):
         printError(self.__ctx, error)
 
     @ui.button(emoji=DELETE, style=ButtonStyle.danger)
-    async def delete(self, button, interaction):
+    async def delete(self, _, __):
         await self.__msg.edit(content="Deleting this message...", embed=None)
         await sleep(1)
         await self.__msg.delete()
 
     @ui.button(emoji=PREV, style=ButtonStyle.primary)
-    async def prev(self, button, interaction):
+    async def prev(self, _, __):
         if self.__page > 1:
             self.__page -= 1
             await self.__edit()
 
     @ui.button(emoji=NEXT, style=ButtonStyle.primary)
-    async def next(self, button, interaction):
+    async def next(self, _, __):
         if self.__page < self.__allpages:
             self.__page += 1
             await self.__edit()
 
     @ui.button(emoji=GO_TO_PAGE, style=ButtonStyle.secondary)
-    async def gotopage(self, button, interaction):
+    async def gotopage(self, _, __):
         if self.__allpages > 1:
             mlist = [
                 await self.__ctx.send(

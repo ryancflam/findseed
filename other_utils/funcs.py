@@ -168,6 +168,10 @@ def sign(value):
     return -1 if value < 0 else 0 if not value else 1
 
 
+def strictRounding(value: float):
+    return int(value) + (0 if value == int(value) else 1)
+
+
 def removeDotZero(value):
     try:
         valuestr = "{:,}".format(value)

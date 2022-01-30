@@ -128,7 +128,7 @@ class BotInstance(Bot):
         if ctx.valid and not self.is_ready() and funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
         if self.is_ready() and funcs.userNotBlacklisted(self, message):
-            if ctx.valid:
+            if ctx.valid and ctx.cog.qualified_name != "Easter Eggs":
                 await message.channel.trigger_typing()
             await self.process_commands(message)
 
