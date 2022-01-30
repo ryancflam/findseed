@@ -201,8 +201,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="github", description="Returns statistics about a GitHub repository.",
-                      aliases=["loc", "code", "linesofcode", "repository", "repo", "git"], usage='[username/repository]')
+    @commands.command(name="github", description="Returns statistics about a GitHub repository.", usage='[username/repository]',
+                      aliases=["loc", "code", "linesofcode", "repository", "repo", "git", "source", "sourcecode"])
     async def repository(self, ctx, *, repo: str=""):
         await ctx.send("Getting repository statistics. Please wait...")
         try:
