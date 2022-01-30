@@ -154,7 +154,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             try:
                 chips = game.getPlayer(count - 1).getChips()
                 await player.send(f"**== No Thanks ==**\n\nWelcome to No Thanks. You are **Player {str(count)}**." + \
-                                  f" Active channel: <#{ctx.channel.id}>\n\n**You have {chips} chips." + \
+                                  f" Active channel: <#{ctx.channel.id}>\n\n**You have {chips} chips. " + \
                                   f"You may hide or tell how many chips you have. Every time a card is drawn, you may choose" + \
                                   " to either take it and gain all of the card's chips, or pass it to the next player and " + \
                                   "place a chip on the card. If you have no chips left, you must take the card. Once a card is" + \

@@ -597,6 +597,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             e = Embed(description=output)
             e.set_author(name=f"{top}{gameName} - {catName}",
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
+            if count:
+                e.set_footer(text="Please use the link above to view the full leaderboards as well as other categories.")
             await ctx.reply(embed=e)
         except Exception as ex:
             funcs.printError(ctx, ex)
