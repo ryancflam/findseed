@@ -1,3 +1,5 @@
+# Credit - https://github.com/evescape/tetris-bot
+
 from asyncio import sleep
 from random import randint
 from time import time

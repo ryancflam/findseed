@@ -18,7 +18,7 @@ class PageButtons(ui.View):
         self.__msg = msg
         self.__embeds = embeds
         self.__page = 1
-        self.__allpages = len(self.__embeds)
+        self.__pages = len(self.__embeds)
 
     async def __edit(self):
         await self.__msg.edit(embed=self.__embeds[self.__page - 1])
@@ -46,16 +46,16 @@ class PageButtons(ui.View):
 
     @ui.button(emoji=NEXT, style=ButtonStyle.primary)
     async def next(self, _, __):
-        if self.__page < self.__allpages:
+        if self.__page < self.__pages:
             self.__page += 1
             await self.__edit()
 
     @ui.button(emoji=GO_TO_PAGE, style=ButtonStyle.secondary)
     async def gotopage(self, _, __):
-        if self.__allpages > 1:
+        if self.__pages > 1:
             mlist = [
                 await self.__ctx.send(
-                    f"{self.__ctx.author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__allpages)})"
+                    f"{self.__ctx.author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__pages)})"
                 )
             ]
             while True:
@@ -67,7 +67,7 @@ class PageButtons(ui.View):
                     mlist.append(userm)
                     try:
                         page = int(userm.content.replace(",", "").replace(" ", ""))
-                        if not 1 <= page <= self.__allpages:
+                        if not 1 <= page <= self.__pages:
                             raise Exception
                         break
                     except:

@@ -14,14 +14,15 @@ A *(mostly)* Minecraft-centred bot, [!findseed](https://discord.com/oauth2/autho
 
 Miscellaneous features also include **Conversion Tools**, **Animal Crossing**, along with various, less significant commands, which can be accessed via `!miscellaneous`.
 
-**Unprompted Messages** that trigger funny bot responses (disabled by default; enable with `!umenable`) include "hmmm" and "I'm !findseed"—see `!unpromptedmessages`.
+There are **Unprompted Messages** that trigger funny bot responses (disabled by default; enable with `!umenable`) such as "f", "hmmm", "I'm !findseed"—see `!unpromptedmessages`.
 
 The bot also attempts to remove any scam links which can be seen in `!scamurls` (enabled by default; disable with `!spdisable`).
 
 **Developer Team**:
-- ryancflam
-- ryancflam's brain
-- ryancflam's fingers
+- Owner & Lead Developer - ryancflam
+- Senior Developer - ryancflam's brain
+- Senior Developer - ryancflam's fingers
+- Assistant Developer - ryancflam's coffee
 
 ### == Other Notes ==
 
