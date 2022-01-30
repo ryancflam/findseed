@@ -25,6 +25,6 @@ The bot also attempts to remove any scam links which can be seen in `!scamurls` 
 
 ### == Other Notes ==
 
-!findseed does not store any personal data or personally identifying information including usernames and email addresses. Discord user IDs and server IDs are stored, however, only to record the preferences of the bot's users and servers. The data recorded are in no way used maliciously, personally, or financially—as with anything else with regard to this bot. ~~I can barely write good code let alone hack and steal user data...~~
+!findseed does not store any personal data or personally identifying information including usernames, IP addresses, and email addresses. Discord user IDs and server IDs are stored, however, only to record the preferences of the bot's users and servers. The data recorded are in no way used maliciously, personally, or financially—as with anything else with regard to this bot. ~~I can barely write good code let alone hack and steal user data...~~
 
 Users may be subject to being blocked from interacting with the bot in any way if found excessively spamming commands or using them in a malicious or exploitative manner.
