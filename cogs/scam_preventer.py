@@ -17,7 +17,7 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.scamlinks = await funcs.readTxtLines("assets/scam_preventer/scam_links.txt")
+        self.scamlinks = await funcs.readTxt("assets/scam_preventer/scam_links.txt", lines=True)
         await funcs.generateJson("scam_preventer", {"disallowed_servers": []})
 
     @commands.command(name="spdisable", description="Disables the scam preventer for your server, which is enabled by default.",

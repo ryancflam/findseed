@@ -3,7 +3,6 @@ from calendar import timegm
 from datetime import datetime, timedelta
 from json import JSONDecodeError, dumps
 from math import sqrt
-from pathlib import Path
 from platform import system
 from random import choice
 from statistics import mean, median, mode, pstdev, stdev
@@ -1114,8 +1113,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 " ARSE AND YOU DON'T EVEN SEE IT!"
             ]
             try:
-                answer.append(Path(f"{funcs.getPath()}/assets/easter_eggs/copypasta.txt").read_text().replace("\*", "*")[:1994])
-            except:
+                answer.append((await funcs.readTxt("/assets/easter_eggs/copypasta.txt")).replace("\*", "*")[:1994])
+            except Exception as ex:
+                funcs.printError(ctx, ex)
                 pass
             e = Embed(description=f"```{choice(answer)}```")
         except Exception as ex:

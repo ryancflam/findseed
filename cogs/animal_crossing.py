@@ -26,7 +26,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         self.fossils = await funcs.readJson("assets/animal_crossing/fossils.json")
         self.personalities = await funcs.readJson("assets/animal_crossing/personalities.json")
         self.sea = await funcs.readJson("assets/animal_crossing/sea_creatures.json")
-        self.species = await funcs.readTxtLines("assets/animal_crossing/species.txt")
+        self.species = await funcs.readTxt("assets/animal_crossing/species.txt", lines=True)
         self.villagers = await funcs.readJson("assets/animal_crossing/villagers.json")
 
     @staticmethod

@@ -1,7 +1,7 @@
 from random import choice
 from time import time
 
-from other_utils.funcs import minSecs, readTxtLines
+from other_utils.funcs import minSecs, readTxt
 
 
 class Hangman:
@@ -27,7 +27,7 @@ class Hangman:
         self.__startTime = time()
 
     async def __newWord(self):
-        self.__word = choice((await readTxtLines("assets/chat_games/hangman_words.txt")))
+        self.__word = choice((await readTxt("assets/chat_games/hangman_words.txt", lines=True)))
         self.__dashes = str("-" * len(self.__word))
 
     @staticmethod

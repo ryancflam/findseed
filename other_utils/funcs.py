@@ -519,11 +519,15 @@ async def readTxtAttachment(message):
     return attachment.decode("utf-8")
 
 
-async def readTxtLines(pathstr):
+async def readTxt(pathstr, lines=False):
     async with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
-        lines = await f.readlines()
+        if lines:
+            lines = await f.readlines()
+            content = [i[:-1] for i in lines if i[:-1]]
+        else:
+            content = await f.read()
     await f.close()
-    return [i[:-1] for i in lines if i[:-1]]
+    return content
 
 
 async def readJson(pathstr):

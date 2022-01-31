@@ -27,9 +27,9 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     async def __readFiles(self):
         self.personalityTest = await funcs.readJson("assets/random_stuff/personality_test.json")
         self.trumpquotes = await funcs.readJson("assets/random_stuff/trump_quotes.json")
-        self.truths = await funcs.readTxtLines("assets/random_stuff/truths.txt")
-        self.dares = await funcs.readTxtLines("assets/random_stuff/dares.txt")
-        self.nhie = await funcs.readTxtLines("assets/random_stuff/nhie.txt")
+        self.truths = await funcs.readTxt("assets/random_stuff/truths.txt", lines=True)
+        self.dares = await funcs.readTxt("assets/random_stuff/dares.txt", lines=True)
+        self.nhie = await funcs.readTxt("assets/random_stuff/nhie.txt", lines=True)
 
     @staticmethod
     def rgb(value):
