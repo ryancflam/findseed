@@ -2,10 +2,10 @@ from asyncio import TimeoutError, sleep
 from random import choice, choices, randint, shuffle
 from time import time
 
+from aiogtts import aiogTTS, lang
 from discord import Colour, Embed, File, User
 from discord.ext import commands
 from googletrans import Translator
-from gtts import gTTS, lang
 
 import config
 from other_utils import funcs
@@ -26,6 +26,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.truths = funcs.readTxtLines("assets/random_stuff/truths.txt")
         self.dares = funcs.readTxtLines("assets/random_stuff/dares.txt")
         self.nhie = funcs.readTxtLines("assets/random_stuff/nhie.txt")
+        self.tts = aiogTTS()
 
     @staticmethod
     def rgb(value):
@@ -571,11 +572,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 return await ctx.reply(embed=funcs.errorEmbed(
                     "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
                 ))
-        if len(text) > 500:
-            return await ctx.reply(embed=funcs.errorEmbed(None, "Text must be 500 characters or less."))
-        myobj = gTTS(text=text, lang=langcode, slow=False)
         location = f"{int(time())}.mp3"
-        myobj.save(f"{funcs.getPath()}/temp/" + location)
+        await self.tts.save(text, f"{funcs.getPath()}/temp/{location}", slow=False, lang=langcode)
         file = File(f"{funcs.getPath()}/temp/" + location)
         await ctx.reply(file=file)
         funcs.deleteTempFile(location)
