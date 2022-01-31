@@ -585,7 +585,13 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/937078099789635614/unknown.png")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="eray", aliases=["eraying", "microlensing"],
+    @commands.command(name="ninjabrainbot", aliases=["ninjabot", "ninjabrain", "nb", "nbb"], hidden=True,
+                      description="Shows the Ninjabrain Bot tutorial and repository page.")
+    async def ninjabrainbot(self, ctx):
+        await ctx.reply("Tutorial: <https://youtu.be/Rx8i7e5lu7g>\n\nRepository: https://github.com/Ninjabrain1/Ninjabrain-Bot")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="eray", aliases=["eraying", "microlensing"], hidden=True,
                       description="Shows the microlensing tutorial for *Minecraft: Java Edition* speedrunning.")
     async def eray(self, ctx):
         await ctx.reply("https://www.youtube.com/watch?v=jvTfMLPnMSw")

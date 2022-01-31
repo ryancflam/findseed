@@ -570,7 +570,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     break
             if not lb:
                 raise Exception
-            output = f"{catURL}\n\n"
+            output = f"{catURL}\n"
             catres = await funcs.getRequest(lb)
             runs = catres.json()["data"]["runs"][:10]
             count = 0

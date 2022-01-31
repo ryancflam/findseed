@@ -198,14 +198,14 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
                                                 "particular month in *Animal Crossing: New Horizons*.",
-                      aliases=["acarriving", "acarrive"], usage="[month]")
+                      aliases=["acarriving", "acarrive", "acn"], usage="[month]")
     async def acnew(self, ctx, month=""):
         await ctx.reply(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
                                                     "particular month in *Animal Crossing: New Horizons*.",
-                      aliases=["acleave"], usage="[month]")
+                      aliases=["acleave", "acl"], usage="[month]")
     async def acleaving(self, ctx, month=""):
         await ctx.reply(embed=self.crittersListEmbed(month, mode=-1))
 
@@ -327,7 +327,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acpersonality", usage="[personality type]",
-                      aliases=["acnhpersonality", "acpersonalities", "acnhpersonalities"],
+                      aliases=["acnhpersonality", "acpersonalities", "acnhpersonalities", "acp"],
                       description="Shows information about an *Animal Crossing: New Horizons* villager personality.")
     async def acpersonality(self, ctx, *, personality: str=""):
         personality = funcs.replaceCharacters(personality.casefold(), [" ", "-", "_"]).replace("uchi", "sisterly") \
@@ -360,7 +360,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acsea", description="Shows information about an *Animal Crossing: New Horizons* sea creature.",
-                      aliases=["acnhsea","acsc", "acnhsc"], usage="<sea creature name>")
+                      aliases=["acnhsea", "acsc", "acnhsc", "acs"], usage="<sea creature name>")
     async def acsea(self, ctx, *, sea):
         try:
             seadata = self.findData(self.sea, sea)
@@ -561,7 +561,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips"],
+    @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips", "stalk", "stalks"],
                       description="Shows pattern information about the *Animal Crossing: New Horizons* stalk market.")
     async def acturnips(self, ctx):
         await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg", message="Credit:\n<https://twitter.com/MadzMasc>")
