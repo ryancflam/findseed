@@ -34,7 +34,7 @@ class PageButtons(ui.View):
 
     @ui.button(emoji=DELETE, style=ButtonStyle.danger)
     async def delete(self, _, __):
-        await self.__msg.edit(content="Deleting this message...", embed=None)
+        await self.__msg.edit(content="Deleting this message...", embed=None, view=None)
         await sleep(1)
         await self.__msg.delete()
 
