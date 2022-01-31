@@ -34,8 +34,7 @@ class BotInstance(Bot):
     def __init__(self, loop):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
-            intents=Intents.all(),
-            strip_after_prefix=True
+            intents=Intents.all()
         )
         self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
