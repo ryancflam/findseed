@@ -18,7 +18,8 @@ from other_utils import funcs
 BARTER_LIMIT = 896
 
 
-class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to *Minecraft* and *Minecraft* speedrunning."):
+class Minecraft(commands.Cog, name="Minecraft",
+                description="Commands relating to *Minecraft* in general and *Minecraft: Java Edition* speedrunning."):
     def __init__(self, botInstance):
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
@@ -579,54 +580,6 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bedtiming", description="Shows the bed timing for end fights.",
-                      aliases=["bedtimings", "onecycle", "timingbed", "bedtime", "bed", "beds"])
-    async def bedtiming(self, ctx):
-        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/937078099789635614/unknown.png")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="ninjabrainbot", aliases=["ninjabot", "ninjabrain", "nb", "nbb"], hidden=True,
-                      description="Shows the Ninjabrain Bot tutorial and repository page.")
-    async def ninjabrainbot(self, ctx):
-        await ctx.reply("Tutorial: <https://youtu.be/Rx8i7e5lu7g>\n\nRepository: https://github.com/Ninjabrain1/Ninjabrain-Bot")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="eray", aliases=["eraying", "microlensing"], hidden=True,
-                      description="Shows the microlensing tutorial for *Minecraft: Java Edition* speedrunning.")
-    async def eray(self, ctx):
-        await ctx.reply("https://www.youtube.com/watch?v=jvTfMLPnMSw")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="blindtravelcoords", aliases=["rings", "strongholdrings", "strongholdring"],
-                      description="Shows the idea blind travel coordinates for the first to third stronghold rings.")
-    async def blindtravelcoords(self, ctx):
-        await ctx.reply("https://imgur.com/gallery/i3fIanf")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="mcspeedrunning", aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning", "mcsr"],
-                      description="Shows the Minecraft Speedrunning website.", hidden=True)
-    async def mcspeedrunning(self, ctx):
-        await ctx.reply("https://www.minecraftspeedrunning.com/")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="speedrunigt", aliases=["igt"], description="Shows the SpeedRunIGT mod website.", hidden=True)
-    async def speedrunigt(self, ctx):
-        await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True)
-    async def zerocycle(self, ctx):
-        await ctx.reply("https://zerocycle.repl.co/")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="fsg", description="Shows a list of FSG seed generators.", hidden=True, aliases=["fsgseed", "fsgseeds"])
-    async def fsg(self, ctx):
-        await ctx.reply("Use one of the allowed generators: " +
-                        "<https://docs.google.com/spreadsheets/d/1ilu72GJ-vJZq2LFU68rycGMeTbWPjHJnO8PGfp4QjA8/edit#gid=0>\n\n" +
-                        "If you would like to use the generator locally for shorter wait times, follow this: " +
-                        "<https://youtu.be/Gl7zOn2lLo4>\n\nPlease play the seed within 30 seconds after it has been generated.")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
                                                         "t attempts to locate the stronghold using both " + \
                                                         'the "8, 8" rule and triangulation. To use this ' + \
@@ -711,7 +664,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
             await ctx.send("You have been inactive for over 20 minutes, stopping triangulation program.")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="coordsdist", description="Calculates the distance between two sets of *Minecraft* coordinates.",
+    @commands.command(name="coordsdist", description="Calculates the distance between two sets of coordinates.",
                       aliases=["coords", "distance", "dist", "coord", "coordinates", "coordinate"],
                       usage="<x #1> <z #1> <x #2> <z #2>\n\nAlternative usage(s):\n\n- <F3+C data> <x> <z>")
     async def coords(self, ctx, *, inp: str):
@@ -848,7 +801,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="fossils", description="Brings up a *Minecraft* fossil identification chart for divine travel.",
+    @commands.command(name="fossils", description="Brings up a fossil identification chart for divine travel.",
                       aliases=["ft", "fossiltable", "fossilchart", "fossil"])
     async def fossils(self, ctx):
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
@@ -858,7 +811,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="divinetravel", description="Brings up a *Minecraft* divine travel chart.",
+    @commands.command(name="divinetravel", description="Brings up the chart for divine travel.",
                       aliases=["dt", "divine", "div", "dv"], usage="[option]")
     async def divinetravel(self, ctx, *, option: str=""):
         if option:
@@ -876,6 +829,78 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         else:
             url = "https://media.discordapp.net/attachments/771698457391136798/934726825811275816/unknown.png"
             await funcs.sendImage(ctx, url)
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="bastions", description="Shows the comprehensive guides to bastions.", hidden=True, aliases=["bastion"])
+    async def bastions(self, ctx):
+        await ctx.reply("Guides: https://youtube.com/playlist?list=PL7Q35RXRsOR-udeKzwlYGJd0ZrvGJ0fwu\n\nP" +
+                        "ractice Map: https://github.com/LlamaPag/bastion\n\nGuide to Practice Map: <https://youtu.be/jlA-jW7VGqw>")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="endpractice", description="Shows the end practice map by ryguy2k4.", hidden=True,
+                      aliases=["end", "endfight", "endpractise"])
+    async def endpractice(self, ctx):
+        await ctx.reply("https://github.com/ryguy2k4/ryguy2k4endpractice/releases")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="mapless", description="Shows the mapless treasure tutorial and practice map.", hidden=True,
+                      aliases=["buriedtreasure"])
+    async def mapless(self, ctx):
+        await ctx.reply("Tutorial: https://youtu.be/ho1rwmooHRg\n\nPractice Map: <https://cdn.discordapp.com/att" +
+                        "achments/405839885509984256/885694752056541234/Mapless_Map.zip>")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="quadrants", description="Shows the four Nether quadrants.", hidden=True,
+                      aliases=["netheregions", "netheregion", "netherregion", "netherregions", "nether", "quadrant"])
+    async def quadrants(self, ctx):
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/937755369072107520/ejAZNGq.png")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="bedtiming", description="Shows the accurate bed timing for end fights.", hidden=True,
+                      aliases=["bedtimings", "onecycle", "timingbed", "bedtime", "bed", "beds"])
+    async def bedtiming(self, ctx):
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/937078099789635614/unknown.png")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="ninjabrainbot", aliases=["ninjabot", "ninjabrain", "nb", "nbb"], hidden=True,
+                      description="Shows the Ninjabrain Bot tutorial and repository page.")
+    async def ninjabrainbot(self, ctx):
+        await ctx.reply("Tutorial: <https://youtu.be/Rx8i7e5lu7g>\n\nRepository: https://github.com/Ninjabrain1/Ninjabrain-Bot")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="eray", aliases=["eraying", "microlensing"], hidden=True, description="Shows the microlensing tutorial.")
+    async def eray(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=jvTfMLPnMSw")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="blindtravelcoords", aliases=["rings", "strongholdrings", "strongholdring"], hidden=True,
+                      description="Shows the idea blind travel coordinates for the first to third stronghold rings.")
+    async def blindtravelcoords(self, ctx):
+        await ctx.reply("https://imgur.com/gallery/i3fIanf")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="mcspeedrunning", description="Shows some important *Minecraft: Java Edition* speedrunning resources.",
+                      aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning", "mcsr", "speedrun"])
+    async def mcspeedrunning(self, ctx):
+        await ctx.reply("Guide: https://www.youtube.com/watch?v=GAbnKAyireM\n\nWebsite: https://www.minecraftspeedrunning.com/")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="speedrunigt", aliases=["igt"], description="Download the SpeedRunIGT mod here.", hidden=True)
+    async def speedrunigt(self, ctx):
+        await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True)
+    async def zerocycle(self, ctx):
+        await ctx.reply("https://zerocycle.repl.co/")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="fsg", description="Shows a list of FSG seed generators.", hidden=True, aliases=["fsgseed", "fsgseeds"])
+    async def fsg(self, ctx):
+        await ctx.reply("Use one of the allowed generators: " +
+                        "<https://docs.google.com/spreadsheets/d/1ilu72GJ-vJZq2LFU68rycGMeTbWPjHJnO8PGfp4QjA8/edit#gid=0>\n\n" +
+                        "If you would like to use the generator locally for shorter wait times, follow this: " +
+                        "<https://youtu.be/Gl7zOn2lLo4>\n\nPlease play the seed within 30 seconds after it has been generated.")
 
 
 def setup(botInstance):
