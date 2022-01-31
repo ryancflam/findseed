@@ -817,14 +817,14 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             language = ""
             option = None
             await ctx.reply(embed=Embed(title="Please select a language below or input `quit` to quit...",
-                                       description=output))
+                                        description=output))
             while language not in languages and language != "quit":
                 try:
                     option = await self.client.wait_for(
                         "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=120
                     )
-                    language = option.content.casefold().replace(" ", "").replace("#", "sharp").replace(
-                        "♯", "sharp").replace("++", "pp")
+                    language = option.content.casefold().replace(" ", "").replace("#", "sharp") \
+                        .replace("♯", "sharp").replace("++", "pp")
                     language = "javascript" if language == "js" else language
                     if language not in languages and language != "quit":
                         await option.reply(embed=funcs.errorEmbed(None, "Invalid language."))
