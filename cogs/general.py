@@ -178,7 +178,12 @@ class General(commands.Cog, name="General", description="Standard commands relat
             try:
                 cog = self.client.get_cog(cogname.replace("_", " ").title())
                 userisowner = ctx.author == (await self.client.application_info()).owner
-                commandsList = list(filter(lambda x: not x.hidden or userisowner, sorted(cog.get_commands(), key=lambda y: y.name)))
+                commandsList = list(
+                    filter(
+                        lambda x: userisowner or not funcs.commandIsOwnerOnly(x) and not funcs.commandIsEE(x),
+                        sorted(cog.get_commands(), key=lambda y: y.name)
+                    )
+                )
                 if not commandsList:
                     raise Exception()
                 break

@@ -87,6 +87,10 @@ def commandIsOwnerOnly(command):
     return "<function is_owner.<locals>.predicate" in [str(i).split(" at")[0] for i in command.checks]
 
 
+def commandIsEE(command):
+    return command.cog.qualified_name == "Easter Eggs"
+
+
 def commandsListEmbed(client, menu: int=0):
     e = Embed(title=f"{'Miscellaneous' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands")
     cmds = 0
