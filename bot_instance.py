@@ -35,7 +35,6 @@ class BotInstance(Bot):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
             intents=Intents.all(),
-            case_insensitive=True,
             strip_after_prefix=True
         )
         self.loop.create_task(self.__generateFiles())
@@ -124,6 +123,8 @@ class BotInstance(Bot):
             await self.__presence(self.__activityName)
 
     async def on_message(self, message):
+        command = message.content.split(self.command_prefix, 1)[-1].split(" ", 1)
+        message.content = self.command_prefix + command[0].casefold() + ((" " + command[-1]) if " " in message.content else "")
         ctx = await self.get_context(message)
         if ctx.valid and not self.is_ready() and await funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
