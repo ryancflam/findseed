@@ -575,7 +575,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 return await ctx.reply(embed=funcs.errorEmbed(
                     "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
                 ))
-        location = f"{int(time())}.mp3"
+        location = f"{time()}.mp3"
         await self.tts.save(text, f"{funcs.getPath()}/temp/{location}", slow=False, lang=langcode)
         file = File(f"{funcs.getPath()}/temp/" + location)
         try:
