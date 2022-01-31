@@ -160,12 +160,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
-            data = funcs.readJson("data/blacklist.json")
+            data = await funcs.readJson("data/blacklist.json")
             serverList = list(data["servers"])
             if serverID not in serverList:
                 serverList.append(serverID)
                 data["servers"] = serverList
-                funcs.dumpJson("data/blacklist.json", data)
+                await funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.reply("Added.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
@@ -181,14 +181,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             userID = int(userID)
             if userID == ctx.author.id:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Are you trying to blacklist yourself?"))
-            if userID in funcs.readJson("data/whitelist.json")["users"]:
+            if userID in (await funcs.readJson("data/whitelist.json"))["users"]:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "This user is whitelisted."))
-            data = funcs.readJson("data/blacklist.json")
+            data = await funcs.readJson("data/blacklist.json")
             userList = list(data["users"])
             if userID not in userList:
                 userList.append(userID)
                 data["users"] = userList
-                funcs.dumpJson("data/blacklist.json", data)
+                await funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.reply("Added.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Already in blacklist."))
         except ValueError:
@@ -202,12 +202,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             serverID = int(serverID)
-            data = funcs.readJson("data/blacklist.json")
+            data = await funcs.readJson("data/blacklist.json")
             serverList = list(data["servers"])
             if serverID in serverList:
                 serverList.remove(serverID)
                 data["servers"] = serverList
-                funcs.dumpJson("data/blacklist.json", data)
+                await funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.reply("Removed.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
@@ -221,12 +221,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
-            data = funcs.readJson("data/blacklist.json")
+            data = await funcs.readJson("data/blacklist.json")
             userList = list(data["users"])
             if userID in userList:
                 userList.remove(userID)
                 data["users"] = userList
-                funcs.dumpJson("data/blacklist.json", data)
+                await funcs.dumpJson("data/blacklist.json", data)
                 return await ctx.reply("Removed.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Not in blacklist."))
         except ValueError:
@@ -235,7 +235,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.command(name="blacklist", description="Gets the blacklist.", aliases=["bl"])
     @commands.is_owner()
     async def _blacklist(self, ctx):
-        data = funcs.readJson("data/blacklist.json")
+        data = await funcs.readJson("data/blacklist.json")
         serverList = list(data["servers"])
         userList = list(data["users"])
         await ctx.reply(
@@ -248,7 +248,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.command(name="whitelist", description="Gets the whitelist.", aliases=["wl"])
     @commands.is_owner()
     async def _whitelist(self, ctx):
-        userList = list(funcs.readJson("data/whitelist.json")["users"])
+        userList = list((await funcs.readJson("data/whitelist.json"))["users"])
         await ctx.reply(
             "```Users ({:,}): ".format(len(userList)) +
             f"{'None' if not userList else ', '.join(str(user) for user in userList)}```"
@@ -262,14 +262,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
-            if userID in funcs.readJson("data/blacklist.json")["users"]:
+            if userID in (await funcs.readJson("data/blacklist.json"))["users"]:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "This user is blacklisted."))
-            data = funcs.readJson("data/whitelist.json")
+            data = await funcs.readJson("data/whitelist.json")
             userList = list(data["users"])
             if userID not in userList:
                 userList.append(userID)
                 data["users"] = userList
-                funcs.dumpJson("data/whitelist.json", data)
+                await funcs.dumpJson("data/whitelist.json", data)
                 return await ctx.reply("Added.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Already in whitelist."))
         except ValueError:
@@ -283,14 +283,14 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
-            data = funcs.readJson("data/whitelist.json")
+            data = await funcs.readJson("data/whitelist.json")
             userList = list(data["users"])
             if ctx.author.id == userID:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Are you trying to unwhitelist yourself?"))
             if userID in userList:
                 userList.remove(userID)
                 data["users"] = userList
-                funcs.dumpJson("data/whitelist.json", data)
+                await funcs.dumpJson("data/whitelist.json", data)
                 return await ctx.reply("Removed.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Not in whitelist."))
         except ValueError:
@@ -319,12 +319,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
-            data = funcs.readJson("data/unprompted_bots.json")
+            data = await funcs.readJson("data/unprompted_bots.json")
             userList = list(data["ids"])
             if userID not in userList:
                 userList.append(userID)
                 data["ids"] = userList
-                funcs.dumpJson("data/unprompted_bots.json", data)
+                await funcs.dumpJson("data/unprompted_bots.json", data)
                 return await ctx.reply("Added.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Already in unprompted bots list."))
         except ValueError:
@@ -338,12 +338,12 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         try:
             userID = int(userID)
-            data = funcs.readJson("data/unprompted_bots.json")
+            data = await funcs.readJson("data/unprompted_bots.json")
             userList = list(data["ids"])
             if userID in userList:
                 userList.remove(userID)
                 data["ids"] = userList
-                funcs.dumpJson("data/unprompted_bots.json", data)
+                await funcs.dumpJson("data/unprompted_bots.json", data)
                 return await ctx.reply("Removed.")
             await ctx.reply(embed=funcs.errorEmbed(None, "Not in unprompted bots list."))
         except ValueError:
@@ -352,7 +352,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.command(name="unpromptedbots", description="Gets the list of unprompted bots.", aliases=["ub"])
     @commands.is_owner()
     async def _unpromptedbots(self, ctx):
-        userList = list(funcs.readJson("data/unprompted_bots.json")["ids"])
+        userList = list((await funcs.readJson("data/unprompted_bots.json"))["ids"])
         await ctx.reply(
             f"```Allowed unprompted bots: {'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )

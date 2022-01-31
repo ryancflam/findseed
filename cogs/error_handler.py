@@ -13,7 +13,7 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for ha
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            if ctx.author.id in funcs.readJson("data/whitelist.json")["users"]:
+            if ctx.author.id in (await funcs.readJson("data/whitelist.json"))["users"]:
                 ctx.command.reset_cooldown(ctx)
                 return await self.client.process_commands(ctx.message)
             retry = round(error.retry_after, 2)

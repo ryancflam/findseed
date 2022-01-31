@@ -12,21 +12,25 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                          description="Funny bot responses that are not command-invoked."):
     def __init__(self, botInstance):
         self.client = botInstance
+        self.client.loop.create_task(self.__generateFiles())
         self.lastthreemsgs = {}
-        funcs.generateJson("unprompted_bots", {"ids": []})
-        funcs.generateJson("unprompted_messages", {"servers": []})
+
+    @staticmethod
+    async def __generateFiles():
+        await funcs.generateJson("unprompted_bots", {"ids": []})
+        await funcs.generateJson("unprompted_messages", {"servers": []})
 
     @commands.command(name="umenable", description="Enables unprompted messages for your server.",
                       aliases=["ume", "eum", "enableum"])
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def umenable(self, ctx):
-        data = funcs.readJson("data/unprompted_messages.json")
+        data = await funcs.readJson("data/unprompted_messages.json")
         serverList = list(data["servers"])
         if ctx.guild.id not in serverList:
             serverList.append(ctx.guild.id)
             data["servers"] = serverList
-            funcs.dumpJson("data/unprompted_messages.json", data)
+            await funcs.dumpJson("data/unprompted_messages.json", data)
             return await ctx.reply("`Enabled unprompted messages for this server.`")
         await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
 
@@ -35,12 +39,12 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def umdisable(self, ctx):
-        data = funcs.readJson("data/unprompted_messages.json")
+        data = await funcs.readJson("data/unprompted_messages.json")
         serverList = list(data["servers"])
         if ctx.guild.id in serverList:
             serverList.remove(ctx.guild.id)
             data["servers"] = serverList
-            funcs.dumpJson("data/unprompted_messages.json", data)
+            await funcs.dumpJson("data/unprompted_messages.json", data)
             return await ctx.reply("`Disabled unprompted messages for this server.`")
         await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
 
@@ -62,9 +66,10 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if (not message.guild or message.guild and message.guild.id in funcs.readJson("data/unprompted_messages.json")["servers"]) \
-                and funcs.userNotBlacklisted(self.client, message) \
-                and (not message.author.bot or (message.author.id in funcs.readJson("data/unprompted_bots.json")["ids"]
+        if (not message.guild
+            or message.guild and message.guild.id in (await funcs.readJson("data/unprompted_messages.json"))["servers"]) \
+                and await funcs.userNotBlacklisted(self.client, message) \
+                and (not message.author.bot or (message.author.id in (await funcs.readJson("data/unprompted_bots.json"))["ids"]
                                                 and message.author.id != self.client.user.id)):
             originalmsg = message.content
             lowercase = originalmsg.casefold()

@@ -21,11 +21,14 @@ BARTER_LIMIT = 896
 class Minecraft(commands.Cog, name="Minecraft", description="Commands relating to *Minecraft* and *Minecraft* speedrunning."):
     def __init__(self, botInstance):
         self.client = botInstance
-        self.divinetravel = funcs.readJson("assets/minecraft/divine_travel.json")
-        self.perfecttravel = funcs.readJson("assets/minecraft/perfect_travel.json")
-        self.eyedata = funcs.readJson("assets/minecraft/eye_data.json")
-        self.loottable = self.piglinLootTable()
-        funcs.generateJson(
+        self.client.loop.create_task(self.__readFiles())
+
+    async def __readFiles(self):
+        self.divinetravel = await funcs.readJson("assets/minecraft/divine_travel.json")
+        self.perfecttravel = await funcs.readJson("assets/minecraft/perfect_travel.json")
+        self.eyedata = await funcs.readJson("assets/minecraft/eye_data.json")
+        self.loottable = await self.piglinLootTable()
+        await funcs.generateJson(
             "findseed",
             {
                 "calls": 0,
@@ -36,18 +39,11 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 }
             }
         )
-        funcs.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
+        await funcs.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
 
     @staticmethod
-    def randomEyes():
-        eyes = 0
-        for _ in range(12):
-            eyes += 1 if funcs.oneIn(10) else 0
-        return eyes
-
-    @staticmethod
-    def piglinLootTable():
-        lt = funcs.readJson("assets/minecraft/piglin_loot_table.json")
+    async def piglinLootTable():
+        lt = await funcs.readJson("assets/minecraft/piglin_loot_table.json")
         ltnew = []
         for i in lt:
             if i["id"] < 5:
@@ -61,6 +57,13 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                 for _ in range(i["weight"] * 3):
                     ltnew.append(i)
         return ltnew
+
+    @staticmethod
+    def randomEyes():
+        eyes = 0
+        for _ in range(12):
+            eyes += 1 if funcs.oneIn(10) else 0
+        return eyes
 
     @staticmethod
     def getExcess(item):
@@ -101,7 +104,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
                       aliases=["fs", "seed", "findseeds", "f"])
     async def findseed(self, ctx):
         eyes = self.randomEyes()
-        data = funcs.readJson("data/findseed.json")
+        data = await funcs.readJson("data/findseed.json")
         odds = self.eyedata[str(eyes)]["percent"]
         onein = self.eyedata[str(eyes)]["onein"]
         update = False
@@ -115,7 +118,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         highestTotal = data["highest"]["found"]
         data["calls"] += 1
         calls = data["calls"]
-        funcs.dumpJson("data/findseed.json", data)
+        await funcs.dumpJson("data/findseed.json", data)
         file = File(f"{funcs.getPath()}/assets/minecraft/portal_frame_images/{eyes}eye.png", filename="portal.png")
         foundTime = "just now"
         if not update:
@@ -153,7 +156,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
     async def finddream(self, ctx):
         pearls, rods = 0, 0
         dpearls, drods = 262, 305
-        data = funcs.readJson("data/finddream.json")
+        data = await funcs.readJson("data/finddream.json")
         mostPearls = data["mostPearls"]
         mostRods = data["mostRods"]
         for _ in range(dpearls):
@@ -164,7 +167,7 @@ class Minecraft(commands.Cog, name="Minecraft", description="Commands relating t
         data["mostRods"] = rods if rods >= mostRods else mostRods
         data["iteration"] += 1
         iters = data['iteration']
-        funcs.dumpJson("data/finddream.json", data)
+        await funcs.dumpJson("data/finddream.json", data)
         e = Embed(
             title=f"{self.client.command_prefix}finddream",
             description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " + \

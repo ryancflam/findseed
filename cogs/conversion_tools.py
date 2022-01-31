@@ -13,7 +13,11 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
                       description="Convert inputs from one unit or format to another."):
     def __init__(self, botInstance):
         self.client = botInstance
-        self.morsecode = funcs.readJson("assets/conversion_tools/morse_code.json")
+        self.client.loop.create_task(self.__readFiles())
+        self.morsecode = None
+
+    async def __readFiles(self):
+        self.morsecode = await funcs.readJson("assets/conversion_tools/morse_code.json")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",

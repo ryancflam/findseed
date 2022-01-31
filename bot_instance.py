@@ -38,15 +38,21 @@ class BotInstance(Bot):
             case_insensitive=True,
             strip_after_prefix=True
         )
+        self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
         self.__eventLoop = loop
         self.__token = config.botToken
         self.__activityName = config.activityName
         self.__activityType = config.activityType
         self.__status = config.status
-        self.__generateFiles()
         self.__statcord = Client(self, config.statcordKey)
         self.__statcord.start_loop()
+
+    def startup(self):
+        for cog in listdir(f"{PATH}/cogs"):
+            if cog.endswith(".py"):
+                funcs.loadCog(self, cog)
+        super().run(self.__token, reconnect=True)
 
     @staticmethod
     def __generateDir(name):
@@ -54,20 +60,14 @@ class BotInstance(Bot):
             makedirs(f"{PATH}/{name}")
             print("Generated directory: " + name)
 
-    def __generateFiles(self):
+    async def __generateFiles(self):
         self.__generateDir("data")
         if path.exists(f"{funcs.getPath()}/temp"):
             rmtree(f"{funcs.getPath()}/temp")
             print("Removed directory: temp")
         self.__generateDir("temp")
-        funcs.generateJson("blacklist", {"servers": [], "users": []})
-        funcs.generateJson("whitelist", {"users": []})
-
-    def startup(self):
-        for cog in listdir(f"{PATH}/cogs"):
-            if cog.endswith(".py"):
-                funcs.loadCog(self, cog)
-        super().run(self.__token, reconnect=True)
+        await funcs.generateJson("blacklist", {"servers": [], "users": []})
+        await funcs.generateJson("whitelist", {"users": []})
 
     async def kill(self):
         print("Stopping bot...")
@@ -110,12 +110,12 @@ class BotInstance(Bot):
         except Exception as ex:
             print(f"Warning - {ex}")
         owner = (await self.application_info()).owner
-        data = funcs.readJson("data/whitelist.json")
+        data = await funcs.readJson("data/whitelist.json")
         wl = list(data["users"])
         if owner.id not in wl:
             wl.append(owner.id)
             data["users"] = wl
-            funcs.dumpJson("data/whitelist.json", data)
+            await funcs.dumpJson("data/whitelist.json", data)
         print(f"Logged in as Discord user: {self.user}")
         await owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
@@ -125,9 +125,9 @@ class BotInstance(Bot):
 
     async def on_message(self, message):
         ctx = await self.get_context(message)
-        if ctx.valid and not self.is_ready() and funcs.userNotBlacklisted(self, message):
+        if ctx.valid and not self.is_ready() and await funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
-        if self.is_ready() and funcs.userNotBlacklisted(self, message):
+        if self.is_ready() and await funcs.userNotBlacklisted(self, message):
             if ctx.valid and ctx.cog.qualified_name != "Easter Eggs":
                 await message.channel.trigger_typing()
             await self.process_commands(message)

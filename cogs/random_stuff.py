@@ -18,15 +18,18 @@ RN_RANGE = 999999999999
 class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fun commands for you to kill time."):
     def __init__(self, botInstance):
         self.client = botInstance
+        self.client.loop.create_task(self.__readFiles())
         self.activeSpinners = []
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
-        self.personalityTest = funcs.readJson("assets/random_stuff/personality_test.json")
-        self.trumpquotes = funcs.readJson("assets/random_stuff/trump_quotes.json")
-        self.truths = funcs.readTxtLines("assets/random_stuff/truths.txt")
-        self.dares = funcs.readTxtLines("assets/random_stuff/dares.txt")
-        self.nhie = funcs.readTxtLines("assets/random_stuff/nhie.txt")
         self.tts = aiogTTS()
+
+    async def __readFiles(self):
+        self.personalityTest = await funcs.readJson("assets/random_stuff/personality_test.json")
+        self.trumpquotes = await funcs.readJson("assets/random_stuff/trump_quotes.json")
+        self.truths = await funcs.readTxtLines("assets/random_stuff/truths.txt")
+        self.dares = await funcs.readTxtLines("assets/random_stuff/dares.txt")
+        self.nhie = await funcs.readTxtLines("assets/random_stuff/nhie.txt")
 
     @staticmethod
     def rgb(value):
@@ -563,7 +566,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="tts", description="Converts text to speech.", aliases=["texttospeech", "speech"],
-                      usage='<language code> <input>', hidden=True)
+                      usage='<language code> <input>')
     async def tts(self, ctx, langcode, *, text):
         langs = lang.tts_langs()
         if langcode not in langs:
@@ -575,7 +578,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         location = f"{int(time())}.mp3"
         await self.tts.save(text, f"{funcs.getPath()}/temp/{location}", slow=False, lang=langcode)
         file = File(f"{funcs.getPath()}/temp/" + location)
-        await ctx.reply(file=file)
+        try:
+            await ctx.reply(file=file)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, "The generated file is too large!"))
         funcs.deleteTempFile(location)
 
     @commands.cooldown(1, 1, commands.BucketType.user)

@@ -18,12 +18,17 @@ class Hangman:
         "┌----\n|   |\n|\n|\n|\n|\n|\n|\n|9 lives\n└-------"
     ]
 
-    def __init__(self):
-        self.__word = choice(readTxtLines("assets/chat_games/hangman_words.txt"))
-        self.__dashes = str("-" * len(self.__word))
+    def __init__(self, client):
+        self.__client = client
+        self.__client.loop.create_task(self.__newWord())
+        self.__dashes = None
         self.__lives = 10
         self.__guesses = set()
         self.__startTime = time()
+
+    async def __newWord(self):
+        self.__word = choice((await readTxtLines("assets/chat_games/hangman_words.txt")))
+        self.__dashes = str("-" * len(self.__word))
 
     @staticmethod
     def __dash(secret, d, r):

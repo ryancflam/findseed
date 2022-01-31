@@ -2,11 +2,12 @@ import time
 from calendar import monthrange
 from datetime import date, datetime, timedelta
 from io import BytesIO
-from json import JSONDecodeError, dump, load
+from json import JSONDecodeError, dumps, loads
 from os import path, remove
 from random import randint
 from re import split
 
+from aiofiles import open
 from dateutil import parser
 from discord import Embed, File
 from httpx import AsyncClient, get
@@ -72,35 +73,6 @@ def evalMath(inp: str):
     raise Exception(ans[1])
 
 
-def readTxtLines(pathstr):
-    with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
-        lines = f.readlines()
-    f.close()
-    return [i[:-1] for i in lines if i[:-1]]
-
-
-def readJson(pathstr):
-    with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
-        data = load(f)
-    f.close()
-    return data
-
-
-def generateJson(name, data: dict):
-    file = f"{getPath()}/data/{name}.json"
-    if not path.exists(file):
-        fobj = open(file, "w")
-        dump(data, fobj, sort_keys=True, indent=4)
-        fobj.close()
-        print(f"Generated file: {name}.json")
-
-
-def dumpJson(pathstr, data):
-    with open(f"{getPath()}/{pathstr}", "w") as f:
-        dump(data, f, sort_keys=True, indent=4)
-    f.close()
-
-
 def replaceCharacters(string, toreplace: list, replaceto: str=""):
     for char in toreplace:
         string = string.replace(char, replaceto)
@@ -137,24 +109,6 @@ def commandsListEmbed(client, menu: int=0):
     zero = f", or {client.command_prefix}category <category> for more information about a specific category"
     e.set_footer(text=f"Use {client.command_prefix}help <command> for help with a specific command{zero if not menu else ''}.")
     return e
-
-
-def userNotBlacklisted(client, message):
-    if message.author.id in readJson("data/whitelist.json")["users"]:
-        return True
-    data = readJson("data/blacklist.json")
-    serverList = list(data["servers"])
-    userList = list(data["users"])
-    allowed = True
-    for serverID in serverList:
-        server = client.get_guild(serverID)
-        if server:
-            member = server.get_member(message.author.id)
-            if member:
-                allowed = False
-                break
-    return allowed and message.author.id not in userList \
-           and (not message.guild or message.guild.id not in serverList)
 
 
 def weirdCase(text):
@@ -565,8 +519,37 @@ async def readTxtAttachment(message):
     return attachment.decode("utf-8")
 
 
+async def readTxtLines(pathstr):
+    async with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
+        lines = await f.readlines()
+    await f.close()
+    return [i[:-1] for i in lines if i[:-1]]
+
+
+async def readJson(pathstr):
+    async with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
+        data = await f.read()
+    await f.close()
+    return loads(data)
+
+
+async def generateJson(name, data: dict):
+    file = f"{getPath()}/data/{name}.json"
+    if not path.exists(file):
+        async with open(file, "w") as f:
+            await f.write(dumps(data, sort_keys=True, indent=4))
+        await f.close()
+        print(f"Generated file: {name}.json")
+
+
+async def dumpJson(pathstr, data):
+    async with open(f"{getPath()}/{pathstr}", "w") as f:
+        await f.write(dumps(data, sort_keys=True, indent=4))
+    await f.close()
+
+
 async def easterEggsPredicate(ctx):
-    return ctx.guild and ctx.guild.id in readJson("data/easter_eggs.json")["servers"]
+    return ctx.guild and ctx.guild.id in (await readJson("data/easter_eggs.json"))["servers"]
 
 
 async def getRequest(url, headers=None, params=None, timeout=None, verify=True):
@@ -615,3 +598,21 @@ async def postRequest(url, data=None, headers=None, timeout=None, verify=True, j
 async def decodeQR(link):
     res = await getRequest("http://api.qrserver.com/v1/read-qr-code", params={"fileurl": link})
     return res.json()[0]["symbol"][0]["data"]
+
+
+async def userNotBlacklisted(client, message):
+    if message.author.id in (await readJson("data/whitelist.json"))["users"]:
+        return True
+    data = await readJson("data/blacklist.json")
+    serverList = list(data["servers"])
+    userList = list(data["users"])
+    allowed = True
+    for serverID in serverList:
+        server = client.get_guild(serverID)
+        if server:
+            member = server.get_member(message.author.id)
+            if member:
+                allowed = False
+                break
+    return allowed and message.author.id not in userList \
+           and (not message.guild or message.guild.id not in serverList)

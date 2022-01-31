@@ -81,7 +81,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                         value="`{}{} ({:,})`".format(self.client.command_prefix, popular['name'], int(popular['count'])))
         except:
             pass
-        e.add_field(name="!findseed Calls", value="`{:,}`".format(funcs.readJson("data/findseed.json")['calls']))
+        e.add_field(name="!findseed Calls", value="`{:,}`".format((await funcs.readJson("data/findseed.json"))['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.starttime)}")
         await ctx.reply(embed=e)

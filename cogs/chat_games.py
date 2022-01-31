@@ -1,4 +1,4 @@
-from asyncio import TimeoutError
+from asyncio import TimeoutError, sleep
 from datetime import datetime
 from random import choice, randint, shuffle
 from string import ascii_lowercase
@@ -31,19 +31,27 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
 
     async def checkGameInChannel(self, ctx):
         if ctx.channel.id in self.gameChannels:
-            await ctx.reply(
-                embed=funcs.errorEmbed(
-                    None, "A game is already in progress in this channel, please be patient or use another channel!"
-                )
+            e = funcs.errorEmbed(
+                None,
+                f"A game is already in progress in this channel (`{ctx.channel.id}`), please be patient or use another channel!"
             )
+            e.set_footer(text="If you believe there is no game in progress in this channel, please contact the bot owner via " +
+                              f"{self.client.command_prefix}msgbotowner and provide the channel ID above.")
+            await ctx.reply(embed=e)
             return True
         return False
 
     @commands.command(name="cleargamechannels", description="Resets the game channel list.",
-                      aliases=["resetgamechannels", "rgc", "cgc"], hidden=True)
+                      aliases=["resetgamechannels", "rgc", "cgc"], hidden=True, usage="[channel ID]")
     @commands.is_owner()
-    async def cleargamechannels(self, ctx):
-        self.gameChannels = []
+    async def cleargamechannels(self, ctx, channelID=None):
+        if not channelID:
+            self.gameChannels = []
+        else:
+            try:
+                self.gameChannels.remove(int(channelID))
+            except:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid channel ID."))
         await ctx.reply(":ok_hand:")
 
     @tasks.loop(seconds=1.0)
@@ -132,7 +140,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 )
             except TimeoutError:
                 continue
-            if joinGame.author.bot or joinGame.author in players or not funcs.userNotBlacklisted(self.client, joinGame):
+            if joinGame.author.bot or joinGame.author in players or not await funcs.userNotBlacklisted(self.client, joinGame):
                 continue
             else:
                 players.append(joinGame.author)
@@ -276,7 +284,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 )
             except TimeoutError:
                 continue
-            if joinGame.author.bot or joinGame.author in game.getPlayerList() or not funcs.userNotBlacklisted(self.client, joinGame):
+            if joinGame.author.bot or joinGame.author in game.getPlayerList() \
+                    or not await funcs.userNotBlacklisted(self.client, joinGame):
                 continue
             else:
                 game.addPlayer(joinGame.author)
@@ -1059,7 +1068,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             "Input `lives` to see how many lives you have left, `time` to see total elapsed time, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
-        game = Hangman()
+        game = Hangman(self.client)
+        await sleep(1)
         while game.getLives() > 0 and not game.getDashes() == game.getWord():
             await ctx.send(f"```{ctx.author.name}'s word:\n\n{game.getDashes()}```")
             await ctx.send("`Please guess a letter.`")
@@ -1235,16 +1245,24 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 name.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
             )
             await ctx.send(embed=e)
-            try:
-                useranswer = await self.client.wait_for(
-                    "message", timeout=10,
-                    check=lambda m: guessmsg in funcs.replaceCharacters(
-                        m.content.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
-                    ) and m.channel == ctx.channel and funcs.userNotBlacklisted(self.client, m)
-                )
-                await useranswer.reply(f"`Correct! That Pokémon is {name}!`")
-            except TimeoutError:
-                await ctx.send(f"`Time's up! That Pokémon is {name}!`")
+            starttime = int(time())
+            timeout = 10
+            while True:
+                try:
+                    useranswer = await self.client.wait_for(
+                        "message", timeout=timeout,
+                        check=lambda m: guessmsg in funcs.replaceCharacters(
+                            m.content.casefold().replace("-rime", "rime").replace("-mime", "mime").replace('é', "e"), removechars
+                        ) and m.channel == ctx.channel
+                    )
+                    if not await funcs.userNotBlacklisted(self.client, useranswer):
+                        timeout -= int(time()) - starttime
+                        continue
+                    await useranswer.reply(f"`Correct! That Pokémon is {name}!`")
+                    break
+                except TimeoutError:
+                    await ctx.send(f"`Time's up! That Pokémon is {name}!`")
+                    break
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.send(embed=funcs.errorEmbed(None, "Possible server error, stopping game."))
