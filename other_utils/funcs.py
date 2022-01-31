@@ -515,8 +515,16 @@ def deleteTempFile(file: str):
 
 
 async def readTxtAttachment(message):
-    attachment = await message.attachments[0].read()
-    return attachment.decode("utf-8")
+    attach = message.attachments[0]
+    filename = f"{time.time()}-{attach.filename}"
+    filepath = f"{getPath()}/temp/{filename}"
+    await attach.save(filepath)
+    try:
+        content = await readTxt("temp/" + filename)
+    except:
+        content = None
+    deleteTempFile(filename)
+    return content
 
 
 async def readTxt(pathstr, lines=False):

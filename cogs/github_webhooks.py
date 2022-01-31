@@ -46,8 +46,10 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
                 for commit in commits:
                     user = commit['committer']['username']
                     message = commit['message']
-                    e.description += f"\n`{commit['id'][:7]}...` {message[:50] + ('...' if len(message) > 50 else '')} " + \
+                    e.description += f"\n`{commit['id'][:7]}...{commit['id'][-7:]}` " + \
+                                     f"{message[:100] + ('...' if len(message) > 100 else '')} " + \
                                      f"- [{user}](https://github.com/{user})"
+                e.description = e.description[:2048]
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
                 RIDICULOUS_CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(e, RIDICULOUS_CHANNEL_LIST[:-1]))
             except:

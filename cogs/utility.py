@@ -17,7 +17,6 @@ from googletrans import Translator, constants
 from lyricsgenius import Genius
 from mendeleev import element
 from plotly import graph_objects as go
-from PyPDF2 import PdfFileReader
 from qrcode import QRCode
 
 import config
@@ -1138,42 +1137,23 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="wordcount", description="Counts the number of words and characters in an input.",
                       aliases=["lettercount", "countletter", "countchar", "countletters", "char", "chars", "letters",
                                "charcount", "wc", "countword", "word", "words", "countwords", "letter"],
-                      usage="<input OR .PDF/.TXT (<= 300 KB for PDF)>")
+                      usage="<input OR text attachment>")
     async def wordcount(self, ctx, *, inp=""):
-        filename = f"{time()}"
         if ctx.message.attachments:
             try:
                 inp = await funcs.readTxtAttachment(ctx.message)
-            except:
-                try:
-                    attach = ctx.message.attachments[0]
-                    if attach.size > 307200:
-                        return await ctx.reply(embed=funcs.errorEmbed(
-                            None, "PDF size must be 300 KB or below. For larger files, please use an online service."
-                        ))
-                    filename = f"{filename}-{attach.filename}"
-                    filepath = f"{funcs.getPath()}/temp/{filename}"
-                    await attach.save(filepath)
-                    pdf = open(filepath, "rb")
-                    reader = PdfFileReader(pdf)
-                    inp = ""
-                    for page in range(reader.numPages):
-                        pageobj = reader.getPage(page - 1)
-                        inp += pageobj.extractText()
-                    pdf.close()
-                except Exception as ex:
-                    funcs.printError(ctx, ex)
-                    inp = inp
+            except Exception as ex:
+                funcs.printError(ctx, ex)
+                inp = inp
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        splt = "".join(ch for ch in inp if ch not in set(punctuation)).split()
+        splt = funcs.replaceCharacters(inp, set(punctuation)).split()
         e = Embed(title="Word Count")
         e.add_field(name="Characters", value="`{:,}`".format(len(inp.strip())))
         e.add_field(name="Words", value="`{:,}`".format(len(splt)))
         e.add_field(name="Unique Words", value="`{:,}`".format(len(set(splt))))
         e.set_footer(text="Note: This may not be 100% accurate.")
         await ctx.reply(embed=e)
-        funcs.deleteTempFile(filename)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.",
