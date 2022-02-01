@@ -61,6 +61,7 @@ class BotInstance(commands.Bot):
             return ex
 
     def __processCommands(self, message):
+        message.content = message.content.replace("！", "!")
         if message.content.startswith(self.command_prefix):
             while message.content.split()[0] == self.command_prefix:
                 messagesplit = message.content.split(self.command_prefix, 1)
