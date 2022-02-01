@@ -204,7 +204,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
         else:
             try:
                 prefix = self.client.command_prefix
-                command = self.client.get_command(cmd[0].replace(prefix, ""))
+                command = self.client.get_command(cmd[0].replace(prefix, "").casefold())
                 cog = command.cog_name
                 if funcs.commandIsOwnerOnly(command) and ctx.author != (await self.client.application_info()).owner \
                         or cog == "Easter Eggs" and not await funcs.easterEggsPredicate(ctx):
