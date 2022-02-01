@@ -36,7 +36,7 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for ha
         elif isinstance(error, commands.UserInputError):
             await ctx.reply(
                 embed=funcs.errorEmbed(
-                    "Invalid arguments!", "Correct usage: " + \
+                    "Invalid arguments!", "Correct usage: " +
                     f"`{self.client.command_prefix}{ctx.command.name} {ctx.command.usage}`"
                 ).set_footer(text="Command usage: <> = Required; [] = Optional")
             )

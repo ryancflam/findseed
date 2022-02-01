@@ -44,7 +44,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         for i in vbds:
             bdm, bdd = i["birthday-string"].split(" ")
             newlist.append(
-                i["name"]["name-USen"].title() + f' ({bdd})' + \
+                i["name"]["name-USen"].title() + f' ({bdd})' +
                 f'{BD_KEY if int(funcs.monthNameToNumber(month)) == now.month and int(bdd[:-2]) == now.day else ""}'
             )
         return newlist
@@ -98,7 +98,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             if not nbugs and not nfish and not nsea and not sbugs and not sfish and not ssea:
                 e = funcs.errorEmbed(None, "Invalid month.")
             e.set_footer(
-                text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " + \
+                text=f"Use {self.client.command_prefix}acbug, {self.client.command_prefix}acfish, or " +
                      f"{self.client.command_prefix}acsea for specific critter information."
             )
         except Exception as ex:
@@ -189,21 +189,21 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         except Exception:
             pref = self.client.command_prefix
             e = funcs.errorEmbed(
-                None, "Not found, please check your spelling. Furniture names are case sensitive." + \
-                      " (e.g. `acoustic guitar` or `Bunny Day arch`)\n\nOr is this even the right category? " + \
+                None, "Not found, please check your spelling. Furniture names are case sensitive." +
+                      " (e.g. `acoustic guitar` or `Bunny Day arch`)\n\nOr is this even the right category? " +
                       f"(`{pref}achouseware`/`{pref}acmisc`/`{pref}acwallmounted`)"
             )
         return e
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acnew", description="Returns a list of critters arriving in a " + \
+    @commands.command(name="acnew", description="Returns a list of critters arriving in a " +
                                                 "particular month in *Animal Crossing: New Horizons*.",
                       aliases=["acarriving", "acarrive", "acn"], usage="[month]")
     async def acnew(self, ctx, month=""):
         await ctx.reply(embed=self.crittersListEmbed(month))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acleaving", description="Returns a list of critters leaving after a " + \
+    @commands.command(name="acleaving", description="Returns a list of critters leaving after a " +
                                                     "particular month in *Animal Crossing: New Horizons*.",
                       aliases=["acleave", "acl"], usage="[month]")
     async def acleaving(self, ctx, month=""):
@@ -412,7 +412,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             bdm, bdd = bd[:-2].split(" ")
             now = datetime.now()
             e.add_field(name="Birthday",
-                        value=f"`{bd} ({funcs.dateToZodiac(bd, ac=True)})`" + \
+                        value=f"`{bd} ({funcs.dateToZodiac(bd, ac=True)})`" +
                               f"{' :birthday:' if int(bdd) == now.day and int(funcs.monthNameToNumber(bdm)) == now.month else ''}")
             e.add_field(name="Species", value=f"`{villagerdata['species']}`")
             e.add_field(name="Gender", value=f"`{villagerdata['gender']}`")
@@ -471,7 +471,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
                     for v in nonsanrio:
                         villagers.remove(v)
                     e.set_footer(
-                        text="Note: NMT probability does not include the Sanrio villagers. " + \
+                        text="Note: NMT probability does not include the Sanrio villagers. " +
                              f"({', '.join(sv for sv in villagers)})"
                     )
             except Exception:
@@ -480,7 +480,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acvbd", aliases=["vbd", "acnhvbd"], usage="[month] [day]",
-                      description="Shows all *Animal Crossing: New Horizons* villagers who celebrates " + \
+                      description="Shows all *Animal Crossing: New Horizons* villagers who celebrates " +
                                   f"their birthday in a given month or on a given date.")
     async def acvbd(self, ctx, month: str="", day: str=""):
         try:

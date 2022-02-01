@@ -56,7 +56,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         if await self.checkGameInChannel(ctx):
             return
         await ctx.send(
-            "**Welcome to Tetris. Use the provided buttons to play, input `time` to see total elapsed time" + \
+            "**Welcome to Tetris. Use the provided buttons to play, input `time` to see total elapsed time" +
             ", `bnw` to enable black-and-white mode, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
@@ -87,7 +87,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             elif nmsg.content.casefold() == "bnw":
                 await ctx.send(f"`{'Enabled' if game.setBnw() else 'Disabled'} black-and-white mode.`")
         lines, level, score = game.getLinesLevelScore()
-        await ctx.send(f"```Lines: {'{:,}'.format(lines)}\n\nLevel: {'{:,}'.format(level)}\n\n" + \
+        await ctx.send(f"```Lines: {'{:,}'.format(lines)}\n\nLevel: {'{:,}'.format(level)}\n\n" +
                        f"Score: {'{:,}'.format(score)}\n\nThanks for playing, {ctx.author.name}!```")
         m, s = game.getTime()
         await funcs.sendTime(ctx, m, s)
@@ -120,7 +120,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         if await self.checkGameInChannel(ctx):
             return
         self.gameChannels.append(ctx.channel.id)
-        await ctx.send("**A game of No Thanks is starting in one minute in this channel! " + \
+        await ctx.send("**A game of No Thanks is starting in one minute in this channel! " +
                        "Say `join` to join. The game requires a minimum of 3 players and a maximum of 7.**")
         players = [ctx.author]
         waiting = time()
@@ -142,8 +142,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             self.gameChannels.remove(ctx.channel.id)
             return await ctx.send("**Not enough players for No Thanks; stopping current game.**")
         await ctx.send(
-            f"**Starting a game of No Thanks with {len(players)} players. " + \
-            "Input `chips` to see how many chips you have, `time` to see total elapsed time, or " + \
+            f"**Starting a game of No Thanks with {len(players)} players. " +
+            "Input `chips` to see how many chips you have, `time` to see total elapsed time, or " +
             "`quit` to quit the game (Note: You may only quit when it is your turn).**"
         )
         count = 1
@@ -152,14 +152,14 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             self.client.loop.create_task(self.ntAwaitInput(game, player, game.getPlayer(count - 1)))
             try:
                 chips = game.getPlayer(count - 1).getChips()
-                await player.send(f"**== No Thanks ==**\n\nWelcome to No Thanks. You are **Player {str(count)}**." + \
-                                  f" Active channel: <#{ctx.channel.id}>\n\n**You have {chips} chips. " + \
-                                  f"You may hide or tell how many chips you have. Every time a card is drawn, you may choose" + \
-                                  " to either take it and gain all of the card's chips, or pass it to the next player and " + \
-                                  "place a chip on the card. If you have no chips left, you must take the card. Once a card is" + \
-                                  " taken, the next card gets drawn. The game ends when there are no cards left to draw, which" + \
-                                  " is when player points are accrued from their cards according to the value of the cards, but" + \
-                                  " cards in a row only count as a single card with the lowest value. Chips are worth one " + \
+                await player.send(f"**== No Thanks ==**\n\nWelcome to No Thanks. You are **Player {str(count)}**." +
+                                  f" Active channel: <#{ctx.channel.id}>\n\n**You have {chips} chips. " +
+                                  f"You may hide or tell how many chips you have. Every time a card is drawn, you may choose" +
+                                  " to either take it and gain all of the card's chips, or pass it to the next player and " +
+                                  "place a chip on the card. If you have no chips left, you must take the card. Once a card is" +
+                                  " taken, the next card gets drawn. The game ends when there are no cards left to draw, which" +
+                                  " is when player points are accrued from their cards according to the value of the cards, but" +
+                                  " cards in a row only count as a single card with the lowest value. Chips are worth one " +
                                   "negative point each. The player(s) with the lowest score wins. Good luck!**")
             except:
                 self.gameChannels.remove(ctx.channel.id)
@@ -198,13 +198,13 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     async def unoDraw(user, drawn):
         if drawn is None:
             return False
-        await user.send("**== Uno ==**\n\nYou have just drawn the following card(s): " + \
+        await user.send("**== Uno ==**\n\nYou have just drawn the following card(s): " +
                         f"`{', '.join(card for card in drawn)}`")
         return True
 
     async def unoCallout(self, ctx, game, caller, victim):
-        await caller.send(f"**== Uno ==**\n\nPsst, **{victim.name}** " + \
-                          "has not said 'uno' yet! Say `call` in this channel to make" + \
+        await caller.send(f"**== Uno ==**\n\nPsst, **{victim.name}** " +
+                          "has not said 'uno' yet! Say `call` in this channel to make" +
                           " them draw two cards before this turn ends!")
         while game.getCallout():
             try:
@@ -214,8 +214,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             except TimeoutError:
                 continue
             if victim == game.getPreviousPlayer():
-                await ctx.send(f"`Uh oh! {victim.name} has been caught not yelling 'uno' by {caller.name}!" + \
-                               f" As punishment, {victim.name} has been forced to draw two extra cards. " + \
+                await ctx.send(f"`Uh oh! {victim.name} has been caught not yelling 'uno' by {caller.name}!" +
+                               f" As punishment, {victim.name} has been forced to draw two extra cards. " +
                                "Better luck next time!`")
                 if not await self.unoDraw(victim, game.callout()):
                     await ctx.send("`No more cards available to draw.`")
@@ -263,7 +263,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         if await self.checkGameInChannel(ctx):
             return
         self.gameChannels.append(ctx.channel.id)
-        await ctx.send("**A game of Uno is starting in one minute in this channel! " + \
+        await ctx.send("**A game of Uno is starting in one minute in this channel! " +
                        "Say `join` to join. The game requires a minimum of 2 players and a maximum of 4.**")
         game = games.Uno()
         game.addPlayer(ctx.author)
@@ -287,9 +287,9 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             self.gameChannels.remove(ctx.channel.id)
             return await ctx.send("**Not enough players for Uno; stopping current game.**")
         await ctx.send(
-            f"**Starting a game of Uno with {len(game.getPlayerList())} players. " + \
-            "Input `hand` to see your hand of cards, `time` to see total elapsed time, or " + \
-            "`quit` to quit the game (Note: You may only quit when it is your turn). " + \
+            f"**Starting a game of Uno with {len(game.getPlayerList())} players. " +
+            "Input `hand` to see your hand of cards, `time` to see total elapsed time, or " +
+            "`quit` to quit the game (Note: You may only quit when it is your turn). " +
             "Remember to say `uno` when you only have one card left!**"
         )
         game.startGame()
@@ -300,16 +300,16 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             hand = game.getHand(player)
             msg = f"`{', '.join(card for card in hand)}` ({len(hand)} left)"
             try:
-                await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are **Player {str(count)}**." + \
-                                  f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}\n\n" + \
+                await player.send(f"**== Uno ==**\n\nWelcome to Uno. You are **Player {str(count)}**." +
+                                  f" Active channel: <#{ctx.channel.id}>\n\nYour hand: {msg}\n\n" +
                                   "**Remember to say `uno` as soon as you play your second to last card!**")
             except:
                 self.gameChannels.remove(ctx.channel.id)
                 return await ctx.send("**Someone has DMs disabled; stopping current game.**")
             count += 1
         logo = "https://media.discordapp.net/attachments/668552771120791563/775240814636171324/logo.png"
-        await ctx.send(f"`Say the name of a card in your hand to play it. " + \
-                       "Say 'draw' to draw a card. Inputs are case insensitive, and you may " + \
+        await ctx.send(f"`Say the name of a card in your hand to play it. " +
+                       "Say 'draw' to draw a card. Inputs are case insensitive, and you may " +
                        "enter the first letter of the card colour and card value (e.g. r 5).`")
         while not game.getGameEndBool():
             if len(game.getPlayerList()) < 2:
@@ -324,7 +324,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     colour=colour
                 )
                 file = File(
-                    funcs.getPath() + funcs.getResource(self.qualified_name, "uno_cards/") + \
+                    funcs.getPath() + funcs.getResource(self.qualified_name, "uno_cards/") +
                     f"{'Xmas_' if datetime.now().month == 12 else ''}{discard.replace(' ', '_')}.png",
                     filename="card.png"
                 )
@@ -352,7 +352,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                 await ctx.send("**Not enough players for Uno; stopping current game.**")
                             break
                         elif decision.casefold().startswith(("w ", "wild")) or decision.casefold() == "w":
-                            await waitForInput.channel.send("`What colour would you like to use? " + \
+                            await waitForInput.channel.send("`What colour would you like to use? " +
                                                             "Please say the first letter of your preferred colour.`")
                             try:
                                 waitForColour = await self.client.wait_for(
@@ -378,7 +378,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                             lastCard = False
                         if playable:
                             _ = await self.unoDraw(affectedPlayer, drawn)
-                            await affectedPlayer.send("**== Uno ==**\n\nYour drawn card is playable! Would you like " + \
+                            await affectedPlayer.send("**== Uno ==**\n\nYour drawn card is playable! Would you like " +
                                                       "to play it? Input `y` to play it, or anything else to keep it.")
                             try:
                                 waitForOption = await self.client.wait_for(
@@ -388,7 +388,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                 if playCard.casefold().startswith("y"):
                                     await ctx.send(f"`{waitForOption.author.name} has played the drawn card.`")
                                     if wildCard:
-                                        await waitForOption.author.send("`What colour do you want? Please say " + \
+                                        await waitForOption.author.send("`What colour do you want? Please say " +
                                                                         "the first letter of your preferred colour.`")
                                         await ctx.send(f"`{waitForOption.author.name} has played a wild card.`")
                                         try:
@@ -412,23 +412,23 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                 else:
                                     await waitForOption.author.send("**== Uno ==**\n\nYou are keeping the card.")
                             except TimeoutError:
-                                await affectedPlayer.send(f"**== Uno ==**\n\nYou have been idling for too long. " + \
+                                await affectedPlayer.send(f"**== Uno ==**\n\nYou have been idling for too long. " +
                                                           "You will now proceed to keep the card.")
                             playable, wildCard = False, False
                         if drawn is None:
-                            await affectedPlayer.send("**== Uno ==**\n\nYou are about to be the victim of a Wild +4 card!" + \
-                                                      " Do you think it may be an illegal move? If so, you may input `y` to " + \
-                                                      "challenge the player.\n```== Wild +4 Challenges ==\n\nAccording to " + \
-                                                      "the official Uno rules, it is considered illegal for a player to use " + \
-                                                      "a Wild +4 card if there are still cards on their hand that match " + \
-                                                      "the colour of the current card on top of the discard pile. Once a Wild" + \
-                                                      " +4 card is played, the victim may choose to challenge the player; if " + \
-                                                      "challenged, the player of the Wild +4 card must then show their hand " + \
-                                                      "of cards to the victim.\n\nIf guilty, the challenged player draws four" + \
-                                                      " cards instead of the accuser as punishment whilst the accuser remains" + \
-                                                      " safe from drawing additional cards. However, if not guilty, then the " + \
-                                                      "accuser must draw a total of six cards.```\nReply with `y` if you " + \
-                                                      "would like to challenge the Wild +4 card play (*You may risk drawing " + \
+                            await affectedPlayer.send("**== Uno ==**\n\nYou are about to be the victim of a Wild +4 card!" +
+                                                      " Do you think it may be an illegal move? If so, you may input `y` to " +
+                                                      "challenge the player.\n```== Wild +4 Challenges ==\n\nAccording to " +
+                                                      "the official Uno rules, it is considered illegal for a player to use " +
+                                                      "a Wild +4 card if there are still cards on their hand that match " +
+                                                      "the colour of the current card on top of the discard pile. Once a Wild" +
+                                                      " +4 card is played, the victim may choose to challenge the player; if " +
+                                                      "challenged, the player of the Wild +4 card must then show their hand " +
+                                                      "of cards to the victim.\n\nIf guilty, the challenged player draws four" +
+                                                      " cards instead of the accuser as punishment whilst the accuser remains" +
+                                                      " safe from drawing additional cards. However, if not guilty, then the " +
+                                                      "accuser must draw a total of six cards.```\nReply with `y` if you " +
+                                                      "would like to challenge the Wild +4 card play (*You may risk drawing " +
                                                       "six cards!*), or any other input to decline.")
                             try:
                                 waitForOption = await self.client.wait_for(
@@ -436,26 +436,26 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                                 )
                                 decision = waitForOption.content
                             except TimeoutError:
-                                await affectedPlayer.send(f"**== Uno ==**\n\nYou have been idling for too long. " + \
+                                await affectedPlayer.send(f"**== Uno ==**\n\nYou have been idling for too long. " +
                                                           "You will now proceed to draw four cards.")
                             decision = decision.casefold().startswith("y")
                             if decision:
-                                await ctx.send(f"`{affectedPlayer.name} suspects that the Wild +4 card is being " + \
-                                               f"played illegally! {currentPlayer.name} will now show their hand " + \
+                                await ctx.send(f"`{affectedPlayer.name} suspects that the Wild +4 card is being " +
+                                               f"played illegally! {currentPlayer.name} will now show their hand " +
                                                f"of cards to {affectedPlayer.name}.`")
                                 msg = f"`{', '.join(card for card in game.getHand(currentPlayer))}` " + \
                                       f"({len(game.getHand(currentPlayer))} left)"
                                 await affectedPlayer.send(f"**== Uno ==**\n\n{currentPlayer.name}'s hand: {msg}")
                             drawn, affectedPlayer, guilty = game.challengePlayer(decision)
                             if guilty:
-                                await ctx.send(f"`Uh oh! {affectedPlayer.name} has been caught illegally playing " + \
-                                               f"the Wild +4 card by {game.getCurrentPlayer().name}! As " + \
-                                               f"punishment, {affectedPlayer.name} has been forced to draw " + \
-                                               f"four cards. {game.getCurrentPlayer().name} is " + \
+                                await ctx.send(f"`Uh oh! {affectedPlayer.name} has been caught illegally playing " +
+                                               f"the Wild +4 card by {game.getCurrentPlayer().name}! As " +
+                                               f"punishment, {affectedPlayer.name} has been forced to draw " +
+                                               f"four cards. {game.getCurrentPlayer().name} is " +
                                                "now safe from drawing.`")
                             if decision and not guilty:
-                                await ctx.send("`It looks like the Wild +4 card has been played legally " + \
-                                               f"after all. Because of that, {affectedPlayer.name} will now " + \
+                                await ctx.send("`It looks like the Wild +4 card has been played legally " +
+                                               f"after all. Because of that, {affectedPlayer.name} will now " +
                                                "have to draw a total of six cards! Better luck next time.`")
                         if drawn:
                             _ = await self.unoDraw(affectedPlayer, drawn)
@@ -479,7 +479,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             colour = self.unoEmbedColour(discard)
             e = Embed(title="Uno", description=f"The final card - `{discard}`", colour=colour)
             file = File(
-                funcs.getPath() + funcs.getResource(self.qualified_name, "uno_cards/") + \
+                funcs.getPath() + funcs.getResource(self.qualified_name, "uno_cards/") +
                 f"{'Xmas_' if datetime.now().month == 12 else ''}{discard.replace(' ', '_')}.png",
                 filename="card.png"
             )
@@ -532,8 +532,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                         game = await aki.answer(resp.content)
                     except:
                         await ctx.send(embed=funcs.errorEmbed("Invalid answer!",
-                            "Valid options:\n\n`y` or `yes` for yes;\n`n` or `no` for no;\n" + \
-                            "`i` or `idk` for I don't know;\n`p` or `probably` for probably;\n" + \
+                            "Valid options:\n\n`y` or `yes` for yes;\n`n` or `no` for no;\n" +
+                            "`i` or `idk` for I don't know;\n`p` or `probably` for probably;\n" +
                             "`pn` or `probably not` for probably not;\n`b` for back;\n`q` or `quit` to quit the game."))
             await aki.win()
             e = Embed(
@@ -554,8 +554,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     async def guessthenumber(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
-        await ctx.send("**Welcome to Guess the Number. A random number between " + \
-                       "1-10000 will be generated and your job is to guess it. " + \
+        await ctx.send("**Welcome to Guess the Number. A random number between " +
+                       "1-10000 will be generated and your job is to guess it. " +
                        "Input `time` to see total elapsed time, or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
         starttime = time()
@@ -592,7 +592,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     await funcs.sendTime(ctx, m, s)
                 else:
                     await ctx.send(embed=funcs.errorEmbed(None, "Invalid input."))
-        await ctx.send("```The number was {:,}.\n\nTotal attempts: {:,}\n\n".format(number, attempts) + \
+        await ctx.send("```The number was {:,}.\n\nTotal attempts: {:,}\n\n".format(number, attempts) +
                        f"Thanks for playing, {ctx.author.name}!```")
         m, s = funcs.minSecs(time(), starttime)
         await funcs.sendTime(ctx, m, s)
@@ -604,12 +604,12 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     async def bullsandcows(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
-        await ctx.send("**Welcome to Bulls and Cows. Input `help` for help, " + \
+        await ctx.send("**Welcome to Bulls and Cows. Input `help` for help, " +
                        "`time` to see total elapsed time, or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
         game = games.BullsAndCows()
         while not game.getGameEnd():
-            await ctx.send("`Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
+            await ctx.send("`Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) +
                            "Please guess a four-digit number with no duplicates.`")
             try:
                 message = await self.client.wait_for(
@@ -626,34 +626,34 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     await funcs.sendTime(ctx, m, s)
                 elif guess.casefold() == "help":
                     await ctx.send(
-                        "```== Bulls and Cows ==\n\nBulls and Cows is a code-breaking logic game, " + \
-                        "originally played using pencil and paper, where one tries to guess a number that" + \
-                        " has been randomly generated by the bot. This game has inspired the commercially" + \
-                        " marketed board game Mastermind and possibly predates it by over a century.\n\n" + \
-                        "The randomly generated number contains exactly four digits between 0 and 9, and" + \
-                        " unlike Guess the Number, the digits have no repeats.\n\nExample of a valid guess:" + \
-                        " 1234\nExample of an invalid guess: 1244 (The digit 4 has been used twice when it " + \
-                        "can only be used once.)\n\nIn the game, the player is asked to enter a four-digit " + \
-                        "number which is then compared to the randomly generated four-digit number; each " + \
-                        "individual digit entered by the player is compared to each digit within the randomly" + \
-                        " generated number. If a digit in the player's guess is in the randomly generated " + \
-                        "number and is in the same position in it as it was in their number, then it is " + \
-                        'scored as a "bull". If that same digit is in a different position, then it is marked' + \
-                        ' as a "cow".\n\nThe goal of this particular version of the game is to find all four ' + \
-                        "bulls in the shortest amount of time, using as few attempts as possible.\n\nExample:\n" + \
-                        "Randomly generated number: 1234\nGuess: 1325\nResult: 1 bull and 2 cows. (1 is the bull," + \
-                        " whereas 2 and 3 are the cows. 5 is not in the randomly generated number, hence it is " + \
+                        "```== Bulls and Cows ==\n\nBulls and Cows is a code-breaking logic game, " +
+                        "originally played using pencil and paper, where one tries to guess a number that" +
+                        " has been randomly generated by the bot. This game has inspired the commercially" +
+                        " marketed board game Mastermind and possibly predates it by over a century.\n\n" +
+                        "The randomly generated number contains exactly four digits between 0 and 9, and" +
+                        " unlike Guess the Number, the digits have no repeats.\n\nExample of a valid guess:" +
+                        " 1234\nExample of an invalid guess: 1244 (The digit 4 has been used twice when it " +
+                        "can only be used once.)\n\nIn the game, the player is asked to enter a four-digit " +
+                        "number which is then compared to the randomly generated four-digit number; each " +
+                        "individual digit entered by the player is compared to each digit within the randomly" +
+                        " generated number. If a digit in the player's guess is in the randomly generated " +
+                        "number and is in the same position in it as it was in their number, then it is " +
+                        'scored as a "bull". If that same digit is in a different position, then it is marked' +
+                        ' as a "cow".\n\nThe goal of this particular version of the game is to find all four ' +
+                        "bulls in the shortest amount of time, using as few attempts as possible.\n\nExample:\n" +
+                        "Randomly generated number: 1234\nGuess: 1325\nResult: 1 bull and 2 cows. (1 is the bull," +
+                        " whereas 2 and 3 are the cows. 5 is not in the randomly generated number, hence it is " +
                         "not scored.)```"
                     )
                 elif guess.casefold() == "quit" or guess.casefold() == "exit" or guess.casefold() == "stop":
                     continue
                 else:
-                    await ctx.send(f"`Result: {bulls} bull{'' if bulls == 1 else 's'} and " + \
-                                   f"{cows} cow{'' if cows == 1 else 's'}." + \
+                    await ctx.send(f"`Result: {bulls} bull{'' if bulls == 1 else 's'} and " +
+                                   f"{cows} cow{'' if cows == 1 else 's'}." +
                                    f"{'' if bulls != 4 else ' You have found the number!'}`")
             except Exception as ex:
                 await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
-        await ctx.send("```The number was {}.\n\nTotal attempts: {:,}\n\n".format(game.getNumber(sep=True), game.getAttempts()) + \
+        await ctx.send("```The number was {}.\n\nTotal attempts: {:,}\n\n".format(game.getNumber(sep=True), game.getAttempts()) +
                        f"Thanks for playing, {ctx.author.name}!```")
         m, s = game.getTime()
         await funcs.sendTime(ctx, m, s)
@@ -664,7 +664,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     async def cardtrick(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
-        await ctx.send("**Welcome to the 21 Card Trick. " + \
+        await ctx.send("**Welcome to the 21 Card Trick. " +
                        "Pick a card from one of the three piles and I will try to guess it.**")
         self.gameChannels.append(ctx.channel.id)
         game = games.CardTrick()
@@ -673,7 +673,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             p1, p2, p3 = game.piles(cardSample)
             await ctx.send(f"```{game.showCards(p1, p2, p3)}```")
             while True:
-                await ctx.send(f"`Which pile is your card in, {ctx.author.name}? " + \
+                await ctx.send(f"`Which pile is your card in, {ctx.author.name}? " +
                                "Enter either 1, 2, or 3 to pick a pile, or 'quit' quit the game.`")
                 try:
                     message = await self.client.wait_for(
@@ -829,14 +829,14 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         game = games.Minesweeper()
         won = False
         while not game.getGameEnd():
-            await ctx.send("```Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
+            await ctx.send("```Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) +
                            f"{game.displayBoard()}```")
             await self.gameOptions(ctx, game)
             won = game.winLose()
         await ctx.send(f"```{game.displayBoard()}```")
         m, s = game.getTime()
         await ctx.send(
-            "```You have {} Minesweeper!\n\nTotal attempts: {:,}".format("won" if won else "lost", game.getAttempts()) + \
+            "```You have {} Minesweeper!\n\nTotal attempts: {:,}".format("won" if won else "lost", game.getAttempts()) +
             f"\n\nThanks for playing, {ctx.author.name}!```"
         )
         await funcs.sendTime(ctx, m, s)
@@ -847,11 +847,11 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
     async def battleship(self, ctx):
         if await self.checkGameInChannel(ctx):
             return
-        await ctx.send("**Welcome to Battleship. Input `time` to see total elapsed time, " + \
+        await ctx.send("**Welcome to Battleship. Input `time` to see total elapsed time, " +
                        "or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
         game = games.Battleship()
-        while game.getShipcount() > 0:
+        while game.getShipcount():
             await ctx.send(
                 "```Attempt {:,} for {}. {}```".format(game.getAttempts() + 1, ctx.author.name, game.displayBoard())
             )
@@ -876,7 +876,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                 xx = int(xx)
             await ctx.send(f"`{ctx.author.name} has {game.takeTurn(yy, xx)}.`")
         m, s = game.getTime()
-        await ctx.send(f"```You have {'won' if game.getWonBool() else 'lost'} Battleship!\n\n" + \
+        await ctx.send(f"```You have {'won' if game.getWonBool() else 'lost'} Battleship!\n\n" +
                        "Total attempts: {:,}\n\nThanks for playing, {}!```".format(game.getAttempts(), ctx.author.name))
         await funcs.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
@@ -1055,13 +1055,13 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         if await self.checkGameInChannel(ctx):
             return
         await ctx.send(
-            "**Welcome to Hangman. You have 10 lives. Guess one letter at a time. " + \
+            "**Welcome to Hangman. You have 10 lives. Guess one letter at a time. " +
             "Input `lives` to see how many lives you have left, `time` to see total elapsed time, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
         game = games.Hangman(self.client)
         await sleep(1)
-        while game.getLives() > 0 and not game.getDashes() == game.getWord():
+        while game.getLives() and not game.getDashes() == game.getWord():
             await ctx.send(f"```{ctx.author.name}'s word:\n\n{game.getDashes()}```")
             await ctx.send("`Please guess a letter.`")
             try:
@@ -1104,7 +1104,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         else:
             lives = game.getLives()
             await ctx.send(
-                f"`{ctx.author.name} has won Hangman with {'' if lives != 10 else 'all '}{lives} " + \
+                f"`{ctx.author.name} has won Hangman with {'' if lives != 10 else 'all '}{lives} " +
                 f"li{'ves' if lives != 1 else 'fe'} left! Their word was {game.getWord()}.`"
             )
         m, s = game.getTime()
@@ -1155,7 +1155,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     choiceno += 1
                 e.add_field(name="Choices", value="```{}```".format(self.formatQuestion(answerchoices[:-1])))
                 e.add_field(name="Category", value=f"`{category.title()}`")
-                e.set_footer(text=f"Please enter a value between 1-{len(possibleanswers)} " + \
+                e.set_footer(text=f"Please enter a value between 1-{len(possibleanswers)} " +
                                   "corresponding to an answer above. You have 30 seconds.")
                 await ctx.send(embed=e)
                 while True:

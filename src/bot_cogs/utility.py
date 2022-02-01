@@ -260,20 +260,20 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     total = data["world_total"]
             e = Embed(description="Statistics taken at: `" + data["statistic_taken_at"] + " UTC`")
             e.set_author(name=f"COVID-19 Statistics ({total['country_name'] if found else 'Global'})",
-                         icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/" + \
+                         icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/" +
                                   "SARS-CoV-2_without_background.png/220px-SARS-CoV-2_without_background.png")
             if found:
                 e.add_field(name="Country", value=f"`{total['country_name']}`")
                 e.add_field(name="Total Cases", value=f"`{total['cases']}`")
-                e.add_field(name="Total Deaths", value=f"`{total['deaths']}" + \
+                e.add_field(name="Total Deaths", value=f"`{total['deaths']}" +
                                                        "\n({}%)`".format(round(int(total['deaths']
                                                            .replace(',', '').replace('N/A', '0')) / int(total['cases']
                                                            .replace(',', '').replace('N/A', '0')) * 100, 2)))
-                e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" + \
+                e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" +
                                                           "\n({}%)`".format(round(int(total['total_recovered']
                                                               .replace(',', '').replace('N/A', '0')) / int(total['cases']
                                                               .replace(',', '').replace('N/A', '0')) * 100, 2)))
-                e.add_field(name="Active Cases", value=f"`{total['active_cases']}" + \
+                e.add_field(name="Active Cases", value=f"`{total['active_cases']}" +
                                                        "\n({}%)`".format(round(int(total['active_cases']
                                                            .replace(',', '').replace('N/A', '0')) / int(total['cases']
                                                            .replace(',', '').replace('N/A', '0')) * 100, 2)))
@@ -281,15 +281,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e.add_field(name="Total Tests", value=f"`{total['total_tests']}`")
             else:
                 e.add_field(name="Total Cases", value=f"`{total['total_cases']}`")
-                e.add_field(name="Total Deaths", value=f"`{total['total_deaths']}" + \
+                e.add_field(name="Total Deaths", value=f"`{total['total_deaths']}" +
                                                        "\n({}%)`".format(round(int(total['total_deaths']
                                                            .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
                                                            .replace(',', '').replace('N/A', '0')) * 100, 2)))
-                e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" + \
+                e.add_field(name="Total Recovered", value=f"`{total['total_recovered']}" +
                                                           "\n({}%)`".format(round(int(total['total_recovered']
                                                               .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
                                                               .replace(',', '').replace('N/A', '0')) * 100, 2)))
-                e.add_field(name="Active Cases", value=f"`{total['active_cases']}" + \
+                e.add_field(name="Active Cases", value=f"`{total['active_cases']}" +
                                                        "\n({}%)`".format(round(int(total['active_cases']
                                                            .replace(',', '').replace('N/A', '0')) / int(total['total_cases']
                                                            .replace(',', '').replace('N/A', '0')) * 100, 2)))
@@ -421,7 +421,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             winddegrees = float(data["wind"]["deg"])
             e = Embed(title=f"{data['name']}, {country}", description=f"**{data['weather'][0]['description'].title()}**")
             e.add_field(name="Temperature", value="`{}°F / {}°C`".format(round(temp2, 1), round(temp, 1)))
-            e.add_field(name="Temp Range", value="`{}°F - {}°F\n".format(round(low2, 1), round(high2, 1)) + \
+            e.add_field(name="Temp Range", value="`{}°F - {}°F\n".format(round(low2, 1), round(high2, 1)) +
                                                  "{}°C - {}°C`".format(round(low, 1), round(high, 1)))
             e.add_field(name="Humidity", value="`{}%`".format(data["main"]["humidity"]))
             e.add_field(name="Wind Speed", value="`{} m/s`".format(data["wind"]["speed"]))
@@ -438,7 +438,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 15, commands.BucketType.user)
-    @commands.command(name="translate", description="Translates text to a different language. " + \
+    @commands.command(name="translate", description="Translates text to a different language. " +
                                                     "Translation may sometimes fail due to rate limit.",
                       aliases=["t", "translator", "trans", "tr", "translation"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text):
@@ -490,7 +490,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     else:
                         amount /= cgData[0]["current_price"]
             await ctx.reply(
-                f"The current price of **{'{:,}'.format(initialamount)} {fromCurrency}** in **{toCurrency}**: " + \
+                f"The current price of **{'{:,}'.format(initialamount)} {fromCurrency}** in **{toCurrency}**: " +
                 "`{:,}`".format(amount)
             )
         except Exception as ex:
@@ -532,11 +532,11 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"]
                 if len(summary) != len(wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000]):
                     summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000] + "..."
-                e = Embed(description="https://en.wikipedia.org/wiki/" + \
+                e = Embed(description="https://en.wikipedia.org/wiki/" +
                                       f"{wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')}"
                 )
                 e.set_author(name=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
-                             icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                             icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" +
                                       "677853982718165001/1122px-Wikipedia-logo-v2.png")
                 e.add_field(name="Extract", value=f"```{summary}```")
             except Exception as ex:
@@ -702,7 +702,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     author = terms[t]["author"]
                     writtenon = funcs.timeStrToDatetime(terms[t]["written_on"])
                     e = Embed(description=permalink)
-                    e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" + \
+                    e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" +
                                                             "669142387330777115/urban-dictionary-android.png")
                     e.add_field(name="Definition", value=funcs.formatting(definition, limit=1000))
                     if example:
@@ -716,8 +716,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             * 100, 2
                         )
                         e.set_footer(
-                            text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[t]['thumbs_up']) + \
-                                 "{:,} 👎)\n".format(terms[t]['thumbs_down']) + \
+                            text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[t]['thumbs_up']) +
+                                 "{:,} 👎)\n".format(terms[t]['thumbs_down']) +
                                  "Page {:,} of {:,}".format(t + 1, len(terms))
                         )
                     except ZeroDivisionError:
@@ -794,7 +794,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],
                       usage="<image URL OR image attachment>")
     async def qrread(self, ctx):
-        await ctx.send("Reading image. Please wait... " + \
+        await ctx.send("Reading image. Please wait... " +
                        "(URL embeds take longer to process than image attachments)")
         if not ctx.message.attachments:
             await sleep(3)
@@ -983,7 +983,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             "NSFW" if subreddit.over18 else 0
                         ] if i
                     ]
-                    e = Embed(description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" + \
+                    e = Embed(description=f"https://www.reddit.com/r/{subreddit.display_name}" + " ([Old Reddit](" +
                                           f"https://old.reddit.com/r/{subreddit.display_name}))")
                     e.set_author(icon_url=icon_url, name="r/" + subreddit.display_name)
                     if tags:
@@ -1000,7 +1000,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             name="Latest Post ({:,} point{}; from u/{})".format(
                                 submission.score, "" if submission.score == 1 else "s", sauthor
                             ),
-                            value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
+                            value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" +
                                   f"https://old.reddit.com{submission.permalink}))",
                             inline=False
                         )
@@ -1025,7 +1025,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 if "NSFW" in tags and not isinstance(ctx.channel, channel.DMChannel) and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this profile in an NSFW channel.")
                 else:
-                    e = Embed(description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" + \
+                    e = Embed(description=f"https://www.reddit.com/user/{redditor.name}" + " ([Old Reddit](" +
                                           f"https://old.reddit.com/user/{redditor.name}))")
                     e.set_author(icon_url=icon_url, name="u/" + redditor.name + (f" ({nickname})" if nickname else ""))
                     if tags:
@@ -1049,15 +1049,15 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             )
                         async for submission in redditor.submissions.new(limit=1):
                             e.add_field(
-                                name=f"Latest Post (on r/{submission.subreddit.display_name}; " + \
+                                name=f"Latest Post (on r/{submission.subreddit.display_name}; " +
                                      f"{'{:,}'.format(submission.score)} point{'' if submission.score == 1 else 's'})",
-                                value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" + \
+                                value=f"https://www.reddit.com{submission.permalink}" + " ([Old Reddit](" +
                                       f"https://old.reddit.com{submission.permalink}))",
                                 inline=False
                             )
                         async for comment in redditor.comments.new(limit=1):
                             e.add_field(
-                                name=f"Latest Comment (on r/{comment.subreddit.display_name}; " + \
+                                name=f"Latest Comment (on r/{comment.subreddit.display_name}; " +
                                      f"{'{:,}'.format(comment.score)} point{'' if comment.score == 1 else 's'})",
                                 value=funcs.formatting(comment.body, limit=1000),
                                 inline=False
@@ -1082,8 +1082,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 "Stop right there, that's illegal!",
                 "Wait hol up...",
                 "FBI OPEN UP!!!",
-                "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
-                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + \
+                "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" +
+                "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" +
                 "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL",
                 "You madlad...",
                 "God damn you.",
@@ -1107,13 +1107,13 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 "EXXXXXCCCCCCUUUUUSEEEE MEEE",
                 "what", "wat", "wut", "Negative nothing", "屌", "No.", "no",
                 "Der Mann sprach für seine Rechte\ner ist verstört, er ist ein egoistischer Gör!",
-                "ENOUGH! Because of you, I almost lost my way! But everycreature here has reminded me of " + \
-                "the true power of friendship! There will always be darkness in the world, but there will " + \
+                "ENOUGH! Because of you, I almost lost my way! But everycreature here has reminded me of " +
+                "the true power of friendship! There will always be darkness in the world, but there will " +
                 "also always be those who find the light!",
                 "Focusing on our differences keeps us divided! Villains and creatures use that division against us!",
                 "SSSSHHHHHAAAAAAAAAAAHHDAAAHHHPPP",
-                "YOU! YOU TRIPLE GREASY WALKING SECOND DINING COURSE, YOU'RE JUST A PHONY! YOU'RE A GIANT, MORALIST" + \
-                " PHONY WHO CAN'T TAKE CARE OF ANYONE, ESPECIALLY HIMSELF! YOU HAVE YOUR OWN DISCIPLINE UP YOUR OWN" + \
+                "YOU! YOU TRIPLE GREASY WALKING SECOND DINING COURSE, YOU'RE JUST A PHONY! YOU'RE A GIANT, MORALIST" +
+                " PHONY WHO CAN'T TAKE CARE OF ANYONE, ESPECIALLY HIMSELF! YOU HAVE YOUR OWN DISCIPLINE UP YOUR OWN" +
                 " ARSE AND YOU DON'T EVEN SEE IT!"
             ]
             try:
@@ -1175,7 +1175,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 data = res.json()
                 if len(data) > 1:
                     await ctx.reply(
-                        "`Please select a number: " + \
+                        "`Please select a number: " +
                         f"{', '.join(str(var) + ' (' + data[var]['name'] + ')' for var in range(len(data)))}`"
                     )
                     try:
@@ -1216,7 +1216,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 pass
             e.add_field(
                 name="Coordinates",
-                value=f"`{str(round(lat, 2)).replace('-', '')}°{'N' if lat > 0 else 'S'}, " + \
+                value=f"`{str(round(lat, 2)).replace('-', '')}°{'N' if lat > 0 else 'S'}, " +
                       f"{str(round(long, 2)).replace('-', '')}°{'E' if long > 0 else 'W'}`"
             )
             e.add_field(name="Region", value=f"`{data['region']} ({data['subregion']})`")
@@ -1470,7 +1470,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             q3 = median(data[-halflist:])
             q1 = median(data[:halflist])
             e = Embed(title="Quartile Calculator",
-                      description=f'Requested by: {ctx.author.mention}\n' + \
+                      description=f'Requested by: {ctx.author.mention}\n' +
                                   f'{funcs.formatting("; ".join(funcs.removeDotZero(i)) for i in data)}')
             e.add_field(name="Total Values", value="`{:,}`".format(len(data)))
             e.add_field(name="Mean", value=f'`{funcs.removeDotZero(mean(data))}`')
@@ -1519,10 +1519,10 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 if not a % i and not b % i:
                     hcf = i
             lcm = int((a * b) / hcf)
-            await ctx.reply(f'The HCF of {funcs.removeDotZero(a)} and ' + \
-                           f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(hcf)}' + \
-                           f'**\nThe LCM of {funcs.removeDotZero(a)} and ' + \
-                           f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(lcm)}**')
+            await ctx.reply(f'The HCF of {funcs.removeDotZero(a)} and ' +
+                            f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(hcf)}' +
+                            f'**\nThe LCM of {funcs.removeDotZero(a)} and ' +
+                            f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(lcm)}**')
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
 
@@ -1586,7 +1586,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
                       usage="[date #1 day] [date #1 month] [date #1 year] [date #2 day] [date #2 month] [date #2 year]\n\n" +
-                            "Alternative usage(s):\n\n- <days (+/-) from today OR weeks (+/- ending with w) from today>\n\n" + \
+                            "Alternative usage(s):\n\n- <days (+/-) from today OR weeks (+/- ending with w) from today>\n\n" +
                             "- <date day> <date month> <date year> <days (+/-) from date OR weeks (+/- ending with w) from date>",
                       name="date")
     async def date(self, ctx, day: str="", month: str="", year: str="", day2: str="", month2: str="", year2: str=""):
@@ -1663,12 +1663,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 hastoday = True
                 if today.date() == dateobj.date():
                     e = Embed(
-                        title=f"{funcs.weekdayNumberToName(dateobj2.weekday())}, " + \
+                        title=f"{funcs.weekdayNumberToName(dateobj2.weekday())}, " +
                               f"{dateobj2.day} {funcs.monthNumberToName(dateobj2.month)} {dateobj2.year}"
                     )
                 else:
                     e = Embed(
-                        title=f"{funcs.weekdayNumberToName(dateobj.weekday())}, " + \
+                        title=f"{funcs.weekdayNumberToName(dateobj.weekday())}, " +
                               f"{dateobj.day} {funcs.monthNumberToName(dateobj.month)} {dateobj.year}"
                     )
             if daysint:

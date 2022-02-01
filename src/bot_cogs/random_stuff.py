@@ -68,8 +68,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await sleep(1)
         await m.edit(content="Y̷o̸u̸ ̷d̴i̵d̶n̸'̷t̸ ̷s̶e̶e̶ ̸a̴n̵y̴t̷h̸i̸n̸g̵.̷")
         await sleep(0.5)
-        await m.edit(content="Y̵̙͓̜̻̲̗̜̘͒̓̂̀̉̈́͛̂͌̀ǫ̵̨̛̳̼̪̂̈́̅̚ų̶̟̭̙̜̺̘̱̌̍̐̎̅̕ ̷͉̈́d̵͚̣̱͈̥͖͈͉̠̘̦̝͇͛̐͛͋̿͒̉͊̃̔̃͜͜ỉ̷̡̛͈̥̯̠͒̑͂̃̊̊̈́̚͝d̶̝̠͖̝̟͆̊͜ͅn̶̢̘̯͔̖͎̬͙̦̗̖͚͔̻̒̕'̵̨͙͇̳̋̑̏̔͊̌̐̆͘ţ̷̢̬̤̰͕̘̺̻͎͕̜͙͚͒̏̈́́̒̈́̊" + \
-                             " ̶̧̱͔̤̺̯̘̠͇̻͛͗͑̄ş̸̡̛͙̺͕̣͕̬̞̹͆̈́̈́͛̊̈̑̊̈́̌̓̄̚e̶̫̲̩̭̟̋̎́͂̇̂̊͜ͅḙ̷̤͕̓̆́̍͒͛͑̔ ̶͔̥̫͖̥̻̰̅͜a̴̧̮͐̾̃́̀͒͊̓̇̈́̃̐̍̚n̴̨̢̖̹̪̦̈́̊̍̈͒̾̅̋͂̽̽y̶̡͇̖̑t̴̛̮̘͉̘͐̋̔́͛͂̉̏͝" + \
+        await m.edit(content="Y̵̙͓̜̻̲̗̜̘͒̓̂̀̉̈́͛̂͌̀ǫ̵̨̛̳̼̪̂̈́̅̚ų̶̟̭̙̜̺̘̱̌̍̐̎̅̕ ̷͉̈́d̵͚̣̱͈̥͖͈͉̠̘̦̝͇͛̐͛͋̿͒̉͊̃̔̃͜͜ỉ̷̡̛͈̥̯̠͒̑͂̃̊̊̈́̚͝d̶̝̠͖̝̟͆̊͜ͅn̶̢̘̯͔̖͎̬͙̦̗̖͚͔̻̒̕'̵̨͙͇̳̋̑̏̔͊̌̐̆͘ţ̷̢̬̤̰͕̘̺̻͎͕̜͙͚͒̏̈́́̒̈́̊" +
+                             " ̶̧̱͔̤̺̯̘̠͇̻͛͗͑̄ş̸̡̛͙̺͕̣͕̬̞̹͆̈́̈́͛̊̈̑̊̈́̌̓̄̚e̶̫̲̩̭̟̋̎́͂̇̂̊͜ͅḙ̷̤͕̓̆́̍͒͛͑̔ ̶͔̥̫͖̥̻̰̅͜a̴̧̮͐̾̃́̀͒͊̓̇̈́̃̐̍̚n̴̨̢̖̹̪̦̈́̊̍̈͒̾̅̋͂̽̽y̶̡͇̖̑t̴̛̮̘͉̘͐̋̔́͛͂̉̏͝" +
                              "h̶̙̳̖̲̙̳̲͎͕̝̝͈͙̝̏́̃̍̑́͛̈̄̿̚͘͜ỉ̶̜̦̓͗͊̓͒̏̕͝n̶̨͔̙͎̠̲̼̩͖̖͕͐̑̽̃͊͜͝ͅͅg̶̞͎̊̂̃͆́͑̿̚͝͝.̷̨̢̡͇̜͙̼̬̗͕͙̣̤͕̈́͆͜")
         await sleep(0.5)
         await m.delete()
@@ -127,7 +127,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 60, commands.BucketType.user)
     @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
-                      description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " + \
+                      description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " +
                                   "Translation may sometimes fail due to rate limit.",
                       aliases=["lc", "literaljapanese", "literalkorean"], hidden=True)
     async def literalchinese(self, ctx, *, inp):
@@ -145,7 +145,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
 
     @commands.cooldown(1, 60, commands.BucketType.user)
     @commands.command(name="literalenglish", aliases=["le"], usage="<English text (10 words or less)>",
-                      description="Literally translates English words to Chinese one by one. " + \
+                      description="Literally translates English words to Chinese one by one. " +
                                   "Translation may sometimes fail due to rate limit.", hidden=True)
     async def literalenglish(self, ctx, *, inp):
         res = ""
@@ -189,7 +189,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             startCall = time()
             hangup = False
             await ctx.send(
-                ":telephone_receiver: Someone has picked up the phone, say hello! " + \
+                ":telephone_receiver: Someone has picked up the phone, say hello! " +
                 "Note that not all messages will be sent. Type `!hangup` to hang up."
             )
             while resetTime < 30 and not hangup and otherParty in self.phoneCallChannels:
@@ -221,14 +221,14 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     @commands.command(name="personalitytest", description="Take a personality test consisting of 88 questions for fun.",
                       aliases=["mbti", "personality", "personalities", "16p", "16personalities"])
     async def personalitytest(self, ctx):
-        await ctx.reply("```== Please Read ==\n\nYou are about to take a low-level personality test consisting of 88 q" + \
-                       "uestions. The test should take around 20 to 30 minutes to complete. To select an answer, inpu" + \
-                       "t either 'a', 'b', or 'c'. Try to leave out as many neutral answers as possible. There " + \
-                       "are no right or wrong answers.\n\nPlease note that this test does not consider the eight " + \
-                       "cognitive functions and was created purely for fun. For more accurate and meaningful" + \
-                       " results, it is recommended that you study each of the cognitive functions and type yourself " + \
-                       "based on those functions with the help of a test that makes good use of them.\n\nIf " + \
-                       "you want to quit, input 'quit'. Otherwise, input 'test' to start the test.\n\n" + \
+        await ctx.reply("```== Please Read ==\n\nYou are about to take a low-level personality test consisting of 88 q" +
+                       "uestions. The test should take around 20 to 30 minutes to complete. To select an answer, inpu" +
+                       "t either 'a', 'b', or 'c'. Try to leave out as many neutral answers as possible. There " +
+                       "are no right or wrong answers.\n\nPlease note that this test does not consider the eight " +
+                       "cognitive functions and was created purely for fun. For more accurate and meaningful" +
+                       " results, it is recommended that you study each of the cognitive functions and type yourself " +
+                       "based on those functions with the help of a test that makes good use of them.\n\nIf " +
+                       "you want to quit, input 'quit'. Otherwise, input 'test' to start the test.\n\n" +
                        "Questions provided by EDCampus. Each question has a 15-minute time limit.```")
         try:
             userchoice = await self.client.wait_for(
@@ -260,7 +260,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 sub = "a) " if choiceCount == 1 else "b) "
                 choiceCount = 2 if choiceCount == 1 else 1
                 question += sub + res[x]["selections"][userchoice] + "\n"
-            await ctx.send(f"```Question {questionCount} of 88 for {ctx.author.name}:\n\n{question[:-1]}\n" + \
+            await ctx.send(f"```Question {questionCount} of 88 for {ctx.author.name}:\n\n{question[:-1]}\n" +
                            "c) none of the above/neutral.```")
             while userInput.casefold() != "a" and userInput.casefold() != "b" \
                     and userInput.casefold() != "c" and userInput.casefold() != "quit" \
@@ -333,10 +333,10 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         sns = "{:.0%}".format(snpercent)
         tfs = "{:.0%}".format(tfpercent)
         jps = "{:.0%}".format(jppercent)
-        await ctx.send(f"```== {ctx.author.name}'s Personality Test Result " + \
-                       f"==\n\n{eir}{eis}\n{snr}{sns}\n{tfr}{tfs}\n{jpr}{jps}\n\nYour four-letter " + \
-                       f"personality code is '{eic}{snc}{tfc}{jpc}'.\n\nOnce again, this test is " + \
-                       "only for fun and should not be treated as a professional assessment. " + \
+        await ctx.send(f"```== {ctx.author.name}'s Personality Test Result " +
+                       f"==\n\n{eir}{eis}\n{snr}{sns}\n{tfr}{tfs}\n{jpr}{jps}\n\nYour four-letter " +
+                       f"personality code is '{eic}{snc}{tfc}{jpc}'.\n\nOnce again, this test is " +
+                       "only for fun and should not be treated as a professional assessment. " +
                        "Thank you for trying out this test!```")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -445,12 +445,12 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 "https://gifimage.net/wp-content/uploads/2017/11/fidget-spinner-gif-transparent-6.gif"
             ])
             await funcs.sendImage(ctx, url, name="spinner.gif",
-                                  message=f"<:fidgetspinner:675314386784485376> **{ctx.author.name} has spun a fidget"+ \
+                                  message=f"<:fidgetspinner:675314386784485376> **{ctx.author.name} has spun a fidget"+
                                           " spinner. Let's see how long it lasts...** <:fidgetspinner:675314386784485376>")
             randomSeconds = randint(5, 180)
             await sleep(randomSeconds)
             await ctx.send(
-                f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name}'s fidget spinner has just stopped " + \
+                f"<:fidgetspinner:675314386784485376> **{ctx.message.author.name}'s fidget spinner has just stopped " +
                 f"spinning; it lasted {randomSeconds} seconds!** <:fidgetspinner:675314386784485376>"
             )
             self.activeSpinners.remove(ctx.message.author.id)
@@ -527,8 +527,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 emoji = "...** :brown_heart:"
             if int(intermediate) < 20:
                 emoji = "...** :broken_heart:"
-            await ctx.reply("The love percentage between " + \
-                           f"**{newlist[0]}** and **{newlist[1]}** is **{intermediate}%{emoji}")
+            await ctx.reply("The love percentage between " +
+                            f"**{newlist[0]}** and **{newlist[1]}** is **{intermediate}%{emoji}")
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Invalid user?"))
@@ -650,7 +650,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             dicesum = sum(dice)
             possiblepts = amount * 6
             await ctx.reply(
-                f"```{', '.join(str(die) for die in dice)}\n{result}\n\nTotal value: " + \
+                f"```{', '.join(str(die) for die in dice)}\n{result}\n\nTotal value: " +
                 f"{dicesum} out of {possiblepts} ({round(dicesum / possiblepts * 100, 3)}%)\n\nRequested by: {ctx.author}```"
             )
 

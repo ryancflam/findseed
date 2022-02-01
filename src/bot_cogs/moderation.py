@@ -11,10 +11,10 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         self.client = botInstance
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="clear", description="Clears channel messages.", usage="<amount>", aliases=["prune", "purge"])
+    @commands.command(name="prune", description="Clears channel messages.", usage="<amount>", aliases=["clear", "purge"])
     @commands.bot_has_permissions(read_message_history=True, manage_messages=True)
     @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx, amount=""):
+    async def prune(self, ctx, amount=""):
         if amount == "":
             e = funcs.errorEmbed(None, "Please enter a value between 1 and 99.")
         else:
@@ -31,7 +31,7 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
                         fails += 1
                 e = Embed(
                     title="Result",
-                    description=f"Removed {success} message{'' if success == 1 else 's'} " + \
+                    description=f"Removed {success} message{'' if success == 1 else 's'} " +
                                 f"with {fails} fail{'' if fails == 1 else 's'}."
                 )
         await ctx.send(embed=e)
@@ -95,12 +95,12 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
             await member.kick(reason=reason)
             try:
-                await member.send(f"You have been kicked from **{ctx.guild.name}**" + \
+                await member.send(f"You have been kicked from **{ctx.guild.name}**" +
                                   f"{'!' if not reason else ' for: `{}`'.format(reason)}")
             except:
                 pass
-            await ctx.reply(f"Successfully kicked user **{member}**" + \
-                           f"{'.' if not reason else ' for: `{}`'.format(reason)}")
+            await ctx.reply(f"Successfully kicked user **{member}**" +
+                            f"{'.' if not reason else ' for: `{}`'.format(reason)}")
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot kick that user."))
 
@@ -115,12 +115,12 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
             await member.ban(reason=reason)
             try:
-                await member.send(f"You have been banned from **{ctx.guild.name}**" + \
+                await member.send(f"You have been banned from **{ctx.guild.name}**" +
                                   f"{'!' if not reason else ' for: `{}`'.format(reason)}")
             except:
                 pass
-            await ctx.reply(f"Successfully banned user **{member}**" + \
-                           f"{'.' if not reason else ' for: `{}`'.format(reason)}")
+            await ctx.reply(f"Successfully banned user **{member}**" +
+                            f"{'.' if not reason else ' for: `{}`'.format(reason)}")
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot ban that user."))
 
@@ -136,9 +136,9 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
             if member == member.guild.owner:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "That user is the owner!"))
-            await member.send(f"You have received a warning in **{ctx.guild.name}**" + \
+            await member.send(f"You have received a warning in **{ctx.guild.name}**" +
                               f"{'!' if not reason else ' for: `{}`'.format(reason)}")
-            await ctx.reply(f"Successfully sent a warning to **{member}**" + \
+            await ctx.reply(f"Successfully sent a warning to **{member}**" +
                             f"{'.' if not reason else ' for: `{}`'.format(reason)}")
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot warn that user; perhaps they have DMs disabled."))

@@ -254,8 +254,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     "The message is too long. Please make it `{:,}` character{} shorter.".format(remain, "" if remain == 1 else "s")
                 )
             await (await self.client.application_info()).owner.send(msgtoowner)
-            await ctx.reply(f"{ctx.author.mention} **You have left a message for the bot owner:**\n```{output}```\n" + \
-                           "Please ensure that your DMs are enabled and expect a reply soon. Spam may result in a blacklist.")
+            await ctx.reply(f"{ctx.author.mention} **You have left a message for the bot owner:**\n```{output}```\n" +
+                            "Please ensure that your DMs are enabled and expect a reply soon. Spam may result in a blacklist.")
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 

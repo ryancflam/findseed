@@ -236,7 +236,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         userList = list(data["users"])
         await ctx.reply(
             "```Servers ({:,}): ".format(len(serverList)) +
-            f"{'None' if not serverList else ', '.join(str(server) for server in serverList)}" + \
+            f"{'None' if not serverList else ', '.join(str(server) for server in serverList)}" +
             "\nUsers ({:,}): ".format(len(userList)) +
             f"{'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
@@ -380,8 +380,8 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             except:
                 men = "DM"
             await user.send(f"**The bot owner has replied:**\n\n```{output}```\nYour message: `{original}` ({men})")
-            await ctx.reply(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" + \
-                           f" `{msgid}`\nChannel ID: `{cid}`\nMessage: `{original}`")
+            await ctx.reply(f"Reply sent.\n\nYour reply: ```{output}```\nUser (ID): `{str(user)} ({user.id})`\nMessage ID:" +
+                            f" `{msgid}`\nChannel ID: `{cid}`\nMessage: `{original}`")
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 

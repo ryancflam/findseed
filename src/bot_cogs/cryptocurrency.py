@@ -141,10 +141,10 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             coin2price = data[1]["current_price"]
             newvalue = coin1cap / coin2cap
             newvalue2 = coin2cap / coin1cap
-            await ctx.reply(f"If **{coin2name} ({coin2symb})** had the market cap of **{coin1name} ({coin1symb})**:\n\n`" + \
+            await ctx.reply(f"If **{coin2name} ({coin2symb})** had the market cap of **{coin1name} ({coin1symb})**:\n\n`" +
                            "{:,} USD` per {} **(+{:,}%)**\n\n".format(
                                round(newvalue * coin2price, 4), coin2symb, round((newvalue - 1) * 100, 2)
-                           ) + f"If **{coin1name} ({coin1symb})** had the market cap of **{coin2name} ({coin2symb})**:\n\n`" + \
+                           ) + f"If **{coin1name} ({coin1symb})** had the market cap of **{coin2name} ({coin2symb})**:\n\n`" +
                            "{:,} USD` per {} **({:,}%)**\n\n".format(
                                round(newvalue2 * coin1price, 4), coin1symb, round((newvalue2 - 1) * 100, 2)
                            ) + "{} price: `{:,} USD` | {} market cap: `{:,} USD` (Rank #{:,})".format(
@@ -258,7 +258,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 else:
                     athDate = "N/A"
                 e = Embed(
-                    colour=colour, description="https://www.coingecko.com/en/coins/" + \
+                    colour=colour, description="https://www.coingecko.com/en/coins/" +
                                                f"{data['name'].casefold().replace(' ', '-').replace('.', '-').replace('τ', 't-')}",
                 )
                 e.set_author(name=f"{data['name']} ({data['symbol'].upper()})", icon_url=data["image"])
@@ -597,7 +597,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                     value = self.weiToETH(latestTx["value"])
                     e.add_field(
                         name=f"Last Transaction ({funcs.timeStrToDatetime(latestTx['confirmed'])})",
-                        value=f"`{'-' if latestTx['tx_output_n'] == -1 and value else '+'}" + \
+                        value=f"`{'-' if latestTx['tx_output_n'] == -1 and value else '+'}" +
                               f"{'{:,}'.format(value) if value else 0} ETH`"
                     )
                     e.add_field(name="Last Transaction Hash", value=f"`{latestTx['tx_hash']}`")

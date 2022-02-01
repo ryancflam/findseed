@@ -136,7 +136,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         e.add_field(name="Your Eyes", value=f"`{eyes}`")
         e.add_field(name="Probability", value=f"`{odds}% (1 in {onein})`")
         e.add_field(name="Most Eyes Found", inline=False,
-                    value=f"`{highest} (last found {foundTime}{' ago' if not update else ''}" + \
+                    value=f"`{highest} (last found {foundTime}{' ago' if not update else ''}" +
                           f", found {'{:,}'.format(highestTotal)} time{'' if highestTotal == 1 else 's'})`")
         e.set_footer(text=f"The command has been called {'{:,}'.format(calls)} time{'' if calls == 1 else 's'}. !eyeodds")
         e.set_image(url="attachment://portal.png")
@@ -153,7 +153,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply(msg)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="finddream", description="Can you get Dream's" + ' *Minecraft* speedrunning "luck"? ' + \
+    @commands.command(name="finddream", description="Can you get Dream's *Minecraft* speedrunning \"luck\"? " +
                                                     "Test your luck using this command!",
                       aliases=["dream", "dreamsimulator", "dreamsim", "dreamluck", "fd"], hidden=True)
     async def finddream(self, ctx):
@@ -173,20 +173,20 @@ class Minecraft(commands.Cog, name="Minecraft",
         await funcs.dumpJson("data/finddream.json", data)
         e = Embed(
             title=f"{self.client.command_prefix}finddream",
-            description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " + \
+            description=f"Dream got 42 ender pearl trades in {dpearls} plus 211 blaze rod drops in {drods}. " +
                         f"Can you achieve his 'luck'?\n\nRequested by: {ctx.author.mention}"
         )
         e.add_field(name="Your Pearl Trades", value=f"`{pearls} ({round(pearls / dpearls * 100, 3)}%)`")
         e.add_field(name="Your Rod Drops", value=f"`{rods} ({round(rods / drods * 100, 3)}%)`")
         e.set_footer(
-            text=f"The command has been called {'{:,}'.format(iters)} time{'' if iters == 1 else 's'}. " + \
+            text=f"The command has been called {'{:,}'.format(iters)} time{'' if iters == 1 else 's'}. " +
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="findcleric", description="Will you get the ender pearl trade from the cleric, " + \
+    @commands.command(name="findcleric", description="Will you get the ender pearl trade from the cleric, " +
                                                      "or will you get one-thirded? Test your luck using this command!",
                       aliases=["cleric", "stupidvillager"], hidden=True)
     async def findcleric(self, ctx):
@@ -217,7 +217,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="findperch", description="You are in insane pace and about to kill the dragon..." + \
+    @commands.command(name="findperch", description="You are in insane pace and about to kill the dragon..." +
                                                     "but does it perch instantly? Test your luck using this command!",
                       aliases=["dragon", "fp", "finddragon"], hidden=True)
     async def findperch(self, ctx):
@@ -234,7 +234,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="findskull", description="You kill a wither skeleton...but does it drop a wither skull?" + \
+    @commands.command(name="findskull", description="You kill a wither skeleton...but does it drop a wither skull?" +
                                                     " Test your luck using this command!",
                       aliases=["skull", "witherskull", "findwitherskull", "findwither"], hidden=True)
     async def findskull(self, ctx):
@@ -309,7 +309,7 @@ class Minecraft(commands.Cog, name="Minecraft",
             )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="anchors", description="Calculates how many chargeable respawn anchors you can craft based on how " + \
+    @commands.command(name="anchors", description="Calculates how many chargeable respawn anchors you can craft based on how " +
                                                   "much glowstone dust and crying obsidian you have.",
                       aliases=["anchor"], usage="<amount of glowstone dust> <amount of crying obdisian>")
     async def anchors(self, ctx, glowdust, cryobby):
@@ -383,7 +383,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply(funcs.formatting(res))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="pearlbarter", description="Finds the probability of getting 12 or more ender pearls" + \
+    @commands.command(name="pearlbarter", description="Finds the probability of getting 12 or more ender pearls" +
                                                       " in a given number of piglin trades in *Minecraft* 1.16.1.",
                       aliases=["pearltrade", "pearlbartering", "barteringpearl", "barterpearl", "barterpearls"],
                       usage=f"[total gold ingots up to {BARTER_LIMIT}]")
@@ -396,19 +396,19 @@ class Minecraft(commands.Cog, name="Minecraft",
             return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
         x = 1 - (403 / 423) ** n - n * (20 / 423) * ((403 / 423) ** (n - 1)) - (2 / 5) * (n * (n - 1) / 2) \
             * ((403 / 423) ** (n - 2)) * ((20 / 423) ** 2)
-        await ctx.reply(f"**[1.16.1]** The probability of getting 12 or more ender pearls" + \
+        await ctx.reply(f"**[1.16.1]** The probability of getting 12 or more ender pearls" +
                         f" with {n} gold ingots is:\n\n`{round(x * 100, 5)}%` (1 in {round(1 / x, 5)})")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="blindtravel", description="A *Minecraft: Java Edition* speedrunning tool that " + \
-                                                      "should be used when you want to build another por" + \
-                                                      "tal in the Nether before throwing any eyes of end" + \
-                                                      "er. To use this command, in the game, press F3+C," + \
-                                                      " pause, come over to Discord, paste your clipboar" + \
-                                                      "d as an argument for the command, and then build " + \
-                                                      "your portal at the suggested coordinates in the N" + \
-                                                      "ether. This command is for versions 1.13+ and may " + \
-                                                      "not be 100% accurate. This command MAY not be used" + \
+    @commands.command(name="blindtravel", description="A *Minecraft: Java Edition* speedrunning tool that " +
+                                                      "should be used when you want to build another por" +
+                                                      "tal in the Nether before throwing any eyes of end" +
+                                                      "er. To use this command, in the game, press F3+C," +
+                                                      " pause, come over to Discord, paste your clipboar" +
+                                                      "d as an argument for the command, and then build " +
+                                                      "your portal at the suggested coordinates in the N" +
+                                                      "ether. This command is for versions 1.13+ and may " +
+                                                      "not be 100% accurate. This command MAY not be used" +
                                                       " in a real speedrun.",
                       aliases=["bt", "blind", "blindtrav"], usage="<F3+C data>")
     async def blindtravel(self, ctx, *, f3c):
@@ -423,24 +423,24 @@ class Minecraft(commands.Cog, name="Minecraft",
             zp = funcs.sign(z) * abs(o * math.sin(t))
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.reply(
-                f"Build your portal at: **{round(xp)}, {round(zp)}** " + \
+                f"Build your portal at: **{round(xp)}, {round(zp)}** " +
                 f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)"
             )
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="educatedtravel", description="A *Minecraft: Java Edition* speedrunning tool th" + \
-                                                         "at should be used when you want to build anoth" + \
-                                                         "er portal in the Nether after throwing an eye " + \
-                                                         "of ender. To use this command, in the game, th" + \
-                                                         "row an eye, stand still, put your mouse direct" + \
-                                                         "ly over the eye, press F3+C, pause, come over " + \
-                                                         "to Discord, paste your clipboard as an argumen" + \
-                                                         "t for the command, and then build your portal " + \
-                                                         "at the suggested coordinates in the Nether. Th" + \
-                                                         "is command is for versions 1.13+ and may not be" + \
-                                                         " 100% accurate. This command MAY not be used in" + \
+    @commands.command(name="educatedtravel", description="A *Minecraft: Java Edition* speedrunning tool th" +
+                                                         "at should be used when you want to build anoth" +
+                                                         "er portal in the Nether after throwing an eye " +
+                                                         "of ender. To use this command, in the game, th" +
+                                                         "row an eye, stand still, put your mouse direct" +
+                                                         "ly over the eye, press F3+C, pause, come over " +
+                                                         "to Discord, paste your clipboard as an argumen" +
+                                                         "t for the command, and then build your portal " +
+                                                         "at the suggested coordinates in the Nether. Th" +
+                                                         "is command is for versions 1.13+ and may not be" +
+                                                         " 100% accurate. This command MAY not be used in" +
                                                          " a real speedrun.",
                       aliases=["et", "educated", "nethertravel"], usage="<F3+C data>")
     async def educatedtravel(self, ctx, *, f3c):
@@ -460,19 +460,19 @@ class Minecraft(commands.Cog, name="Minecraft",
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="doubletravel", description="A *Minecraft: Java Edition* speedrunning tool that" + \
-                                                       ", whilst you are in the Nether, gets a spot for " + \
-                                                       "you to make your first portal inside the second " + \
-                                                       "ring of strongholds. To use this command, in the" + \
-                                                       " game, press F3+C, pause, come over to Discord, " + \
-                                                       "paste your clipboard as an argument for the comm" + \
-                                                       "and, and then build your portal at the suggested" + \
-                                                       " coordinates in the Nether. `educatedtravel` shou" + \
-                                                       "ld then be used after exiting the Nether which s" + \
-                                                       "hould do a good job of getting you to the right " + \
-                                                       "spot in the Nether to build your second portal. " + \
-                                                       "This command is for versions 1.13+ and may not be" + \
-                                                       " 100% accurate. This command MAY not be used in a " + \
+    @commands.command(name="doubletravel", description="A *Minecraft: Java Edition* speedrunning tool that" +
+                                                       ", whilst you are in the Nether, gets a spot for " +
+                                                       "you to make your first portal inside the second " +
+                                                       "ring of strongholds. To use this command, in the" +
+                                                       " game, press F3+C, pause, come over to Discord, " +
+                                                       "paste your clipboard as an argument for the comm" +
+                                                       "and, and then build your portal at the suggested" +
+                                                       " coordinates in the Nether. `educatedtravel` shou" +
+                                                       "ld then be used after exiting the Nether which s" +
+                                                       "hould do a good job of getting you to the right " +
+                                                       "spot in the Nether to build your second portal. " +
+                                                       "This command is for versions 1.13+ and may not be" +
+                                                       " 100% accurate. This command MAY not be used in a " +
                                                        "real speedrun.",
                       aliases=["double"], usage="<F3+C data>")
     async def doubletravel(self, ctx, *, f3c):
@@ -485,25 +485,25 @@ class Minecraft(commands.Cog, name="Minecraft",
             zp = funcs.sign(z) * abs(o * math.sin(t))
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.reply(
-                f"Build your first portal at: **{round(xp)}, {round(zp)}** " + \
-                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\n" + \
+                f"Build your first portal at: **{round(xp)}, {round(zp)}** " +
+                f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)\n\n" +
                 f"Use `{self.client.command_prefix}educatedtravel` afterwards."
             )
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="safeblind", description="A *Minecraft: Java Edition* speedrunning tool that, s" + \
-                                                    "imilar to `blindtravel`, should be used when you wan" + \
-                                                    "t to build another portal in the Nether before thro" + \
-                                                    "wing any eyes of ender. This on average will get yo" + \
-                                                    "u closer to the stronghold compared to `blindtravel`" + \
-                                                    ", but time may be lost. To use this command, in the" + \
-                                                    " game, press F3+C, pause, come over to Discord, pas" + \
-                                                    "te your clipboard as an argument for the command, a" + \
-                                                    "nd then build your portal at the suggested coordina" + \
-                                                    "tes in the Nether. This command is for versions 1.13" + \
-                                                    "+ and may not be 100% accurate. This command MAY not" + \
+    @commands.command(name="safeblind", description="A *Minecraft: Java Edition* speedrunning tool that, s" +
+                                                    "imilar to `blindtravel`, should be used when you wan" +
+                                                    "t to build another portal in the Nether before thro" +
+                                                    "wing any eyes of ender. This on average will get yo" +
+                                                    "u closer to the stronghold compared to `blindtravel`" +
+                                                    ", but time may be lost. To use this command, in the" +
+                                                    " game, press F3+C, pause, come over to Discord, pas" +
+                                                    "te your clipboard as an argument for the command, a" +
+                                                    "nd then build your portal at the suggested coordina" +
+                                                    "tes in the Nether. This command is for versions 1.13" +
+                                                    "+ and may not be 100% accurate. This command MAY not" +
                                                     " be used in a real speedrun.",
                       aliases=["sb", "safetravel", "safe", "st"], usage="<F3+C data>", hidden=True)
     async def safeblind(self, ctx, *, f3c):
@@ -519,26 +519,26 @@ class Minecraft(commands.Cog, name="Minecraft",
             zp = funcs.sign(z) * abs(o * math.sin(t))
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.reply(
-                f"Build your portal at: **{round(xp)}, {round(zp)}** " + \
+                f"Build your portal at: **{round(xp)}, {round(zp)}** " +
                 f"({'{:,}'.format(blocks)} block{'' if blocks == 1 else 's'} away)"
             )
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="perfecttravel", description="A *Minecraft: Java Edition* speedrunning tool that att" + \
-                                                        "empts to take you directly to the stronghold portal " + \
-                                                        "room with the use of two Nether portals and F3 data." + \
-                                                        " To use this command, in the game, leave your first " + \
-                                                        "portal, find a chunk intersection and stand on the c" + \
-                                                        'hunk coordinate "0, 0" right in the centre, press F3' + \
-                                                        "+C, pause, come over to Discord, paste your clipboar" + \
-                                                        "d as an argument for the command, go back to the Net" + \
-                                                        "her, and then build your second portal at the sugges" + \
-                                                        "ted coordinates in the Nether. This command is for v" + \
-                                                        "ersions 1.13+ and may not be 100% accurate. This com" + \
+    @commands.command(name="perfecttravel", description="A *Minecraft: Java Edition* speedrunning tool that att" +
+                                                        "empts to take you directly to the stronghold portal " +
+                                                        "room with the use of two Nether portals and F3 data." +
+                                                        " To use this command, in the game, leave your first " +
+                                                        "portal, find a chunk intersection and stand on the c" +
+                                                        'hunk coordinate "0, 0" right in the centre, press F3' +
+                                                        "+C, pause, come over to Discord, paste your clipboar" +
+                                                        "d as an argument for the command, go back to the Net" +
+                                                        "her, and then build your second portal at the sugges" +
+                                                        "ted coordinates in the Nether. This command is for v" +
+                                                        "ersions 1.13+ and may not be 100% accurate. This com" +
                                                         "mand MAY not be used in a real speedrun.",
-                      aliases=["perfectt", "perfect", "ptravel", "ptrav", "ptr", "pt"], usage='<F3+C data> ["calc"]\n\n' + \
+                      aliases=["perfectt", "perfect", "ptravel", "ptrav", "ptr", "pt"], usage='<F3+C data> ["calc"]\n\n' +
                       'Note: Add "calc" at the end if you do not want to manually calculate the portal coordinates yourself.')
     async def perfecttravel(self, ctx, *, f3c):
         calc = True if f3c.casefold().split()[-1] == "calc" else False
@@ -551,10 +551,10 @@ class Minecraft(commands.Cog, name="Minecraft",
                 f += 360
             targetchunk = self.perfecttravel[str(round(f, 2))][0]
             if calc:
-                await ctx.send("**Note:** Second Nether portal coordinates are calculated for you. " + \
+                await ctx.send("**Note:** Second Nether portal coordinates are calculated for you. " +
                                "Your run is now most likely invalid.")
             else:
-                await ctx.send("**Note:** Although no calculations are done and only a lookup table is being used, " + \
+                await ctx.send("**Note:** Although no calculations are done and only a lookup table is being used, " +
                                f"note that you may still risk invalidating your run or at least have it kept under close scrutiny.")
             try:
                 targetchunkx, targetchunkz = targetchunk.split(" ")
@@ -566,14 +566,14 @@ class Minecraft(commands.Cog, name="Minecraft",
             if targetchunk:
                 if calc:
                     await ctx.reply(
-                        f"Build your second portal at: **" + \
-                        f"{round(nx + (1 if nx < 0 else 0))}, {round(nz + (1 if nz < 0 else 0))}** " + \
+                        f"Build your second portal at: **" +
+                        f"{round(nx + (1 if nx < 0 else 0))}, {round(nz + (1 if nz < 0 else 0))}** " +
                         "\n\nMore info: https://youtu.be/YpV7I9X-Jso"
                     )
                 else:
                     await ctx.reply(
-                        f"Offset: **{nx}, {nz}**\n\nYour current chunk for reference: **" + \
-                        f"{px}, {pz}**" + \
+                        f"Offset: **{nx}, {nz}**\n\nYour current chunk for reference: **" +
+                        f"{px}, {pz}**" +
                         "\n\nMore info: https://youtu.be/YpV7I9X-Jso"
                     )
             else:
@@ -582,21 +582,21 @@ class Minecraft(commands.Cog, name="Minecraft",
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" + \
-                                                        "t attempts to locate the stronghold using both " + \
-                                                        'the "8, 8" rule and triangulation. To use this ' + \
-                                                        "command, in the game, throw and eye, stand stil" + \
-                                                        "l, put your mouse directly over the eye, press " + \
-                                                        "F3+C, pause, come over to Discord, paste your c" + \
-                                                        "lipboard as an argument for the command, and th" + \
-                                                        "e command should return a set of coordinates ca" + \
-                                                        'lculated using the "8, 8" rule. You may continu' + \
-                                                        "e using this command by parsing more F3+C clipb" + \
-                                                        "oards as regular messages as you get closer to " + \
-                                                        "the stronghold. Once the program knows you are " + \
-                                                        "fairly close to the stronghold, it will automat" + \
-                                                        "ically stop. This command is for versions 1.13+" + \
-                                                        " and may not be 100% accurate. This command MAY" + \
+    @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" +
+                                                        "t attempts to locate the stronghold using both " +
+                                                        'the "8, 8" rule and triangulation. To use this ' +
+                                                        "command, in the game, throw and eye, stand stil" +
+                                                        "l, put your mouse directly over the eye, press " +
+                                                        "F3+C, pause, come over to Discord, paste your c" +
+                                                        "lipboard as an argument for the command, and th" +
+                                                        "e command should return a set of coordinates ca" +
+                                                        'lculated using the "8, 8" rule. You may continu' +
+                                                        "e using this command by parsing more F3+C clipb" +
+                                                        "oards as regular messages as you get closer to " +
+                                                        "the stronghold. Once the program knows you are " +
+                                                        "fairly close to the stronghold, it will automat" +
+                                                        "ically stop. This command is for versions 1.13+" +
+                                                        " and may not be 100% accurate. This command MAY" +
                                                         " not be used in a real speedrun.",
                       aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
                       usage="<F3+C data>")
@@ -690,7 +690,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         )
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="speedrunwr", description="Shows the current world records for the solo Any% Glitchless " + \
+    @commands.command(name="speedrunwr", description="Shows the current world records for the solo Any% Glitchless " +
                                                      "*Minecraft: Java Edition* speedrun categories.",
                       aliases=["worldrecord", "wr", "mcwr", "ssg", "rsg"])
     async def speedrunwr(self, ctx):
@@ -808,7 +808,7 @@ class Minecraft(commands.Cog, name="Minecraft",
     async def fossils(self, ctx):
         url = "https://cdn.discordapp.com/attachments/771404776410972161/842022227347636264/fossiltable.jpg"
         await funcs.sendImage(
-            ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+ \
+            ctx, url, message="PDF: https://cdn.discordapp.com/attachments/817309668924719144/"+
                               "818310310153814056/Fossil_origin_identification_1.pdf"
         )
 

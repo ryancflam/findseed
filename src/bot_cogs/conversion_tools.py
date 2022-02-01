@@ -33,7 +33,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
             if algo not in algorithms:
                 e = funcs.errorEmbed(
                     "Invalid algorithm!",
-                    "Valid options:\n\n`MD5`, `BLAKE2b`, `BLAKE2s`, " + \
+                    "Valid options:\n\n`MD5`, `BLAKE2b`, `BLAKE2s`, " +
                     "`SHA1`, `SHA224`, `SHA256`, `SHA384`, `SHA512`"
                 )
             else:
