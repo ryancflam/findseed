@@ -17,7 +17,7 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
         self.morsecode = None
 
     async def __readFiles(self):
-        self.morsecode = await funcs.readJson("resources/conversion_tools/morse_code.json")
+        self.morsecode = await funcs.readJson(funcs.getResource(self.qualified_name, "morse_code.json"))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",

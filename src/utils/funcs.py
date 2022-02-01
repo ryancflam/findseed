@@ -466,9 +466,13 @@ def noteFinder(rawNote):
     return musicalNotes()[cycle.getIndex()] + str(octave), cycle.getIndex() + octave * 12
 
 
+def formatCogName(cog):
+    return cog.casefold().replace(" ", "_").replace(".py", "")
+
+
 def reloadCog(client, cog):
     try:
-        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        cog = formatCogName(cog)
         client.reload_extension(f"src.bot_cogs.{cog}")
         print(f"Reloaded cog: {cog}")
     except Exception as ex:
@@ -477,7 +481,7 @@ def reloadCog(client, cog):
 
 def loadCog(client, cog):
     try:
-        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        cog = formatCogName(cog)
         client.load_extension(f"src.bot_cogs.{cog}")
         print(f"Loaded cog: {cog}")
     except Exception as ex:
@@ -486,11 +490,15 @@ def loadCog(client, cog):
 
 def unloadCog(client, cog):
     try:
-        cog = cog.casefold().replace(' ', '_').replace('.py', '')
+        cog = formatCogName(cog)
         client.unload_extension(f"src.bot_cogs.{cog}")
         print(f"Unloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
+
+
+def getResource(cog, resource):
+    return f"/resources/{formatCogName(cog)}/{resource}"
 
 
 async def deleteTempFile(file: str):

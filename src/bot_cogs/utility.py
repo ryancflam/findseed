@@ -1117,7 +1117,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 " ARSE AND YOU DON'T EVEN SEE IT!"
             ]
             try:
-                answer.append((await funcs.readTxt("/resources/easter_eggs/copypasta.txt")).replace("\*", "*")[:1994])
+                answer.append(
+                    (await funcs.readTxt(funcs.getResource(self.qualified_name, "copypasta.txt"))).replace("\*", "*")[:1994]
+                )
             except Exception as ex:
                 funcs.printError(ctx, ex)
                 pass
