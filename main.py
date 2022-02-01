@@ -3,7 +3,8 @@ from logging import StreamHandler, getLogger, INFO
 from sys import stdout
 
 from src.bot_instance import BotInstance
-
+from src.utils import funcs
+print(funcs.getPath())
 
 def main():
     handler = StreamHandler(stream=stdout)
