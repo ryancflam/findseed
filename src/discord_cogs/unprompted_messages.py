@@ -5,7 +5,7 @@ from re import sub
 
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 
 class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True),

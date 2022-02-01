@@ -7,7 +7,7 @@ from random import choice
 from discord import Embed
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 AC_LOGO = "https://cdn.discordapp.com/attachments/771404776410972161/906436017987395604/unknown.png"
 BD_KEY = "LOL"

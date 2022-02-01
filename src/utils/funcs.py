@@ -13,8 +13,8 @@ from discord import Embed, File
 from httpx import AsyncClient, get
 from plotly import graph_objects as go
 
-from other_utils.item_cycle import ItemCycle
-from other_utils.safe_eval import SafeEval
+from src.utils.item_cycle import ItemCycle
+from src.utils.safe_eval import SafeEval
 
 tickers = {}
 while True:
@@ -30,7 +30,7 @@ while True:
 
 
 def getPath():
-    return path.dirname(path.realpath(__file__)).rsplit("other_utils", 1)[0][:-1]
+    return path.dirname(path.realpath(__name__))
 
 
 def testKaleido():
@@ -489,7 +489,7 @@ def noteFinder(rawNote):
 def reloadCog(client, cog):
     try:
         cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.reload_extension(f"cogs.{cog}")
+        client.reload_extension(f"src.discord_cogs.{cog}")
         print(f"Reloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -498,7 +498,7 @@ def reloadCog(client, cog):
 def loadCog(client, cog):
     try:
         cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.load_extension(f"cogs.{cog}")
+        client.load_extension(f"src.discord_cogs.{cog}")
         print(f"Loaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -507,7 +507,7 @@ def loadCog(client, cog):
 def unloadCog(client, cog):
     try:
         cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.unload_extension(f"cogs.{cog}")
+        client.unload_extension(f"src.discord_cogs.{cog}")
         print(f"Unloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)

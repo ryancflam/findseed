@@ -1,8 +1,8 @@
 from random import randrange, shuffle
 from time import time
 
-from other_utils.funcs import minSecs
-from other_utils.item_cycle import ItemCycle
+from src.utils.funcs import minSecs
+from src.utils.item_cycle import ItemCycle
 
 
 class NoThanks:

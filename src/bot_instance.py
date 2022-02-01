@@ -7,7 +7,7 @@ from discord import Activity, Intents
 from discord.ext.commands import Bot
 from statcord import Client
 
-from other_utils import funcs
+from src.utils import funcs
 
 PATH = funcs.getPath()
 
@@ -47,7 +47,7 @@ class BotInstance(Bot):
         self.__statcord.start_loop()
 
     def startup(self):
-        for cog in listdir(f"{PATH}/cogs"):
+        for cog in listdir(f"{PATH}/src/discord_cogs"):
             if cog.endswith(".py"):
                 funcs.loadCog(self, cog)
         super().run(self.__token, reconnect=True)

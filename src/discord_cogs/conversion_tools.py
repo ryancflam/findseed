@@ -5,8 +5,8 @@ import hashlib
 from discord import Embed
 from discord.ext import commands
 
-from other_utils import funcs
-from other_utils.brainfuck_interpreter import BrainfuckInterpreter
+from src.utils import funcs
+from src.utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
 class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(hidden=True),

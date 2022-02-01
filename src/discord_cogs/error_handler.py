@@ -2,7 +2,7 @@
 
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 
 class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for handling errors.",

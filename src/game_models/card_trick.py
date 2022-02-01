@@ -1,4 +1,4 @@
-from other_utils.playing_cards import PlayingCards
+from src.utils.playing_cards import PlayingCards
 
 
 class CardTrick:

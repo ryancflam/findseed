@@ -20,8 +20,8 @@ from plotly import graph_objects as go
 from qrcode import QRCode
 
 import config
-from other_utils import funcs
-from other_utils.page_buttons import PageButtons
+from src.utils import funcs
+from src.utils.page_buttons import PageButtons
 
 DEFAULT_REPO = "ryancflam/findseed"
 HCF_LIMIT = 1000000

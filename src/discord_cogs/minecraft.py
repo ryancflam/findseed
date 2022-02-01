@@ -13,7 +13,7 @@ from time import time
 from discord import Colour, Embed, File
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 BARTER_LIMIT = 896
 

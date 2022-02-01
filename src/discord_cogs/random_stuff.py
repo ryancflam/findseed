@@ -8,8 +8,8 @@ from discord.ext import commands
 from googletrans import Translator
 
 import config
-from other_utils import funcs
-from other_utils.playing_cards import PlayingCards
+from src.utils import funcs
+from src.utils.playing_cards import PlayingCards
 
 COIN_EDGE_ODDS = 6001
 RN_RANGE = 999999999999

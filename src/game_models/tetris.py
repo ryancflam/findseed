@@ -6,7 +6,7 @@ from time import time
 
 from discord import ButtonStyle, ui
 
-from other_utils.funcs import minSecs, printError
+from src.utils.funcs import minSecs, printError
 
 LEFT = "◀️"
 RIGHT = "▶️"

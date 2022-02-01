@@ -3,7 +3,7 @@ from datetime import timedelta
 from discord import Embed, Member
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 
 class Moderation(commands.Cog, name="Moderation", description="Simple moderation and member-management commands for server staff."):

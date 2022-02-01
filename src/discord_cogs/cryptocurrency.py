@@ -7,8 +7,8 @@ from pandas import DataFrame, DatetimeIndex
 from plotly import express, graph_objects
 
 import config
-from other_utils import funcs
-from other_utils.bitcoin_address import BitcoinAddress
+from src.utils import funcs
+from src.utils.bitcoin_address import BitcoinAddress
 
 GAS_HODL = 0.00088
 GAS_GOVN = 0.03504

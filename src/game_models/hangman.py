@@ -1,7 +1,7 @@
 from random import choice
 from time import time
 
-from other_utils.funcs import minSecs, readTxt
+from src.utils.funcs import minSecs, readTxt
 
 
 class Hangman:

@@ -4,7 +4,7 @@ from itertools import chain, groupby
 from math import inf
 from time import time
 
-from other_utils.funcs import minSecs, numberEmojis
+from src.utils.funcs import minSecs, numberEmojis
 
 ROWS = 6
 COLS = 7

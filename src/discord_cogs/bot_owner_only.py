@@ -9,7 +9,7 @@ from time import time
 import discord
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 
 class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
@@ -98,7 +98,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="loadcog", description="Loads a cog.", usage="<cog name>", aliases=["enablecog"])
+    @commands.command(name="loadcog", description="Loads a cog.", usage="<cog name>", aliases=["enablecog", "load"])
     @commands.is_owner()
     async def _loadcog(self, ctx, *, cog: str=""):
         if cog == "":
@@ -109,7 +109,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="unloadcog", description="Unloads a cog.", usage="<cog name>", aliases=["disablecog"])
+    @commands.command(name="unloadcog", description="Unloads a cog.", usage="<cog name>", aliases=["disablecog", "unload"])
     @commands.is_owner()
     async def _unloadcog(self, ctx, *, cog: str=""):
         if cog == "":
@@ -152,8 +152,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
-    @commands.command(name="blacklistserver", description="Blacklists a server.",
-                      aliases=["bls"], usage="<server ID>")
+    @commands.command(name="blacklistserver", description="Blacklists a server.", aliases=["bls"], usage="<server ID>")
     @commands.is_owner()
     async def _blacklistserver(self, ctx, *, serverID=None):
         if not serverID:
@@ -171,8 +170,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
-    @commands.command(name="blacklistuser", description="Blacklists a user.",
-                      aliases=["blu"], usage="<user ID>")
+    @commands.command(name="blacklistuser", description="Blacklists a user.", aliases=["blu"], usage="<user ID>")
     @commands.is_owner()
     async def _blacklistuser(self, ctx, *, userID=None):
         if not userID:
@@ -194,8 +192,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
-    @commands.command(name="unblacklistserver", description="Unblacklists a server.",
-                      aliases=["ubls"], usage="<server ID>")
+    @commands.command(name="unblacklistserver", description="Unblacklists a server.", aliases=["ubls"], usage="<server ID>")
     @commands.is_owner()
     async def _unblacklistserver(self, ctx, *, serverID=None):
         if not serverID:
@@ -213,8 +210,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
 
-    @commands.command(name="unblacklistuser", description="Unblacklists a user.",
-                      aliases=["ublu"], usage="<user ID>")
+    @commands.command(name="unblacklistuser", description="Unblacklists a user.", aliases=["ublu"], usage="<user ID>")
     @commands.is_owner()
     async def _unblacklistuser(self, ctx, *, userID=None):
         if not userID:
@@ -254,8 +250,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             f"{'None' if not userList else ', '.join(str(user) for user in userList)}```"
         )
 
-    @commands.command(name="whitelistuser", description="Whitelists a user.",
-                      aliases=["wlu"], usage="<user ID>")
+    @commands.command(name="whitelistuser", description="Whitelists a user.", aliases=["wlu"], usage="<user ID>")
     @commands.is_owner()
     async def _whitelistuser(self, ctx, *, userID=None):
         if not userID:

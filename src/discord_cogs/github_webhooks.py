@@ -7,7 +7,7 @@ from discord.ext import commands
 from flask import Flask, abort, request
 
 from config import githubWebhooks
-from other_utils import funcs
+from src.utils import funcs
 
 FLASK_APP = Flask(__name__)
 RIDICULOUS_CHANNEL_LIST = []

@@ -5,7 +5,7 @@ from re import findall
 
 from discord.ext import commands
 
-from other_utils import funcs
+from src.utils import funcs
 
 IMGUR_URL = "imgur.com"
 

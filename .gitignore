@@ -1,8 +1,8 @@
 requirementsgen.bat
 config.py
 assets/easter_eggs/*
-cogs/testcog.py
-cogs/easter_eggs.py
+src/discord_cogs/testcog.py
+src/discord_cogs/easter_eggs.py
 data/*
 temp/*
 !data/.gitkeep

@@ -7,7 +7,7 @@ from discord.ext import commands
 from psutil import cpu_percent, disk_usage, virtual_memory
 
 import config
-from other_utils import funcs
+from src.utils import funcs
 
 
 class General(commands.Cog, name="General", description="Standard commands relating to this bot, its features, or Discord."):

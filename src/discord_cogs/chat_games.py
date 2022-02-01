@@ -9,17 +9,17 @@ from akinator.async_aki import Akinator
 from discord import Colour, Embed, File, User
 from discord.ext import commands, tasks
 
-from game_models.battleship import Battleship
-from game_models.bulls_and_cows import BullsAndCows
-from game_models.card_trick import CardTrick
-from game_models.connect_four import ConnectFour
-from game_models.hangman import Hangman
-from game_models.minesweeper import Minesweeper
-from game_models.no_thanks import NoThanks
-from game_models.tetris import Tetris
-from game_models.tic_tac_toe import TicTacToe
-from game_models.uno import Uno
-from other_utils import funcs
+from src.game_models.battleship import Battleship
+from src.game_models.bulls_and_cows import BullsAndCows
+from src.game_models.card_trick import CardTrick
+from src.game_models.connect_four import ConnectFour
+from src.game_models.hangman import Hangman
+from src.game_models.minesweeper import Minesweeper
+from src.game_models.no_thanks import NoThanks
+from src.game_models.tetris import Tetris
+from src.game_models.tic_tac_toe import TicTacToe
+from src.game_models.uno import Uno
+from src.utils import funcs
 
 
 class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for you to kill time."):

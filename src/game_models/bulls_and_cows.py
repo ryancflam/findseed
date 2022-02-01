@@ -1,7 +1,7 @@
 from random import sample
 from time import time
 
-from other_utils.funcs import minSecs, replaceCharacters
+from src.utils.funcs import minSecs, replaceCharacters
 
 
 class BullsAndCows:

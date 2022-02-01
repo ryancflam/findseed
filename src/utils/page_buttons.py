@@ -2,7 +2,7 @@ from asyncio import TimeoutError, sleep
 
 from discord import ButtonStyle, ui
 
-from other_utils.funcs import errorEmbed, printError
+from src.utils.funcs import errorEmbed, printError
 
 DELETE = "🗑️"
 PREV = "⏮"

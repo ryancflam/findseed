@@ -3,7 +3,7 @@
 from math import floor, inf
 from time import time
 
-from other_utils.funcs import minSecs
+from src.utils.funcs import minSecs
 
 
 class TicTacToe:
