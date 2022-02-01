@@ -494,7 +494,7 @@ def unloadCog(client, cog):
         client.unload_extension(f"src.bot_cogs.{cog}")
         print(f"Unloaded cog: {cog}")
     except Exception as ex:
-        raise Exception(ex)
+        raise Exception(ex))
 
 
 def getResource(cog, resource):
