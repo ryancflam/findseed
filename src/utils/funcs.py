@@ -1,4 +1,3 @@
-import time
 from calendar import monthrange
 from datetime import date, datetime, timedelta
 from io import BytesIO
@@ -6,6 +5,7 @@ from json import JSONDecodeError, dumps, loads
 from os import path, remove
 from random import randint
 from re import split
+from time import sleep, time
 
 from aiofiles import open
 from dateutil import parser
@@ -26,7 +26,7 @@ while True:
                 tickers[coin["symbol"]] = coin["id"]
         break
     except JSONDecodeError:
-        time.sleep(30)
+        sleep(30)
 
 
 def getPath():
@@ -520,7 +520,7 @@ def deleteTempFile(file: str):
 
 async def readTxtAttachment(message):
     attach = message.attachments[0]
-    filename = f"{time.time()}-{attach.filename}"
+    filename = f"{time()}-{attach.filename}"
     filepath = f"{getPath()}/temp/{filename}"
     await attach.save(filepath)
     try:

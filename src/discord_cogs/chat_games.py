@@ -1104,8 +1104,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         else:
             lives = game.getLives()
             await ctx.send(
-                f"`{ctx.author.name} has won Hangman with " + \
-                f"{'' if lives != 10 else 'all '}{lives} li{'ves' if lives != 1 else 'fe'} left!`"
+                f"`{ctx.author.name} has won Hangman with {'' if lives != 10 else 'all '}{lives} " + \
+                f"li{'ves' if lives != 1 else 'fe'} left! Their word was {game.getWord()}.`"
             )
         m, s = game.getTime()
         await funcs.sendTime(ctx, m, s)

@@ -1,10 +1,9 @@
-from asyncio import sleep
 from os import listdir, makedirs, path
 from shutil import rmtree
 from sys import exit
 
 from discord import Activity, Intents
-from discord.ext.commands import Bot
+from discord.ext import commands, tasks
 from statcord import Client
 
 from src.utils import funcs
@@ -30,7 +29,7 @@ except ModuleNotFoundError:
     exit()
 
 
-class BotInstance(Bot):
+class BotInstance(commands.Bot):
     def __init__(self, loop):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
@@ -45,6 +44,7 @@ class BotInstance(Bot):
         self.__status = config.status
         self.__statcord = Client(self, config.statcordKey)
         self.__statcord.start_loop()
+        self.__btcPresence = True
 
     def startup(self):
         for cog in listdir(f"{PATH}/src/discord_cogs"):
@@ -76,32 +76,20 @@ class BotInstance(Bot):
         await funcs.generateJson("blacklist", {"servers": [], "users": []})
         await funcs.generateJson("whitelist", {"users": []})
 
-    async def kill(self):
-        print("Stopping bot...")
-        try:
-            for cog in sorted(self.cogs):
-                funcs.unloadCog(self, cog)
-            self.__eventLoop.stop()
-            return exit()
-        except Exception as ex:
-            return ex
-
+    @tasks.loop(seconds=120.0)
     async def __bitcoin(self):
-        btc = True
-        while True:
-            try:
-                res = await funcs.getRequest(
-                    "https://api.coingecko.com/api/v3/coins/markets",
-                    params={"vs_currency": "usd", "ids": ("bitcoin" if btc else "ethereum")}
-                )
-                data = res.json()[0]
-                ext = "🎉" if data["ath"] < data["current_price"] else ""
-                msg = " @ ${:,}{}".format(data["current_price"], ext)
-            except:
-                msg = ""
-            await self.__presence(("BTC" if btc else "ETH") + msg)
-            await sleep(120)
-            btc = not btc
+        try:
+            res = await funcs.getRequest(
+                "https://api.coingecko.com/api/v3/coins/markets",
+                params={"vs_currency": "usd", "ids": ("bitcoin" if self.__btcPresence else "ethereum")}
+            )
+            data = res.json()[0]
+            ext = "🎉" if data["ath"] < data["current_price"] else ""
+            msg = " @ ${:,}{}".format(data["current_price"], ext)
+        except:
+            msg = ""
+        await self.__presence(("BTC" if self.__btcPresence else "ETH") + msg)
+        self.__btcPresence = not self.__btcPresence
 
     async def __presence(self, name):
         await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
@@ -126,7 +114,8 @@ class BotInstance(Bot):
         print(f"Logged in as Discord user: {self.user}")
         await owner.send("Bot is online.")
         if self.__activityName.casefold() == "bitcoin":
-            await self.loop.create_task(self.__bitcoin())
+            print("Activating Bitcoin/Ethereum price status...")
+            self.__bitcoin.start()
         else:
             await self.__presence(self.__activityName)
 
@@ -143,3 +132,13 @@ class BotInstance(Bot):
 
     async def on_command(self, ctx):
         self.__statcord.command_run(ctx)
+
+    async def kill(self):
+        print("Stopping bot...")
+        try:
+            for cog in sorted(self.cogs):
+                funcs.unloadCog(self, cog)
+            self.__eventLoop.stop()
+            return exit()
+        except Exception as ex:
+            return ex
