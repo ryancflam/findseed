@@ -9,16 +9,7 @@ from akinator.async_aki import Akinator
 from discord import Colour, Embed, File, User
 from discord.ext import commands, tasks
 
-from src.game_models.battleship import Battleship
-from src.game_models.bulls_and_cows import BullsAndCows
-from src.game_models.card_trick import CardTrick
-from src.game_models.connect_four import ConnectFour
-from src.game_models.hangman import Hangman
-from src.game_models.minesweeper import Minesweeper
-from src.game_models.no_thanks import NoThanks
-from src.game_models.tetris import Tetris
-from src.game_models.tic_tac_toe import TicTacToe
-from src.game_models.uno import Uno
+from src import games
 from src.utils import funcs
 
 
@@ -69,7 +60,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             ", `bnw` to enable black-and-white mode, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
-        self.tetrisGames[ctx.channel] = Tetris(ctx, self.client)
+        self.tetrisGames[ctx.channel] = games.Tetris(ctx, self.client)
         game = self.tetrisGames[ctx.channel]
         game.newBlock()
         e = Embed(title="Tetris", description=game.gameBoard())
@@ -156,7 +147,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             "`quit` to quit the game (Note: You may only quit when it is your turn).**"
         )
         count = 1
-        game = NoThanks(players)
+        game = games.NoThanks(players)
         for player in players:
             self.client.loop.create_task(self.ntAwaitInput(game, player, game.getPlayer(count - 1)))
             try:
@@ -274,7 +265,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.append(ctx.channel.id)
         await ctx.send("**A game of Uno is starting in one minute in this channel! " + \
                        "Say `join` to join. The game requires a minimum of 2 players and a maximum of 4.**")
-        game = Uno()
+        game = games.Uno()
         game.addPlayer(ctx.author)
         waiting = time()
         while time() - waiting < 60:
@@ -616,7 +607,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send("**Welcome to Bulls and Cows. Input `help` for help, " + \
                        "`time` to see total elapsed time, or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
-        game = BullsAndCows()
+        game = games.BullsAndCows()
         while not game.getGameEnd():
             await ctx.send("`Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
                            "Please guess a four-digit number with no duplicates.`")
@@ -676,7 +667,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send("**Welcome to the 21 Card Trick. " + \
                        "Pick a card from one of the three piles and I will try to guess it.**")
         self.gameChannels.append(ctx.channel.id)
-        game = CardTrick()
+        game = games.CardTrick()
         cardSample = game.getSample()
         for _ in range(3):
             p1, p2, p3 = game.piles(cardSample)
@@ -835,7 +826,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             return
         await ctx.send("**Welcome to Minesweeper. Input `time` to see total elapsed time, or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
-        game = Minesweeper()
+        game = games.Minesweeper()
         won = False
         while not game.getGameEnd():
             await ctx.send("```Attempt {:,} for {}. ".format(game.getAttempts() + 1, ctx.author.name) + \
@@ -859,7 +850,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send("**Welcome to Battleship. Input `time` to see total elapsed time, " + \
                        "or `quit` to quit the game.**")
         self.gameChannels.append(ctx.channel.id)
-        game = Battleship()
+        game = games.Battleship()
         while game.getShipcount() > 0:
             await ctx.send(
                 "```Attempt {:,} for {}. {}```".format(game.getAttempts() + 1, ctx.author.name, game.displayBoard())
@@ -923,7 +914,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         except Exception as ex:
             return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
         self.gameChannels.append(ctx.channel.id)
-        game = TicTacToe(player1=player1, player2=player2)
+        game = games.TicTacToe(player1=player1, player2=player2)
         if player1 == player2:
             msg = f"Both **Player 1 ({game.CROSS})** and **Player 2 ({game.NOUGHT})** are {player1.mention}."
         else:
@@ -978,7 +969,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         except Exception as ex:
             return await ctx.send(embed=funcs.errorEmbed(None, str(ex)))
         self.gameChannels.append(ctx.channel.id)
-        game = ConnectFour(player1=player1, player2=player2)
+        game = games.ConnectFour(player1=player1, player2=player2)
         if player1 == player2:
             msg = f"Both **Player 1 ({game.RED})** and **Player 2 ({game.YELLOW})** are {player1.mention}."
         else:
@@ -1068,7 +1059,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             "Input `lives` to see how many lives you have left, `time` to see total elapsed time, or `quit` to quit the game.**"
         )
         self.gameChannels.append(ctx.channel.id)
-        game = Hangman(self.client)
+        game = games.Hangman(self.client)
         await sleep(1)
         while game.getLives() > 0 and not game.getDashes() == game.getWord():
             await ctx.send(f"```{ctx.author.name}'s word:\n\n{game.getDashes()}```")
