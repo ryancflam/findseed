@@ -50,6 +50,16 @@ class BotInstance(commands.Bot):
                 funcs.loadCog(self, cog)
         super().run(self.__token, reconnect=True)
 
+    def kill(self):
+        print("Stopping bot...")
+        try:
+            for cog in sorted(self.cogs):
+                funcs.unloadCog(self, cog)
+            self.__eventLoop.stop()
+            return exit()
+        except Exception as ex:
+            return ex
+
     def __processCommands(self, message):
         if message.content.startswith(self.command_prefix):
             while message.content.split()[0] == self.command_prefix:
@@ -131,13 +141,3 @@ class BotInstance(commands.Bot):
 
     async def on_command(self, ctx):
         self.__statcord.command_run(ctx)
-
-    async def kill(self):
-        print("Stopping bot...")
-        try:
-            for cog in sorted(self.cogs):
-                funcs.unloadCog(self, cog)
-            self.__eventLoop.stop()
-            return exit()
-        except Exception as ex:
-            return ex

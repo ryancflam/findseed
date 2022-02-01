@@ -31,7 +31,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
             return await ctx.send("Cancelling.")
         await ctx.reply("Stopping bot...")
         try:
-            await self.client.kill()
+            self.client.kill()
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
@@ -67,7 +67,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         )
         await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
         obj.kill()
-        await self.client.kill()
+        self.client.kill()
 
     @commands.command(name="gitpull", description="Pulls from the source repository.", aliases=["gp", "pull"])
     @commands.is_owner()

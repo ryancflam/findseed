@@ -403,7 +403,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @commands.command(name="weather", description="Finds the current weather of a location.",
                       aliases=["w"], usage="<location>")
     async def weather(self, ctx, *, location: str=""):
-        zero = -funcs.kelvin()
+        zero = -funcs.KELVIN
         url = f"http://api.openweathermap.org/data/2.5/weather?q={location.casefold().replace(' ', '%20')}" + \
               f"&APPID={config.owmKey}"
         try:
@@ -1274,7 +1274,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 fi = elementobj.ionenergies[1]
             except:
                 fi = None
-            roomtemp = funcs.kelvin() + 25
+            roomtemp = funcs.KELVIN + 25
             if not mp or not bp:
                 state = "Artificial"
             elif mp > roomtemp:
@@ -1744,7 +1744,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
-            e.set_footer(text="Notes: " + ", ".join(i for i in funcs.musicalNotes()))
+            e.set_footer(text="Notes: " + ", ".join(i for i in funcs.MUSICAL_NOTES))
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
