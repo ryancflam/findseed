@@ -136,8 +136,9 @@ class BotInstance(Bot):
         if ctx.valid and not self.is_ready() and await funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
         if self.is_ready() and await funcs.userNotBlacklisted(self, message):
-            if ctx.valid and not funcs.commandIsEE(ctx.command):
-                await message.channel.trigger_typing()
+            if ctx.valid and not ctx.author.bot:
+                if not funcs.commandIsEE(ctx.command):
+                    await message.channel.trigger_typing()
                 await self.process_commands(message)
 
     async def on_command(self, ctx):

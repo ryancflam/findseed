@@ -44,12 +44,17 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for ha
             await ctx.reply(
                 embed=funcs.errorEmbed(
                     "Insufficient privileges!",
-                    "You are missing the following permission(s): " + ", ".join(f"`{perm}`" for perm in error.missing_permissions)
+                    "You are missing the following permission(s): " +
+                    ", ".join(f"`{perm}`" for perm in sorted(error.missing_permissions))
                 )
             )
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.reply(
-                embed=funcs.errorEmbed(None, f"{self.client.user.name} does not have permission to perform such action.")
+                embed=funcs.errorEmbed(
+                    "Insufficient privileges!",
+                    f"{self.client.user.name} is missing the following permission(s): " +
+                    ", ".join(f"`{perm}`" for perm in sorted(error.missing_permissions))
+                )
             )
 
 
