@@ -564,7 +564,12 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
     @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips", "stalk", "stalks"],
                       description="Shows pattern information about the *Animal Crossing: New Horizons* stalk market.")
     async def acturnips(self, ctx):
-        await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg", message="Credit:\n<https://twitter.com/MadzMasc>")
+        await funcs.sendImage(ctx, "https://i.redd.it/9qk5zhtw4fr41.jpg")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="meteonook", description="Shows the MeteoNook link.")
+    async def meteonook(self, ctx):
+        await ctx.reply("https://wuffs.org/acnh/weather/")
 
 
 def setup(botInstance):

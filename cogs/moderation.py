@@ -38,7 +38,7 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
 
     @commands.command(name="timeout", usage='<@mention> [Xm/h/d (replace X with number of minutes/hours/days)] [reason]',
                       description="Times out a user in your server. If the user already has a time out, this replaces it. " +
-                                  "The default time out is one minute.")
+                                  "The default time out is one minute.", aliases=["mute"])
     @commands.bot_has_permissions(moderate_members=True)
     @commands.has_permissions(moderate_members=True)
     async def timeout(self, ctx, member: Member, minutes="1", *, reason=None):
@@ -74,7 +74,8 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot time out that user."))
 
-    @commands.command(name="untimeout", description="Removes a time out for a user in your server.", usage="<@mention>")
+    @commands.command(name="untimeout", description="Removes the time out for a user in your server.",
+                      usage="<@mention>", aliases=["unmute"])
     @commands.bot_has_permissions(moderate_members=True)
     @commands.has_permissions(moderate_members=True)
     async def untimeout(self, ctx, member: Member):
@@ -123,7 +124,25 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "Cannot ban that user."))
 
-    @commands.command(name="unban", description="Unbans a user in your server.", usage="<username#discriminator>")
+    @commands.command(name="warn", description="Sends a user in your server a warning.", usage="<@mention> [reason]",
+                      aliases=["warning"])
+    @commands.bot_has_permissions(moderate_members=True)
+    @commands.has_permissions(moderate_members=True)
+    async def warn(self, ctx, member: Member, *, reason=None):
+        try:
+            if member.bot:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "That user is a bot."))
+            if member == ctx.author:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
+            await member.send(f"You have received a warning in **{ctx.guild.name}**" + \
+                              f"{'!' if not reason else ' for: `{}`'.format(reason)}")
+            await ctx.reply(f"Successfully sent a warning to **{member}**" + \
+                            f"{'.' if not reason else ' for: `{}`'.format(reason)}")
+        except Exception:
+            await ctx.reply(embed=funcs.errorEmbed(None, "Cannot warn that user; perhaps they have DMs disabled."))
+
+    @commands.command(name="unban", description="Unbans a user in your server. Use the `banlist` command for the server banlist.",
+                      usage="<username#discriminator>")
     @commands.bot_has_permissions(ban_members=True, manage_guild=True)
     @commands.has_permissions(ban_members=True, manage_guild=True)
     async def unban(self, ctx, *, member=""):

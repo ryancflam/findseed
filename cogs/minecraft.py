@@ -882,7 +882,9 @@ class Minecraft(commands.Cog, name="Minecraft",
     @commands.command(name="mcspeedrunning", description="Shows some important *Minecraft: Java Edition* speedrunning resources.",
                       aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning", "mcsr", "speedrun"])
     async def mcspeedrunning(self, ctx):
-        await ctx.reply("Guide: https://www.youtube.com/watch?v=GAbnKAyireM\n\nWebsite: https://www.minecraftspeedrunning.com/")
+        await ctx.reply(
+            "Setup Guide: https://www.youtube.com/watch?v=GAbnKAyireM\n\nWebsite: https://www.minecraftspeedrunning.com/"
+        )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="speedrunigt", aliases=["igt"], description="Download the SpeedRunIGT mod here.", hidden=True)
@@ -890,7 +892,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True)
+    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True, aliases=["0cycle"])
     async def zerocycle(self, ctx):
         await ctx.reply("https://zerocycle.repl.co/")
 
