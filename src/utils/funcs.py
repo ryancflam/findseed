@@ -30,7 +30,7 @@ while True:
 
 
 def getPath():
-    return path.dirname(path.realpath(__file__)).split("src")[0]
+    return path.dirname(path.realpath(__file__)).rsplit("src", 1)[0]
 
 
 def testKaleido():
