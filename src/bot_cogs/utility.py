@@ -12,7 +12,7 @@ from time import gmtime, mktime, time
 
 from asyncpraw import Reddit
 from discord import Embed, File, channel
-from discord.ext import commands
+from discord.ext import commands, tasks
 from googletrans import Translator, constants
 from lyricsgenius import Genius
 from mendeleev import element
@@ -32,6 +32,11 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         self.client = botInstance
         self.reddit = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
         self.genius = Genius(config.geniusToken)
+        self.__getTickers.start()
+
+    @tasks.loop(hours=24.0)
+    async def __getTickers(self):
+        self.tickers = await funcs.getTickers()
 
     async def gatherLabelsAndValues(self, ctx):
         labels = []
@@ -468,7 +473,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     amount /= data["rates"][fromCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": funcs.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": self.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     amount *= cgData[0]["current_price"]
@@ -477,7 +482,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     amount *= data["rates"][toCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": funcs.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": self.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     if fromCurrency.upper() == toCurrency.upper():
@@ -1112,7 +1117,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 " ARSE AND YOU DON'T EVEN SEE IT!"
             ]
             try:
-                answer.append((await funcs.readTxt("/assets/easter_eggs/copypasta.txt")).replace("\*", "*")[:1994])
+                answer.append((await funcs.readTxt("/resources/easter_eggs/copypasta.txt")).replace("\*", "*")[:1994])
             except Exception as ex:
                 funcs.printError(ctx, ex)
                 pass

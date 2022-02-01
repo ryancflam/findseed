@@ -45,7 +45,7 @@ class BotInstance(commands.Bot):
         self.__btcPresence = self.__activityName.casefold() == "bitcoin"
 
     def startup(self):
-        for cog in listdir(f"{PATH}/src/discord_cogs"):
+        for cog in listdir(f"{PATH}/src/bot_cogs"):
             if cog.endswith(".py"):
                 funcs.loadCog(self, cog)
         super().run(self.__token, reconnect=True)
@@ -74,7 +74,7 @@ class BotInstance(commands.Bot):
         await funcs.generateJson("blacklist", {"servers": [], "users": []})
         await funcs.generateJson("whitelist", {"users": []})
 
-    @tasks.loop(seconds=120.0)
+    @tasks.loop(minutes=2.0)
     async def __bitcoin(self):
         try:
             res = await funcs.getRequest(

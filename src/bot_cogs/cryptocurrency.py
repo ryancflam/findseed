@@ -2,7 +2,7 @@ from datetime import datetime
 from time import time
 
 from discord import Colour, Embed, File
-from discord.ext import commands
+from discord.ext import commands, tasks
 from pandas import DataFrame, DatetimeIndex
 from plotly import express, graph_objects
 
@@ -21,19 +21,23 @@ BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
     def __init__(self, botInstance):
         self.client = botInstance
+        self.__getTickers.start()
 
-    @staticmethod
-    def getCoinGeckoID(coin):
+    def getCoinGeckoID(self, coin):
         joke = "neo" if coin.casefold() == "neo" \
                or coin.casefold().startswith(("noeo", "ronneo", "neoo", "n*", "neoe", "noee", "ronnoe")) else coin
         try:
-            return funcs.tickers[joke]
+            return self.tickers[joke]
         except KeyError:
             return joke
 
     @staticmethod
     def weiToETH(value):
         return value / 1000000000000000000
+
+    @tasks.loop(hours=24.0)
+    async def __getTickers(self):
+        self.tickers = await funcs.getTickers()
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Returns the prices and market capitalisations of NEO and GAS with GAS-to-NEO ratio.",

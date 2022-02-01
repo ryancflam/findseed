@@ -20,14 +20,14 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.art = await funcs.readJson("assets/animal_crossing/art.json")
-        self.bugs = await funcs.readJson("assets/animal_crossing/bugs.json")
-        self.fish = await funcs.readJson("assets/animal_crossing/fish.json")
-        self.fossils = await funcs.readJson("assets/animal_crossing/fossils.json")
-        self.personalities = await funcs.readJson("assets/animal_crossing/personalities.json")
-        self.sea = await funcs.readJson("assets/animal_crossing/sea_creatures.json")
-        self.species = await funcs.readTxt("assets/animal_crossing/species.txt", lines=True)
-        self.villagers = await funcs.readJson("assets/animal_crossing/villagers.json")
+        self.art = await funcs.readJson("resources/animal_crossing/art.json")
+        self.bugs = await funcs.readJson("resources/animal_crossing/bugs.json")
+        self.fish = await funcs.readJson("resources/animal_crossing/fish.json")
+        self.fossils = await funcs.readJson("resources/animal_crossing/fossils.json")
+        self.personalities = await funcs.readJson("resources/animal_crossing/personalities.json")
+        self.sea = await funcs.readJson("resources/animal_crossing/sea_creatures.json")
+        self.species = await funcs.readTxt("resources/animal_crossing/species.txt", lines=True)
+        self.villagers = await funcs.readJson("resources/animal_crossing/villagers.json")
 
     @staticmethod
     def findData(data: dict, name: str):

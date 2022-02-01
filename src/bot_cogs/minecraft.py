@@ -25,9 +25,9 @@ class Minecraft(commands.Cog, name="Minecraft",
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.divinetravel = await funcs.readJson("assets/minecraft/divine_travel.json")
-        self.perfecttravel = await funcs.readJson("assets/minecraft/perfect_travel.json")
-        self.eyedata = await funcs.readJson("assets/minecraft/eye_data.json")
+        self.divinetravel = await funcs.readJson("resources/minecraft/divine_travel.json")
+        self.perfecttravel = await funcs.readJson("resources/minecraft/perfect_travel.json")
+        self.eyedata = await funcs.readJson("resources/minecraft/eye_data.json")
         self.loottable = await self.piglinLootTable()
         await funcs.generateJson(
             "findseed",
@@ -44,7 +44,7 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @staticmethod
     async def piglinLootTable():
-        lt = await funcs.readJson("assets/minecraft/piglin_loot_table.json")
+        lt = await funcs.readJson("resources/minecraft/piglin_loot_table.json")
         ltnew = []
         for i in lt:
             if i["id"] < 5:
@@ -120,7 +120,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         data["calls"] += 1
         calls = data["calls"]
         await funcs.dumpJson("data/findseed.json", data)
-        file = File(f"{funcs.getPath()}/assets/minecraft/portal_frame_images/{eyes}eye.png", filename="portal.png")
+        file = File(f"{funcs.getPath()}/resources/minecraft/portal_frame_images/{eyes}eye.png", filename="portal.png")
         foundTime = "just now"
         if not update:
             timestr = funcs.timeDifferenceStr(time(), highestTime)

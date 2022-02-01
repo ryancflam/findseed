@@ -1,3 +1,4 @@
+from asyncio import sleep
 from calendar import monthrange
 from datetime import date, datetime, timedelta
 from io import BytesIO
@@ -5,29 +6,17 @@ from json import JSONDecodeError, dumps, loads
 from os import path
 from random import randint
 from re import split
-from time import sleep, time
+from time import time
 
 from aiofiles import open
 from aiofiles.os import remove
 from dateutil import parser
 from discord import Embed, File
-from httpx import AsyncClient, get
+from httpx import AsyncClient
 from plotly import graph_objects as go
 
 from src.utils.item_cycle import ItemCycle
 from src.utils.safe_eval import SafeEval
-
-tickers = {}
-while True:
-    try:
-        cgres = get("https://api.coingecko.com/api/v3/coins/list")
-        cgdata = cgres.json()
-        for coin in cgdata:
-            if coin["symbol"] not in tickers:
-                tickers[coin["symbol"]] = coin["id"]
-        break
-    except JSONDecodeError:
-        sleep(30)
 
 
 def getPath():
@@ -480,7 +469,7 @@ def noteFinder(rawNote):
 def reloadCog(client, cog):
     try:
         cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.reload_extension(f"src.discord_cogs.{cog}")
+        client.reload_extension(f"src.bot_cogs.{cog}")
         print(f"Reloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -489,7 +478,7 @@ def reloadCog(client, cog):
 def loadCog(client, cog):
     try:
         cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.load_extension(f"src.discord_cogs.{cog}")
+        client.load_extension(f"src.bot_cogs.{cog}")
         print(f"Loaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -498,7 +487,7 @@ def loadCog(client, cog):
 def unloadCog(client, cog):
     try:
         cog = cog.casefold().replace(' ', '_').replace('.py', '')
-        client.unload_extension(f"src.discord_cogs.{cog}")
+        client.unload_extension(f"src.bot_cogs.{cog}")
         print(f"Unloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -620,6 +609,20 @@ async def userNotBlacklisted(client, message):
                 break
     return allowed and message.author.id not in userList \
            and (not message.guild or message.guild.id not in serverList)
+
+
+async def getTickers():
+    while True:
+        try:
+            tickers = {}
+            cgres = await getRequest("https://api.coingecko.com/api/v3/coins/list")
+            cgdata = cgres.json()
+            for coin in cgdata:
+                if coin["symbol"] not in tickers:
+                    tickers[coin["symbol"]] = coin["id"]
+            return tickers
+        except JSONDecodeError:
+            await sleep(30)
 
 
 async def testKaleido():

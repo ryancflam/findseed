@@ -27,7 +27,7 @@ class Hangman:
         self.__startTime = time()
 
     async def __newWord(self):
-        self.__word = choice((await readTxt("assets/chat_games/hangman_words.txt", lines=True)))
+        self.__word = choice((await readTxt("resources/chat_games/hangman_words.txt", lines=True)))
         self.__dashes = str("-" * len(self.__word))
 
     @staticmethod

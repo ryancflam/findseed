@@ -17,7 +17,7 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.scamlinks = await funcs.readTxt("assets/scam_preventer/scam_links.txt", lines=True)
+        self.scamlinks = await funcs.readTxt("resources/scam_preventer/scam_links.txt", lines=True)
         await funcs.generateJson("scam_preventer", {"disallowed_servers": []})
 
     @commands.command(name="spdisable", description="Disables the scam preventer for your server, which is enabled by default.",
@@ -52,7 +52,7 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
     @commands.command(name="scamurls", description="Shows the scam URLs that the bot tries to remove.",
                       aliases=["scam", "scamlinks", "scamlink", "scamurl"])
     async def scamurls(self, ctx):
-        await ctx.reply("<https://github.com/ryancflam/findseed/blob/master/assets/scam_preventer/scam_links.txt>")
+        await ctx.reply("<https://github.com/ryancflam/findseed/blob/master/resources/scam_preventer/scam_links.txt>")
 
     async def deleteEmbedOrAttachment(self, message, qrlink):
         qr = await funcs.decodeQR(qrlink)
