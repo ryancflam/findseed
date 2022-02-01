@@ -134,6 +134,8 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
                 return await ctx.reply(embed=funcs.errorEmbed(None, "That user is a bot."))
             if member == ctx.author:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Why would you do that?"))
+            if member == member.guild.owner:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "That user is the owner!"))
             await member.send(f"You have received a warning in **{ctx.guild.name}**" + \
                               f"{'!' if not reason else ' for: `{}`'.format(reason)}")
             await ctx.reply(f"Successfully sent a warning to **{member}**" + \
