@@ -804,7 +804,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
         e.add_field(name="Public Address",value=f"```{pk}```")
         e.add_field(name="Private Key",value=f"```{swif}```")
         e.add_field(name="Private Key in Hex",value=f"```{shex}```")
-        e.set_footer(text=f"Requested by: {ctx.author.name}")
+        e.set_footer(text=f"Requested by: {ctx.author}")
         await ctx.reply("```== WARNING == \n\nIt is critical that you do NOT use any Bitcoin address generated via this bot " +
                         "due to security reasons. This command was simply created for fun and to demonstrate the capabilities" +
                         " of the Python programming language.\n\nIf you wish to generate a new Bitcoin address for actual" +

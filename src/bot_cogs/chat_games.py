@@ -64,7 +64,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         game = self.tetrisGames[ctx.channel]
         game.newBlock()
         e = Embed(title="Tetris", description=game.gameBoard())
-        e.set_footer(text=f"Called by: {ctx.author}")
+        e.set_footer(text=f"Requested by: {ctx.author}")
         e.set_thumbnail(url=f"{game.NEXT_BLOCK_IMAGES[game.getNextBlock().getBlockType()]}")
         e.add_field(name="Lines", value="`0`")
         e.add_field(name="Level", value="`0`")
@@ -511,7 +511,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             while aki.progression <= 80:
                 try:
                     await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage).set_footer(
-                        text=f"Progress: {round(aki.progression / 80 * 100, 2)}% | Called by: {ctx.author}"))
+                        text=f"Progress: {round(aki.progression / 80 * 100, 2)}% | Requested by: {ctx.author}"))
                     resp = await self.client.wait_for(
                         "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
                         timeout=60

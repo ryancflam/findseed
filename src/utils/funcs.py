@@ -8,8 +8,7 @@ from random import randint
 from re import split
 from time import time
 
-from aiofiles import open
-from aiofiles.os import remove
+from aiofiles import open, os
 from dateutil import parser
 from discord import Embed, File
 from httpx import AsyncClient
@@ -172,7 +171,7 @@ def dateBirthday(day: int, month: int, year: int):
            + (" :birthday:" if day == nowt.day and month == nowt.month else "")
 
 
-def degreesToDirection(value):
+def degreesToDirection(value: float):
     if not 11.25 < value <= 348.75:
         return "N"
     if 11.25 < value <= 33.75:
@@ -239,7 +238,7 @@ def dateDifference(dateobj, dateobj2):
     return years, months, daysfinal, years * 12 + months, (dateobj2 - dateobj).days
 
 
-def weekdayNumberToName(number):
+def weekdayNumberToName(number: int):
     if number == 0:
         return "Monday"
     if number == 1:
@@ -263,29 +262,30 @@ def monthNumberToName(number):
 
 
 def monthNameToNumber(name: str):
-    if name.casefold().startswith("ja"):
+    name = name.casefold()
+    if name.startswith("ja"):
         return "1"
-    if name.casefold().startswith("f"):
+    if name.startswith("f"):
         return "2"
-    if name.casefold().startswith("mar"):
+    if name.startswith("mar"):
         return "3"
-    if name.casefold().startswith("ap"):
+    if name.startswith("ap"):
         return "4"
-    if name.casefold().startswith("may"):
+    if name.startswith("may"):
         return "5"
-    if name.casefold().startswith("jun"):
+    if name.startswith("jun"):
         return "6"
-    if name.casefold().startswith("jul"):
+    if name.startswith("jul"):
         return "7"
-    if name.casefold().startswith("au"):
+    if name.startswith("au"):
         return "8"
-    if name.casefold().startswith("s"):
+    if name.startswith("s"):
         return "9"
-    if name.casefold().startswith("o"):
+    if name.startswith("o"):
         return "10"
-    if name.casefold().startswith("n"):
+    if name.startswith("n"):
         return "11"
-    if name.casefold().startswith("d"):
+    if name.startswith("d"):
         return "12"
     raise Exception("Invalid month.")
 
@@ -300,46 +300,47 @@ def valueToOrdinal(n):
 
 
 def getZodiacInfo(zodiac: str):
-    if zodiac.casefold().startswith("cap"):
+    zodiac = zodiac.casefold()
+    if zodiac.startswith("cap"):
         return "https://cdn.discordapp.com/attachments/771698457391136798/927265871024513034/unknown.png", \
             "December 22nd to January 19th", "Capricorn"
-    if zodiac.casefold().startswith("aq"):
+    if zodiac.startswith("aq"):
         return "https://cdn.discordapp.com/attachments/771698457391136798/927266052985978960/unknown.png", \
             "January 20th to February 18th", "Aquarius"
-    if zodiac.casefold().startswith("p"):
+    if zodiac.startswith("p"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266217725657128/unknown.png", \
             "February 19th to March 20th", "Pisces"
-    if zodiac.casefold().startswith("ar"):
+    if zodiac.startswith("ar"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266309664825374/unknown.png", \
             "March 21st to April 19th", "Aries"
-    if zodiac.casefold().startswith("t"):
+    if zodiac.startswith("t"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266400807030854/unknown.png", \
             "April 20th to May 20th", "Taurus"
-    if zodiac.casefold().startswith("g"):
+    if zodiac.startswith("g"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266546101928056/unknown.png", \
             "May 21st to June 20th", "Gemini"
-    if zodiac.casefold().startswith("can"):
+    if zodiac.startswith("can"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266890823401542/unknown.png", \
             "June 21st to July 22nd", "Cancer"
-    if zodiac.casefold().startswith("le"):
+    if zodiac.startswith("le"):
         return "https://media.discordapp.net/attachments/771698457391136798/927266982846427176/unknown.png", \
             "July 23rd to August 22nd", "Leo"
-    if zodiac.casefold().startswith("v"):
+    if zodiac.startswith("v"):
         return "https://media.discordapp.net/attachments/771698457391136798/927267049380651078/unknown.png", \
             "August 23rd to September 22nd", "Virgo"
-    if zodiac.casefold().startswith("li"):
+    if zodiac.startswith("li"):
         return "https://cdn.discordapp.com/attachments/771698457391136798/927267136232128552/unknown.png", \
             "September 23rd to October 22nd", "Libra"
-    if zodiac.casefold().startswith("sc"):
+    if zodiac.startswith("sc"):
         return "https://media.discordapp.net/attachments/771698457391136798/927267220839596032/unknown.png", \
             "October 23rd to November 21st", "Scorpio"
-    if zodiac.casefold().startswith("sa"):
+    if zodiac.startswith("sa"):
         return "https://media.discordapp.net/attachments/771698457391136798/927267312246075392/unknown.png", \
             "November 22nd to December 21st", "Sagittarius"
     raise Exception("Valid options:\n\n" + ", ".join(f"`{dateToZodiac(monthNumberToName(i) + ' 1')}`" for i in range(1, 13)))
 
 
-def dateToZodiac(datestr: str, ac=False):
+def dateToZodiac(datestr: str, ac: bool=False):
     month, day = datestr.split(" ")
     try:
         day = int(day)
@@ -415,11 +416,11 @@ def leapYear(year):
         return False
 
 
-def celsiusToFahrenheit(value):
+def celsiusToFahrenheit(value: float):
     return value * 9 / 5 + 32
 
 
-def fahrenheitToCelsius(value):
+def fahrenheitToCelsius(value: float):
     return (value - 32) * 5 / 9
 
 
@@ -503,7 +504,7 @@ def getResource(cog, resource):
 
 async def deleteTempFile(file: str):
     if path.exists(f"{getPath()}/temp/{file}"):
-        await remove(f"{getPath()}/temp/{file}")
+        await os.remove(f"{getPath()}/temp/{file}")
 
 
 async def readTxtAttachment(message):
