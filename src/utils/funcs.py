@@ -71,12 +71,15 @@ def commandIsEE(command):
 
 
 def commandsListEmbed(client, menu: int=0):
-    e = Embed(title=f"{'Miscellaneous' if menu == 1 else 'Bot Owner' if menu == 2 else client.user.name} Commands")
+    e = Embed(
+        title=f"{'Miscellaneous' if menu == 1 else 'Bot Owner' if menu == 2 else 'All' if menu == 3 else client.user.name} Commands"
+    )
     cmds = 0
     for cog in sorted(client.cogs):
         commandsList = list(filter(
             lambda x: (x.hidden and x.cog_name != "Easter Eggs" and not commandIsOwnerOnly(x)) if menu == 1
             else commandIsOwnerOnly(x) if menu == 2
+            else not commandIsOwnerOnly(x) and not commandIsEE(x) if menu == 3
             else not x.hidden,
             sorted(client.get_cog(cog).get_commands(), key=lambda y: y.name)
         ))
@@ -87,10 +90,14 @@ def commandsListEmbed(client, menu: int=0):
     e.title += " ({:,})".format(cmds)
     if menu == 1:
         e.description = "Miscellaneous commands hidden from the main commands menu."
+        allc = False
     elif menu == 2:
         e.description = "Bot owner commands."
-    zero = f", or {client.command_prefix}category <category> for more information about a specific category"
-    e.set_footer(text=f"Use {client.command_prefix}help <command> for help with a specific command{zero if not menu else ''}.")
+        allc = False
+    else:
+        allc = True
+    moreinfo = f", or {client.command_prefix}category <category> for more information about a specific category"
+    e.set_footer(text=f"Use {client.command_prefix}help <command> for help with a specific command{moreinfo if allc else ''}.")
     return e
 
 

@@ -226,10 +226,15 @@ class General(commands.Cog, name="General", description="Standard commands relat
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="miscellaneous", aliases=["hidden", "???????????"],
+    @commands.command(name="miscellaneous", aliases=["hidden"],
                       description="Shows a list of miscellaneous commands hidden from the main commands menu.")
     async def miscellaneous(self, ctx):
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=1))
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="everygoddamncommand", hidden=True, description="Shows literally every goddamn command.")
+    async def everygoddamncommand(self, ctx):
+        await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=3))
 
     @commands.cooldown(1, 180, commands.BucketType.user)
     @commands.command(description="Feel free to use this to send a message to the bot owner, whether it be to report " +
