@@ -2,12 +2,13 @@ from calendar import monthrange
 from datetime import date, datetime, timedelta
 from io import BytesIO
 from json import JSONDecodeError, dumps, loads
-from os import path, remove
+from os import path
 from random import randint
 from re import split
 from time import sleep, time
 
 from aiofiles import open
+from aiofiles.os import remove
 from dateutil import parser
 from discord import Embed, File
 from httpx import AsyncClient, get
@@ -31,16 +32,6 @@ while True:
 
 def getPath():
     return path.dirname(path.realpath(__file__)).rsplit("src", 1)[0]
-
-
-def testKaleido():
-    print("Testing Kaleido...")
-    try:
-        go.Figure().write_image(f"{getPath()}/temp/test.png")
-        deleteTempFile("test.png")
-        print("Kaleido installed and ready")
-    except:
-        raise Exception("Kaleido is not installed!")
 
 
 def kelvin():
@@ -513,9 +504,9 @@ def unloadCog(client, cog):
         raise Exception(ex)
 
 
-def deleteTempFile(file: str):
+async def deleteTempFile(file: str):
     if path.exists(f"{getPath()}/temp/{file}"):
-        remove(f"{getPath()}/temp/{file}")
+        await remove(f"{getPath()}/temp/{file}")
 
 
 async def readTxtAttachment(message):
@@ -527,7 +518,7 @@ async def readTxtAttachment(message):
         content = await readTxt("temp/" + filename)
     except:
         content = None
-    deleteTempFile(filename)
+    await deleteTempFile(filename)
     return content
 
 
@@ -549,19 +540,16 @@ async def readJson(pathstr):
     return loads(data)
 
 
-async def generateJson(name, data: dict):
-    file = f"{getPath()}/data/{name}.json"
-    if not path.exists(file):
-        async with open(file, "w") as f:
-            await f.write(dumps(data, sort_keys=True, indent=4))
-        await f.close()
-        print(f"Generated file: {name}.json")
-
-
 async def dumpJson(pathstr, data):
     async with open(f"{getPath()}/{pathstr}", "w") as f:
         await f.write(dumps(data, sort_keys=True, indent=4))
     await f.close()
+
+
+async def generateJson(name, data: dict):
+    if not path.exists(f"{getPath()}/data/{name}.json"):
+        await dumpJson(f"data/{name}.json", data)
+        print(f"Generated file: {name}.json")
 
 
 async def easterEggsPredicate(ctx):
@@ -632,3 +620,13 @@ async def userNotBlacklisted(client, message):
                 break
     return allowed and message.author.id not in userList \
            and (not message.guild or message.guild.id not in serverList)
+
+
+async def testKaleido():
+    print("Testing Kaleido...")
+    try:
+        go.Figure().write_image(f"{getPath()}/temp/test.png")
+        await deleteTempFile("test.png")
+        print("Kaleido installed and ready")
+    except:
+        raise Exception("Kaleido is not installed!")

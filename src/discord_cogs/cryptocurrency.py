@@ -342,7 +342,7 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                 "Be sure to use the correct symbol or CoinGecko ID. (e.g. `etc` or `ethereum-classic`)"
             )
         await ctx.reply(embed=e, file=image)
-        funcs.deleteTempFile(imgName)
+        await funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos", "top"],

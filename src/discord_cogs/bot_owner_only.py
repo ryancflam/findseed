@@ -408,7 +408,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 await attach.save(filepath)
                 with open(filepath, "rb") as image:
                     await self.client.user.edit(avatar=image.read())
-                funcs.deleteTempFile(filename)
+                await funcs.deleteTempFile(filename)
                 await ctx.reply(":ok_hand:")
             else:
                 await ctx.reply(embed=funcs.errorEmbed(None, "No attachment detected."))

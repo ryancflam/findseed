@@ -1,7 +1,8 @@
-from os import listdir, makedirs, path
-from shutil import rmtree
+from os import listdir, path
 from sys import exit
 
+from aiofiles.os import mkdir
+from aioshutil import rmtree
 from discord import Activity, Intents
 from discord.ext import commands, tasks
 from statcord import Client
@@ -31,10 +32,7 @@ except ModuleNotFoundError:
 
 class BotInstance(commands.Bot):
     def __init__(self, loop):
-        super().__init__(
-            command_prefix="b" * (not config.production) + config.prefix,
-            intents=Intents.all()
-        )
+        super().__init__(command_prefix="b" * (not config.production) + config.prefix, intents=Intents.all())
         self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
         self.__eventLoop = loop
@@ -44,7 +42,7 @@ class BotInstance(commands.Bot):
         self.__status = config.status
         self.__statcord = Client(self, config.statcordKey)
         self.__statcord.start_loop()
-        self.__btcPresence = True
+        self.__btcPresence = self.__activityName.casefold() == "bitcoin"
 
     def startup(self):
         for cog in listdir(f"{PATH}/src/discord_cogs"):
@@ -62,17 +60,17 @@ class BotInstance(commands.Bot):
         return message
 
     @staticmethod
-    def __generateDir(name):
+    async def __generateDir(name):
         if not path.exists(f"{PATH}/{name}"):
-            makedirs(f"{PATH}/{name}")
+            await mkdir(f"{PATH}/{name}")
             print("Generated directory: " + name)
 
     async def __generateFiles(self):
-        self.__generateDir("data")
+        await self.__generateDir("data")
         if path.exists(f"{funcs.getPath()}/temp"):
-            rmtree(f"{funcs.getPath()}/temp")
+            await rmtree(f"{funcs.getPath()}/temp")
             print("Removed directory: temp")
-        self.__generateDir("temp")
+        await self.__generateDir("temp")
         await funcs.generateJson("blacklist", {"servers": [], "users": []})
         await funcs.generateJson("whitelist", {"users": []})
 
@@ -86,7 +84,8 @@ class BotInstance(commands.Bot):
             data = res.json()[0]
             ext = "🎉" if data["ath"] < data["current_price"] else ""
             msg = " @ ${:,}{}".format(data["current_price"], ext)
-        except:
+        except Exception as ex:
+            print(f"Error - " + str(ex))
             msg = ""
         await self.__presence(("BTC" if self.__btcPresence else "ETH") + msg)
         self.__btcPresence = not self.__btcPresence
@@ -101,7 +100,7 @@ class BotInstance(commands.Bot):
             except Exception as ex:
                 print(f"Warning - {ex}")
         try:
-            funcs.testKaleido()
+            await funcs.testKaleido()
         except Exception as ex:
             print(f"Warning - {ex}")
         owner = (await self.application_info()).owner
@@ -113,8 +112,8 @@ class BotInstance(commands.Bot):
             await funcs.dumpJson("data/whitelist.json", data)
         print(f"Logged in as Discord user: {self.user}")
         await owner.send("Bot is online.")
-        if self.__activityName.casefold() == "bitcoin":
-            print("Activating Bitcoin/Ethereum price status...")
+        if self.__btcPresence:
+            print("Using Bitcoin/Ethereum price status")
             self.__bitcoin.start()
         else:
             await self.__presence(self.__activityName)

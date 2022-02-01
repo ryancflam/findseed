@@ -148,7 +148,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
         await ctx.reply(embed=e, file=image)
-        funcs.deleteTempFile(imgName)
+        await funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="linechart", description="Generates a line chart.", aliases=["line", "linegraph"], usage="[title]")
@@ -172,7 +172,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
         await ctx.reply(embed=e, file=image)
-        funcs.deleteTempFile(imgName)
+        await funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="barchart", description="Generates a bar chart.", aliases=["bar", "bargraph"], usage="[title]")
@@ -196,7 +196,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
         await ctx.reply(embed=e, file=image)
-        funcs.deleteTempFile(imgName)
+        await funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="github", description="Returns statistics about a GitHub repository.", usage='[username/repository]',
@@ -783,7 +783,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e, file=image)
-        funcs.deleteTempFile(imgName)
+        await funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],
@@ -1493,7 +1493,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e, file=image)
-        funcs.deleteTempFile(imgName)
+        await funcs.deleteTempFile(imgName)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="hcf", usage="<value #1 up to {:,}> <value #2 up to {:,}>".format(HCF_LIMIT, HCF_LIMIT),

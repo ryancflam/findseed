@@ -583,7 +583,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "The generated file is too large!"))
-        funcs.deleteTempFile(location)
+        await funcs.deleteTempFile(location)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="flipcoin", description="Flips coins.", usage="[amount up to 100]",
