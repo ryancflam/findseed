@@ -9,12 +9,15 @@ async def getTickers():
     while True:
         try:
             tickers = {}
+            print("Getting CoinGecko tickers...")
             res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
             for coin in res.json():
                 if coin["symbol"] not in tickers:
                     tickers[coin["symbol"]] = coin["id"]
+            print("Retrieved CoinGecko tickers")
             return tickers
-        except JSONDecodeError:
+        except JSONDecodeError as ex:
+            print(f"Error - Failed to get CoinGecko tickers ({ex}). Retrying in 30 seconds...")
             await sleep(30)
 
 

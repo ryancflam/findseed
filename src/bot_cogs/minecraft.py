@@ -144,7 +144,7 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="eyeodds", description="Shows the odds of getting each type of end portal.",
-                      aliases=["odds", "eyes", "eye"])
+                      aliases=["odds", "eyes", "eye", "eyeodd", "eyeood", "eyeoods"])
     async def eyeodds(self, ctx):
         msg = ""
         for i in range(13):
@@ -183,6 +183,23 @@ class Minecraft(commands.Cog, name="Minecraft",
                  f"| Most pearl trades: {data['mostPearls']}; most rod drops: {data['mostRods']}"
         )
         e.set_thumbnail(url="https://static.wikia.nocookie.net/dream_team/images/7/7b/Dream.jpeg")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="findbreak", description="You throw an ender eye. Does it break or do you get to keep it?" +
+                                                     " Test your luck using this command!",
+                      aliases=["break", "eyebreak", "breakeye"], hidden=True)
+    async def findbreak(self, ctx):
+        e = Embed(title=f"{self.client.command_prefix}findbreak",
+                  description=f"Requested by: {ctx.message.author.mention}")
+        badluckonein = 5
+        goodluck = not funcs.oneIn(badluckonein)
+        e.add_field(name="Result", value=f"`{'No Break!' if goodluck else 'Break...'}`")
+        e.set_thumbnail(url="https://media.discordapp.net/attachments/771404776410972161/938407577975418900/unknown.png")
+        e.set_image(url="https://cdn.discordapp.com/attachments/771404776410972161/938408463946637312/2022-02-02_20.20.06.png"
+                        if goodluck else
+                        "https://media.discordapp.net/attachments/771404776410972161/938408658411327528/unknown.png")
+        e.set_footer(text=f"Odds: {str(badluckonein - 1) if goodluck else '1'}/{str(badluckonein)}")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -252,7 +269,7 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findblaze", description="You kill a blaze...but does it drop a rod? Test your luck using this command!",
-                      aliases=["blaze", "rod", "blazerod", "findrod", "findblazerod"], hidden=True)
+                      aliases=["rod", "blazerod", "findrod", "findblazerod"], hidden=True)
     async def findblaze(self, ctx):
         e = Embed(title=f"{self.client.command_prefix}findblaze",
                   description=f"Requested by: {ctx.message.author.mention}")
@@ -868,6 +885,12 @@ class Minecraft(commands.Cog, name="Minecraft",
                       description="Shows the Ninjabrain Bot tutorial and repository page.")
     async def ninjabrainbot(self, ctx):
         await ctx.reply("Tutorial: <https://youtu.be/Rx8i7e5lu7g>\n\nRepository: https://github.com/Ninjabrain1/Ninjabrain-Bot")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="blazefights", aliases=["blazefight", "blaze", "blazes", "fortress", "fortresses"],
+                      hidden=True, description="Shows the tutorial for fortresses and blaze fights.")
+    async def blazefights(self, ctx):
+        await ctx.reply("https://youtu.be/pmx9LyUvLTk")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="eray", aliases=["eraying", "microlensing"], hidden=True, description="Shows the microlensing tutorial.")
