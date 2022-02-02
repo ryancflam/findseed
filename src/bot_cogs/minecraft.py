@@ -839,9 +839,9 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="divinetravel", aliases=["dt", "divine", "div", "dv"], usage="[option OR F3+I data]",
-                      description="Either brings up the chart for divine travel or gets certain divine coordinates. " +
-                                  "You can use options like `fossilX` with X being the x-coordinate, or look at the fossil" +
-                                  " origin in the game, press F3+I, and paste your clipboard as an argument for this command.")
+                      description="Either brings up the chart for divine travel or gets certain divine coordinates. You can use o" +
+                                  "ptions like `fossilX` with X being the x-coordinate of the fossil origin, or look at the fo" +
+                                  "ssil origin in the game, press F3+I, and paste your clipboard as an argument for this command.")
     async def divinetravel(self, ctx, *, option: str=""):
         if option:
             try:
@@ -907,7 +907,7 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blazefights", aliases=["blazefight", "blaze", "blazes", "fortress", "fortresses"],
-                      hidden=True, description="Shows the tutorial for fortresses and blaze fights.")
+                      hidden=True, description="Shows the tutorial for Nether fortresses and blaze fights.")
     async def blazefights(self, ctx):
         await ctx.reply("https://youtu.be/pmx9LyUvLTk")
 
@@ -918,7 +918,7 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravelcoords", aliases=["rings", "strongholdrings", "strongholdring"], hidden=True,
-                      description="Shows the idea blind travel coordinates for the first to third stronghold rings.")
+                      description="Shows the ideal blind travel coordinates for the first to third stronghold rings.")
     async def blindtravelcoords(self, ctx):
         await ctx.reply("https://imgur.com/gallery/i3fIanf")
 
