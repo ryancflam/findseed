@@ -9,9 +9,8 @@ async def getTickers():
     while True:
         try:
             tickers = {}
-            cgres = await getRequest("https://api.coingecko.com/api/v3/coins/list")
-            cgdata = cgres.json()
-            for coin in cgdata:
+            res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
+            for coin in res.json():
                 if coin["symbol"] not in tickers:
                     tickers[coin["symbol"]] = coin["id"]
             return tickers

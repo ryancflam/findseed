@@ -6,15 +6,15 @@ from src.utils.item_cycle import ItemCycle
 MUSICAL_NOTES = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
 
 
-def noteFinder(rawNote):
+def noteFinder(raw):
     cycle = ItemCycle(MUSICAL_NOTES)
-    noteandoctave = split(r"(^[^\d]+)", rawNote)[1:]
+    noteandoctave = split(r"(^[^\d]+)", raw)[1:]
     octave = int(noteandoctave[1])
     flatsharp = noteandoctave[0][1:].casefold().replace("#", "♯").replace("b", "♭")
     if flatsharp.endswith("-"):
         flatsharp = flatsharp[:-1]
         octave *= -1
-    cycle.updateIndex(MUSICAL_NOTES.index(rawNote[:1].upper()))
+    cycle.updateIndex(MUSICAL_NOTES.index(raw[:1].upper()))
     if flatsharp:
         for i in flatsharp:
             if i == "♯":

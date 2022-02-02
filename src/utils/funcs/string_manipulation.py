@@ -18,8 +18,8 @@ def replaceCharacters(string, toreplace: list, replaceto: str=""):
     return string
 
 
-def multiString(string, n: int=2000):
-    return [string[i:i + n] for i in range(0, len(string), n)]
+def multiString(string, limit: int=2000):
+    return [string[i:i + limit] for i in range(0, len(string), limit)]
 
 
 def weirdCase(text):

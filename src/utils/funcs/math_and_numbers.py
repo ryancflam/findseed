@@ -114,19 +114,16 @@ def valueToOrdinal(n):
 
 
 def leapYear(year):
-    a = int(year)
-    if a <= 1582:
+    year = int(year)
+    if year <= 1582:
         return None
-    elif not a % 4:
-        if not a % 100:
-            if not a % 400:
+    elif not year % 4:
+        if not year % 100:
+            if not year % 400:
                 return True
-            else:
-                return False
-        else:
-            return True
-    else:
-        return False
+            return False
+        return True
+    return False
 
 
 def celsiusToFahrenheit(value: float):

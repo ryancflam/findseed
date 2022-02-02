@@ -744,7 +744,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             link = data2["url"]
             thumbnail = data2["song_art_image_thumbnail_url"]
             originallyric = funcs.multiString(
-                self.genius.search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), n=2048
+                self.genius.search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048
             )
             embeds = []
             pagecount = 0
