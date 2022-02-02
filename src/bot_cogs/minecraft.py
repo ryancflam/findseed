@@ -79,6 +79,14 @@ class Minecraft(commands.Cog, name="Minecraft",
         return min([glowdust // 16, cryobby // 6])
 
     @staticmethod
+    def f3iProcessing(clipboard):
+        try:
+            args = clipboard.split(" ")
+            return int(args[1]), int(args[2]), int(args[3])
+        except Exception:
+            raise Exception("Invalid input. Please do not modify your F3+I clipboard.")
+
+    @staticmethod
     def f3cProcessing(clipboard):
         try:
             args = clipboard.split(" ")
@@ -830,15 +838,26 @@ class Minecraft(commands.Cog, name="Minecraft",
         )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="divinetravel", description="Brings up the chart for divine travel.",
-                      aliases=["dt", "divine", "div", "dv"], usage="[option]")
+    @commands.command(name="divinetravel", aliases=["dt", "divine", "div", "dv"], usage="[option OR F3+I data]",
+                      description="Either brings up the chart for divine travel or gets certain divine coordinates. " +
+                                  "You can use options like `fossilX` with X being the x-coordinate, or look at the fossil" +
+                                  " origin in the game, press F3+I, and paste your clipboard as an argument for this command.")
     async def divinetravel(self, ctx, *, option: str=""):
         if option:
             try:
+                try:
+                    x, _, _ = self.f3iProcessing(option)
+                    option = "fossil" + str(x)
+                except:
+                    pass
                 res = self.divinetravel[option.casefold().replace(" ", "")].split(" | ")
                 e = Embed(title="Divine Travel: " + option.casefold().replace(" ", ""))
                 for i in range(len(res)):
-                    e.add_field(name=f"Stronghold {str(i + 1)}", value=f"`{res[i].split(': ')[1]}`")
+                    if i > 2:
+                        text = f"High Roll #{i - 2}"
+                    else:
+                        text = f"Stronghold #{i + 1}"
+                    e.add_field(name=f"{text}", value=f"`{res[i].split(': ')[1]}`")
             except KeyError:
                 e = funcs.errorEmbed(
                     "Invalid option!",
