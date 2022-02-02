@@ -576,8 +576,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                     "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
                 ))
         location = f"{time()}.mp3"
-        await self.tts.save(text, f"{funcs.getPath()}/temp/{location}", slow=False, lang=langcode)
-        file = File(f"{funcs.getPath()}/temp/" + location)
+        await self.tts.save(text, f"{funcs.PATH}/temp/{location}", slow=False, lang=langcode)
+        file = File(f"{funcs.PATH}/temp/" + location)
         try:
             await ctx.reply(file=file)
         except Exception as ex:

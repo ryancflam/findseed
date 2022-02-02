@@ -9,8 +9,6 @@ from statcord import Client
 
 from src.utils import funcs
 
-PATH = funcs.getPath()
-
 try:
     import config
     try:
@@ -20,9 +18,9 @@ try:
         print("Warning - config.py is not ready, please check for missing fields")
         exit()
 except ModuleNotFoundError:
-    f = open(f"{PATH}/config.py", "w")
-    if path.exists(f"{PATH}/config.py.template"):
-        template = open(f"{PATH}/config.py.template", "r")
+    f = open(f"{funcs.PATH}/config.py", "w")
+    if path.exists(f"{funcs.PATH}/config.py.template"):
+        template = open(f"{funcs.PATH}/config.py.template", "r")
         f.write(template.read())
         template.close()
     f.close()
@@ -45,7 +43,7 @@ class BotInstance(commands.Bot):
         self.__btcPresence = self.__activityName.casefold() == "bitcoin"
 
     def startup(self):
-        for cog in listdir(f"{PATH}/src/bot_cogs"):
+        for cog in listdir(f"{funcs.PATH}/src/bot_cogs"):
             if cog.endswith(".py"):
                 funcs.loadCog(self, cog)
         super().run(self.__token, reconnect=True)
@@ -61,7 +59,6 @@ class BotInstance(commands.Bot):
             return ex
 
     def __processCommands(self, message):
-        message.content = message.content.replace("！", "!")
         if message.content.startswith(self.command_prefix):
             while message.content.split()[0] == self.command_prefix:
                 messagesplit = message.content.split(self.command_prefix, 1)
@@ -72,14 +69,14 @@ class BotInstance(commands.Bot):
 
     @staticmethod
     async def __generateDir(name):
-        if not path.exists(f"{PATH}/{name}"):
-            await mkdir(f"{PATH}/{name}")
+        if not path.exists(f"{funcs.PATH}/{name}"):
+            await mkdir(f"{funcs.PATH}/{name}")
             print("Generated directory: " + name)
 
     async def __generateFiles(self):
         await self.__generateDir("data")
-        if path.exists(f"{funcs.getPath()}/temp"):
-            await rmtree(f"{funcs.getPath()}/temp")
+        if path.exists(f"{funcs.PATH}/temp"):
+            await rmtree(f"{funcs.PATH}/temp")
             print("Removed directory: temp")
         await self.__generateDir("temp")
         await funcs.generateJson("blacklist", {"servers": [], "users": []})

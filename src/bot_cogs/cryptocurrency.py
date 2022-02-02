@@ -327,8 +327,8 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                                           xaxis_rangeslider_visible=False,
                                           xaxis_title="Date",
                                           template="plotly_dark")
-                        fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
-                        image = File(f"{funcs.getPath()}/temp/{imgName}")
+                        fig.write_image(f"{funcs.PATH}/temp/{imgName}")
+                        image = File(f"{funcs.PATH}/temp/{imgName}")
                         e.set_image(url=f"attachment://{imgName}")
                     except Exception as ex:
                         funcs.printError(ctx, ex)

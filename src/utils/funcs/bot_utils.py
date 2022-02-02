@@ -4,9 +4,7 @@ from os import path
 from aiofiles import open, os
 from plotly import graph_objects as go
 
-
-def getPath():
-    return path.dirname(path.realpath(__file__)).rsplit("src", 1)[0]
+PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0]
 
 
 def printError(ctx, error):
@@ -49,12 +47,12 @@ def getResource(cog, resource):
 
 
 async def deleteTempFile(file: str):
-    if path.exists(f"{getPath()}/temp/{file}"):
-        await os.remove(f"{getPath()}/temp/{file}")
+    if path.exists(f"{PATH}/temp/{file}"):
+        await os.remove(f"{PATH}/temp/{file}")
 
 
 async def readTxt(pathstr, lines=False):
-    async with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
+    async with open(f"{PATH}/{pathstr}", "r", encoding="utf-8") as f:
         if lines:
             lines = await f.readlines()
             content = [i[:-1] for i in lines if i[:-1]]
@@ -65,20 +63,20 @@ async def readTxt(pathstr, lines=False):
 
 
 async def readJson(pathstr):
-    async with open(f"{getPath()}/{pathstr}", "r", encoding="utf-8") as f:
+    async with open(f"{PATH}/{pathstr}", "r", encoding="utf-8") as f:
         data = await f.read()
     await f.close()
     return loads(data)
 
 
 async def dumpJson(pathstr, data):
-    async with open(f"{getPath()}/{pathstr}", "w") as f:
+    async with open(f"{PATH}/{pathstr}", "w") as f:
         await f.write(dumps(data, sort_keys=True, indent=4))
     await f.close()
 
 
 async def generateJson(name, data: dict):
-    if not path.exists(f"{getPath()}/data/{name}.json"):
+    if not path.exists(f"{PATH}/data/{name}.json"):
         await dumpJson(f"data/{name}.json", data)
         print(f"Generated file: {name}.json")
 
@@ -104,7 +102,7 @@ async def userNotBlacklisted(client, message):
 async def testKaleido():
     print("Testing Kaleido...")
     try:
-        go.Figure().write_image(f"{getPath()}/temp/test.png")
+        go.Figure().write_image(f"{PATH}/temp/test.png")
         await deleteTempFile("test.png")
         print("Kaleido installed and ready")
     except:

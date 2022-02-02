@@ -120,7 +120,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         calls = data["calls"]
         await funcs.dumpJson("data/findseed.json", data)
         file = File(
-            funcs.getPath() + funcs.getResource(self.qualified_name, "portal_frame_images/") + f"{eyes}eye.png",
+            funcs.PATH + funcs.getResource(self.qualified_name, "portal_frame_images/") + f"{eyes}eye.png",
             filename="portal.png"
         )
         foundTime = "just now"

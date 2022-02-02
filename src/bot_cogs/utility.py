@@ -127,8 +127,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         e = Embed(title="Chart", description=f"Requested by: {ctx.author.mention}")
         for i in range(len(labels)):
             e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero(values[i])))
-        fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
-        image = File(f"{funcs.getPath()}/temp/{imgName}")
+        fig.write_image(f"{funcs.PATH}/temp/{imgName}")
+        image = File(f"{funcs.PATH}/temp/{imgName}")
         e.set_image(url=f"attachment://{imgName}")
         return e, image
 
@@ -781,8 +781,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 img = qr.make_image(fill_color="white", back_color="black")
             else:
                 img = qr.make_image(fill_color="black", back_color="white")
-            img.save(f"{funcs.getPath()}/temp/{imgName}")
-            image = File(f"{funcs.getPath()}/temp/{imgName}")
+            img.save(f"{funcs.PATH}/temp/{imgName}")
+            image = File(f"{funcs.PATH}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
         except Exception as ex:
             funcs.printError(ctx, ex)
@@ -1493,8 +1493,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
             fig.update_traces(boxpoints=boxpoints, jitter=0.3)
-            fig.write_image(f"{funcs.getPath()}/temp/{imgName}")
-            image = File(f"{funcs.getPath()}/temp/{imgName}")
+            fig.write_image(f"{funcs.PATH}/temp/{imgName}")
+            image = File(f"{funcs.PATH}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
         except Exception as ex:
             funcs.printError(ctx, ex)

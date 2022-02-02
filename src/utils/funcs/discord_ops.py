@@ -2,7 +2,7 @@ from time import time
 
 from discord import Embed, File
 
-from src.utils.funcs import bot, http_requests
+from src.utils.funcs import bot_utils, http_requests
 
 
 def numberEmojis():
@@ -65,18 +65,18 @@ def errorEmbed(error, message):
 async def readTxtAttachment(message):
     attach = message.attachments[0]
     filename = f"{time()}-{attach.filename}"
-    filepath = f"{bot.getPath()}/temp/{filename}"
+    filepath = f"{bot_utils.PATH}/temp/{filename}"
     await attach.save(filepath)
     try:
-        content = await bot.readTxt("temp/" + filename)
+        content = await bot_utils.readTxt("temp/" + filename)
     except:
         content = None
-    await bot.deleteTempFile(filename)
+    await bot_utils.deleteTempFile(filename)
     return content
 
 
 async def easterEggsPredicate(ctx):
-    return ctx.guild and ctx.guild.id in (await bot.readJson("data/easter_eggs.json"))["servers"]
+    return ctx.guild and ctx.guild.id in (await bot_utils.readJson("data/easter_eggs.json"))["servers"]
 
 
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
@@ -86,7 +86,7 @@ async def sendImage(ctx, url: str, name: str="image.png", message=None):
         try:
             await ctx.send(message, file=File(await http_requests.getImage(url), name))
         except Exception as ex:
-            bot.printError(ctx, ex)
+            bot_utils.printError(ctx, ex)
 
 
 async def sendTime(ctx, mins, secs):

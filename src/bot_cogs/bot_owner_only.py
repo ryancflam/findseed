@@ -56,7 +56,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                                            and m.content.casefold() == "yes",
                 timeout=10
             )
-            gitpull = f"cd {funcs.getPath()} && git pull && "
+            gitpull = f"cd {funcs.PATH} && git pull && "
         except TimeoutError:
             await msg.reply("Not git-pulling. Commencing restart...")
         else:
@@ -73,7 +73,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
     @commands.is_owner()
     async def _gitpull(self, ctx):
         obj = Popen(
-            f"cd {funcs.getPath()} && git pull", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
+            f"cd {funcs.PATH} && git pull", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
             close_fds=False if system() == "Windows" else True
         )
         await ctx.reply(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
@@ -404,7 +404,7 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
                 filename = f"{time()}"
                 attach = ctx.message.attachments[0]
                 filename = f"{filename}-{attach.filename}"
-                filepath = f"{funcs.getPath()}/temp/{filename}"
+                filepath = f"{funcs.PATH}/temp/{filename}"
                 await attach.save(filepath)
                 with open(filepath, "rb") as image:
                     await self.client.user.edit(avatar=image.read())
