@@ -4,21 +4,25 @@ from os import path
 from aiofiles import open, os
 from plotly import graph_objects as go
 
+from src.utils.funcs.string_manipulation import formatCogName
+
 PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0]
+COGS_PATH = "src/bot_cogs"
+RESOURCES_PATH = "resources"
 
 
 def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
 
 
-def formatCogName(cog):
-    return cog.casefold().replace(" ", "_").replace(".py", "")
+def getResource(cog, resource):
+    return f"/{RESOURCES_PATH}/{formatCogName(cog)}/{resource}"
 
 
 def reloadCog(client, cog):
     try:
         cog = formatCogName(cog)
-        client.reload_extension(f"src.bot_cogs.{cog}")
+        client.reload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
         print(f"Reloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -27,7 +31,7 @@ def reloadCog(client, cog):
 def loadCog(client, cog):
     try:
         cog = formatCogName(cog)
-        client.load_extension(f"src.bot_cogs.{cog}")
+        client.load_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
         print(f"Loaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
@@ -36,14 +40,10 @@ def loadCog(client, cog):
 def unloadCog(client, cog):
     try:
         cog = formatCogName(cog)
-        client.unload_extension(f"src.bot_cogs.{cog}")
+        client.unload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
         print(f"Unloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
-
-
-def getResource(cog, resource):
-    return f"/resources/{formatCogName(cog)}/{resource}"
 
 
 async def deleteTempFile(file: str):

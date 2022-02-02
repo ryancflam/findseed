@@ -1,6 +1,6 @@
 from re import split
 
-from src.utils.funcs import string_manipulation
+from src.utils.funcs.string_manipulation import monthNameToNumber, monthNumberToName
 from src.utils.item_cycle import ItemCycle
 
 MUSICAL_NOTES = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
@@ -67,7 +67,7 @@ def getZodiacInfo(zodiac: str):
         return "https://media.discordapp.net/attachments/771698457391136798/927267312246075392/unknown.png", \
             "November 22nd to December 21st", "Sagittarius"
     raise Exception("Valid options:\n\n" + ", ".join(
-        f"`{dateToZodiac(string_manipulation.monthNumberToName(i) + ' 1')}`" for i in range(1, 13)
+        f"`{dateToZodiac(monthNumberToName(i) + ' 1')}`" for i in range(1, 13)
     ))
 
 
@@ -77,7 +77,7 @@ def dateToZodiac(datestr: str, ac: bool=False):
         day = int(day)
     except:
         day = int(day[:-2])
-    month = string_manipulation.monthNumberToName(string_manipulation.monthNameToNumber(month))
+    month = monthNumberToName(monthNameToNumber(month))
     if month == "December" and day > 21 or month == "January" and day < 20:
         return "Capricorn"
     if month == "January" and day > 19 or month == "February" and day < 19:

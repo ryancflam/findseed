@@ -2,7 +2,7 @@ from datetime import date, datetime, timedelta
 
 from dateutil import parser
 
-from src.utils.funcs import math_and_numbers
+from src.utils.funcs.math_and_numbers import oneIn
 
 
 def formatting(text, limit: int=2048):
@@ -10,6 +10,10 @@ def formatting(text, limit: int=2048):
     if output == "``````":
         raise Exception
     return output
+
+
+def formatCogName(cog):
+    return cog.casefold().replace(" ", "_").replace(".py", "")
 
 
 def replaceCharacters(string, toreplace: list, replaceto: str=""):
@@ -25,7 +29,7 @@ def multiString(string, limit: int=2000):
 def weirdCase(text):
     res = ""
     for char in text.casefold():
-        res += char.upper() if math_and_numbers.oneIn(2) else char
+        res += char.upper() if oneIn(2) else char
     return res
 
 

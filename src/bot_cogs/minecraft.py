@@ -187,8 +187,8 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findbreak", description="You throw an ender eye. Does it break or do you get to keep it?" +
-                                                     " Test your luck using this command!",
-                      aliases=["break", "eyebreak", "breakeye"], hidden=True)
+                                                    " Test your luck using this command!",
+                      aliases=["break", "eyebreak", "breakeye", "findeye"], hidden=True)
     async def findbreak(self, ctx):
         e = Embed(title=f"{self.client.command_prefix}findbreak",
                   description=f"Requested by: {ctx.message.author.mention}")
@@ -220,7 +220,7 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="findgravel", description="Will you get flint from gravel? Test your luck using this command!",
-                      aliases=["gravel", "flint", "findflint"], hidden=True)
+                      aliases=["gravel", "flint", "findflint", "fg"], hidden=True)
     async def findgravel(self, ctx):
         e = Embed(title=f"{self.client.command_prefix}findgravel",
                   description=f"Requested by: {ctx.message.author.mention}")

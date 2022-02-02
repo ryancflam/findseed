@@ -43,7 +43,7 @@ class BotInstance(commands.Bot):
         self.__btcPresence = self.__activityName.casefold() == "bitcoin"
 
     def startup(self):
-        for cog in listdir(f"{funcs.PATH}/src/bot_cogs"):
+        for cog in listdir(f"{funcs.PATH}/{funcs.COGS_PATH}"):
             if cog.endswith(".py"):
                 funcs.loadCog(self, cog)
         super().run(self.__token, reconnect=True)
@@ -139,3 +139,6 @@ class BotInstance(commands.Bot):
 
     async def on_command(self, ctx):
         self.__statcord.command_run(ctx)
+
+    async def sync_commands(self):
+        pass
