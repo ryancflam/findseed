@@ -123,8 +123,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         return xtitle, ytitle
 
     @staticmethod
-    def makeChartEmbed(ctx, fig, labels, values, imgName):
-        e = Embed(title="Chart", description=f"Requested by: {ctx.author.mention}")
+    def makeChartEmbed(ctx, fig, labels, values, imgName, title):
+        e = Embed(title=title, description=f"Requested by: {ctx.author.mention}")
         for i in range(len(labels)):
             e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero(values[i])))
         fig.write_image(f"{funcs.PATH}/temp/{imgName}")
@@ -148,7 +148,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
         try:
             fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
             fig.update_layout(title=title)
-            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName)
+            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Pie Chart")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -172,7 +172,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig = go.Figure(data=[go.Scatter(x=labels, y=values)])
             xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
             fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
-            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName)
+            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Line Chart")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -196,7 +196,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             fig = go.Figure(data=[go.Bar(x=labels, y=values)])
             xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
             fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
-            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName)
+            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Bar Chart")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
