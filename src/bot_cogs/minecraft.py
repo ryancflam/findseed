@@ -939,7 +939,7 @@ class Minecraft(commands.Cog, name="Minecraft",
     @commands.command(name="zerocycle", description="Shows some useful Zero Cycle resources.", hidden=True,
                       aliases=["0cycle", "0c", "zero", "zeroc", "zc"])
     async def zerocycle(self, ctx):
-        await ctx.reply("Full Zero-Cycle Guide: https://youtu.be/iClDGWL0e5s\n\nResources: https://zerocycle.repl.co/")
+        await ctx.reply("Full Zero Cycle Guide: https://youtu.be/iClDGWL0e5s\n\nResources: https://zerocycle.repl.co/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="fsg", description="Shows a list of FSG seed generators.", hidden=True, aliases=["fsgseed", "fsgseeds"])
