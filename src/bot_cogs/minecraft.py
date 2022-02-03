@@ -903,7 +903,7 @@ class Minecraft(commands.Cog, name="Minecraft",
     @commands.command(name="ninjabrainbot", aliases=["ninjabot", "ninjabrain", "nb", "nbb"], hidden=True,
                       description="Shows the Ninjabrain Bot tutorial and repository page.")
     async def ninjabrainbot(self, ctx):
-        await ctx.reply("Tutorial: <https://youtu.be/Rx8i7e5lu7g>\n\nRepository: https://github.com/Ninjabrain1/Ninjabrain-Bot")
+        await ctx.reply("Tutorial: https://youtu.be/Rx8i7e5lu7g\n\nRepository: https://github.com/Ninjabrain1/Ninjabrain-Bot")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blazefights", aliases=["blazefight", "blaze", "blazes", "fortress", "fortresses"],
@@ -936,9 +936,9 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True, aliases=["0cycle"])
+    @commands.command(name="zerocycle", description="Shows the Zero Cycle practice map.", hidden=True, aliases=["0cycle", "0c"])
     async def zerocycle(self, ctx):
-        await ctx.reply("https://zerocycle.repl.co/")
+        await ctx.reply("Full Zero-Cycle Guide: https://youtu.be/iClDGWL0e5s\n\nResources: https://zerocycle.repl.co/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="fsg", description="Shows a list of FSG seed generators.", hidden=True, aliases=["fsgseed", "fsgseeds"])
