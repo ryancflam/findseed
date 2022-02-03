@@ -62,7 +62,8 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         if await funcs.easterEggsPredicate(ctx):
             commandsList = list(filter(lambda x: not funcs.commandIsOwnerOnly(x),
                                        sorted(self.client.get_cog("Easter Eggs").get_commands(), key=lambda y: y.name)))
-            m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList))
+            m = await ctx.reply(", ".join(f"`{self.client.command_prefix}{str(command)}`" for command in commandsList)
+                                + "\n\nDeletes: \"sigmax\", \"ankhazone\"")
         else:
             m = await ctx.reply(f"`{self.client.command_prefix}eeenable`")
         await sleep(1)

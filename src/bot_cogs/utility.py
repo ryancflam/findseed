@@ -728,8 +728,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             except Exception as ex:
                 funcs.printError(ctx, ex)
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="lyrics", description="Gets the lyrics of a song.", aliases=["lyric", "song"], usage="<song keywords>")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="lyrics", description="Gets the lyrics of a song from Genius.",
+                      aliases=["lyric", "song", "genius"], usage="<song keywords>")
     async def lyrics(self, ctx, *, keywords):
         try:
             await ctx.send("Getting lyrics. Please wait...")
