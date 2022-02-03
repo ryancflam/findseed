@@ -2,6 +2,7 @@ from asyncio import sleep
 from io import BytesIO
 from json import JSONDecodeError
 
+from discord import File
 from httpx import AsyncClient
 
 
@@ -33,10 +34,10 @@ async def postRequest(url, data=None, headers=None, timeout=None, verify=True, j
     return res
 
 
-async def getImage(url, headers=None, params=None, timeout=None, verify=True):
+async def getImageFile(url, headers=None, params=None, timeout=None, verify=True, name="image.png"):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
-    return BytesIO(res.content)
+    return File(BytesIO(res.content), name)
 
 
 async def decodeQR(link):

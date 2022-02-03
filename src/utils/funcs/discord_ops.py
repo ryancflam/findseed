@@ -1,6 +1,6 @@
 from time import time
 
-from discord import Embed, File
+from discord import Embed
 
 from src.utils.funcs import bot_utils, http_requests
 
@@ -81,10 +81,10 @@ async def easterEggsPredicate(ctx):
 
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
     try:
-        await ctx.reply(message, file=File(await http_requests.getImage(url), name))
+        await ctx.reply(message, file=(await http_requests.getImageFile(url, name=name)))
     except:
         try:
-            await ctx.send(message, file=File(await http_requests.getImage(url), name))
+            await ctx.send(message, file=(await http_requests.getImageFile(url, name=name)))
         except Exception as ex:
             bot_utils.printError(ctx, ex)
 

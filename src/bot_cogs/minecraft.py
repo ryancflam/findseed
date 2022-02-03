@@ -937,9 +937,14 @@ class Minecraft(commands.Cog, name="Minecraft",
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="zerocycle", description="Shows some useful Zero Cycle resources.", hidden=True,
-                      aliases=["0cycle", "0c", "zero", "zeroc", "zc"])
+                      aliases=["0cycle", "0c", "zero", "zeroc", "zc", "0"])
     async def zerocycle(self, ctx):
-        await ctx.reply("Full Zero Cycle Guide: https://youtu.be/iClDGWL0e5s\n\nResources: https://zerocycle.repl.co/")
+        await ctx.reply(
+            "Full Zero Cycle Guide: https://youtu.be/iClDGWL0e5s\n\nResources: https://zerocycle.repl.co/",
+            file=(await funcs.getImageFile(
+                "https://media.discordapp.net/attachments/771404776410972161/938843696009469952/unknown.png"
+            ))
+        )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="fsg", description="Shows a list of FSG seed generators.", hidden=True, aliases=["fsgseed", "fsgseeds"])
