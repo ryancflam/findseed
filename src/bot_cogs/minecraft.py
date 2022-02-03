@@ -936,7 +936,8 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zerocycle", description="Shows some useful Zero Cycle resources.", hidden=True, aliases=["0cycle", "0c"])
+    @commands.command(name="zerocycle", description="Shows some useful Zero Cycle resources.", hidden=True,
+                      aliases=["0cycle", "0c", "zero", "zeroc", "zc"])
     async def zerocycle(self, ctx):
         await ctx.reply("Full Zero-Cycle Guide: https://youtu.be/iClDGWL0e5s\n\nResources: https://zerocycle.repl.co/")
 

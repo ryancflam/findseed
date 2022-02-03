@@ -1569,7 +1569,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.", usage="[year]",
-                      aliases=["cz", "zodiacchinese", "zc", "year", "yearofthe", "ly", "leap", "leapyear"], hidden=True)
+                      aliases=["cz", "zodiacchinese", "year", "yearofthe", "ly", "leap", "leapyear"], hidden=True)
     async def chinesezodiac(self, ctx, year: str=""):
         year = year or datetime.now().year
         try:
