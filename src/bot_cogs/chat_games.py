@@ -188,8 +188,8 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send(f"`{game.getStatus()}`")
         ranking = game.rankPlayers()
         status = "```== No Thanks ==\n\n"
-        for i in range(len(ranking)):
-            status += f"{funcs.valueToOrdinal(i + 1)} - {ranking[i].getPlayer()} (Score: {ranking[i].calculateScore()})\n"
+        for i, c in enumerate(ranking):
+            status += f"{funcs.valueToOrdinal(i + 1)} - {c.getPlayer()} (Score: {c.calculateScore()})\n"
         await ctx.send(status + "\nThanks for playing!```")
         await funcs.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
@@ -511,7 +511,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             while aki.progression <= 80:
                 try:
                     await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage).set_footer(
-                        text=f"Progress: {round(aki.progression / 80 * 100, 2)}% | Requested by: {ctx.author}"))
+                        text=f"Progress: {round(aki.progression / 80 * 100, 2)}%\nRequested by: {ctx.author}"))
                     resp = await self.client.wait_for(
                         "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
                         timeout=60

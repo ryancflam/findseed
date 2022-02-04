@@ -30,7 +30,12 @@ except ModuleNotFoundError:
 
 class BotInstance(commands.Bot):
     def __init__(self, loop):
-        super().__init__(command_prefix="b" * (not config.production) + config.prefix, intents=Intents.all())
+        super().__init__(
+            command_prefix="b" * (not config.production) + config.prefix,
+            intents=Intents.all(),
+            case_insensitive=True,
+            strip_after_prefix=True
+        )
         self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
         self.__eventLoop = loop
@@ -57,15 +62,6 @@ class BotInstance(commands.Bot):
             return exit()
         except Exception as ex:
             return ex
-
-    def __processCommands(self, message):
-        if message.content.startswith(self.command_prefix):
-            while message.content.split()[0] == self.command_prefix:
-                messagesplit = message.content.split(self.command_prefix, 1)
-                message.content = self.command_prefix + messagesplit[1][1:]
-            command = message.content.split(self.command_prefix, 1)[-1].split(" ", 1)
-            message.content = self.command_prefix + command[0].casefold() + ((" " + command[-1]) if " " in message.content else "")
-        return message
 
     @staticmethod
     async def __generateDir(name):
@@ -127,7 +123,6 @@ class BotInstance(commands.Bot):
             await self.__presence(self.__activityName)
 
     async def on_message(self, message):
-        message = self.__processCommands(message)
         ctx = await self.get_context(message)
         if ctx.valid and not self.is_ready() and await funcs.userNotBlacklisted(self, message):
             return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
@@ -139,6 +134,3 @@ class BotInstance(commands.Bot):
 
     async def on_command(self, ctx):
         self.__statcord.command_run(ctx)
-
-    async def sync_commands(self):
-        pass

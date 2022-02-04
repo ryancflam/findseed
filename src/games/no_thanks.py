@@ -28,8 +28,8 @@ class NoThanks:
     @staticmethod
     def __newPlayerList(rawPlayerList: list):
         newList = []
-        for i in range(len(rawPlayerList)):
-            newList.append(NoThanksPlayer(rawPlayerList[i], len(rawPlayerList), i))
+        for i, c in enumerate(rawPlayerList):
+            newList.append(NoThanksPlayer(c, len(rawPlayerList), i))
         return newList
 
     def __nextPlayer(self, quitGame: bool=False):

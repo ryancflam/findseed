@@ -125,8 +125,8 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     @staticmethod
     def makeChartEmbed(ctx, fig, labels, values, imgName, title):
         e = Embed(title=title, description=f"Requested by: {ctx.author.mention}")
-        for i in range(len(labels)):
-            e.add_field(name=labels[i], value="`{}`".format(funcs.removeDotZero(values[i])))
+        for i, c in enumerate(labels):
+            e.add_field(name=c, value=f"`{funcs.removeDotZero(values[i])}`")
         fig.write_image(f"{funcs.PATH}/temp/{imgName}")
         image = File(f"{funcs.PATH}/temp/{imgName}")
         e.set_image(url=f"attachment://{imgName}")
@@ -320,10 +320,9 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 dago, eta = "", ""
                 reg, data, arrive, realarrive, depart, realdepart = ph, ph, ph, ph, ph, ph
                 ft, duration, originname, originicao, originiata, destname, desticao, destiata = ph, ph, ph, ph, ph, ph, ph, ph
-                flighturl = f"https://www.flightradar24.com/data/flights/{flightstr.lower()}"
+                flighturl = f"https://www.flightradar24.com/data/flights/{flightstr.casefold()}"
                 status, callsign, aircraft, flightdate, airline = ph, ph, ph, ph, ph
-                for i in range(len(fdd)):
-                    data = fdd[i]
+                for data in fdd:
                     callsign = data["identification"]["callsign"]
                     if callsign is None:
                         callsign = "None"
@@ -362,14 +361,13 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         if ft[1:2] == ":":
                             ft = "0" + (ft[:4])
                         dago = "Current Flight Time"
-                    realdepart = str(datetime.fromtimestamp(realdepart + data["airport"]["origin"]["timezone"]["offset"]))
-                    realarrive = str(datetime.fromtimestamp(realarrive + data["airport"]["destination"]["timezone"]["offset"]))
-                    flightdate = realdepart[:10]
+                    realdepart = datetime.fromtimestamp(realdepart + data["airport"]["origin"]["timezone"]["offset"])
+                    realarrive = datetime.fromtimestamp(realarrive + data["airport"]["destination"]["timezone"]["offset"])
+                    flightdate = funcs.dateBirthday(realdepart.day, realdepart.month, realdepart.year, noBD=True)
                     break
                 imgl = res.json()["result"]["response"]["aircraftImages"]
                 thumbnail = "https://images.flightradar24.com/opengraph/fr24_logo_twitter.png"
-                for y in range(len(imgl)):
-                    image = imgl[y]
+                for image in imgl:
                     if image["registration"] != reg:
                         continue
                     thumbnail = list(
@@ -386,10 +384,10 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                             value=f"`{airline} ({data['airline']['code']['iata']}/{data['airline']['code']['icao']})`")
                 e.add_field(name="Origin", value=f"`{originname} ({originiata}/{originicao})`")
                 e.add_field(name="Destination", value=f"`{destname} ({destiata}/{desticao})`")
-                e.add_field(name=depart, value=f"`{realdepart}`")
+                e.add_field(name=depart, value=f"`{str(realdepart)}`")
                 if dago:
                     e.add_field(name=dago, value=f"`{ft}`")
-                e.add_field(name=arrive, value=f"`{realarrive}`")
+                e.add_field(name=arrive, value=f"`{str(realarrive)}`")
                 if eta:
                     e.add_field(name=eta, value=f"`{duration}`")
                 e.set_footer(text="Note: Flight data provided by Flightradar24 may not be 100% accurate.",
@@ -693,14 +691,14 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
                 embeds = []
                 pagecount = 0
-                for t in range(len(terms)):
+                for i, c in enumerate(terms):
                     pagecount += 1
-                    example = terms[t]["example"].replace("[", "").replace("]", "")
-                    definition = terms[t]["definition"].replace("[", "").replace("]", "")
-                    permalink = terms[t]["permalink"]
-                    word = terms[t]["word"]
-                    author = terms[t]["author"]
-                    writtenon = funcs.timeStrToDatetime(terms[t]["written_on"])
+                    example = c["example"].replace("[", "").replace("]", "")
+                    definition = c["definition"].replace("[", "").replace("]", "")
+                    permalink = c["permalink"]
+                    word = c["word"]
+                    author = c["author"]
+                    writtenon = funcs.timeStrToDatetime(c["written_on"])
                     e = Embed(description=permalink)
                     e.set_author(name=f'"{word}"', icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" +
                                                             "669142387330777115/urban-dictionary-android.png")
@@ -711,17 +709,14 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                         e.add_field(name="Author", value=f"`{author}`")
                     e.add_field(name="Submission Time (UTC)", value=f"`{writtenon}`")
                     try:
-                        ar = round(
-                            terms[t]['thumbs_up'] / (terms[t]['thumbs_up'] + terms[t]['thumbs_down'])
-                            * 100, 2
-                        )
+                        ar = round(c['thumbs_up'] / (c['thumbs_up'] + c['thumbs_down']) * 100, 2)
                         e.set_footer(
-                            text="Approval rate: {}% ({:,} 👍 - ".format(ar, terms[t]['thumbs_up']) +
-                                 "{:,} 👎)\n".format(terms[t]['thumbs_down']) +
-                                 "Page {:,} of {:,}".format(t + 1, len(terms))
+                            text="Approval rate: {}% ({:,} 👍 - ".format(ar, c['thumbs_up']) +
+                                 "{:,} 👎)\n".format(c['thumbs_down']) +
+                                 "Page {:,} of {:,}".format(i + 1, len(terms))
                         )
                     except ZeroDivisionError:
-                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(t + 1, len(terms)))
+                        e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(i + 1, len(terms)))
                     embeds.append(e)
                 m = await ctx.reply(embed=embeds[0])
                 await m.edit(view=PageButtons(ctx, self.client, m, embeds))
@@ -1177,7 +1172,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 if len(data) > 1:
                     await ctx.reply(
                         "`Please select a number: " +
-                        f"{', '.join(str(var) + ' (' + data[var]['name'] + ')' for var in range(len(data)))}`"
+                        f"{', '.join(str(i) + ' (' + c['name'] + ')' for i, c in enumerate(data))}`"
                     )
                     try:
                         pchoice = await self.client.wait_for(

@@ -852,12 +852,12 @@ class Minecraft(commands.Cog, name="Minecraft",
                     pass
                 res = self.divinetravel[option.casefold().replace(" ", "")].split(" | ")
                 e = Embed(title="Divine Travel: " + option.casefold().replace(" ", ""))
-                for i in range(len(res)):
+                for i, c in enumerate(res):
                     if i > 2:
                         text = f"High Roll #{i - 2}"
                     else:
                         text = f"Stronghold #{i + 1}"
-                    e.add_field(name=f"{text}", value=f"`{res[i].split(': ')[1]}`")
+                    e.add_field(name=f"{text}", value=f"`{c.split(': ')[1]}`")
             except KeyError:
                 e = funcs.errorEmbed(
                     "Invalid option!",

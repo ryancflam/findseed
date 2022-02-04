@@ -31,10 +31,10 @@ class Hangman:
         self.__dashes = str("-" * len(self.__word))
 
     @staticmethod
-    def __dash(secret, d, r):
+    def __setDashes(secret, d, r):
         result = ""
-        for i in range(len(secret)):
-            result += r if secret[i] == r else d[i]
+        for i, c in enumerate(secret):
+            result += r if c == r else d[i]
         return result
 
     def getWord(self):
@@ -56,7 +56,7 @@ class Hangman:
         if guess.lower() in self.__guesses:
             raise Exception("You have already guessed this letter!")
         elif guess.lower() in self.__word:
-            self.__dashes = self.__dash(self.__word, self.__dashes, guess.lower())
+            self.__dashes = self.__setDashes(self.__word, self.__dashes, guess.lower())
             self.__guesses.add(guess.lower())
             return True
         else:

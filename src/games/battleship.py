@@ -29,7 +29,7 @@ class Battleship:
         self.__placeShips()
 
     def __placeShips(self):
-        for i in range(len(self.__shipcode)):
+        for i, j in enumerate(self.__shipcode):
             while True:
                 rand1 = randint(0, self.__boardSize - 1)
                 rand2 = randint(0, self.__boardSize - 1)
@@ -38,7 +38,7 @@ class Battleship:
                 problem = False
                 while piece < self.__shipsize[i] and not problem:
                     if self.__board[rand1][rand2] == ".":
-                        self.__board[rand1][rand2] = self.__shipcode[i]
+                        self.__board[rand1][rand2] = j
                     else:
                         problem = True
                     if not direction:
@@ -52,7 +52,7 @@ class Battleship:
                     if problem:
                         for r in range(self.__boardSize):
                             for c in range(self.__boardSize):
-                                if self.__board[r][c] == self.__shipcode[i]:
+                                if self.__board[r][c] == j:
                                     self.__board[r][c] = "."
                 if piece == self.__shipsize[i] and not problem:
                     break

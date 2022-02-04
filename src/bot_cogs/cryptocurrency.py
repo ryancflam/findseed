@@ -358,13 +358,12 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
             data = res.json()
             e = Embed(title="Top 25 Cryptocurrencies by Market Cap",
                       description="https://www.coingecko.com/en/coins/all")
-            for counter in range(len(data)):
-                coinData = data[counter]
+            for i, c in enumerate(data):
                 e.add_field(
-                    name=f"{counter + 1}) {coinData['name']} ({coinData['symbol'].upper()})",
-                    value="`{:,} USD`".format(coinData['market_data']['market_cap']['usd'])
+                    name=f"{i + 1}) {c['name']} ({c['symbol'].upper()})",
+                    value="`{:,} USD`".format(c['market_data']['market_cap']['usd'])
                 )
-                if counter == 24:
+                if i == 24:
                     break
             e.set_footer(
                 text=f"Use {self.client.command_prefix}coinprice <coin symbol> [vs currency] for more information."

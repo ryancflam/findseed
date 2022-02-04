@@ -113,7 +113,7 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
             if len(data) > 1:
                 await ctx.reply(
                     "`Please select a number: {}`".format(
-                        ", ".join(f"{str(var)} ({data[var]['variant']})" for var in range(len(data)))
+                        ", ".join(f"{str(i)} ({c['variant']})" for i, c in enumerate(data))
                     )
                 )
                 try:

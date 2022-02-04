@@ -111,10 +111,10 @@ def monthNameToNumber(name: str):
     raise Exception("Invalid month.")
 
 
-def dateBirthday(day: int, month: int, year: int):
+def dateBirthday(day: int, month: int, year: int, noBD=False):
     nowt = datetime.now()
     return ("`%s %s %s`" % (day, monthNumberToName(month), year)) \
-           + (" :birthday:" if day == nowt.day and month == nowt.month else "")
+           + (" :birthday:" if day == nowt.day and month == nowt.month and not noBD else "")
 
 
 def timeStrToDatetime(datestr: str):
