@@ -70,12 +70,12 @@ class Uno:
         return deck
 
     def __createDiscard(self):
-        x = randint(0, len(self.__deck) - 1)
-        self.__discardPile.append(self.__deck[x])
+        rdn = randint(0, len(self.__deck) - 1)
+        self.__discardPile.append(self.__deck[rdn])
         if self.__discardPile[-1] == "Wild +4":
             self.__createDiscard()
         else:
-            self.__deck.remove(self.__deck[x])
+            self.__deck.remove(self.__deck[rdn])
 
     def __firstDeal(self):
         for _ in range(7):
