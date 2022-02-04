@@ -927,7 +927,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             await ctx.send(funcs.formatting(game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
-            await ctx.send(f"**[{currentPlayer.getLetter()}]** `It is {currentPlayer.getPlayer().name}'s turn! " +
+            await ctx.send(f"**[{currentPlayer.getPlayerType()}]** `It is {currentPlayer.getPlayer().name}'s turn! " +
                            "Please select a slot number between 1-9.`")
             try:
                 move = await self.client.wait_for(
@@ -950,7 +950,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     winner = game.getWinner().getPlayer().name + " wins"
                 except:
                     winner = "I win"
-                await ctx.send(f"**[{game.getWinner().getLetter()}]** `{winner}! Game over!`")
+                await ctx.send(f"**[{game.getWinner().getPlayerType()}]** `{winner}! Game over!`")
                 break
         if not game.getEmptySlots() and not game.getWinner():
             await ctx.send("`Draw! Game over!`")
@@ -981,7 +981,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         await ctx.send(embed=Embed(title="Connect Four", description=game.displayBoard()))
         while game.getEmptySlots():
             currentPlayer = game.getCurrentPlayer()
-            await ctx.send(f"**[{currentPlayer.getColour()}]** `It is {currentPlayer.getPlayer().name}'s turn! " +
+            await ctx.send(f"**[{currentPlayer.getPlayerType()}]** `It is {currentPlayer.getPlayer().name}'s turn! " +
                            "Please select a column number between 1-7.`")
             try:
                 move = await self.client.wait_for(
@@ -1004,7 +1004,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     winner = game.getWinner().getPlayer().name + " wins"
                 except:
                     winner = "I win"
-                await ctx.send(f"**[{game.getWinner().getColour()}]** `{winner}! Game over!`")
+                await ctx.send(f"**[{game.getWinner().getPlayerType()}]** `{winner}! Game over!`")
                 break
         if not game.getEmptySlots() and not game.getWinner():
             await ctx.send("`Draw! Game over!`")

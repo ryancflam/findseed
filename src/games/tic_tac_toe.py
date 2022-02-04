@@ -3,6 +3,7 @@
 from math import floor, inf
 from time import time
 
+from src.utils.base_player import BasePlayer
 from src.utils.funcs import minSecs
 
 
@@ -11,8 +12,8 @@ class TicTacToe:
     NOUGHT = "O"
 
     def __init__(self, player1=None, player2=None):
-        self.__player1 = TicTacToePlayer(letter=self.CROSS, user=player1)
-        self.__player2 = TicTacToePlayer(letter=self.NOUGHT, user=player2)
+        self.__player1 = BasePlayer(playerType=self.CROSS, user=player1)
+        self.__player2 = BasePlayer(playerType=self.NOUGHT, user=player2)
         self.__startTime = time()
         self.__winner = None
         self.__board = [" " for _ in range(9)]
@@ -39,15 +40,16 @@ class TicTacToe:
         except:
             pass
         best = [None, -inf if player == bot else inf]
-        for move in [i for i, j in enumerate(self.__board) if j == " "]:
-            self.move(move + 1, computerSim=True)
-            score = self.__computerMove(otherPlayer, bot)
-            self.__board[move] = " "
-            self.__winner = None
-            self.__switchPlayer()
-            score[0] = move
-            if player == bot and score[1] > best[1] or player != bot and score[1] < best[1]:
-                best = score
+        for i, c in enumerate(self.__board):
+             if c == " ":
+                self.move(i + 1, computerSim=True)
+                score = self.__computerMove(otherPlayer, bot)
+                self.__board[i] = " "
+                self.__winner = None
+                self.__switchPlayer()
+                score[0] = i
+                if player == bot and score[1] > best[1] or player != bot and score[1] < best[1]:
+                    best = score
         return best
 
     def move(self, slot, computerSim=False):
@@ -59,13 +61,13 @@ class TicTacToe:
             raise Exception("Slot number must be 1-9 inclusive.")
         if self.__board[slot] != " ":
             raise Exception("This slot is already occupied!")
-        self.__board[slot] = self.__currentPlayer.getLetter()
+        self.__board[slot] = self.__currentPlayer.getPlayerType()
         self.__checkWinner(slot, self.__board[slot])
         if (self.__winner or not self.getEmptySlots()) and not computerSim:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer() and not computerSim:
-            self.move(self.__computerMove(self.__currentPlayer.getLetter(), self.__currentPlayer.getLetter())[0] + 1)
+            self.move(self.__computerMove(self.__currentPlayer.getPlayerType(), self.__currentPlayer.getPlayerType())[0] + 1)
             if not self.__currentPlayer.getPlayer():
                 self.__switchPlayer()
 
@@ -90,15 +92,3 @@ class TicTacToe:
 
     def getWinner(self):
         return self.__winner
-
-
-class TicTacToePlayer:
-    def __init__(self, letter: str, user=None):
-        self.__letter = letter
-        self.__player = user
-
-    def getLetter(self):
-        return self.__letter
-
-    def getPlayer(self):
-        return self.__player

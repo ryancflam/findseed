@@ -4,6 +4,7 @@ from itertools import chain, groupby
 from math import inf
 from time import time
 
+from src.utils.base_player import BasePlayer
 from src.utils.funcs import minSecs, numberEmojis
 
 ROWS = 6
@@ -16,8 +17,8 @@ class ConnectFour:
     YELLOW = "🟡"
 
     def __init__(self, player1=None, player2=None):
-        self.__player1 = ConnectFourPlayer(colour=self.RED, user=player1)
-        self.__player2 = ConnectFourPlayer(colour=self.YELLOW, user=player2)
+        self.__player1 = BasePlayer(playerType=self.RED, user=player1)
+        self.__player2 = BasePlayer(playerType=self.YELLOW, user=player2)
         self.__startTime = time()
         self.__winner = None
         self.__board = [[self.NONE] * ROWS for _ in range(COLS)]
@@ -94,7 +95,7 @@ class ConnectFour:
         i = -1
         while self.__board[col][i] != self.NONE:
             i -= 1
-        self.__board[col][i] = self.__currentPlayer.getColour()
+        self.__board[col][i] = self.__currentPlayer.getPlayerType()
         if computerSim:
             self.__pseudoMove = (col, i)
         self.__checkWinner()
@@ -124,15 +125,3 @@ class ConnectFour:
 
     def getWinner(self):
         return self.__winner
-
-
-class ConnectFourPlayer:
-    def __init__(self, colour: str, user=None):
-        self.__colour = colour
-        self.__player = user
-
-    def getColour(self):
-        return self.__colour
-
-    def getPlayer(self):
-        return self.__player
