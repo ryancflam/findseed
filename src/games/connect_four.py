@@ -25,16 +25,12 @@ class ConnectFour:
         self.__currentPlayer = self.__player1
         self.__pseudoMove = (None, None)
 
-    def __diagonalsPos(self):
-        for di in ([(j, i - j) for j in range(COLS)] for i in range(COLS + ROWS - 1)):
-            yield [self.__board[i][j] for i, j in di if 0 <= i < COLS and 0 <= j < ROWS]
-
-    def __diagonalsNeg(self):
-        for di in ([(j, i - COLS + j + 1) for j in range(COLS)] for i in range(COLS + ROWS - 1)):
+    def __diagonals(self, pos=True):
+        for di in ([(j, ((i - j) if pos else (i - COLS + j + 1))) for j in range(COLS)] for i in range(COLS + ROWS - 1)):
             yield [self.__board[i][j] for i, j in di if 0 <= i < COLS and 0 <= j < ROWS]
 
     def __checkInARow(self, val: int=4):
-        for line in chain(*(self.__board, zip(*self.__board), self.__diagonalsPos(), self.__diagonalsNeg())):
+        for line in chain(*(self.__board, zip(*self.__board), self.__diagonals(), self.__diagonals(pos=False))):
             for colour, group in groupby(line):
                 if colour != self.NONE and len(list(group)) >= val:
                     return True
@@ -74,7 +70,7 @@ class ConnectFour:
             self.__resetMove()
             self.insert(col + 1, computerSim=True)
             if self.__winner:
-                scores[col] += 10000
+                scores[col] += inf
                 self.__winner = None
             elif self.__checkInARow(3):
                 scores[col] += 4
