@@ -1,5 +1,6 @@
 from os import listdir, path
 from sys import exit
+from time import time
 
 from aiofiles.os import mkdir
 from aioshutil import rmtree
@@ -36,6 +37,7 @@ class BotInstance(commands.Bot):
             case_insensitive=True,
             strip_after_prefix=True
         )
+        self.startTime = time()
         self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
         self.__eventLoop = loop

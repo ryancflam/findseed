@@ -13,7 +13,6 @@ from src.utils import funcs
 class General(commands.Cog, name="General", description="Standard commands relating to this bot, its features, or Discord."):
     def __init__(self, botInstance):
         self.client = botInstance
-        self.starttime = time()
 
     @commands.command(name="ping", description="Tests the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
@@ -83,7 +82,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
             pass
         e.add_field(name="!findseed Calls", value="`{:,}`".format((await funcs.readJson("data/findseed.json"))['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
-        e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.starttime)}")
+        e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.client.startTime)}")
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
