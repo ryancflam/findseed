@@ -25,11 +25,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.tts = aiogTTS()
 
     async def __readFiles(self):
-        self.personalityTest = await funcs.readJson("resources/random_stuff/personality_test.json")
-        self.trumpquotes = await funcs.readJson("resources/random_stuff/trump_quotes.json")
-        self.truths = await funcs.readTxt("resources/random_stuff/truths.txt", lines=True)
-        self.dares = await funcs.readTxt("resources/random_stuff/dares.txt", lines=True)
-        self.nhie = await funcs.readTxt("resources/random_stuff/nhie.txt", lines=True)
+        self.personalityTest = await funcs.readJson(funcs.getResource(self.qualified_name, "personality_test.json"))
+        self.trumpquotes = await funcs.readJson(funcs.getResource(self.qualified_name, "trump_quotes.json"))
+        self.truths = await funcs.readTxt(funcs.getResource(self.qualified_name, "truths.txt"), lines=True)
+        self.dares = await funcs.readTxt(funcs.getResource(self.qualified_name, "dares.txt"), lines=True)
+        self.nhie = await funcs.readTxt(funcs.getResource(self.qualified_name, "nhie.txt"), lines=True)
 
     @staticmethod
     def rgb(value):
@@ -76,8 +76,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await m.delete()
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="wyr", description="Sends a random Would You Rather question.",
-                      aliases=["rather", "wouldyourather"])
+    @commands.command(name="wyr", description="Sends a random Would You Rather question.", aliases=["rather", "wouldyourather"])
     async def wyr(self, ctx):
         try:
             res = await funcs.getRequest("http://either.io/questions/next/1")
@@ -90,8 +89,12 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             info = data['moreinfo']
             e = Embed(title="Would You Rather",
                       description=f"🔵 {opt1 + ('' if opt1.endswith('.') else '.')}\n🔴 {opt2 + ('' if opt1.endswith('.') else '.')}")
-            e.add_field(name="Option 1 Votes", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2))))
-            e.add_field(name="Option 2 Votes", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2))))
+            e.add_field(
+                name="Option #1 Votes", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2)))
+            )
+            e.add_field(
+                name="Option #2 Votes", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2)))
+            )
             if info:
                 e.set_footer(text=info)
             yes = True
