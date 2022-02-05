@@ -623,7 +623,7 @@ class Minecraft(commands.Cog, name="Minecraft",
                                                         "ically stop. This command is for versions 1.13+" +
                                                         " and may not be 100% accurate. This command MAY" +
                                                         " not be used in a real speedrun.",
-                      aliases=["triangulate", "stronghold", "triangle", "trian", "tri", "88", "44"],
+                      aliases=["triangulate", "triangle", "trian", "tri", "88", "44"],
                       usage="<F3+C data>")
     async def triangulation(self, ctx, *, f3c):
         await ctx.send("**Note:** This command, along with other speedrunning calculators, MAY not be used in a real speedrun.")
@@ -917,6 +917,18 @@ class Minecraft(commands.Cog, name="Minecraft",
         await ctx.reply("https://www.youtube.com/watch?v=jvTfMLPnMSw")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="magmaravines", aliases=["ravine", "magmaravine", "magma", "ravines", "oceanravine", "oceanravines"],
+                      description="Shows the guide to magma ravines.", hidden=True)
+    async def magmaravines(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=yGyMWYhHYoQ")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="hypermodern", aliases=["hyperm", "hmodern"], hidden=True,
+                      description="Shows the guide to hypermodern speedruns.")
+    async def hypermodern(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=gAHMJfsrHe4")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="blindtravelcoords", aliases=["rings", "strongholdrings", "strongholdring"], hidden=True,
                       description="Shows the ideal blind travel coordinates for the first to third stronghold rings.")
     async def blindtravelcoords(self, ctx):
@@ -934,6 +946,23 @@ class Minecraft(commands.Cog, name="Minecraft",
     @commands.command(name="speedrunigt", aliases=["igt"], description="Download the SpeedRunIGT mod here.", hidden=True)
     async def speedrunigt(self, ctx):
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="strongholdnav", aliases=["stronghold", "sh", "strongholds"],
+                      description="Shows the guides to stronghold navigation and hidden rooms.", hidden=True)
+    async def strongholdnav(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=hEZfeUWA3hM\n\nhttps://www.youtube.com/watch?v=vztJNmUdyBY")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="ruinedportals", description="Shows some useful ruined portal resources.", hidden=True,
+                      aliases=["rp", "ruinedportal", "ruined", "ruinportal", "ruinportals", "ruin"])
+    async def ruinedportals(self, ctx):
+        await ctx.reply(
+            "Quick Completion Guide: https://www.youtube.com/watch?v=Bg_TVoo8waM",
+            file=(await funcs.getImageFile(
+                "https://media.discordapp.net/attachments/771404776410972161/939500126903336960/unknown.png"
+            ))
+        )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="zerocycle", description="Shows some useful Zero Cycle resources.", hidden=True,
