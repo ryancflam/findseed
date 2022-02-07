@@ -9,14 +9,16 @@ from discord.ext import commands
 
 import config
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 from src.utils.playing_cards import PlayingCards
 
 COIN_EDGE_ODDS = 6001
 RN_RANGE = 999999999999
 
 
-class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fun commands for you to kill time."):
-    def __init__(self, botInstance):
+class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random commands for you to kill time."):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
         self.activeSpinners = []
@@ -24,11 +26,11 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.phoneCallChannels = []
 
     async def __readFiles(self):
-        self.personalityTest = await funcs.readJson(funcs.getResource(self.qualified_name, "personality_test.json"))
-        self.trumpquotes = await funcs.readJson(funcs.getResource(self.qualified_name, "trump_quotes.json"))
-        self.truths = await funcs.readTxt(funcs.getResource(self.qualified_name, "truths.txt"), lines=True)
-        self.dares = await funcs.readTxt(funcs.getResource(self.qualified_name, "dares.txt"), lines=True)
-        self.nhie = await funcs.readTxt(funcs.getResource(self.qualified_name, "nhie.txt"), lines=True)
+        self.personalityTest = await funcs.readJson(funcs.getResource(self.name, "personality_test.json"))
+        self.trumpquotes = await funcs.readJson(funcs.getResource(self.name, "trump_quotes.json"))
+        self.truths = await funcs.readTxt(funcs.getResource(self.name, "truths.txt"), lines=True)
+        self.dares = await funcs.readTxt(funcs.getResource(self.name, "dares.txt"), lines=True)
+        self.nhie = await funcs.readTxt(funcs.getResource(self.name, "nhie.txt"), lines=True)
 
     @staticmethod
     def rgb(value):
@@ -818,5 +820,5 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         await ctx.reply(embed=e)
 
 
-def setup(botInstance):
-    botInstance.add_cog(RandomStuff(botInstance))
+if __name__ != "__main__":
+    setup = RandomStuff.setup

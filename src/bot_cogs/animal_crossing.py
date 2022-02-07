@@ -8,26 +8,28 @@ from discord import Embed
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 AC_LOGO = "https://cdn.discordapp.com/attachments/771404776410972161/906436017987395604/unknown.png"
 BD_KEY = "LOL"
 
 
-class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands relating to *Animal Crossing: New Horizons*.",
+class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands relating to *Animal Crossing: New Horizons*.",
                      command_attrs=dict(hidden=True)):
-    def __init__(self, botInstance):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.art = await funcs.readJson(funcs.getResource(self.qualified_name, "art.json"))
-        self.bugs = await funcs.readJson(funcs.getResource(self.qualified_name, "bugs.json"))
-        self.fish = await funcs.readJson(funcs.getResource(self.qualified_name, "fish.json"))
-        self.fossils = await funcs.readJson(funcs.getResource(self.qualified_name, "fossils.json"))
-        self.personalities = await funcs.readJson(funcs.getResource(self.qualified_name, "personalities.json"))
-        self.sea = await funcs.readJson(funcs.getResource(self.qualified_name, "sea_creatures.json"))
-        self.species = await funcs.readTxt(funcs.getResource(self.qualified_name, "species.txt"), lines=True)
-        self.villagers = await funcs.readJson(funcs.getResource(self.qualified_name, "villagers.json"))
+        self.art = await funcs.readJson(funcs.getResource(self.name, "art.json"))
+        self.bugs = await funcs.readJson(funcs.getResource(self.name, "bugs.json"))
+        self.fish = await funcs.readJson(funcs.getResource(self.name, "fish.json"))
+        self.fossils = await funcs.readJson(funcs.getResource(self.name, "fossils.json"))
+        self.personalities = await funcs.readJson(funcs.getResource(self.name, "personalities.json"))
+        self.sea = await funcs.readJson(funcs.getResource(self.name, "sea_creatures.json"))
+        self.species = await funcs.readTxt(funcs.getResource(self.name, "species.txt"), lines=True)
+        self.villagers = await funcs.readJson(funcs.getResource(self.name, "villagers.json"))
 
     @staticmethod
     def findData(data: dict, name: str):
@@ -572,5 +574,5 @@ class AnimalCrossing(commands.Cog, name="Animal Crossing", description="Commands
         await ctx.reply("https://wuffs.org/acnh/weather/")
 
 
-def setup(botInstance):
-    botInstance.add_cog(AnimalCrossing(botInstance))
+if __name__ != "__main__":
+    setup = AnimalCrossing.setup

@@ -24,7 +24,7 @@ def commandIsOwnerOnly(command):
 
 
 def commandIsEE(command):
-    return command.cog.qualified_name == "Easter Eggs"
+    return command.cog.name == "Easter Eggs"
 
 
 def commandsListEmbed(client, menu: int=0):
@@ -34,7 +34,7 @@ def commandsListEmbed(client, menu: int=0):
     cmds = 0
     for cog in sorted(client.cogs):
         commandsList = list(filter(
-            lambda x: (x.hidden and x.cog_name != "Easter Eggs" and not commandIsOwnerOnly(x)) if menu == 1
+            lambda x: (x.hidden and not commandIsEE(x) and not commandIsOwnerOnly(x)) if menu == 1
             else commandIsOwnerOnly(x) if menu == 2
             else not commandIsOwnerOnly(x) and not commandIsEE(x) if menu == 3
             else not x.hidden,

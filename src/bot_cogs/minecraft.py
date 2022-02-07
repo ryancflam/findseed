@@ -14,20 +14,22 @@ from discord import Colour, Embed, File
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 BARTER_LIMIT = 896
 
 
-class Minecraft(commands.Cog, name="Minecraft",
+class Minecraft(BaseCog, name="Minecraft",
                 description="Commands relating to *Minecraft* in general and *Minecraft: Java Edition* speedrunning."):
-    def __init__(self, botInstance):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.divinetravel = await funcs.readJson(funcs.getResource(self.qualified_name, "divine_travel.json"))
-        self.perfecttravel = await funcs.readJson(funcs.getResource(self.qualified_name, "perfect_travel.json"))
-        self.eyedata = await funcs.readJson(funcs.getResource(self.qualified_name, "eye_data.json"))
+        self.divinetravel = await funcs.readJson(funcs.getResource(self.name, "divine_travel.json"))
+        self.perfecttravel = await funcs.readJson(funcs.getResource(self.name, "perfect_travel.json"))
+        self.eyedata = await funcs.readJson(funcs.getResource(self.name, "eye_data.json"))
         self.loottable = await self.piglinLootTable()
         await funcs.generateJson(
             "findseed",
@@ -43,7 +45,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         await funcs.generateJson("finddream", {"iteration": 0, "mostPearls": 0, "mostRods": 0})
 
     async def piglinLootTable(self):
-        lt = await funcs.readJson(funcs.getResource(self.qualified_name, "piglin_loot_table.json"))
+        lt = await funcs.readJson(funcs.getResource(self.name, "piglin_loot_table.json"))
         ltnew = []
         for i in lt:
             if i["id"] < 5:
@@ -128,7 +130,7 @@ class Minecraft(commands.Cog, name="Minecraft",
         calls = data["calls"]
         await funcs.dumpJson("data/findseed.json", data)
         file = File(
-            funcs.PATH + funcs.getResource(self.qualified_name, "portal_frame_images/") + f"{eyes}eye.png",
+            funcs.PATH + funcs.getResource(self.name, "portal_frame_images/") + f"{eyes}eye.png",
             filename="portal.png"
         )
         foundTime = "just now"
@@ -984,5 +986,5 @@ class Minecraft(commands.Cog, name="Minecraft",
                         "<https://youtu.be/Gl7zOn2lLo4>\n\nPlease play the seed within 30 seconds after it has been generated.")
 
 
-def setup(botInstance):
-    botInstance.add_cog(Minecraft(botInstance))
+if __name__ != "__main__":
+    setup = Minecraft.setup

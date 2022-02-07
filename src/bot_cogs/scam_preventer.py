@@ -6,18 +6,20 @@ from re import findall
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 IMGUR_URL = "imgur.com"
 
 
-class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidden=True),
+class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=True),
                     description="A cog that tries to remove messages with Discord scam links."):
-    def __init__(self, botInstance):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.scamlinks = await funcs.readTxt(funcs.getResource(self.qualified_name, "scam_links.txt"), lines=True)
+        self.scamlinks = await funcs.readTxt(funcs.getResource(self.name, "scam_links.txt"), lines=True)
         await funcs.generateJson("scam_preventer", {"disallowed_servers": []})
 
     @commands.command(name="spdisable", description="Disables the scam preventer for your server, which is enabled by default.",
@@ -120,5 +122,5 @@ class ScamPreventer(commands.Cog, name="Scam Preventer", command_attrs=dict(hidd
                     pass
 
 
-def setup(botInstance):
-    botInstance.add_cog(ScamPreventer(botInstance))
+if __name__ != "__main__":
+    setup = ScamPreventer.setup

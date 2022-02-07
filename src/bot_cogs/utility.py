@@ -21,14 +21,16 @@ from qrcode import QRCode
 
 import config
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 from src.utils.page_buttons import PageButtons
 
 DEFAULT_REPO = "ryancflam/findseed"
 HCF_LIMIT = 1000000
 
 
-class Utility(commands.Cog, name="Utility", description="Useful commands for getting data or calculating things."):
-    def __init__(self, botInstance):
+class Utility(BaseCog, name="Utility", description="Some useful commands for getting data or calculating things."):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.reddit = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
 
@@ -1108,7 +1110,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             ]
             try:
                 answer.append(
-                    (await funcs.readTxt(funcs.getResource(self.qualified_name, "copypasta.txt"))).replace("\*", "*")[:1994]
+                    (await funcs.readTxt(funcs.getResource(self.name, "copypasta.txt"))).replace("\*", "*")[:1994]
                 )
             except Exception as ex:
                 funcs.printError(ctx, ex)
@@ -1828,5 +1830,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                 e = funcs.errorEmbed(None, "Server error or query limit reached.")
         await ctx.reply(embed=e)
 
-def setup(botInstance):
-    botInstance.add_cog(Utility(botInstance))
+
+if __name__ != "__main__":
+    setup = Utility.setup

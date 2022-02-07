@@ -6,17 +6,19 @@ from discord import Embed
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 from src.utils.brainfuck_interpreter import BrainfuckInterpreter
 
 
-class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(hidden=True),
+class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidden=True),
                       description="Convert inputs from one unit or format to another."):
-    def __init__(self, botInstance):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):
-        self.morsecode = await funcs.readJson(funcs.getResource(self.qualified_name, "morse_code.json"))
+        self.morsecode = await funcs.readJson(funcs.getResource(self.name, "morse_code.json"))
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="hash", description="Generates a hash from an input using an algorithm.",
@@ -521,5 +523,5 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
         await ctx.reply(embed=e)
 
 
-def setup(botInstance):
-    botInstance.add_cog(ConversionTools(botInstance))
+if __name__ != "__main__":
+    setup = ConversionTools.setup

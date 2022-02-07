@@ -8,10 +8,12 @@ from psutil import cpu_percent, disk_usage, virtual_memory
 
 import config
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 
-class General(commands.Cog, name="General", description="Standard commands relating to this bot, its features, or Discord."):
-    def __init__(self, botInstance):
+class General(BaseCog, name="General", description="Standard commands relating to this bot, its features, or Discord."):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
 
     @commands.command(name="ping", description="Tests the latency of the bot.", aliases=["p", "pong", "latency"])
@@ -188,7 +190,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                 break
             except:
                 cogname = "General"
-        e = Embed(title=cogname.replace("_", " ").title(), description=cog.description)
+        e = Embed(title=cog.name, description=cog.description)
         e.add_field(name="Commands ({:,})".format(len(commandsList)),
                     value=", ".join(f"`{prefix}{str(command)}`" for command in commandsList))
         e.set_footer(text=f"Use {prefix}help <command> for help with a specific command.")
@@ -204,9 +206,8 @@ class General(commands.Cog, name="General", description="Standard commands relat
             try:
                 prefix = self.client.command_prefix
                 command = self.client.get_command(cmd[0].replace(prefix, "").casefold())
-                cog = command.cog_name
                 if funcs.commandIsOwnerOnly(command) and ctx.author != (await self.client.application_info()).owner \
-                        or cog == "Easter Eggs" and not await funcs.easterEggsPredicate(ctx):
+                        or funcs.commandIsEE(command) and not await funcs.easterEggsPredicate(ctx):
                     raise Exception()
                 name = command.name
                 usage = command.usage
@@ -219,7 +220,7 @@ class General(commands.Cog, name="General", description="Standard commands relat
                     e.add_field(
                         name="Aliases", value=", ".join(f"`{prefix}{alias}`" for alias in aliases)
                     )
-                e.add_field(name="Category", value=f"`{cog}`")
+                e.add_field(name="Category", value=f"`{command.cog.name}`")
             except Exception:
                 e = funcs.errorEmbed(None, "Unknown command.")
         await ctx.reply(embed=e)
@@ -336,5 +337,5 @@ class General(commands.Cog, name="General", description="Standard commands relat
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
 
-def setup(botInstance):
-    botInstance.add_cog(General(botInstance))
+if __name__ != "__main__":
+    setup = General.setup

@@ -8,6 +8,7 @@ from plotly import express, graph_objects
 
 import config
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 from src.utils.bitcoin_address import BitcoinAddress
 
 GAS_HODL = 0.00088
@@ -18,8 +19,9 @@ ETHEREUM_LOGO = "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png"
 BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 
 
-class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
-    def __init__(self, botInstance):
+class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
 
     def getCoinGeckoID(self, coin):
@@ -807,5 +809,5 @@ class Cryptocurrency(commands.Cog, name="Cryptocurrency", description="Cryptocur
                         embed=e)
 
 
-def setup(botInstance):
-    botInstance.add_cog(Cryptocurrency(botInstance))
+if __name__ != "__main__":
+    setup = Cryptocurrency.setup

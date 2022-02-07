@@ -10,10 +10,12 @@ import discord
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 
-class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
-    def __init__(self, botInstance):
+class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
 
     @commands.command(name="killbot", description="Kills the bot. Proceed with caution.")
@@ -422,5 +424,5 @@ class BotOwnerOnly(commands.Cog, name="Bot Owner Only", description="Commands fo
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=2))
 
 
-def setup(botInstance):
-    botInstance.add_cog(BotOwnerOnly(botInstance))
+if __name__ != "__main__":
+    setup = BotOwnerOnly.setup

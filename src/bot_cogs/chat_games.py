@@ -11,10 +11,12 @@ from discord.ext import commands, tasks
 
 from src import games
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 
-class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for you to kill time."):
-    def __init__(self, botInstance):
+class ChatGames(BaseCog, name="Chat Games", description="Fun chat games for you to kill time."):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.gameChannels = []
         self.tetrisGames = {}
@@ -324,7 +326,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
                     colour=colour
                 )
                 file = File(
-                    funcs.PATH + funcs.getResource(self.qualified_name, "uno_cards/") +
+                    funcs.PATH + funcs.getResource(self.name, "uno_cards/") +
                     f"{'Xmas_' if datetime.now().month == 12 else ''}{discard.replace(' ', '_')}.png",
                     filename="card.png"
                 )
@@ -479,7 +481,7 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
             colour = self.unoEmbedColour(discard)
             e = Embed(title="Uno", description=f"The final card - `{discard}`", colour=colour)
             file = File(
-                funcs.PATH + funcs.getResource(self.qualified_name, "uno_cards/") +
+                funcs.PATH + funcs.getResource(self.name, "uno_cards/") +
                 f"{'Xmas_' if datetime.now().month == 12 else ''}{discard.replace(' ', '_')}.png",
                 filename="card.png"
             )
@@ -1260,5 +1262,5 @@ class ChatGames(commands.Cog, name="Chat Games", description="Fun chat games for
         self.gameChannels.remove(ctx.channel.id)
 
 
-def setup(botInstance):
-    botInstance.add_cog(ChatGames(botInstance))
+if __name__ != "__main__":
+    setup = ChatGames.setup

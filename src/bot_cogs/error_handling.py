@@ -3,11 +3,12 @@
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 
-class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for handling errors.",
-                   command_attrs=dict(hidden=True)):
-    def __init__(self, botInstance):
+class ErrorHandling(BaseCog, name="Error Handling", description="A cog for handling errors.", command_attrs=dict(hidden=True)):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
 
     @commands.Cog.listener()
@@ -58,5 +59,5 @@ class ErrorHandler(commands.Cog, name="Error Handler", description="A cog for ha
             )
 
 
-def setup(botInstance):
-    botInstance.add_cog(ErrorHandler(botInstance))
+if __name__ != "__main__":
+    setup = ErrorHandling.setup

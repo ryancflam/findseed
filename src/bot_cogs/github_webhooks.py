@@ -8,17 +8,29 @@ from flask import Flask, abort, request
 
 from config import githubWebhooks
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 FLASK_APP = Flask(__name__)
 RIDICULOUS_CHANNEL_LIST = []
 
 
-class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
+class GitHubWebhooks(BaseCog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
                      description="A cog for handling push webhooks from GitHub."):
-    def __init__(self, botInstance):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         if RIDICULOUS_CHANNEL_LIST[:-1]:
             Thread(target=self.startFlaskApp).start()
+
+    @classmethod
+    def setup(cls, botInstance):
+        global RIDICULOUS_CHANNEL_LIST
+        for channelID in githubWebhooks:
+            channel = botInstance.get_channel(channelID)
+            if channel:
+                RIDICULOUS_CHANNEL_LIST.append(channel)
+        RIDICULOUS_CHANNEL_LIST.append(botInstance)
+        botInstance.add_cog(cls(botInstance))
 
     @staticmethod
     def startFlaskApp(host: str="0.0.0.0", port: int=8080):
@@ -72,11 +84,5 @@ class GitHubWebhooks(commands.Cog, name="GitHub Webhooks", command_attrs=dict(hi
         await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
 
-def setup(botInstance):
-    global RIDICULOUS_CHANNEL_LIST
-    for channelID in githubWebhooks:
-        channel = botInstance.get_channel(channelID)
-        if channel:
-            RIDICULOUS_CHANNEL_LIST.append(channel)
-    RIDICULOUS_CHANNEL_LIST.append(botInstance)
-    botInstance.add_cog(GitHubWebhooks(botInstance))
+if __name__ != "__main__":
+    setup = GitHubWebhooks.setup

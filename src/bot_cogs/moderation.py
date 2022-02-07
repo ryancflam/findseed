@@ -4,10 +4,12 @@ from discord import Embed, Member
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 
-class Moderation(commands.Cog, name="Moderation", description="Simple moderation and member-management commands for server staff."):
-    def __init__(self, botInstance):
+class Moderation(BaseCog, name="Moderation", description="Simple moderation and member-management commands for server staff."):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
 
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -173,5 +175,5 @@ class Moderation(commands.Cog, name="Moderation", description="Simple moderation
         await ctx.reply(funcs.formatting(string))
 
 
-def setup(botInstance):
-    botInstance.add_cog(Moderation(botInstance))
+if __name__ != "__main__":
+    setup = Moderation.setup

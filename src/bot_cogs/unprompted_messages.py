@@ -6,11 +6,13 @@ from re import sub
 from discord.ext import commands
 
 from src.utils import funcs
+from src.utils.base_cog import BaseCog
 
 
-class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs=dict(hidden=True),
+class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict(hidden=True),
                          description="Funny bot responses that are not command-invoked."):
-    def __init__(self, botInstance):
+    def __init__(self, botInstance, *args, **kwargs):
+        super().__init__(botInstance, *args, **kwargs)
         self.client = botInstance
         self.client.loop.create_task(self.__generateFiles())
         self.lastthreemsgs = {}
@@ -163,5 +165,5 @@ class UnpromptedMessages(commands.Cog, name="Unprompted Messages", command_attrs
                         )
 
 
-def setup(botInstance):
-    botInstance.add_cog(UnpromptedMessages(botInstance))
+if __name__ != "__main__":
+    setup = UnpromptedMessages.setup
