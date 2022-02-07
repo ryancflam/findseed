@@ -137,7 +137,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         g = AsyncTranslator()
         try:
             gathers = []
-            for text in list(inp.replace(" ", ""))[:50]:
+            for text in list(inp.replace(" ", "").replace("\n", ""))[:50]:
                 gathers.append(g.translate(text, "en"))
             e = Embed(title="Literal Chinese", description=funcs.formatting("".join((await gather(*gathers)))))
         except Exception as ex:
