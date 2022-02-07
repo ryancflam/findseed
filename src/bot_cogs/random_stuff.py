@@ -22,7 +22,6 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
         self.activeSpinners = []
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
-        self.tts = aiogTTS()
 
     async def __readFiles(self):
         self.personalityTest = await funcs.readJson(funcs.getResource(self.qualified_name, "personality_test.json"))
@@ -566,10 +565,10 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             f":8ball: {mention}: `{choice(['Empty input...', 'I cannot hear you.']) if not msg else choice(responses)}`"
         )
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="tts", description="Converts text to speech.", aliases=["texttospeech", "speech"],
-                      usage='<language code> <input>')
-    async def tts(self, ctx, langcode, *, text):
+                      usage='<language code> <input OR text attachment>')
+    async def tts(self, ctx, langcode, *, inp=""):
         langs = lang.tts_langs()
         if langcode not in langs:
             langcode = langcode.casefold()
@@ -577,8 +576,16 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
                 return await ctx.reply(embed=funcs.errorEmbed(
                     "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in sorted(langs.keys()))
                 ))
+        if ctx.message.attachments:
+            try:
+                inp = await funcs.readTxtAttachment(ctx.message)
+            except Exception as ex:
+                funcs.printError(ctx, ex)
+                inp = inp
+        if not inp:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         location = f"{time()}.mp3"
-        await self.tts.save(text, f"{funcs.PATH}/temp/{location}", slow=False, lang=langcode)
+        await aiogTTS().save(inp, f"{funcs.PATH}/temp/{location}", slow=False, lang=langcode)
         file = File(f"{funcs.PATH}/temp/" + location)
         try:
             await ctx.reply(file=file)
