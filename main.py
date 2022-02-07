@@ -2,7 +2,7 @@ from asyncio import new_event_loop as loop
 from logging import StreamHandler, getLogger, INFO
 from sys import stdout
 
-from src.bot_instance import BotInstanc
+from src.bot_instance import BotInstance
 
 
 def main():
