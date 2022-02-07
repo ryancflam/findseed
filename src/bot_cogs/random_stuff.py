@@ -1,11 +1,11 @@
-from asyncio import TimeoutError, sleep
+from asyncio import TimeoutError, gather, sleep
 from random import choice, choices, randint, shuffle
 from time import time
 
 from aiogtts import aiogTTS, lang
+from async_google_trans_new import AsyncTranslator
 from discord import Colour, Embed, File, User
 from discord.ext import commands
-from googletrans import Translator
 
 import config
 from src.utils import funcs
@@ -129,36 +129,34 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
     async def dare(self, ctx):
         await ctx.send(embed=self.todEmbed(dare=1))
 
-    @commands.cooldown(1, 60, commands.BucketType.user)
-    @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (10 characters or less)>",
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="literalchinese", usage="<Chinese/Japanese/Korean text (50 characters or less)>",
                       description="Literally translates Chinese, Japanese, and Korean characters to English one by one. " +
                                   "Translation may sometimes fail due to rate limit.",
                       aliases=["lc", "literaljapanese", "literalkorean"], hidden=True)
     async def literalchinese(self, ctx, *, inp):
-        res = ""
+        g = AsyncTranslator()
         try:
-            inplist = list(inp.replace(" ", ""))[:10]
-            output = Translator().translate(inplist, dest="en")
-            for t in output:
-                res += f"{t.text} "
-            e = Embed(title="Literal Chinese", description=funcs.formatting(res))
+            gathers = []
+            for text in list(inp.replace(" ", ""))[:50]:
+                gathers.append(g.translate(text, "en"))
+            e = Embed(title="Literal Chinese", description=funcs.formatting("".join((await gather(*gathers)))))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 60, commands.BucketType.user)
-    @commands.command(name="literalenglish", aliases=["le"], usage="<English text (10 words or less)>",
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="literalenglish", aliases=["le"], usage="<English text (50 words or less)>",
                       description="Literally translates English words to Chinese one by one. " +
                                   "Translation may sometimes fail due to rate limit.", hidden=True)
     async def literalenglish(self, ctx, *, inp):
-        res = ""
+        g = AsyncTranslator()
         try:
-            inplist = inp.split()[:10]
-            output = Translator().translate(inplist, dest="zh-tw")
-            for t in output:
-                res += t.text
-            e = Embed(title="Literal English", description=funcs.formatting(res))
+            gathers = []
+            for text in inp.split()[:50]:
+                gathers.append(g.translate(text, "zh-tw"))
+            e = Embed(title="Literal English", description=funcs.formatting("".join((await gather(*gathers))).replace(" ", "")))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
@@ -577,7 +575,7 @@ class RandomStuff(commands.Cog, name="Random Stuff", description="Some random fu
             langcode = langcode.casefold()
             if langcode not in langs:
                 return await ctx.reply(embed=funcs.errorEmbed(
-                    "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in langs.keys())
+                    "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in sorted(langs.keys()))
                 ))
         location = f"{time()}.mp3"
         await self.tts.save(text, f"{funcs.PATH}/temp/{location}", slow=False, lang=langcode)

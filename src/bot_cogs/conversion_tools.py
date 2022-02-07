@@ -14,7 +14,6 @@ class ConversionTools(commands.Cog, name="Conversion Tools", command_attrs=dict(
     def __init__(self, botInstance):
         self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
-        self.morsecode = None
 
     async def __readFiles(self):
         self.morsecode = await funcs.readJson(funcs.getResource(self.qualified_name, "morse_code.json"))

@@ -40,6 +40,7 @@ class BotInstance(commands.Bot):
         self.startTime = time()
         self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
+        self.__getTickers.start()
         self.__eventLoop = loop
         self.__token = config.botToken
         self.__activityName = config.activityName
@@ -79,6 +80,10 @@ class BotInstance(commands.Bot):
         await self.__generateDir("temp")
         await funcs.generateJson("blacklist", {"servers": [], "users": []})
         await funcs.generateJson("whitelist", {"users": []})
+
+    @tasks.loop(hours=24.0)
+    async def __getTickers(self):
+        self.tickers = await funcs.getTickers()
 
     @tasks.loop(minutes=2.0)
     async def __bitcoin(self):

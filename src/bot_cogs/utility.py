@@ -10,10 +10,10 @@ from string import punctuation
 from subprocess import PIPE, Popen, STDOUT
 from time import gmtime, mktime, time
 
+from async_google_trans_new import AsyncTranslator, constant
 from asyncpraw import Reddit
 from discord import Embed, File, channel
-from discord.ext import commands, tasks
-from googletrans import Translator, constants
+from discord.ext import commands
 from lyricsgenius import Genius
 from mendeleev import element
 from plotly import graph_objects as go
@@ -31,12 +31,6 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
     def __init__(self, botInstance):
         self.client = botInstance
         self.reddit = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
-        self.genius = Genius(config.geniusToken)
-        self.__getTickers.start()
-
-    @tasks.loop(hours=24.0)
-    async def __getTickers(self):
-        self.tickers = await funcs.getTickers()
 
     async def gatherLabelsAndValues(self, ctx):
         labels = []
@@ -441,12 +435,12 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                       aliases=["t", "translator", "trans", "tr", "translation"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text):
         try:
-            if dest.casefold() not in constants.LANGUAGES.keys():
+            if dest.casefold() not in constant.LANGUAGES.keys():
                 e = funcs.errorEmbed(
-                    "Invalid language code!", f"Valid options:\n\n{', '.join(f'`{i}`' for i in constants.LANGUAGES.keys())}"
+                    "Invalid language code!", f"Valid options:\n\n{', '.join(f'`{i}`' for i in sorted(constant.LANGUAGES.keys()))}"
                 )
             else:
-                output = Translator().translate(text.casefold(), dest=dest.casefold()).text
+                output = await AsyncTranslator().translate(text, dest.casefold())
                 e = Embed(title="Translation", description=funcs.formatting(output))
         except Exception as ex:
             funcs.printError(ctx, ex)
@@ -471,7 +465,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     amount /= data["rates"][fromCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": self.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": self.client.tickers[fromCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     amount *= cgData[0]["current_price"]
@@ -480,7 +474,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
                     amount *= data["rates"][toCurrency]
                 except:
                     res = await funcs.getRequest(
-                        coingecko, params={"ids": self.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
+                        coingecko, params={"ids": self.client.tickers[toCurrency.casefold()], "vs_currency": "EUR"}
                     )
                     cgData = res.json()
                     if fromCurrency.upper() == toCurrency.upper():
@@ -740,7 +734,7 @@ class Utility(commands.Cog, name="Utility", description="Useful commands for get
             link = data2["url"]
             thumbnail = data2["song_art_image_thumbnail_url"]
             originallyric = funcs.multiString(
-                self.genius.search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048
+                Genius(config.geniusToken).search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048
             )
             embeds = []
             pagecount = 0
