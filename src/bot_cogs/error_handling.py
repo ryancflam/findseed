@@ -1,5 +1,3 @@
-# Hidden category
-
 from discord.ext import commands
 
 from src.utils import funcs

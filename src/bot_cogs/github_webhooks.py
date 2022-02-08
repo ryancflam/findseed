@@ -1,5 +1,3 @@
-# Hidden category
-
 from threading import Thread
 
 from discord import Embed

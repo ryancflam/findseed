@@ -1,5 +1,3 @@
-# Hidden category
-
 from random import choice
 from re import sub
 

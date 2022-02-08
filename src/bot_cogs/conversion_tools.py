@@ -1,5 +1,3 @@
-# Hidden category
-
 import hashlib
 
 from discord import Embed

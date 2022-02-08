@@ -1,5 +1,3 @@
-# Hidden category
-
 from asyncio import TimeoutError
 from datetime import datetime
 from random import choice
