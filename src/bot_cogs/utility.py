@@ -31,8 +31,6 @@ HCF_LIMIT = 1000000
 class Utility(BaseCog, name="Utility", description="Some useful commands for getting data or calculating things."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
-        self.reddit = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
 
     async def gatherLabelsAndValues(self, ctx):
         labels = []
@@ -954,6 +952,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",
                       aliases=["subreddit", "r", "redditor"], usage="<r/subreddit OR u/redditor>")
     async def reddit(self, ctx, *, inp=""):
+        redditclient = Reddit(client_id=config.redditClientID, client_secret=config.redditClientSecret, user_agent="*")
         inp = inp.casefold().replace(" ", "/")
         inp = inp.split("reddit.com/")[1] if "reddit.com/" in inp else inp
         while inp.startswith("/"):
@@ -963,7 +962,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         try:
             icon_url = "https://www.redditinc.com/assets/images/site/reddit-logo.png"
             if inp.startswith("r") and "/" in inp:
-                subreddit = await self.reddit.subreddit(inp.split("/")[-1], fetch=True)
+                subreddit = await redditclient.subreddit(inp.split("/")[-1], fetch=True)
                 if subreddit.over18 and not isinstance(ctx.channel, channel.DMChannel) and not ctx.channel.is_nsfw():
                     e = funcs.errorEmbed("NSFW/Over 18!", "Please view this community in an NSFW channel.")
                 else:
@@ -997,7 +996,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             inline=False
                         )
             elif inp.startswith("u") and "/" in inp:
-                redditor = await self.reddit.redditor(inp.split("/")[-1], fetch=True)
+                redditor = await redditclient.redditor(inp.split("/")[-1], fetch=True)
                 try:
                     suspended = redditor.is_suspended
                     tags = ["Suspended"]

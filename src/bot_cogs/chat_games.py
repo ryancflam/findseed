@@ -17,7 +17,6 @@ from src.utils.base_cog import BaseCog
 class ChatGames(BaseCog, name="Chat Games", description="Fun chat games for you to kill time."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.gameChannels = []
         self.tetrisGames = {}
         self.tetrisTick.start()

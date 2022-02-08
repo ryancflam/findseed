@@ -10,7 +10,6 @@ from src.utils.base_cog import BaseCog
 class Moderation(BaseCog, name="Moderation", description="Simple moderation and member-management commands for server staff."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="prune", description="Clears channel messages.", usage="<amount>", aliases=["clear", "purge"])

@@ -184,7 +184,7 @@ class Uno:
 
     def addPlayer(self, player):
         self.__playerList.append(player)
-        self.__playerHands.append(UnoPlayer())
+        self.__playerHands.append(UnoHand())
 
     def removePlayer(self, player, playedAllCards=False):
         playerIndex = self.__playerList.index(player)
@@ -342,7 +342,7 @@ class Uno:
         return minSecs(time(), self.__startTime)
 
 
-class UnoPlayer:
+class UnoHand:
     def __init__(self):
         self.__cards = []
 

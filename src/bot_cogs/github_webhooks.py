@@ -18,7 +18,6 @@ class GitHubWebhooks(BaseCog, name="GitHub Webhooks", command_attrs=dict(hidden=
                      description="A cog for handling push webhooks from GitHub."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         if RIDICULOUS_CHANNEL_LIST[:-1]:
             Thread(target=self.startFlaskApp).start()
 

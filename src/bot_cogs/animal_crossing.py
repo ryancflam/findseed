@@ -18,7 +18,6 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                      command_attrs=dict(hidden=True)):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):

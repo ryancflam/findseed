@@ -15,7 +15,6 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                     description="A cog that tries to remove messages with Discord scam links."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):

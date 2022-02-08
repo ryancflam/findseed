@@ -2,6 +2,7 @@ from random import randrange, shuffle
 from time import time
 
 from src.utils.funcs import minSecs
+from src.utils.base_player import BasePlayer
 from src.utils.item_cycle import ItemCycle
 
 
@@ -107,9 +108,9 @@ class NoThanks:
         return minSecs(time(), self.__startTime)
 
 
-class NoThanksPlayer:
+class NoThanksPlayer(BasePlayer):
     def __init__(self, user, totalPlayers: int, index: int):
-        self.__player = user
+        super().__init__("", user)
         self.__cards = []
         self.__chips = 11 if totalPlayers < 6 else 9 if totalPlayers == 6 else 7
         self.__index = index
@@ -144,6 +145,3 @@ class NoThanksPlayer:
 
     def updateIndex(self):
         self.__index -= 1
-
-    def getPlayer(self):
-        return self.__player

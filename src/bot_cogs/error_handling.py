@@ -9,7 +9,6 @@ from src.utils.base_cog import BaseCog
 class ErrorHandling(BaseCog, name="Error Handling", description="A cog for handling errors.", command_attrs=dict(hidden=True)):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

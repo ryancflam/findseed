@@ -19,7 +19,6 @@ RN_RANGE = 999999999999
 class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random commands for you to kill time."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
         self.activeSpinners = []
         self.phoneWaitingChannels = []

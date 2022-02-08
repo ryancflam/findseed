@@ -23,7 +23,6 @@ class Minecraft(BaseCog, name="Minecraft",
                 description="Commands relating to *Minecraft* in general and *Minecraft: Java Edition* speedrunning."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):

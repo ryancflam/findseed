@@ -16,7 +16,6 @@ from src.utils.base_cog import BaseCog
 class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
 
     @commands.command(name="killbot", description="Kills the bot. Proceed with caution.")
     @commands.is_owner()

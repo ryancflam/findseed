@@ -22,7 +22,6 @@ BLOCKCYPHER_PARAMS = {"token": config.blockCypherKey}
 class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency-related commands."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
 
     def getCoinGeckoID(self, coin):
         joke = "neo" if coin.casefold() == "neo" \

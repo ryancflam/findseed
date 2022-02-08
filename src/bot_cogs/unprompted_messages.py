@@ -13,7 +13,6 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                          description="Funny bot responses that are not command-invoked."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.client.loop.create_task(self.__generateFiles())
         self.lastthreemsgs = {}
 
@@ -89,7 +88,10 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                             self.lastthreemsgs[message.channel.id][2].content]
                     if len(set(authors)) == 3 and len(set(msgs)) == 1:
                         await message.channel.send(originalmsg)
-                        del self.lastthreemsgs[message.channel.id]
+                        try:
+                            del self.lastthreemsgs[message.channel.id]
+                        except:
+                            pass
                         return
                     else:
                         self.lastthreemsgs[message.channel.id].pop(0)

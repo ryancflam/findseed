@@ -14,7 +14,6 @@ class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidde
                       description="Convert inputs from one unit or format to another."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
         self.client.loop.create_task(self.__readFiles())
 
     async def __readFiles(self):

@@ -14,7 +14,6 @@ from src.utils.base_cog import BaseCog
 class General(BaseCog, name="General", description="Standard commands relating to this bot, its features, or Discord."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        self.client = botInstance
 
     @commands.command(name="ping", description="Tests the latency of the bot.", aliases=["p", "pong", "latency"])
     async def ping(self, ctx):
