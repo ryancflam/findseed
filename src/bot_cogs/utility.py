@@ -453,7 +453,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     async def currency(self, ctx, fromC, toC, *, amount: str="1"):
         try:
             output = [fromC.upper(), toC.upper(), amount]
-            res = await funcs.getRequest("http://data.fixer.io/api/latest", params={"access_key": config.fixerKey})
+            res = await funcs.getRequest("http://api.exchangeratesapi.io/v1/latest",
+                                         params={"access_key": config.exchangeratesapiKey})
             data = res.json()
             amount = float(output[2].replace(",", "").replace(" ", ""))
             initialamount = amount
@@ -482,8 +483,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     else:
                         amount /= cgData[0]["current_price"]
             await ctx.reply(
-                f"The current price of **{'{:,}'.format(initialamount)} {fromCurrency}** in **{toCurrency}**: " +
-                "`{:,}`".format(amount)
+                f"The current price of **{funcs.removeDotZero(initialamount)} {fromCurrency}** in **{toCurrency}**: " +
+                f"`{funcs.removeDotZero(amount)}`"
             )
         except Exception as ex:
             funcs.printError(ctx, ex)
