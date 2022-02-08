@@ -819,5 +819,4 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         await ctx.reply(embed=e)
 
 
-if __name__ != "__main__":
-    setup = RandomStuff.setup
+setup = RandomStuff.setup

@@ -336,5 +336,4 @@ class General(BaseCog, name="General", description="Standard commands relating t
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
 
-if __name__ != "__main__":
-    setup = General.setup
+setup = General.setup

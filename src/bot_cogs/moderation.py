@@ -174,5 +174,4 @@ class Moderation(BaseCog, name="Moderation", description="Simple moderation and 
         await ctx.reply(funcs.formatting(string))
 
 
-if __name__ != "__main__":
-    setup = Moderation.setup
+setup = Moderation.setup

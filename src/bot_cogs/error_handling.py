@@ -58,5 +58,4 @@ class ErrorHandling(BaseCog, name="Error Handling", description="A cog for handl
             )
 
 
-if __name__ != "__main__":
-    setup = ErrorHandling.setup
+setup = ErrorHandling.setup

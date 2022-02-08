@@ -985,5 +985,4 @@ class Minecraft(BaseCog, name="Minecraft",
                         "<https://youtu.be/Gl7zOn2lLo4>\n\nPlease play the seed within 30 seconds after it has been generated.")
 
 
-if __name__ != "__main__":
-    setup = Minecraft.setup
+setup = Minecraft.setup

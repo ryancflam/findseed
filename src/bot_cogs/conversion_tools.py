@@ -522,5 +522,4 @@ class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidde
         await ctx.reply(embed=e)
 
 
-if __name__ != "__main__":
-    setup = ConversionTools.setup
+setup = ConversionTools.setup

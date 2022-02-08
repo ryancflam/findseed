@@ -808,5 +808,4 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
                         embed=e)
 
 
-if __name__ != "__main__":
-    setup = Cryptocurrency.setup
+setup = Cryptocurrency.setup

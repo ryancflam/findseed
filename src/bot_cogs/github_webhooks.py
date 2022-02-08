@@ -83,5 +83,4 @@ class GitHubWebhooks(BaseCog, name="GitHub Webhooks", command_attrs=dict(hidden=
         await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
 
-if __name__ != "__main__":
-    setup = GitHubWebhooks.setup
+setup = GitHubWebhooks.setup

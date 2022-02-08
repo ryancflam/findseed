@@ -1261,5 +1261,4 @@ class ChatGames(BaseCog, name="Chat Games", description="Fun chat games for you 
         self.gameChannels.remove(ctx.channel.id)
 
 
-if __name__ != "__main__":
-    setup = ChatGames.setup
+setup = ChatGames.setup

@@ -423,5 +423,4 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=2))
 
 
-if __name__ != "__main__":
-    setup = BotOwnerOnly.setup
+setup = BotOwnerOnly.setup

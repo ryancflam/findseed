@@ -573,5 +573,4 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
         await ctx.reply("https://wuffs.org/acnh/weather/")
 
 
-if __name__ != "__main__":
-    setup = AnimalCrossing.setup
+setup = AnimalCrossing.setup

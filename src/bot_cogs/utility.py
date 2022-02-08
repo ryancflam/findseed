@@ -1830,5 +1830,4 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await ctx.reply(embed=e)
 
 
-if __name__ != "__main__":
-    setup = Utility.setup
+setup = Utility.setup

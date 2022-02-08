@@ -121,5 +121,4 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                     pass
 
 
-if __name__ != "__main__":
-    setup = ScamPreventer.setup
+setup = ScamPreventer.setup

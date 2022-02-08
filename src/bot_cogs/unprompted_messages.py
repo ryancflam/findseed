@@ -167,5 +167,4 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                         )
 
 
-if __name__ != "__main__":
-    setup = UnpromptedMessages.setup
+setup = UnpromptedMessages.setup
