@@ -29,7 +29,7 @@ except ModuleNotFoundError:
     exit()
 
 
-class BotInstance(commands.Bot):
+class BotInstance(commands.AutoShardedBot):
     def __init__(self, loop):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
