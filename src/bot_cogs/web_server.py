@@ -2,46 +2,42 @@ from threading import Thread
 
 from discord import Embed
 from discord.ext import commands
-from flask import Flask, abort, request
+from flask import Flask, abort, render_template, request
 
 from config import githubWebhooks
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
 
-FLASK_APP = Flask(__name__)
+FLASK_APP = Flask(__name__, template_folder=funcs.PATH + funcs.RESOURCES_PATH + "/web_server")
+HOST = "0.0.0.0"
+PORT = 8080
 RIDICULOUS_CHANNEL_LIST = []
 
 
-class GitHubWebhooks(BaseCog, name="GitHub Webhooks", command_attrs=dict(hidden=True),
-                     description="A cog for handling push webhooks from GitHub."):
+class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
+                description="A simple web server which optionally handles GitHub push webhooks."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
-        if RIDICULOUS_CHANNEL_LIST[:-1]:
-            Thread(target=self.startFlaskApp).start()
 
-    @classmethod
-    def setup(cls, botInstance):
+    @commands.Cog.listener()
+    async def on_ready(self):
         global RIDICULOUS_CHANNEL_LIST
         for channelID in githubWebhooks:
-            channel = botInstance.get_channel(channelID)
+            channel = self.client.get_channel(channelID)
             if channel:
                 RIDICULOUS_CHANNEL_LIST.append(channel)
-        RIDICULOUS_CHANNEL_LIST.append(botInstance)
-        botInstance.add_cog(cls(botInstance))
-
-    @staticmethod
-    def startFlaskApp(host: str="0.0.0.0", port: int=8080):
-        FLASK_APP.run(host=host, port=port)
+        RIDICULOUS_CHANNEL_LIST.append(self.client)
+        Thread(target=FLASK_APP.run, args=(HOST, PORT)).start()
 
     @staticmethod
     @FLASK_APP.route("/")
     def home():
-        return "GitHub Webhooks cog is active."
+        return render_template("main.html")
 
     @staticmethod
     @FLASK_APP.route("/git", methods=["POST"])
     def gitlog():
-        if request.method == "POST":
+        if RIDICULOUS_CHANNEL_LIST[:-1]:
             data = request.json
             try:
                 headcommit = data['head_commit']
@@ -81,4 +77,4 @@ class GitHubWebhooks(BaseCog, name="GitHub Webhooks", command_attrs=dict(hidden=
         await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
 
-setup = GitHubWebhooks.setup
+setup = WebServer.setup

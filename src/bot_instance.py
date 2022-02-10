@@ -105,11 +105,6 @@ class BotInstance(commands.AutoShardedBot):
         await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
 
     async def on_ready(self):
-        if config.githubWebhooks:
-            try:
-                funcs.reloadCog(self, "github_webhooks")
-            except Exception as ex:
-                print(f"Warning - {ex}")
         try:
             await funcs.testKaleido()
         except Exception as ex:
