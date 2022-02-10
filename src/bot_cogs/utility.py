@@ -24,7 +24,6 @@ from src.utils import funcs
 from src.utils.base_cog import BaseCog
 from src.utils.page_buttons import PageButtons
 
-DEFAULT_REPO = "ryancflam/findseed"
 HCF_LIMIT = 1000000
 
 
@@ -203,7 +202,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     async def repository(self, ctx, *, repo: str=""):
         await ctx.send("Getting repository statistics. Please wait...")
         try:
-            repo = repo.casefold().replace(" ", "") or DEFAULT_REPO
+            repo = repo.casefold().replace(" ", "") or config.githubRepo
             while repo.endswith("/"):
                 repo = repo[:-1]
             repo = repo.split("github.com/")[1] if "github.com/" in repo else repo
@@ -654,8 +653,10 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     if count == 15 or run == len(queue):
                         pagecount += 1
                         e = Embed(description=output)
-                        e.set_author(name=f"Unverified Runs ({'{:,}'.format(len(queue))}) - {gameName}",
-                                     icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png")
+                        e.set_author(
+                            name=f"Unverified Runs ({'{:,}'.format(len(queue))}) - {gameName}",
+                            icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png"
+                        )
                         e.set_footer(text="Page {:,} of {:,}".format(pagecount, funcs.strictRounding(total)))
                         outputlist.append(e)
                         output = ""

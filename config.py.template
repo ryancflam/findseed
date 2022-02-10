@@ -1,4 +1,5 @@
 production = False # automatically puts "b" in front of prefix if False
+githubRepo = "ryancflam/findseed"
 botToken = ""
 prefix = "!"
 activityName = "" # put "bitcoin" for auto Bitcoin prices

@@ -2,8 +2,9 @@ from datetime import datetime
 from sys import version
 from time import time
 
-from discord import Embed, __version__
+from discord import ButtonStyle, Embed, __version__
 from discord.ext import commands
+from discord.ui import Button, View
 from psutil import cpu_percent, disk_usage, virtual_memory
 
 import config
@@ -84,7 +85,10 @@ class General(BaseCog, name="General", description="Standard commands relating t
         e.add_field(name="!findseed Calls", value="`{:,}`".format((await funcs.readJson("data/findseed.json"))['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.client.startTime)}")
-        await ctx.reply(embed=e)
+        e.set_image(url="https://opengraph.githubassets.com/1/" + config.githubRepo)
+        view = View()
+        view.add_item(Button(label="GitHub Repository", style=ButtonStyle.secondary, url="https://github.com/" + config.githubRepo))
+        await ctx.reply(embed=e, view=view)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="serverinfo", description="Shows information about a Discord server that the bot is in.",

@@ -67,13 +67,11 @@ class Minecraft(BaseCog, name="Minecraft",
         return eyes
 
     @staticmethod
-    def getExcess(item):
-        stacks = item / 64
-        excess = int((stacks - int(stacks)) * 64)
-        stacksandexcess = int(stacks) and excess
-        return "" if not int(stacks) and excess == item \
-               else f" ({'{:,} stack{}'.format(int(stacks), '' if int(stacks) == 1 else 's') if int(stacks) else ''}" + \
-                    f"{' + ' if stacksandexcess else ''}{str(excess) if excess else ''})"
+    def getExcessStr(item):
+        stacks, excess = funcs.stacksAndExcess(item)
+        return "" if not stacks and excess == item \
+               else f" ({'{:,} stack{}'.format(stacks, '' if stacks == 1 else 's') if stacks else ''}" + \
+                    f"{' + ' if stacks and excess else ''}{str(excess) if excess else ''})"
 
     @staticmethod
     def chargeableAnchors(glowdust: int, cryobby: int):
@@ -307,7 +305,7 @@ class Minecraft(BaseCog, name="Minecraft",
                 raise Exception
             log = emeralds * 4
             await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** logs{}.".format(
-                emeralds, "" if emeralds == 1 else "s", int(log), self.getExcess(log)
+                emeralds, "" if emeralds == 1 else "s", int(log), self.getExcessStr(log)
             ))
         except Exception as ex:
             funcs.printError(ctx, ex)
@@ -326,7 +324,7 @@ class Minecraft(BaseCog, name="Minecraft",
             hay = 20 * emeralds / 9
             hay = funcs.strictRounding(hay)
             await ctx.reply("You want **{:,}** emerald{}.\n\nYou will need **{:,}** hay bales{}.".format(
-                emeralds, "" if emeralds == 1 else "s", int(hay), self.getExcess(hay)
+                emeralds, "" if emeralds == 1 else "s", int(hay), self.getExcessStr(hay)
             ))
         except Exception as ex:
             funcs.printError(ctx, ex)

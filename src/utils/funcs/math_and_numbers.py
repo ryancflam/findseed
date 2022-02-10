@@ -11,7 +11,7 @@ def sign(value):
 
 
 def strictRounding(value: float):
-    return int(value) + (0 if value == int(value) else 1)
+    return int(value) + (0 if value.is_integer() else 1)
 
 
 def removeDotZero(value):
@@ -106,11 +106,7 @@ def dateDifference(dateobj, dateobj2):
 
 def valueToOrdinal(n):
     n = int(n)
-    if 11 <= (n % 100) <= 13:
-        ordinal = "th"
-    else:
-        ordinal = ["th", "st", "nd", "rd", "th"][min(n % 10, 4)]
-    return f"{str(n)}{ordinal}"
+    return str(n) + ("th" if 11 <= (n % 100) <= 13 else ["th", "st", "nd", "rd", "th"][min(n % 10, 4)])
 
 
 def leapYear(year):
@@ -132,3 +128,8 @@ def celsiusToFahrenheit(value: float):
 
 def fahrenheitToCelsius(value: float):
     return (value - 32) * 5 / 9
+
+
+def stacksAndExcess(total: int, stackMax: int=64):
+    stacks = total / stackMax
+    return int(stacks), int((stacks - int(stacks)) * stackMax)
