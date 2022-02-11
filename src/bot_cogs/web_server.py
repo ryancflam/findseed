@@ -8,11 +8,11 @@ from config import gitLogChannels, production
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
 
-PATH = funcs.PATH + funcs.RESOURCES_PATH + "\\web_server"
-print(PATH)
+SLASH = "/" if "/" in funcs.PATH else "\\"
+PATH = funcs.PATH + funcs.RESOURCES_PATH + f"{SLASH}web_server"
 HOST = "0.0.0.0"
 PORT = 8080 if production else 80
-FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "\\static")
+FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + f"{SLASH}static")
 RIDICULOUS_CHANNEL_LIST = []
 
 
