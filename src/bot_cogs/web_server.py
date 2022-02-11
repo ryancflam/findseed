@@ -4,13 +4,14 @@ from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, render_template, request
 
-from config import githubWebhooks
+from config import gitLogChannels, production
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
 
-FLASK_APP = Flask(__name__, template_folder=funcs.PATH + funcs.RESOURCES_PATH + "/web_server")
+PATH = funcs.PATH + funcs.RESOURCES_PATH + "\\web_server"
 HOST = "0.0.0.0"
-PORT = 8080
+PORT = 8080 if production else 80
+FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "\\static")
 RIDICULOUS_CHANNEL_LIST = []
 
 
@@ -22,7 +23,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @commands.Cog.listener()
     async def on_ready(self):
         global RIDICULOUS_CHANNEL_LIST
-        for channelID in githubWebhooks:
+        for channelID in gitLogChannels:
             channel = self.client.get_channel(channelID)
             if channel:
                 RIDICULOUS_CHANNEL_LIST.append(channel)
@@ -32,7 +33,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @staticmethod
     @FLASK_APP.route("/")
     def home():
-        return render_template("main.html")
+        return render_template("index.html")
 
     @staticmethod
     @FLASK_APP.route("/git", methods=["POST"])
@@ -62,7 +63,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             return "success", 200
         abort(400)
 
-    @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.githubWebhooks`.",
+    @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.gitLogChannels`.",
                       aliases=["gitlog", "gitchannels", "gitchannel", "gitlogs", "gitlogchannel"])
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
