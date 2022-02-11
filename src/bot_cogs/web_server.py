@@ -9,6 +9,7 @@ from src.utils import funcs
 from src.utils.base_cog import BaseCog
 
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "\\web_server"
+print(PATH)
 HOST = "0.0.0.0"
 PORT = 8080 if production else 80
 FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "\\static")
