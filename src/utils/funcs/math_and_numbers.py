@@ -1,4 +1,6 @@
+from binascii import b2a_hex
 from calendar import monthrange
+from os import urandom
 from random import randint
 
 from src.utils.safe_eval import SafeEval
@@ -26,6 +28,10 @@ def removeDotZero(value):
 
 def oneIn(odds: int):
     return False if odds < 1 else not randint(0, odds - 1)
+
+
+def randomHex(digits: int):
+    return b2a_hex(urandom(digits)).decode("utf-8")[:digits]
 
 
 def evalMath(inp: str):

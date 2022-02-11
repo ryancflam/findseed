@@ -85,7 +85,7 @@ class General(BaseCog, name="General", description="Standard commands relating t
         e.add_field(name="!findseed Calls", value="`{:,}`".format((await funcs.readJson("data/findseed.json"))['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.client.startTime)}")
-        e.set_image(url="https://opengraph.githubassets.com/1/" + config.githubRepo)
+        e.set_image(url=funcs.githubRepoPic(config.githubRepo))
         view = View()
         view.add_item(Button(label="GitHub Repository", style=ButtonStyle.secondary, url="https://github.com/" + config.githubRepo))
         await ctx.reply(embed=e, view=view)

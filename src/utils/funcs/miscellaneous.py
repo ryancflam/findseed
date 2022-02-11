@@ -1,5 +1,6 @@
 from re import split
 
+from src.utils.funcs.math_and_numbers import randomHex
 from src.utils.funcs.string_manipulation import monthNameToNumber, monthNumberToName
 from src.utils.item_cycle import ItemCycle
 
@@ -129,3 +130,7 @@ def yearToChineseZodiac(year):
     if (year - 2000) % 12 == 10:
         return "Tiger (虎)"
     return "Rabbit (兔)"
+
+
+def githubRepoPic(repo):
+    return f"https://opengraph.githubassets.com/{randomHex(64)}/{repo}"

@@ -731,6 +731,20 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         e.set_image(url=f"https://www.colorhexa.com/{colour}.png")
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="randomhex", usage="<digits>", aliases=["rhex", "hex", "hexadecimal", "randomhexadecimal"],
+                      description="Generates a random hexadecimal number with a certain number of digits.")
+    async def randomhex(self, ctx, digits):
+        try:
+            digits = int(digits.replace(",", ""))
+        except:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
+        e = Embed(title="{:,}-Digit Hexadecimal".format(digits), description=f"```{funcs.randomHex(digits)}```")
+        try:
+            await ctx.reply(embed=e)
+        except:
+            await ctx.reply(embed=funcs.errorEmbed(None, "The result is too long!"))
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="randomchoice", usage="<items separated with ;>",
                       aliases=["shuffle", "list", "choose", "choice"], description="Picks a random item from a given list.")

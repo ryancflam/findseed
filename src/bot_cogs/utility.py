@@ -213,7 +213,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             for i in sorted(res.json(), reverse=True, key=lambda x: x["linesOfCode"])[:25]:
                 e.add_field(name=f"{i['language']} Lines (Files)", value="`{:,} ({:,})`".format(i["linesOfCode"], i["files"]))
             e.set_footer(text="Note: Lines of code do not include comment or blank lines.")
-            e.set_image(url="https://opengraph.githubassets.com/1/" + repo)
+            e.set_image(url=funcs.githubRepoPic(repo))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Unknown repository or server error.")
