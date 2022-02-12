@@ -1,6 +1,7 @@
 from time import time
 
-from discord import Embed
+from discord import ButtonStyle, Embed
+from discord.ui import Button, View
 
 from src.utils.funcs import bot_utils, http_requests
 
@@ -60,6 +61,22 @@ def commandsListEmbed(client, menu: int=0):
 
 def errorEmbed(error, message):
     return Embed(title=f":no_entry: {error or 'Error'}", colour=0xe74c3c, description=message)
+
+
+def newButtonView(btype: int=1, label=None, emoji=None, url=None):
+    if not label and not emoji:
+        raise Exception("No label or emoji.")
+    view = View()
+    if btype == 0:
+        style = ButtonStyle.danger
+    elif btype == 1:
+        style = ButtonStyle.primary
+    elif btype == 2:
+        style = ButtonStyle.secondary
+    else:
+        style = ButtonStyle.success
+    view.add_item(Button(label=label, style=style, url=url, emoji=emoji))
+    return view
 
 
 async def readTxtAttachment(message):

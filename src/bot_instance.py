@@ -60,7 +60,7 @@ class BotInstance(commands.AutoShardedBot):
         print("Stopping bot...")
         try:
             for cog in sorted(self.cogs):
-                funcs.unloadCog(self, cog)
+                funcs.unloadCog(self, cog, force=True)
             self.__eventLoop.stop()
             return exit()
         except Exception as ex:

@@ -1,3 +1,4 @@
+from asyncio import sleep
 from threading import Thread
 
 from discord import Embed
@@ -8,11 +9,10 @@ from config import gitLogChannels, production
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
 
-SLASH = "/" if "/" in funcs.PATH else "\\"
-PATH = funcs.PATH + funcs.RESOURCES_PATH + f"{SLASH}web_server"
 HOST = "0.0.0.0"
 PORT = 8080 if production else 80
-FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + f"{SLASH}static")
+PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
+FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
 RIDICULOUS_CHANNEL_LIST = []
 
 
@@ -23,6 +23,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @commands.Cog.listener()
     async def on_ready(self):
+        await sleep(1)
         global RIDICULOUS_CHANNEL_LIST
         for channelID in gitLogChannels:
             channel = self.client.get_channel(channelID)

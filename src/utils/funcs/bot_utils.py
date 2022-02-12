@@ -6,9 +6,10 @@ from plotly import graph_objects as go
 
 from src.utils.funcs.string_manipulation import formatCogName
 
-PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0]
+PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0].replace("\\", "/")
 COGS_PATH = "src/bot_cogs"
 RESOURCES_PATH = "resources"
+VITAL_COGS = ["bot_owner_only", "general", "web_server"]
 
 
 def printError(ctx, error):
@@ -17,15 +18,6 @@ def printError(ctx, error):
 
 def getResource(cog, resource):
     return f"/{RESOURCES_PATH}/{formatCogName(cog)}/{resource}"
-
-
-def reloadCog(client, cog):
-    try:
-        cog = formatCogName(cog)
-        client.reload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
-        print(f"Reloaded cog: {cog}")
-    except Exception as ex:
-        raise Exception(ex)
 
 
 def loadCog(client, cog):
@@ -37,11 +29,24 @@ def loadCog(client, cog):
         raise Exception(ex)
 
 
-def unloadCog(client, cog):
+def unloadCog(client, cog, force=False):
     try:
         cog = formatCogName(cog)
+        if cog in VITAL_COGS and not force:
+            raise Exception("Cannot unload that cog!")
         client.unload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
         print(f"Unloaded cog: {cog}")
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def reloadCog(client, cog, force=False):
+    try:
+        cog = formatCogName(cog)
+        if cog in VITAL_COGS and not force:
+            raise Exception("Cannot reload that cog!")
+        client.reload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
+        print(f"Reloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
 
