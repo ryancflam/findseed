@@ -9,7 +9,7 @@ function playWhenReady() {
     var s = d.getSeconds();
     if (h === 4 && m === 0 && s === 0) {
         playSound("static/assets/4am.mp3");
-        clearInterval(interval);        
+        clearInterval(interval);
     }
 }
 
