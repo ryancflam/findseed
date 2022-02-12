@@ -8,7 +8,7 @@ function play4AM() {
     var h = date.getHours();
     var m = date.getMinutes();
     var s = date.getSeconds();
-    if (h === 4 && m === 0 && s === 0) {
+    if (h === 4 && m === 5 && s === 0) {
         document.getElementById("audio").play();
     }
 }
