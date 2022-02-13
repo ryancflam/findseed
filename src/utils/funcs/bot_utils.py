@@ -16,8 +16,8 @@ def printError(ctx, error):
     print(f"Error ({ctx.command.name}): {error}")
 
 
-def getResource(cog=None, resource=""):
-    return f'/{RESOURCES_PATH}/{f"{formatCogName(cog)}/" if cog else ""}{resource}'
+def getResource(cog=None, resource=None):
+    return f'/{RESOURCES_PATH}/{f"{formatCogName(cog)}/" if cog else ""}{resource if resource else ""}'
 
 
 def loadCog(client, cog):
