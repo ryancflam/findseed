@@ -1797,7 +1797,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 res += f" ({notableyears[age]})"
         await ctx.reply(funcs.formatting(res))
 
-    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.cooldown(1, 15, commands.BucketType.user)
     @commands.command(name="wolfram", description="Queries things using the Wolfram|Alpha API.",
                       aliases=["wolf", "wa", "wolframalpha", "query"], usage="<input>")
     async def wolfram(self, ctx, *, inp: str=""):
@@ -1812,24 +1812,34 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 e = Embed()
                 e.set_author(icon_url="https://media.discordapp.net/attachments/771404776410972161/929386312765669376/wolfram.png",
                              name="Wolfram|Alpha Query")
-                img = False
                 if data["success"]:
-                    for i in data["pods"][:25]:
-                        if i["subpods"][0]["plaintext"]:
-                            e.add_field(name=i["title"], value=funcs.formatting(i["subpods"][0]["plaintext"], limit=200))
-                        if not img and (i["title"] == "Result" and i["scanner"] == "Expand" or "plot" in i["title"].casefold()):
-                            e.set_image(url=i["subpods"][0]["img"]["src"])
-                            img = True
+                    imgs = []
+                    for i, c in enumerate(data["pods"]):
+                        if c["subpods"][0]["plaintext"] and i < 25:
+                            e.add_field(name=c["title"],
+                                        value=funcs.formatting(c["subpods"][0]["plaintext"], limit=200),
+                                        inline=False)
+                        try:
+                            imgs.append((c["subpods"][0]["img"]["src"], c["title"]))
+                        except:
+                            pass
+                    embeds = []
+                    for i, c in enumerate(imgs):
+                        emb = e.copy()
+                        emb.set_image(url=c[0])
+                        emb.set_footer(text="{}\nPage {:,} of {:,}".format(c[1], i + 1, len(imgs)))
+                        embeds.append(emb)
+                    m = await ctx.reply(embed=embeds[0])
+                    return await m.edit(view=PageButtons(ctx, self.client, m, embeds))
                 else:
                     try:
                         e.add_field(name="Did You Mean", value=", ".join(f"`{i['val']}`" for i in data["didyoumeans"][:20]))
                     except:
                         e.add_field(name="Tips", value=funcs.formatting("Check your spelling, and use English"))
-                e.set_footer(text="Note: Results may be cut-off due to Discord's limit.")
+                    return await ctx.reply(embed=e)
             except Exception as ex:
                 funcs.printError(ctx, ex)
-                e = funcs.errorEmbed(None, "Server error or query limit reached.")
-        await ctx.reply(embed=e)
+                return await ctx.reply(embed=funcs.errorEmbed(None, "Server error or query limit reached."))
 
 
 setup = Utility.setup
