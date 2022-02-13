@@ -1802,7 +1802,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       aliases=["wolf", "wa", "wolframalpha", "query"], usage="<input>")
     async def wolfram(self, ctx, *, inp: str=""):
         if not inp:
-            e = funcs.errorEmbed(None, "Empty input.")
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         else:
             await ctx.send("Querying. Please wait...")
             try:
