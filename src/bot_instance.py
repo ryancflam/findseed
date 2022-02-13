@@ -73,6 +73,7 @@ class BotInstance(commands.AutoShardedBot):
             print("Generated directory: " + name)
 
     async def __generateFiles(self):
+        self.emoji = await funcs.readJson(funcs.getResource(None, "emoji.json"))
         await self.__generateDir("data")
         if path.exists(f"{funcs.PATH}/temp"):
             await rmtree(f"{funcs.PATH}/temp")
@@ -80,6 +81,16 @@ class BotInstance(commands.AutoShardedBot):
         await self.__generateDir("temp")
         await funcs.generateJson("blacklist", {"servers": [], "users": []})
         await funcs.generateJson("whitelist", {"users": []})
+
+    async def __invokeCommand(self, message):
+        ctx = await self.get_context(message)
+        if ctx.valid and not self.is_ready() and await funcs.userNotBlacklisted(self, message):
+            return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
+        if self.is_ready() and await funcs.userNotBlacklisted(self, message):
+            if ctx.valid and not ctx.author.bot:
+                if not funcs.commandIsEE(ctx.command):
+                    await message.channel.trigger_typing()
+                await self.process_commands(message)
 
     @tasks.loop(hours=24.0)
     async def __getTickers(self):
@@ -125,14 +136,11 @@ class BotInstance(commands.AutoShardedBot):
             await self.__presence(self.__activityName)
 
     async def on_message(self, message):
-        ctx = await self.get_context(message)
-        if ctx.valid and not self.is_ready() and await funcs.userNotBlacklisted(self, message):
-            return await message.channel.send(f"{self.user.name} is not ready yet, please wait!")
-        if self.is_ready() and await funcs.userNotBlacklisted(self, message):
-            if ctx.valid and not ctx.author.bot:
-                if not funcs.commandIsEE(ctx.command):
-                    await message.channel.trigger_typing()
-                await self.process_commands(message)
+        await self.__invokeCommand(message)
+
+    async def on_message_edit(self, before, after):
+        if before.content != after.content:
+            await self.__invokeCommand(after)
 
     async def on_command(self, ctx):
         self.__statcord.command_run(ctx)

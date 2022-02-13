@@ -9,6 +9,7 @@ from statistics import mean, median, mode, pstdev, stdev
 from string import punctuation
 from subprocess import PIPE, Popen, STDOUT
 from time import gmtime, mktime, time
+from urllib import parse
 
 from async_google_trans_new import AsyncTranslator, constant
 from asyncpraw import Reddit
@@ -1796,6 +1797,26 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             if age in notableyears:
                 res += f" ({notableyears[age]})"
         await ctx.reply(funcs.formatting(res))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="google", description="Generates search URLs for Google, Bing, and DuckDuckGo.",
+                      aliases=["search", "ddg", "duckduckgo", "lookup", "bing"], usage="<keywords>")
+    async def google(self, ctx, *, inp: str=""):
+        if not inp:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        param = parse.urlencode({"q": inp})
+        view = funcs.newButtonView(
+            2, label="Google", url=f"https://www.google.com/search?{param}", emoji=self.client.emoji["google"]
+        )
+        view = funcs.newButtonView(
+            2, label="Bing", url=f"https://www.bing.com/search?{param}", emoji=self.client.emoji["bing"], view=view
+        )
+        await ctx.reply(
+            f"Use the buttons below to search for `{inp}`.",
+            view=funcs.newButtonView(
+                2, label="DuckDuckGo", url=f"https://www.duckduckgo.com/?{param}", emoji=self.client.emoji["ddg"], view=view
+            )
+        )
 
     @commands.cooldown(1, 15, commands.BucketType.user)
     @commands.command(name="wolfram", description="Queries things using the Wolfram|Alpha API.",

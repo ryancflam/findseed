@@ -63,10 +63,10 @@ def errorEmbed(error, message):
     return Embed(title=f":no_entry: {error or 'Error'}", colour=0xe74c3c, description=message)
 
 
-def newButtonView(btype: int=1, label=None, emoji=None, url=None):
+def newButtonView(btype: int=1, label=None, emoji=None, url=None, view=None):
     if not label and not emoji:
         raise Exception("No label or emoji.")
-    view = View()
+    view = view or View()
     if btype == 0:
         style = ButtonStyle.danger
     elif btype == 1:

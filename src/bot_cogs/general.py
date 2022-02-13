@@ -337,5 +337,10 @@ class General(BaseCog, name="General", description="Standard commands relating t
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid user."))
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="channelid", description="Shows the current channel's ID.", aliases=["channel", "cid"], hidden=True)
+    async def channelid(self, ctx):
+        await ctx.reply(f"`#{ctx.channel.id}`")
+
 
 setup = General.setup

@@ -13,8 +13,8 @@ class Moderation(BaseCog, name="Moderation", description="Simple moderation and 
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="prune", description="Clears channel messages.", usage="<amount>", aliases=["clear", "purge"])
-    @commands.bot_has_permissions(read_message_history=True, manage_messages=True)
-    @commands.has_permissions(manage_messages=True)
+    @commands.bot_has_permissions(manage_messages=True, read_message_history=True)
+    @commands.has_permissions(manage_messages=True, read_message_history=True)
     async def prune(self, ctx, amount=""):
         if amount == "":
             e = funcs.errorEmbed(None, "Please enter a value between 1 and 99.")
@@ -160,10 +160,35 @@ class Moderation(BaseCog, name="Moderation", description="Simple moderation and 
         except Exception:
             await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred. Unknown user?"))
 
+    @commands.command(name="lock", usage="[reason]",
+                      description="Locks the current channel by disabling the `Send Messages` permission for the default role.")
+    @commands.bot_has_permissions(manage_guild=True, manage_roles=True)
+    @commands.has_permissions(manage_guild=True, manage_roles=True)
+    async def lock(self, ctx, *, reason=None):
+        if not ctx.channel.permissions_for(ctx.guild.default_role).send_messages:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "This channel is already locked."))
+        await ctx.channel.set_permissions(
+            ctx.guild.default_role,
+            send_messages=False,
+            reason=f"Locked by {ctx.author} ({ctx.author.id}){'.' if not reason else ' for: {}'.format(reason)}"
+        )
+        await ctx.reply(f"Successfully locked this channel (`#{ctx.channel.id}`)" +
+                        f"{'.' if not reason else ' for: `{}`'.format(reason)}")
+
+    @commands.command(name="unlock",
+                      description="Unlocks the current channel by enabling the `Send Messages` permission for the default role.")
+    @commands.bot_has_permissions(manage_guild=True, manage_roles=True)
+    @commands.has_permissions(manage_guild=True, manage_roles=True)
+    async def unlock(self, ctx):
+        if ctx.channel.permissions_for(ctx.guild.default_role).send_messages:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "This channel is not locked."))
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
+        await ctx.reply(f"Successfully unlocked this channel (`#{ctx.channel.id}`).")
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="banlist", description="Returns a list of banned users in your server.", aliases=["bans", "bannedusers"])
-    @commands.bot_has_permissions(manage_guild=True)
-    @commands.has_permissions(manage_guild=True)
+    @commands.bot_has_permissions(moderate_members=True)
+    @commands.has_permissions(moderate_members=True)
     async def banlist(self, ctx):
         bannedusers = await ctx.guild.bans()
         string = "\n".join(
