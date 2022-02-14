@@ -1,6 +1,5 @@
 from asyncio import sleep
 from os import path
-from socket import gethostbyname, gethostname
 from threading import Thread
 
 from discord import Embed
@@ -56,8 +55,12 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             try:
                 Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
+                ip = await funcs.getRequest("https://api.ipify.org")
                 await (await self.client.application_info()).owner.send(
-                    "Web server is running on: <http{}://{}:{}/>".format("s" if kwargs else "", gethostbyname(gethostname()), PORT)
+                    "Web server is running on: <http{}://{}{}/>".format(
+                        "s" if kwargs else "",
+                        ip.content.decode("utf8"),
+                        "" if PORT == 80 else f":{PORT}")
                 )
             except Exception as ex:
                 print("Error - " + str(ex))
