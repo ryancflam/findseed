@@ -22,7 +22,7 @@ RIDICULOUS_CHANNEL_LIST = []
 class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 description="A simple web server which optionally handles GitHub push webhooks."):
     def __init__(self, botInstance, *args, **kwargs):
-        super().__init__(botInstance, *args, **kwargs)
+        super().__init__(botInstance, *args, **kwargs
         self.active = False
 
     @staticmethod
