@@ -35,8 +35,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             RIDICULOUS_CHANNEL_LIST.append(self.client)
             kwargs = None
             keys = await funcs.readJson("data/web_server_certificates/default_certificates.json")
-            cert = funcs.PATH + "" + keys["public_key"]
-            key = funcs.PATH + "" + keys["private_key"]
+            cert = funcs.PATH + "data/web_server_certificates/" + keys["public_key"]
+            key = funcs.PATH + "data/web_server_certificates/" + keys["private_key"]
             if path.exists(cert) and path.exists(key):
                 kwargs = (cert, key)
                 print("Web Server - Attempting to use HTTPS...")

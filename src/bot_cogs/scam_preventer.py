@@ -133,12 +133,18 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        await self.processMessage(message)
+        try:
+            await self.processMessage(message)
+        except:
+            pass
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         if before.content != after.content:
-            await self.processMessage(after)
+            try:
+                await self.processMessage(after)
+            except:
+                pass
 
 
 setup = ScamPreventer.setup
