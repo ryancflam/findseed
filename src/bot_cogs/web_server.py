@@ -38,7 +38,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             cert = funcs.PATH + "data/web_server_certificates/" + keys["public_key"]
             key = funcs.PATH + "data/web_server_certificates/" + keys["private_key"]
             if path.exists(cert) and path.exists(key):
-                kwargs = (cert, key)
+                kwargs = dict(ssl_context=(cert, key))
                 print("Web Server - Attempting to use HTTPS...")
             try:
                 Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
