@@ -42,7 +42,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @staticmethod
     @FLASK_APP.route("/")
-    def home():
+    def index():
         return render_template("index.html")
 
     @staticmethod
@@ -52,11 +52,11 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @staticmethod
     @FLASK_APP.route("/git", methods=["POST"])
-    def gitlog():
+    def git():
         if RIDICULOUS_CHANNEL_LIST[:-1]:
             data = request.json
             try:
-                headcommit = data['head_commit']
+                headcommit = data["head_commit"]
                 commits = data["commits"]
                 e = Embed(
                     title=f"{len(commits)} New Commit{'' if len(commits) == 1 else 's'}",
@@ -65,8 +65,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 e.set_author(name=data["repository"]["full_name"] + f" ({data['ref']})",
                              icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
                 for commit in commits:
-                    user = commit['committer']['username']
-                    message = commit['message']
+                    user = commit["committer"]["username"]
+                    message = commit["message"].replace("_", "\_").replace("*", "\*")
                     e.description += f"\n`{commit['id'][:7]}...{commit['id'][-7:]}` " + \
                                      f"{message[:100] + ('...' if len(message) > 100 else '')} " + \
                                      f"- [{user}](https://github.com/{user})"
