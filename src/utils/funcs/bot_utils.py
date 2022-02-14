@@ -56,8 +56,8 @@ async def deleteTempFile(file: str):
         await os.remove(f"{PATH}/temp/{file}")
 
 
-async def readTxt(pathstr, lines=False):
-    async with open(f"{PATH}/{pathstr}", "r", encoding="utf-8") as f:
+async def readTxt(pathstr, lines=False, encoding="utf-8"):
+    async with open(f"{PATH}/{pathstr}", "r", encoding=encoding) as f:
         if lines:
             lines = await f.readlines()
             content = [i[:-1] for i in lines if i[:-1]]
@@ -67,8 +67,14 @@ async def readTxt(pathstr, lines=False):
     return content
 
 
-async def readJson(pathstr):
-    async with open(f"{PATH}/{pathstr}", "r", encoding="utf-8") as f:
+async def writeTxt(pathstr, text):
+    async with open(f"{PATH}/{pathstr}", "w") as f:
+        await f.write(text)
+    await f.close()
+
+
+async def readJson(pathstr, encoding="utf-8"):
+    async with open(f"{PATH}/{pathstr}", "r", encoding=encoding) as f:
         data = await f.read()
     await f.close()
     return loads(data)

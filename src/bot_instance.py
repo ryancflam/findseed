@@ -20,10 +20,9 @@ try:
         exit()
 except ModuleNotFoundError:
     f = open(f"{funcs.PATH}/config.py", "w")
-    if path.exists(f"{funcs.PATH}/config.py.template"):
-        template = open(f"{funcs.PATH}/config.py.template", "r")
-        f.write(template.read())
-        template.close()
+    template = open(f"{funcs.PATH}/config.py.template", "r")
+    f.write(template.read())
+    template.close()
     f.close()
     print("Generated file: config.py - please fill in the fields before using")
     exit()

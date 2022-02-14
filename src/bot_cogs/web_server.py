@@ -13,6 +13,7 @@ from src.utils.base_cog import BaseCog
 HOST = "0.0.0.0"
 PORT = 8080 if production else 80
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
+CERTIFICATES = "data/web_server_certificates/"
 FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
 RIDICULOUS_CHANNEL_LIST = []
 
@@ -23,8 +24,15 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
         super().__init__(botInstance, *args, **kwargs)
         self.active = False
 
+    @staticmethod
+    async def __generateJson():
+        if not path.exists(funcs.PATH + CERTIFICATES + "default_certificates.json"):
+            template = await funcs.readTxt(CERTIFICATES + "default_certificates.json.template", encoding=None)
+            await funcs.writeTxt(CERTIFICATES + "default_certificates.json", template)
+
     @commands.Cog.listener()
     async def on_ready(self):
+        await self.__generateJson()
         if not self.active:
             await sleep(1)
             global RIDICULOUS_CHANNEL_LIST
@@ -34,9 +42,10 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                     RIDICULOUS_CHANNEL_LIST.append(channel)
             RIDICULOUS_CHANNEL_LIST.append(self.client)
             kwargs = None
-            keys = await funcs.readJson("data/web_server_certificates/default_certificates.json")
-            cert = funcs.PATH + "data/web_server_certificates/" + keys["public_key"]
-            key = funcs.PATH + "data/web_server_certificates/" + keys["private_key"]
+            keys = await funcs.readJson(CERTIFICATES + "default_certificates.json")
+            certs = funcs.PATH + CERTIFICATES if not keys["custom_location"] else keys["custom_location"]
+            cert = certs + keys["public_key"]
+            key = certs + keys["private_key"]
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print("Web Server - Attempting to use HTTPS...")

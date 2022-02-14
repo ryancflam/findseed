@@ -4,7 +4,7 @@ src/bot_cogs/testcog.py
 src/bot_cogs/easter_eggs.py
 !/data
 /data/*
-!/data/web_server_certificates
+!/data/web_server_certificates/default_certificates.json.template
 temp/*
 .idea/
 */__pycache__
