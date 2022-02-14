@@ -64,59 +64,81 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                     break
         return False
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.author != self.client.user \
-                and message.author.id not in (await funcs.readJson("data/unprompted_bots.json"))["ids"] \
-                and message.guild \
-                and message.guild.id not in (await funcs.readJson("data/scam_preventer.json"))["disallowed_servers"]:
-            urls = findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", message.content)
-            for link in urls:
+    async def detect(self, message, txt):
+        text = funcs.asciiIgnore(txt.casefold().replace(" ", ""))
+        urls = findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", text)
+        for link in urls:
+            try:
+                if link.endswith(">"):
+                    link = link[:-1]
+                res = await funcs.getRequest(link)
+                tryscam = res.url
                 try:
-                    if link.endswith(">"):
-                        link = link[:-1]
+                    tryimgur = f"/{IMGUR_URL}"
+                    if tryimgur in link:
+                        try:
+                            link = link.replace(tryimgur, f"/i.{IMGUR_URL}")
+                            link += ".jpg"
+                        except:
+                            pass
                     res = await funcs.getRequest(link)
                     tryscam = res.url
-                    try:
-                        tryimgur = f"/{IMGUR_URL}"
-                        if tryimgur in link:
-                            try:
-                                link = link.replace(tryimgur, f"/i.{IMGUR_URL}")
-                                link += ".jpg"
-                            except:
-                                pass
-                        res = await funcs.getRequest(link)
-                        tryscam = res.url
-                    except:
-                        pass
-                    for url in self.scamlinks:
-                        if url in tryscam.casefold().replace(" ", ""):
-                            await message.delete()
-                            return
                 except:
                     pass
-            msg = message.content.casefold().replace(" ", "")
-            for url in self.scamlinks:
-                if url in msg:
-                    try:
+                for url in self.scamlinks:
+                    if url in tryscam.casefold().replace(" ", ""):
                         await message.delete()
-                        return
-                    except:
-                        pass
-            if message.attachments:
+                        return True
+            except:
+                pass
+        for url in self.scamlinks:
+            if url in text:
                 try:
-                    qrlink = message.attachments[0].url
+                    await message.delete()
+                    return True
+                except:
+                    pass
+        return False
+
+    async def processMessage(self, message):
+        if message.author == self.client.user \
+                or message.guild \
+                and message.guild.id not in (await funcs.readJson("data/scam_preventer.json"))["disallowed_servers"]:
+            for a in message.attachments:
+                try:
+                    qrlink = a.url
                     if await self.deleteEmbedOrAttachment(message, qrlink):
                         return
                 except:
                     pass
+            if await self.detect(message, message.content):
+                return
             await sleep(3)
-            if message.embeds:
+            for e in message.embeds:
+                if await self.detect(message, e.title) or await self.detect(message, e.description):
+                    return
+                for field in e.fields:
+                    if await self.detect(message, field.value) or await self.detect(message, field.name):
+                        return
                 try:
-                    qrlink = message.embeds[0].thumbnail.url
-                    _ = await self.deleteEmbedOrAttachment(message, qrlink)
+                    if await self.deleteEmbedOrAttachment(message, e.thumbnail.url):
+                        return
                 except:
                     pass
+                try:
+                    if await self.deleteEmbedOrAttachment(message, e.image.url):
+                        return
+                except:
+                    pass
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        await self.processMessage(message)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        if before.content != after.content:
+            await self.processMessage(after)
 
 
 setup = ScamPreventer.setup

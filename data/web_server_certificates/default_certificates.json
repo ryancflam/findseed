@@ -1,0 +1,4 @@
+{
+    "public_key": "cert.pem",
+    "private_key": "key.pem"
+}

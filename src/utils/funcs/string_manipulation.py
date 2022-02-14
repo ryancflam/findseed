@@ -22,6 +22,10 @@ def replaceCharacters(string, toreplace: list, replaceto: str=""):
     return string
 
 
+def asciiIgnore(text):
+    return text.encode("ascii", "ignore").decode("utf-8")
+
+
 def multiString(string, limit: int=2000):
     return [string[i:i + limit] for i in range(0, len(string), limit)]
 

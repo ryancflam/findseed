@@ -74,7 +74,6 @@ class BotInstance(commands.AutoShardedBot):
 
     async def __generateFiles(self):
         self.emoji = await funcs.readJson(funcs.getResource(resource="emoji.json"))
-        await self.__generateDir("data")
         if path.exists(f"{funcs.PATH}/temp"):
             await rmtree(f"{funcs.PATH}/temp")
             print("Removed directory: temp")

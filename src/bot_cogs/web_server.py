@@ -1,9 +1,10 @@
 from asyncio import sleep
+from os import path
 from threading import Thread
 
 from discord import Embed
 from discord.ext import commands
-from flask import Flask, abort, render_template, request
+from flask import Flask, abort, render_template, request, send_from_directory
 
 from config import gitLogChannels, production
 from src.utils import funcs
@@ -30,12 +31,24 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if channel:
                 RIDICULOUS_CHANNEL_LIST.append(channel)
         RIDICULOUS_CHANNEL_LIST.append(self.client)
-        Thread(target=FLASK_APP.run, args=(HOST, PORT)).start()
+        kwargs = None
+        keys = await funcs.readJson("data/web_server_certificates/default_certificates.json")
+        cert = funcs.PATH + "" + keys["public_key"]
+        key = funcs.PATH + "" + keys["private_key"]
+        if path.exists(cert) and path.exists(key):
+            kwargs = (cert, key)
+            print("Web Server - Attempting to use HTTPS...")
+        Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
 
     @staticmethod
     @FLASK_APP.route("/")
     def home():
         return render_template("index.html")
+
+    @staticmethod
+    @FLASK_APP.route("/robots.txt")
+    def robotstxt():
+        return send_from_directory(FLASK_APP.template_folder, "robots.txt")
 
     @staticmethod
     @FLASK_APP.route("/git", methods=["POST"])

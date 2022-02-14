@@ -9,7 +9,7 @@ from src.utils.funcs.string_manipulation import formatCogName
 PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0].replace("\\", "/")
 COGS_PATH = "src/bot_cogs"
 RESOURCES_PATH = "resources"
-VITAL_COGS = ["bot_owner_only", "general", "web_server"]
+VITAL_COGS = ["bot_owner_only", "general", "web_server_certificates"]
 
 
 def printError(ctx, error):
