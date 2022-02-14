@@ -21,24 +21,27 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 description="A simple web server which optionally handles GitHub push webhooks."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
+        self.active = False
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await sleep(1)
-        global RIDICULOUS_CHANNEL_LIST
-        for channelID in gitLogChannels:
-            channel = self.client.get_channel(channelID)
-            if channel:
-                RIDICULOUS_CHANNEL_LIST.append(channel)
-        RIDICULOUS_CHANNEL_LIST.append(self.client)
-        kwargs = None
-        keys = await funcs.readJson("data/web_server_certificates/default_certificates.json")
-        cert = funcs.PATH + "" + keys["public_key"]
-        key = funcs.PATH + "" + keys["private_key"]
-        if path.exists(cert) and path.exists(key):
-            kwargs = (cert, key)
-            print("Web Server - Attempting to use HTTPS...")
-        Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
+        if not self.active:
+            await sleep(1)
+            global RIDICULOUS_CHANNEL_LIST
+            for channelID in gitLogChannels:
+                channel = self.client.get_channel(channelID)
+                if channel:
+                    RIDICULOUS_CHANNEL_LIST.append(channel)
+            RIDICULOUS_CHANNEL_LIST.append(self.client)
+            kwargs = None
+            keys = await funcs.readJson("data/web_server_certificates/default_certificates.json")
+            cert = funcs.PATH + "" + keys["public_key"]
+            key = funcs.PATH + "" + keys["private_key"]
+            if path.exists(cert) and path.exists(key):
+                kwargs = (cert, key)
+                print("Web Server - Attempting to use HTTPS...")
+            Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
+            self.active = True
 
     @staticmethod
     @FLASK_APP.route("/")
