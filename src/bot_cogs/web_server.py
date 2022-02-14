@@ -1,5 +1,6 @@
 from asyncio import sleep
 from os import path
+from socket import gethostbyname, gethostname
 from threading import Thread
 
 from discord import Embed
@@ -29,6 +30,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
         if not path.exists(funcs.PATH + CERTIFICATES + "default_certificates.json"):
             template = await funcs.readTxt(CERTIFICATES + "default_certificates.json.template", encoding=None)
             await funcs.writeTxt(CERTIFICATES + "default_certificates.json", template)
+            print("Generated file: default_certificates.json")
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -50,10 +52,13 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             key = certs + keys["private_key"]
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
-                print("Web Server - Attempting to use HTTPS...")
+                print(f"{self.name} - Attempting to use HTTPS...")
             try:
                 Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
+                await (await self.client.application_info()).owner.send(
+                    "Web server is running on: <http{}://{}:{}/>".format("s" if kwargs else "", gethostbyname(gethostname()), PORT)
+                )
             except Exception as ex:
                 print("Error - " + str(ex))
 

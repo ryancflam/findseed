@@ -1,8 +1,10 @@
 from discord.ext import commands
 
+from src.bot_instance import BotInstance
+
 
 class BaseCog(commands.Cog):
-    def __init__(self, botInstance, *args, **kwargs):
+    def __init__(self, botInstance: BotInstance, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.client = botInstance
 
