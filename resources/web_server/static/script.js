@@ -3,7 +3,7 @@ const img = document.querySelector(".banner-img");
 t.fromTo(img, 2, {height: "0%"}, {height: "100%", ease: Power2.easeInOut});
 document.addEventListener("contextmenu", event => event.preventDefault());
 
-function play4AM() {
+function main() {
     var date = new Date();
     var h = date.getHours();
     var m = date.getMinutes();
@@ -14,4 +14,4 @@ function play4AM() {
 }
 
 const interval = 1000;
-setInterval("play4AM()", interval);
+setInterval(main, interval);
