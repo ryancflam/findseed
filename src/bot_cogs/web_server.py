@@ -44,6 +44,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             kwargs = None
             keys = await funcs.readJson(CERTIFICATES + "default_certificates.json")
             certs = funcs.PATH + CERTIFICATES if not keys["custom_location"] else keys["custom_location"]
+            if not certs.endswith("/"):
+                certs += "/"
             cert = certs + keys["public_key"]
             key = certs + keys["private_key"]
             if path.exists(cert) and path.exists(key):
