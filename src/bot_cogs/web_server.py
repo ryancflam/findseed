@@ -40,8 +40,11 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = (cert, key)
                 print("Web Server - Attempting to use HTTPS...")
-            Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
-            self.active = True
+            try:
+                Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
+                self.active = True
+            except Exception as ex:
+                print("Error - " + str(ex))
 
     @staticmethod
     @FLASK_APP.route("/")

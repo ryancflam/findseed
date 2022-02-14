@@ -106,7 +106,7 @@ class BotInstance(commands.AutoShardedBot):
             ext = "🎉" if data["ath"] < data["current_price"] else ""
             msg = " @ ${:,}{}".format(data["current_price"], ext)
         except Exception as ex:
-            print(f"Error - " + str(ex))
+            print("Error - " + str(ex))
             msg = ""
         await self.__presence(("BTC" if self.__btcPresence else "ETH") + msg)
         self.__btcPresence = not self.__btcPresence
