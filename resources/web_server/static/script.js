@@ -8,22 +8,22 @@ var AudioContext = window.AudioContext || window.webkitAudioContext;
 const ctx = new AudioContext();
 
 
-function unlockAudioContext() {
-    if (ctx.state !== "suspended") {
-        return;
-    };
-    const b = document.body;
-    const events = ["touchstart", "touchend", "mousedown", "keydown"];
-    events.forEach(e => b.addEventListener(e, unlock, false));
-
-    function unlock() {
-        ctx.resume().then(clean);
-    }
-
-    function clean() {
-        events.forEach(e => b.removeEventListener(e, unlock));
-    }
-}
+//function unlockAudioContext() {
+//    if (ctx.state !== "suspended") {
+//        return;
+//    };
+//    const b = document.body;
+//    const events = ["touchstart", "touchend", "mousedown", "keydown"];
+//    events.forEach(e => b.addEventListener(e, unlock, false));
+//
+//    function unlock() {
+//        ctx.resume().then(clean);
+//    }
+//
+//    function clean() {
+//        events.forEach(e => b.removeEventListener(e, unlock));
+//    }
+//}
 
 
 function formatTime(time) {
@@ -57,7 +57,7 @@ function main() {
 }
 
 
-unlockAudioContext();
+//unlockAudioContext();
 let audio;
 
 fetch(audioURL)
