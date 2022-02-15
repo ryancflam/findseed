@@ -12,9 +12,9 @@ function unlockAudioContext() {
     if (ctx.state !== "suspended") {
         return;
     };
-    events.forEach(e => b.addEventListener(e, unlock, false));
     const b = document.body;
     const events = ["touchstart", "touchend", "mousedown", "keydown"];
+    events.forEach(e => b.addEventListener(e, unlock, false));
 
     function unlock() {
         ctx.resume().then(clean);
