@@ -13,10 +13,11 @@ from src.utils.base_cog import BaseCog
 HOST = "0.0.0.0"
 PORT = 8080 if production else 80
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
-HTTPS = False
 CERTIFICATES = "data/web_server_certificates/"
-FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
-RIDICULOUS_CHANNEL_LIST = []
+
+https = False
+app = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
+ridiculousChannelList = []
 
 
 class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
@@ -34,15 +35,15 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @commands.Cog.listener()
     async def on_ready(self):
-        global HTTPS, RIDICULOUS_CHANNEL_LIST
+        global https, ridiculousChannelList
         await self.__generateJson()
         if not self.active:
             await sleep(1)
             for channelID in gitLogChannels:
                 channel = self.client.get_channel(channelID)
                 if channel:
-                    RIDICULOUS_CHANNEL_LIST.append(channel)
-            RIDICULOUS_CHANNEL_LIST.append(self.client)
+                    ridiculousChannelList.append(channel)
+            ridiculousChannelList.append(self.client)
             kwargs = None
             keys = await funcs.readJson(CERTIFICATES + "default_certificates.json")
             certs = funcs.PATH + CERTIFICATES if not keys["custom_location"] else keys["custom_location"]
@@ -53,9 +54,9 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
-                HTTPS = True
+                https = True
             try:
-                Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
+                Thread(target=app.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
                 ip = await funcs.getRequest("https://api.ipify.org")
                 await (await self.client.application_info()).owner.send(
@@ -69,26 +70,26 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 return funcs.unloadCog(self.client, self, force=True)
 
     @staticmethod
-    @FLASK_APP.before_request
+    @app.before_request
     def ssl():
-        if HTTPS and not request.is_secure:
+        if https and not request.is_secure:
             url = request.url.replace("http://", "https://", 1)
             return redirect(url, code=301)
 
     @staticmethod
-    @FLASK_APP.route("/")
+    @app.route("/")
     def index():
         return render_template("index.html")
 
     @staticmethod
-    @FLASK_APP.route("/robots.txt")
+    @app.route("/robots.txt")
     def robotstxt():
-        return send_from_directory(FLASK_APP.template_folder, "robots.txt")
+        return send_from_directory(app.template_folder, "robots.txt")
 
     @staticmethod
-    @FLASK_APP.route("/git", methods=["POST"])
+    @app.route("/git", methods=["POST"])
     def git():
-        if RIDICULOUS_CHANNEL_LIST[:-1]:
+        if ridiculousChannelList[:-1]:
             data = request.json
             try:
                 headcommit = data["head_commit"]
@@ -107,7 +108,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                                      f"- [{user}](https://github.com/{user})"
                 e.description = e.description[:2048]
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                RIDICULOUS_CHANNEL_LIST[-1].loop.create_task(funcs.sendEmbedToChannels(e, RIDICULOUS_CHANNEL_LIST[:-1]))
+                ridiculousChannelList[-1].loop.create_task(funcs.sendEmbedToChannels(e, ridiculousChannelList[:-1]))
             except:
                 pass
             return "success", 200
@@ -118,7 +119,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @commands.is_owner()
     async def gitlogchannels(self, ctx):
         msg = ""
-        for channel in RIDICULOUS_CHANNEL_LIST[:-1]:
+        for channel in ridiculousChannelList[:-1]:
             if channel:
                 try:
                     name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
