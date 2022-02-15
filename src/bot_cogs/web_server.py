@@ -5,7 +5,6 @@ from threading import Thread
 from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
-from flask_talisman import Talisman
 
 from config import gitLogChannels, production
 from src.utils import funcs
@@ -55,7 +54,6 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
-                # Talisman(app, content_security_policy=None)
             try:
                 Thread(target=app.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
