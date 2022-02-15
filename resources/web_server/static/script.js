@@ -6,6 +6,14 @@ document.addEventListener("contextmenu", event => event.preventDefault());
 const audioURL = "static/assets/4am.mp3";
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 const ctx = new AudioContext();
+let audio;
+
+fetch(audioURL)
+    .then(res => res.arrayBuffer())
+    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+    .then(decodedAudio => {
+        audio = decodedAudio;
+    });
 
 
 //function unlockAudioContext() {
@@ -58,14 +66,5 @@ function main() {
 
 
 //unlockAudioContext();
-let audio;
-
-fetch(audioURL)
-    .then(res => res.arrayBuffer())
-    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
-    .then(decodedAudio => {
-        audio = decodedAudio;
-    });
-
 const interval = 1000;
 setInterval(main, interval);
