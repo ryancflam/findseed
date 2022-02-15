@@ -4,7 +4,7 @@ from threading import Thread
 
 from discord import Embed
 from discord.ext import commands
-from flask import Flask, abort, render_template, request, send_from_directory
+from flask import Flask, abort, redirect, render_template, request, send_from_directory
 
 from config import gitLogChannels, production
 from src.utils import funcs
@@ -13,6 +13,7 @@ from src.utils.base_cog import BaseCog
 HOST = "0.0.0.0"
 PORT = 8080 if production else 80
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
+HTTPS = False
 CERTIFICATES = "data/web_server_certificates/"
 FLASK_APP = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
 RIDICULOUS_CHANNEL_LIST = []
@@ -33,10 +34,10 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @commands.Cog.listener()
     async def on_ready(self):
+        global HTTPS, RIDICULOUS_CHANNEL_LIST
         await self.__generateJson()
         if not self.active:
             await sleep(1)
-            global RIDICULOUS_CHANNEL_LIST
             for channelID in gitLogChannels:
                 channel = self.client.get_channel(channelID)
                 if channel:
@@ -52,6 +53,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
+                HTTPS = True
             try:
                 Thread(target=FLASK_APP.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
@@ -65,6 +67,13 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             except Exception as ex:
                 print("Error - " + str(ex))
                 return funcs.unloadCog(self.client, self, force=True)
+
+    @staticmethod
+    @FLASK_APP.before_request
+    def ssl():
+        if HTTPS and not request.is_secure:
+            url = request.url.replace("http://", "https://", 1)
+            return redirect(url, code=301)
 
     @staticmethod
     @FLASK_APP.route("/")
