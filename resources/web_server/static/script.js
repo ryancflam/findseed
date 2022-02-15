@@ -7,6 +7,9 @@ const audioURL = "static/assets/4am.mp3";
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 const ctx = new AudioContext();
 
+const b = document.body;
+const events = ["touchstart", "touchend", "mousedown", "keydown"];
+
 
 function unlock() {
     ctx.resume().then(clean);
@@ -22,8 +25,6 @@ function unlockAudioContext() {
     if (ctx.state !== "suspended") {
         return;
     };
-    const b = document.body;
-    const events = ["touchstart", "touchend", "mousedown", "keydown"];
     events.forEach(e => b.addEventListener(e, unlock, false));
 }
 
