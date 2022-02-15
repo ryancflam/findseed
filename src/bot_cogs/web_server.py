@@ -55,7 +55,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
-                Talisman(app, content_security_policy=None)
+                # Talisman(app, content_security_policy=None)
             try:
                 Thread(target=app.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
