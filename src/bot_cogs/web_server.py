@@ -5,6 +5,7 @@ from threading import Thread
 from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
+from flask_talisman import Talisman
 
 from config import gitLogChannels, production
 from src.utils import funcs
@@ -54,7 +55,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
-                https = True
+                Talisman(app, content_security_policy=None)
             try:
                 Thread(target=app.run, args=(HOST, PORT), kwargs=kwargs).start()
                 self.active = True
@@ -69,12 +70,12 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 print("Error - " + str(ex))
                 return funcs.unloadCog(self.client, self, force=True)
 
-    @staticmethod
-    @app.before_request
-    def ssl():
-        if https and not request.is_secure:
-            url = request.url.replace("http://", "https://", 1)
-            return redirect(url, code=301)
+    # @staticmethod
+    # @app.before_request
+    # def ssl():
+    #     if https and not request.is_secure:
+    #         url = request.url.replace("http://", "https://", 1)
+    #         return redirect(url, code=301)
 
     @staticmethod
     @app.route("/")
@@ -89,7 +90,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @staticmethod
     @app.route("/git", methods=["POST"])
     def git():
-        if ridiculousChannelList[:-1]:
+        if ridiculousChannelList[:-1] and request.method == "POST":
             data = request.json
             try:
                 headcommit = data["head_commit"]
