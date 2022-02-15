@@ -4,7 +4,7 @@ from threading import Thread
 
 from discord import Embed
 from discord.ext import commands
-from flask import Flask, abort, redirect, render_template, request, send_from_directory
+from flask import Flask, abort, render_template, request, send_from_directory
 from flask_talisman import Talisman
 
 from config import gitLogChannels, production
@@ -16,7 +16,6 @@ PORT = 8080 if production else 80
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
 CERTIFICATES = "data/web_server_certificates/"
 
-https = False
 app = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
 ridiculousChannelList = []
 
@@ -36,7 +35,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @commands.Cog.listener()
     async def on_ready(self):
-        global https, ridiculousChannelList
+        global ridiculousChannelList
         await self.__generateJson()
         if not self.active:
             await sleep(1)
@@ -69,13 +68,6 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             except Exception as ex:
                 print("Error - " + str(ex))
                 return funcs.unloadCog(self.client, self, force=True)
-
-    # @staticmethod
-    # @app.before_request
-    # def ssl():
-    #     if https and not request.is_secure:
-    #         url = request.url.replace("http://", "https://", 1)
-    #         return redirect(url, code=301)
 
     @staticmethod
     @app.route("/")
