@@ -7,25 +7,22 @@ const audioURL = "static/assets/4am.mp3";
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 const ctx = new AudioContext();
 
-const b = document.body;
-const events = ["touchstart", "touchend", "mousedown", "keydown"];
-
-
-function unlock() {
-    ctx.resume().then(clean);
-}
-
-
-function clean() {
-    events.forEach(e => b.removeEventListener(e, unlock));
-}
-
 
 function unlockAudioContext() {
     if (ctx.state !== "suspended") {
         return;
     };
     events.forEach(e => b.addEventListener(e, unlock, false));
+    const b = document.body;
+    const events = ["touchstart", "touchend", "mousedown", "keydown"];
+
+    function unlock() {
+        ctx.resume().then(clean);
+    }
+
+    function clean() {
+        events.forEach(e => b.removeEventListener(e, unlock));
+    }
 }
 
 

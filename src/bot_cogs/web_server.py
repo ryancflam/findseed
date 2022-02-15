@@ -64,7 +64,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 )
             except Exception as ex:
                 print("Error - " + str(ex))
-                return funcs.unloadCog(self.client, self.name, force=True)
+                return funcs.unloadCog(self.client, self, force=True)
 
     @staticmethod
     @FLASK_APP.route("/")

@@ -4,6 +4,7 @@ from os import path
 from aiofiles import open, os
 from plotly import graph_objects as go
 
+from src.utils.base_cog import BaseCog
 from src.utils.funcs.string_manipulation import formatCogName
 
 PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0].replace("\\", "/")
@@ -17,12 +18,18 @@ def printError(ctx, error):
 
 
 def getResource(cog=None, resource=None):
-    return f'/{RESOURCES_PATH}/{f"{formatCogName(cog)}/" if cog else ""}{resource if resource else ""}'
+    return f'/{RESOURCES_PATH}/{f"{formatCogName(cogToStr(cog))}/" if cog else ""}{resource if resource else ""}'
+
+
+def cogToStr(cog):
+    if isinstance(cog, BaseCog):
+        return cog.name
+    return cog
 
 
 def loadCog(client, cog):
     try:
-        cog = formatCogName(cog)
+        cog = formatCogName(cogToStr(cog))
         client.load_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
         print(f"Loaded cog: {cog}")
     except Exception as ex:
@@ -31,7 +38,7 @@ def loadCog(client, cog):
 
 def unloadCog(client, cog, force=False):
     try:
-        cog = formatCogName(cog)
+        cog = formatCogName(cogToStr(cog))
         if cog in VITAL_COGS and not force:
             raise Exception("Cannot unload that cog!")
         client.unload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
@@ -42,7 +49,7 @@ def unloadCog(client, cog, force=False):
 
 def reloadCog(client, cog, force=False):
     try:
-        cog = formatCogName(cog)
+        cog = formatCogName(cogToStr(cog))
         if cog in VITAL_COGS and not force:
             raise Exception("Cannot reload that cog!")
         client.reload_extension(f"{COGS_PATH.replace('/', '.')}.{cog}")
