@@ -1,15 +1,15 @@
-const t = new TimelineMax();
-const img = document.querySelector(".banner-img");
-t.fromTo(img, 2, {height: "0%"}, {height: "100%", ease: Power2.easeInOut});
 document.addEventListener("contextmenu", event => event.preventDefault());
+const timelineMax = new TimelineMax();
+const banner = document.querySelector(".banner-img");
+timelineMax.fromTo(banner, 2, {height: "0%"}, {height: "100%", ease: Power2.easeInOut});
 
 const audioURL = "static/assets/4am.mp3";
 var AudioContext = window.AudioContext || window.webkitAudioContext;
-const ctx = new AudioContext();
+const audioCtx = new AudioContext();
 
 
 function unlockAudioContext() {
-    if (ctx.state !== "suspended") {
+    if (audioCtx.state !== "suspended") {
         return;
     };
     const body = document.body;
@@ -17,7 +17,7 @@ function unlockAudioContext() {
     events.forEach(event => body.addEventListener(event, unlock, false));
 
     function unlock() {
-        ctx.resume().then(clean);
+        audioCtx.resume().then(clean);
     }
 
     function clean() {
@@ -27,9 +27,9 @@ function unlockAudioContext() {
 
 
 function playSound() {
-    var sound = ctx.createBufferSource();
+    var sound = audioCtx.createBufferSource();
     sound.buffer = audio;
-    sound.connect(ctx.destination);
+    sound.connect(audioCtx.destination);
     sound.start();
 }
 
@@ -51,7 +51,7 @@ let audio;
 
 fetch(audioURL)
     .then(res => res.arrayBuffer())
-    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+    .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
     .then(decodedAudio => {
         audio = decodedAudio;
     });
