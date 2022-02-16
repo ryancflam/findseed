@@ -5,6 +5,7 @@ prefix = "!"
 activityName = "" # put "bitcoin" for auto Bitcoin prices
 activityType = 0 # 0 (Playing) / 2 (Listening to) / 3 (Watching)
 status = "online" # "online" / "idle" / "dnd" / "invisible"
+webServerPort = 8080
 statcordKey = "" # https://statcord.com/add
 gitLogChannels = [] # before adding git log channel IDs (int) make a webhook at https://github.com/[username]/[repo]/settings/hooks
 owmKey = "" # https://openweathermap.org/api

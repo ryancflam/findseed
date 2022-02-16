@@ -48,7 +48,7 @@ function main() {
     var h = date.getHours();
     var m = date.getMinutes();
     var s = date.getSeconds();
-    logTime(h, m, s);
+    // logTime(h, m, s);
     if (h === 4 && m === 0 && s === 0) {
         console.log("The time is 4 AM!");
         playSound();

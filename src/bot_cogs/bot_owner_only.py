@@ -386,8 +386,23 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
+    @commands.command(name="updateconfig", description="Updates `config.py`.",
+                      usage="<config.py attachment>", aliases=["updateconfigpy", "configupdate", "configpy", "config.py"])
+    @commands.is_owner()
+    async def _updateconfig(self, ctx):
+        try:
+            if not ctx.message.attachments:
+                raise Exception("No attachment detected.")
+            attachment = ctx.message.attachments[0]
+            if attachment.filename != "config.py":
+                raise Exception("Attachment name must be `config.py`.")
+            await attachment.save(funcs.PATH + attachment.filename)
+            await ctx.reply(":ok_hand: Restart the bot to use the new `config.py`.")
+        except Exception as ex:
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+
     @commands.command(name="changename", description="Changes the username of the bot.",
-                      usage="<new username>", aliases=["namechange"])
+                      usage="<new username>", aliases=["namechange", "changeusername", "usernamechange"])
     @commands.is_owner()
     async def _changename(self, ctx, *, username):
         try:

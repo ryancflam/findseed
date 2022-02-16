@@ -1,18 +1,15 @@
 from asyncio import sleep
 from os import path
-from threading import Thread
 
 from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
-from flask_talisman import Talisman
 
-from config import gitLogChannels, production
+from config import gitLogChannels, webServerPort
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
+from src.utils.base_thread import BaseThread
 
-HOST = "0.0.0.0"
-PORT = 8080 if production else 80
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
 CERTIFICATES = "data/web_server_certificates/"
 
@@ -55,20 +52,21 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
-                Talisman(app, content_security_policy=None)
             try:
-                Thread(target=app.run, args=(HOST, PORT), kwargs=kwargs).start()
-                self.active = True
-                ip = await funcs.getRequest("https://api.ipify.org")
-                await (await self.client.application_info()).owner.send(
-                    "Web server is running on: <http{}://{}{}/>".format(
-                        "s" if kwargs else "",
-                        ip.content.decode("utf8"),
-                        "" if PORT == 80 else f":{PORT}")
-                )
+                t = BaseThread(target=app.run, args=("0.0.0.0", webServerPort), kwargs=kwargs)
+                t.start()
+                await t.checkException()
             except Exception as ex:
                 print("Error - " + str(ex))
                 return funcs.unloadCog(self.client, self, force=True)
+            self.active = True
+            ip = await funcs.getRequest("https://api.ipify.org")
+            await (await self.client.application_info()).owner.send(
+                "Web server is running on: <http{}://{}{}/>".format(
+                    "s" if kwargs else "",
+                    ip.content.decode("utf8"),
+                    "" if webServerPort == 80 else f":{webServerPort}")
+            )
 
     @staticmethod
     @app.before_request
