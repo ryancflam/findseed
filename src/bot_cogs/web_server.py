@@ -5,7 +5,7 @@ from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
 
-from config import webServerPort
+from config import gitLogRoute, webServerPort
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
 from src.utils.base_thread import BaseThread
@@ -28,7 +28,7 @@ def _getChannelObjects(bot, channelIDs: list):
 
 
 class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
-                description="A simple web server which optionally handles GitHub push webhooks."):
+                description="A simple web server which also handles push webhooks from the bot's GitHub repository."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
         self.client.loop.create_task(self.__readFiles())
@@ -90,7 +90,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
         return send_from_directory(app.template_folder, "robots.txt")
 
     @staticmethod
-    @app.route("/git", methods=["POST"])
+    @app.route(gitLogRoute, methods=["POST"])
     def git():
         channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
         if channels and request.method == "POST":

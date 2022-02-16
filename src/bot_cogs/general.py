@@ -342,5 +342,33 @@ class General(BaseCog, name="General", description="Standard commands relating t
     async def channelid(self, ctx):
         await ctx.reply(f"`#{ctx.channel.id}`")
 
+    @commands.command(name="followgitrepo", description="Receive the bot's GitHub push commits for this channel.",
+                      aliases=["followgit", "followrepo", "followgithub", "gitfollow", "githubfollow", "repofollow"])
+    async def followgitrepo(self, ctx):
+        if ctx.guild and not ctx.author.guild_permissions.manage_channels:
+            raise commands.MissingPermissions(missing_permissions=["manage_channels"])
+        data = await funcs.readJson("data/channels_following_repo.json")
+        channelList = list(data["channels"])
+        if ctx.channel.id not in channelList:
+            channelList.append(ctx.channel.id)
+            data["channels"] = channelList
+            await funcs.dumpJson("data/channels_following_repo.json", data)
+            return await ctx.reply("`Now receiving the bot's GitHub push commits for this channel.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are already enabled."))
+
+    @commands.command(name="unfollowgitrepo", description="Stop receiving the bot's GitHub push commits for this channel.",
+                      aliases=["unfollowgit", "unfollowrepo", "unfollowgithub", "gitunfollow", "repounfollow"])
+    async def unfollowgitrepo(self, ctx):
+        if ctx.guild and not ctx.author.guild_permissions.manage_channels:
+            raise commands.MissingPermissions(missing_permissions=["manage_channels"])
+        data = await funcs.readJson("data/channels_following_repo.json")
+        channelList = list(data["channels"])
+        if ctx.channel.id in channelList:
+            channelList.remove(ctx.channel.id)
+            data["channels"] = channelList
+            await funcs.dumpJson("data/channels_following_repo.json", data)
+            return await ctx.reply("`No longer receiving the bot's GitHub push commits for this channel.`")
+        await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are not enabled."))
+
 
 setup = General.setup

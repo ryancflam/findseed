@@ -46,8 +46,9 @@ class ChatGames(BaseCog, name="Chat Games", description="Fun chat games for you 
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid channel ID."))
         await ctx.reply(":ok_hand:")
 
-    @tasks.loop(seconds=1.0)
+    @tasks.loop(seconds=0.1)
     async def tetrisTick(self):
+        print(time())
         for game in list(self.tetrisGames.values()):
             await game.tick()
 
