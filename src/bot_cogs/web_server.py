@@ -1,11 +1,11 @@
-from asyncio import sleep
+from asyncio import run, sleep
 from os import path
 
 from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
 
-from config import gitLogChannels, webServerPort
+from config import webServerPort
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
 from src.utils.base_thread import BaseThread
@@ -14,8 +14,17 @@ PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
 CERTIFICATES = "data/web_server_certificates/"
 
 app = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
+client = None
 https = False
-ridiculousChannelList = []
+
+
+def _getChannelObjects(bot, channelIDs: list):
+    channelList = []
+    for i in channelIDs:
+        channel = bot.get_channel(i)
+        if channel:
+            channelList.append(channel)
+    return channelList
 
 
 class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
@@ -34,14 +43,10 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @commands.Cog.listener()
     async def on_ready(self):
-        global https, ridiculousChannelList
+        global client, https
         if not self.active:
             await sleep(1)
-            for channelID in gitLogChannels:
-                channel = self.client.get_channel(channelID)
-                if channel:
-                    ridiculousChannelList.append(channel)
-            ridiculousChannelList.append(self.client)
+            client = self.client
             kwargs = None
             keys = await funcs.readJson(CERTIFICATES + "default_certificates.json")
             certs = funcs.PATH + CERTIFICATES if not keys["custom_location"] else keys["custom_location"]
@@ -87,7 +92,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @staticmethod
     @app.route("/git", methods=["POST"])
     def git():
-        if ridiculousChannelList[:-1] and request.method == "POST":
+        channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
+        if channels and request.method == "POST":
             data = request.json
             try:
                 headcommit = data["head_commit"]
@@ -106,25 +112,11 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                                      f"- [{user}](https://github.com/{user})"
                 e.description = e.description[:2048]
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                ridiculousChannelList[-1].loop.create_task(funcs.sendEmbedToChannels(e, ridiculousChannelList[:-1]))
+                run(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
             except:
                 pass
             return "success", 200
         abort(400)
-
-    @commands.command(name="gitlogchannels", description="Lists out all visible git log channels from `config.gitLogChannels`.",
-                      aliases=["gitlog", "gitchannels", "gitchannel", "gitlogs", "gitlogchannel"])
-    @commands.is_owner()
-    async def gitlogchannels(self, ctx):
-        msg = ""
-        for channel in ridiculousChannelList[:-1]:
-            if channel:
-                try:
-                    name = f"#{channel.name} in {channel.guild.name} [{channel.guild.id}]"
-                except:
-                    name = "DM"
-                msg += f"- {channel.id} ({name})\n"
-        await ctx.send(funcs.formatting(msg, limit=2000) if msg else "```None```")
 
 
 setup = WebServer.setup

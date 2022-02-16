@@ -79,6 +79,7 @@ class BotInstance(commands.AutoShardedBot):
         await self.__generateDir("temp")
         await funcs.generateJson("blacklist", {"servers": [], "users": []})
         await funcs.generateJson("whitelist", {"users": []})
+        await funcs.generateJson("channels_following_repo", {"channels": []})
 
     async def __invokeCommand(self, message):
         ctx = await self.get_context(message)
