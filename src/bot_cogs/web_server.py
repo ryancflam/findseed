@@ -93,7 +93,10 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @staticmethod
     @app.route("/git", methods=["POST"])
     def git():
-        channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
+        try:
+            channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
+        except Exception as ex:
+            print(ex)
         print(channels)
         if channels and request.method == "POST":
             data = request.json
