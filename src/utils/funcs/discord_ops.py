@@ -117,6 +117,5 @@ async def sendEmbedToChannels(embed: Embed, channellist: list):
         if channel:
             try:
                 await channel.send(embed=embed)
-            except Exception as ex:
-                print(ex)
+            except:
                 pass
