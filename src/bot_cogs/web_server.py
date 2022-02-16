@@ -23,7 +23,6 @@ def _getChannelObjects(bot, channelIDs: list):
     for i in channelIDs:
         channel = bot.get_channel(i)
         if channel:
-            print(channel)
             channelList.append(channel)
     return channelList
 
@@ -93,12 +92,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @staticmethod
     @app.route("/git", methods=["POST"])
     def git():
-        print('YOU IDIOT')
-        try:
-            channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
-        except Exception as ex:
-            print(ex)
-        print(channels)
+        channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
         if channels and request.method == "POST":
             data = request.json
             try:
@@ -118,7 +112,10 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                                      f"- [{user}](https://github.com/{user})"
                 e.description = e.description[:2048]
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                run(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
+                try:
+                    run(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
+                except Exception as ex:
+                    print(ex)
             except:
                 pass
             return "success", 200
