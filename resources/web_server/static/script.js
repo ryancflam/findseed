@@ -16,12 +16,12 @@ function unlockAudioContext() {
     const events = ["touchstart", "touchend", "mousedown", "keydown"];
     events.forEach(event => body.addEventListener(event, unlock, false));
 
-    function unlock() {
-        audioCtx.resume().then(clean);
+    function clear() {
+        events.forEach(event => body.removeEventListener(event, unlock));
     }
 
-    function clean() {
-        events.forEach(event => body.removeEventListener(event, unlock));
+    function unlock() {
+        audioCtx.resume().then(clear);
     }
 }
 

@@ -3,7 +3,8 @@ from threading import Thread
 
 
 class BaseThread(Thread):
-    async def checkException(self):
+    async def start(self):
+        super().start()
         await sleep(1)
         if self.ex:
             raise self.ex

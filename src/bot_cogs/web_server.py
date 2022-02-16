@@ -13,8 +13,8 @@ from src.utils.base_thread import BaseThread
 PATH = funcs.PATH + funcs.RESOURCES_PATH + "/web_server"
 CERTIFICATES = "data/web_server_certificates/"
 
-https = False
 app = Flask(__name__, template_folder=PATH, static_folder=PATH + "/static")
+https = False
 ridiculousChannelList = []
 
 
@@ -22,10 +22,11 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 description="A simple web server which optionally handles GitHub push webhooks."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
+        self.client.loop.create_task(self.__readFiles())
         self.active = False
 
     @staticmethod
-    async def __generateJson():
+    async def __readFiles():
         if not path.exists(funcs.PATH + CERTIFICATES + "default_certificates.json"):
             template = await funcs.readTxt(CERTIFICATES + "default_certificates.json.template", encoding=None)
             await funcs.writeTxt(CERTIFICATES + "default_certificates.json", template)
@@ -34,7 +35,6 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @commands.Cog.listener()
     async def on_ready(self):
         global https, ridiculousChannelList
-        await self.__generateJson()
         if not self.active:
             await sleep(1)
             for channelID in gitLogChannels:
@@ -52,10 +52,9 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
                 print(f"{self.name} - Attempting to use HTTPS...")
+            t = BaseThread(target=app.run, args=("0.0.0.0", webServerPort), kwargs=kwargs)
             try:
-                t = BaseThread(target=app.run, args=("0.0.0.0", webServerPort), kwargs=kwargs)
-                t.start()
-                await t.checkException()
+                await t.start()
             except Exception as ex:
                 print("Error - " + str(ex))
                 return funcs.unloadCog(self.client, self, force=True)
