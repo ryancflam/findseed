@@ -1,12 +1,11 @@
 from asyncio import run, sleep
 from os import path
 
-from discord import Embed
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
 
 from config import gitLogRoute, webServerPort
-from src.utils import funcs
+from src.utils import funcs, github_embeds
 from src.utils.base_cog import BaseCog
 from src.utils.base_thread import BaseThread
 
@@ -25,26 +24,6 @@ def _getChannelObjects(bot, channelIDs: list):
         if channel:
             channelList.append(channel)
     return channelList
-
-
-def _push(data):
-    headcommit = data["head_commit"]
-    commits = data["commits"]
-    e = Embed(
-        title=f"{len(commits)} New Commit{'' if len(commits) == 1 else 's'}",
-        description=headcommit['url']
-    )
-    e.set_author(name=data["repository"]["full_name"] + f" ({data['ref']})",
-                 icon_url="https://media.discordapp.net/attachments/771698457391136798/927918869702647808/github.png")
-    for commit in commits:
-        user = commit["committer"]["username"]
-        message = commit["message"].replace("_", "\_").replace("*", "\*")
-        e.description += f"\n`{commit['id'][:7]}...{commit['id'][-7:]}` " + \
-                         f"{message[:100] + ('...' if len(message) > 100 else '')} " + \
-                         f"- [{user}](https://github.com/{user})"
-    e.description = e.description[:2048]
-    e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-    return e
 
 
 class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
@@ -116,7 +95,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
         if channels and request.method == "POST":
             data = request.json
             try:
-                e = _push(data)
+                e = github_embeds.push(data)
                 client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
             except:
                 pass
