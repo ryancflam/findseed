@@ -112,10 +112,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                                      f"- [{user}](https://github.com/{user})"
                 e.description = e.description[:2048]
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                try:
-                    run(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
-                except Exception as ex:
-                    print(ex)
+                run(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
             except:
                 pass
             return "success", 200
