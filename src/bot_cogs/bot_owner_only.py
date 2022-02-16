@@ -88,7 +88,7 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         await ctx.send(output.replace("@everyone", "everyone").replace("@here", "here"))
 
     @commands.command(name="reloadcog", description="Reloads a cog.", usage="<cog name>",
-                      aliases=["restartcog", "reload", "updatecog"])
+                      aliases=["restartcog", "reload"])
     @commands.is_owner()
     async def _reloadcog(self, ctx, *, cog: str=""):
         if cog == "":
@@ -386,21 +386,6 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="updateconfig", description="Updates `config.py`.",
-                      usage="<config.py attachment>", aliases=["updateconfigpy", "configupdate", "configpy", "config.py"])
-    @commands.is_owner()
-    async def _updateconfig(self, ctx):
-        try:
-            if not ctx.message.attachments:
-                raise Exception("No attachment detected.")
-            attachment = ctx.message.attachments[0]
-            if attachment.filename != "config.py":
-                raise Exception("Attachment name must be `config.py`.")
-            await attachment.save(funcs.PATH + attachment.filename)
-            await ctx.reply(":ok_hand: Restart the bot to use the new `config.py`.")
-        except Exception as ex:
-            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
-
     @commands.command(name="changename", description="Changes the username of the bot.",
                       usage="<new username>", aliases=["namechange", "changeusername", "usernamechange"])
     @commands.is_owner()
@@ -436,6 +421,37 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
     @commands.is_owner()
     async def _ownercmds(self, ctx):
         await ctx.reply(embed=funcs.commandsListEmbed(self.client, menu=2))
+
+    @commands.command(name="updateconfig", description="Updates `config.py`.",
+                      usage="<config.py attachment>", aliases=["updateconfigpy", "configupdate", "configpy", "config.py"])
+    @commands.is_owner()
+    async def _updateconfig(self, ctx):
+        try:
+            if not ctx.message.attachments:
+                raise Exception("No attachment detected.")
+            attachment = ctx.message.attachments[0]
+            if attachment.filename != "config.py":
+                raise Exception("Attachment name must be `config.py`.")
+            await attachment.save(funcs.PATH + attachment.filename)
+            await ctx.reply(":ok_hand: Restart the bot to use the new `config.py`.")
+        except Exception as ex:
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+
+    @commands.command(name="updatecog", description="Adds a cog or updates an existing one.",
+                      usage="<.py attachment>", aliases=["cogupdate", "addcog", "cogadd"])
+    @commands.is_owner()
+    async def _updatecog(self, ctx):
+        try:
+            if not ctx.message.attachments:
+                raise Exception("No attachment detected.")
+            attachment = ctx.message.attachments[0]
+            if not attachment.filename.endswith(".py"):
+                raise Exception("Attachment must be a .py file.")
+            await attachment.save(f"{funcs.PATH}{funcs.COGS_PATH}/{attachment.filename}")
+            await ctx.reply(f":ok_hand: Use `{self.client.command_prefix}loadcog {attachment.filename[:-3]}` to load the cog," +
+                            f" or `{self.client.command_prefix}reloadcog {attachment.filename[:-3]}` if you are updating it.")
+        except Exception as ex:
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
 
 setup = BotOwnerOnly.setup

@@ -354,7 +354,7 @@ class General(BaseCog, name="General", description="Standard commands relating t
             data["channels"] = channelList
             await funcs.dumpJson("data/channels_following_repo.json", data)
             return await ctx.reply("`Now receiving the bot's GitHub push commits for this channel.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are already enabled."))
+        await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are already enabled for this channel."))
 
     @commands.command(name="unfollowgitrepo", description="Stop receiving the bot's GitHub push commits for this channel.",
                       aliases=["unfollowgit", "unfollowrepo", "unfollowgithub", "gitunfollow", "repounfollow"])
@@ -368,7 +368,7 @@ class General(BaseCog, name="General", description="Standard commands relating t
             data["channels"] = channelList
             await funcs.dumpJson("data/channels_following_repo.json", data)
             return await ctx.reply("`No longer receiving the bot's GitHub push commits for this channel.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are not enabled."))
+        await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are not enabled for this channel."))
 
 
 setup = General.setup

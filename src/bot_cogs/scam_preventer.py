@@ -31,7 +31,7 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
             data["disallowed_servers"] = serverList
             await funcs.dumpJson("data/scam_preventer.json", data)
             return await ctx.reply("`Disabled the scam preventer for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "The scam preventer is not enabled."))
+        await ctx.reply(embed=funcs.errorEmbed(None, "The scam preventer is not enabled for this server."))
 
     @commands.command(name="spenable", description="Enables the scam preventer for your server.",
                       aliases=["spe", "esp", "enablesp"])
@@ -45,7 +45,7 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
             data["disallowed_servers"] = serverList
             await funcs.dumpJson("data/scam_preventer.json", data)
             return await ctx.reply("`Enabled the scam preventer for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "The scam preventer is already enabled."))
+        await ctx.reply(embed=funcs.errorEmbed(None, "The scam preventer is already enabled for this server."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="scamurls", description="Shows the scam URLs that the bot tries to remove.",

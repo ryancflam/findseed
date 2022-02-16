@@ -31,7 +31,7 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
             data["servers"] = serverList
             await funcs.dumpJson("data/unprompted_messages.json", data)
             return await ctx.reply("`Enabled unprompted messages for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled."))
+        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are already enabled for this server."))
 
     @commands.command(name="umdisable", description="Disables unprompted messages for your server.",
                       aliases=["umd", "dum", "disableum"])
@@ -45,7 +45,7 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
             data["servers"] = serverList
             await funcs.dumpJson("data/unprompted_messages.json", data)
             return await ctx.reply("`Disabled unprompted messages for this server.`")
-        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled."))
+        await ctx.reply(embed=funcs.errorEmbed(None, "Unprompted messages are not enabled for this server."))
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="unpromptedmessages", description="Shows the unprompted messages menu.", aliases=["um"])
