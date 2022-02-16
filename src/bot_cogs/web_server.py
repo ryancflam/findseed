@@ -1,4 +1,4 @@
-from asyncio import run, sleep, tasks
+from asyncio import run, sleep
 from os import path
 
 from discord import Embed
@@ -112,7 +112,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                                      f"- [{user}](https://github.com/{user})"
                 e.description = e.description[:2048]
                 e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
-                tasks.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
+                client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
             except:
                 pass
             return "success", 200
