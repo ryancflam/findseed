@@ -14,39 +14,33 @@ ROTATE = "🔄"
 SOFT_DROP = "🔽"
 HARD_DROP = "⏬"
 QUIT = "🗑️"
-TETRIS_BLOCKS = [
-    [
-        [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
-        [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]]
-    ],
-    [
-        [[0, 0, 0, 0], [1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 0, 0]],
-        [[0, 0, 1, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
-    ],
-    [
-        [[0, 0, 0, 0], [0, 0, 1, 1], [0, 1, 1, 0], [0, 0, 0, 0]],
-        [[0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]]
-    ],
-    [
-        [[1, 0, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-        [[0, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
-        [[0, 0, 0, 0], [1, 1, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]],
-        [[0, 1, 0, 0], [0, 1, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]]
-    ],
-    [
-        [[0, 0, 0, 1], [0, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]],
-        [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 0]],
-        [[0, 0, 0, 0], [0, 1, 1, 1], [0, 1, 0, 0], [0, 0, 0, 0]],
-        [[0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]]
-    ],
-    [
-        [[0, 1, 0, 0], [1, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-        [[0, 1, 0, 0], [0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
-        [[0, 0, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [0, 0, 0, 0]],
-        [[0, 1, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0]]
-    ],
-    [[[0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]
-]
+
+
+def _chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
+def _getBlocks():
+    figures = [
+        [[1, 5, 9, 13], [4, 5, 6, 7]],
+        [[4, 5, 9, 10], [2, 6, 5, 9]],
+        [[6, 7, 9, 10], [1, 5, 6, 10]],
+        [[0, 4, 5, 6], [1, 2, 5, 9], [4, 5, 6, 10], [1, 5, 9, 8]],
+        [[3, 5, 6, 7], [2, 6, 10, 11], [5, 6, 7, 9], [1, 2, 6, 10]],
+        [[1, 4, 5, 6], [1, 5, 6, 9], [4, 5, 6, 9], [1, 4, 5, 9]],
+        [[1, 2, 5, 6]]
+    ]
+    array4D = []
+    for figure in figures:
+        array3D = []
+        for rotation in figure:
+            array = [0 for _ in range(16)]
+            for r in rotation:
+                array[r] = 1
+            array3D.append(list(_chunks(array, 4)))
+        array4D.append(array3D)
+    return array4D
 
 
 class Tetris:
@@ -62,6 +56,7 @@ class Tetris:
     ]
 
     def __init__(self, ctx, client):
+        self.tetrisBlocks = _getBlocks()
         self.__ctx = ctx
         self.__client = client
         self.__startTime = time()
@@ -73,7 +68,7 @@ class Tetris:
         self.__level = 0
         self.__gameEnd = False
         self.__message = None
-        self.__nextBlock = TetrisBlock(self, randint(0, len(TETRIS_BLOCKS) - 1))
+        self.__nextBlock = TetrisBlock(self, randint(0, len(self.tetrisBlocks) - 1))
         self.__currentBlock = None
         self.__score = 0
         self.__tempPoints = 0
@@ -162,12 +157,12 @@ class Tetris:
             self.__currentBlock.moveY(down=False)
         if self.isOccupied(self.__currentBlock):
             self.__currentBlock.rotation = self.__currentBlock.rotation + 1
-            if self.__currentBlock.rotation >= len(TETRIS_BLOCKS[self.__currentBlock.getBlockType()]):
+            if self.__currentBlock.rotation >= len(self.tetrisBlocks[self.__currentBlock.getBlockType()]):
                 self.__currentBlock.rotation = 0
             if self.isOccupied(self.__currentBlock):
                 self.__gameEnd = True
         self.placeBlock(self.__currentBlock)
-        self.__nextBlock = TetrisBlock(self, randint(0, len(TETRIS_BLOCKS) - 1))
+        self.__nextBlock = TetrisBlock(self, randint(0, len(self.tetrisBlocks) - 1))
 
     def placeBlock(self, blockObject):
         blockObject2 = TetrisBlock(
@@ -290,7 +285,7 @@ class TetrisBlock:
         self.__rotation = value
 
     def getBlock(self):
-        return TETRIS_BLOCKS[self.__blockType][self.__rotation]
+        return self.__game.tetrisBlocks[self.__blockType][self.__rotation]
 
     def getBlockType(self):
         return self.__blockType
@@ -308,7 +303,7 @@ class TetrisBlock:
         self.__game.removeBlock(self)
         prevRotation = self.__rotation
         self.__rotation += 1
-        if self.__rotation >= len(TETRIS_BLOCKS[self.__blockType]):
+        if self.__rotation >= len(self.__game.tetrisBlocks[self.__blockType]):
             self.__rotation = 0
         if self.__game.isOccupied(self):
             self.__x += 1
