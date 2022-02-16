@@ -3,15 +3,6 @@ const img = document.querySelector(".banner-img");
 t.fromTo(img, 2, {height: "0%"}, {height: "100%", ease: Power2.easeInOut});
 document.addEventListener("contextmenu", event => event.preventDefault());
 
-
-function logTime(h, m, s) {
-    formatTime = function(time) {
-        return time < 10 ? `0${time}` : time;
-    }
-    console.log("Current time - " + formatTime(h) + ":" + formatTime(m) + ":" + formatTime(s));
-}
-
-
 const audioURL = "static/assets/4am.mp3";
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 const ctx = new AudioContext();
@@ -48,7 +39,6 @@ function main() {
     var h = date.getHours();
     var m = date.getMinutes();
     var s = date.getSeconds();
-    // logTime(h, m, s);
     if (h === 4 && m === 0 && s === 0) {
         console.log("The time is 4 AM!");
         playSound();
