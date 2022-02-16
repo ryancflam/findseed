@@ -23,6 +23,7 @@ def _getChannelObjects(bot, channelIDs: list):
     for i in channelIDs:
         channel = bot.get_channel(i)
         if channel:
+            print(channel)
             channelList.append(channel)
     return channelList
 
@@ -93,6 +94,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @app.route("/git", methods=["POST"])
     def git():
         channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
+        print(channels)
         if channels and request.method == "POST":
             data = request.json
             try:
