@@ -100,7 +100,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
                 return "success", 200
             raise
-        except:
+        except Exception as ex:
+            print(ex)
             abort(400)
 
 
