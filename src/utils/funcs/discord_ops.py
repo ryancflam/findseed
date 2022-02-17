@@ -112,9 +112,10 @@ async def sendTime(ctx, mins, secs):
     )
 
 
-async def sendEmbedToChannels(embed: Embed, channels: list):
+async def sendEmbedToChannels(embed: Embed, channels):
     for channel in channels:
         if channel:
+            print(channel)
             try:
                 await channel.send(embed=embed)
             except:

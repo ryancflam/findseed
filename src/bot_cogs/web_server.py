@@ -24,6 +24,7 @@ def _getChannelObjects(bot, channelIDs):
         channel = bot.get_channel(i)
         if channel:
             append(channelList, channel)
+            print(channelList)
     return channelList
 
 
@@ -100,8 +101,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
                 return "success", 200
             raise
-        except Exception as ex:
-            print(ex)
+        except:
             abort(400)
 
 
