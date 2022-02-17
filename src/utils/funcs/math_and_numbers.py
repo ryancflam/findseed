@@ -3,13 +3,11 @@ from calendar import monthrange
 from os import urandom
 from random import randint
 
+from numpy import min
+
 from src.utils.safe_eval import SafeEval
 
 KELVIN = 273.15
-
-
-def sign(value):
-    return -1 if value < 0 else 0 if not value else 1
 
 
 def strictRounding(value: float):
@@ -112,7 +110,7 @@ def dateDifference(dateobj, dateobj2):
 
 def valueToOrdinal(n):
     n = int(n)
-    return str(n) + ("th" if 11 <= (n % 100) <= 13 else ["th", "st", "nd", "rd", "th"][min(n % 10, 4)])
+    return str(n) + ("th" if 11 <= (n % 100) <= 13 else ["th", "st", "nd", "rd", "th"][min([n % 10, 4])])
 
 
 def leapYear(year):

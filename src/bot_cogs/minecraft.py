@@ -3,13 +3,13 @@
 # Credit - https://github.com/FourGoesFast/PerfectTravelBot
 # For divinetravel, perfecttravel
 
-import math
 from asyncio import TimeoutError
 from base64 import b64decode
 from json import loads
 from random import choice, randint
 from time import time
 
+import numpy as np
 from discord import Colour, Embed, File
 from discord.ext import commands
 
@@ -101,7 +101,7 @@ class Minecraft(BaseCog, name="Minecraft",
 
     @staticmethod
     def coordsDist(x, z):
-        return math.sqrt(x * x + z * z)
+        return np.sqrt([x * x + z * z])[0]
 
     def coordsDifference(self, coords1: tuple, coords2: tuple):
         return self.coordsDist(coords1[0] - coords2[0], coords1[1] - coords2[1])
@@ -442,9 +442,9 @@ class Minecraft(BaseCog, name="Minecraft",
             dist = self.coordsDist(x, z)
             o = 190 if dist < 190 else dist if dist < 290 else 290 if dist < 442 else 580 if dist < 580 else dist \
                 if dist < 692 else 686 if dist < 825 else 970 if dist < 970 else dist if dist < 1060 else 1060
-            t = math.atan(z / x)
-            xp = funcs.sign(x) * abs(o * math.cos(t))
-            zp = funcs.sign(z) * abs(o * math.sin(t))
+            t = np.arctan([z / x])[0]
+            xp = np.sign(x) * np.absolute([o * np.cos([t])[0]])[0]
+            zp = np.sign(z) * np.absolute([o * np.sin([t])[0]])[0]
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.reply(
                 f"Build your portal at: **{round(xp)}, {round(zp)}** " +
@@ -473,11 +473,11 @@ class Minecraft(BaseCog, name="Minecraft",
             x, z, f = self.f3cProcessing(f3c)
             f = (360 + f if f < 0 else f) - 180
             o = 640 if self.coordsDist(x, z) > 3584 else 216
-            m1 = -math.tan((90 - f) * (math.pi / 180))
+            m1 = -np.tan([(90 - f) * (np.pi / 180)])[0]
             a = 1 + (m1 ** 2)
             b1 = -m1 * (x / 8) + (z / 8)
             b = 2 * m1 * b1
-            xp = ((-b) + (funcs.sign(f) * math.sqrt(b ** 2 - 4 * a * (b1 ** 2 - o ** 2)))) / (2 * a)
+            xp = ((-b) + (np.sign(f) * np.sqrt([b ** 2 - 4 * a * (b1 ** 2 - o ** 2)])[0])) / (2 * a)
             zp = m1 * xp + b1
             await ctx.reply(f"Build your portal at: **{round(xp)}, {round(zp)}** ")
         except Exception as ex:
@@ -504,9 +504,9 @@ class Minecraft(BaseCog, name="Minecraft",
         try:
             x, z, _ = self.f3cProcessing(f3c)
             o = 520
-            t = math.atan(z / x)
-            xp = funcs.sign(x) * abs(o * math.cos(t))
-            zp = funcs.sign(z) * abs(o * math.sin(t))
+            t = np.arctan([z / x])[0]
+            xp = np.sign(x) * np.absolute([o * np.cos([t])[0]])[0]
+            zp = np.sign(z) * np.absolute([o * np.sin([t])[0]])[0]
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.reply(
                 f"Build your first portal at: **{round(xp)}, {round(zp)}** " +
@@ -538,9 +538,9 @@ class Minecraft(BaseCog, name="Minecraft",
             o = 222 if dist < 222 else dist if dist < 250 else 250 if dist < 480 else 615 if dist < 615 \
                 else dist if dist < 645 else 645 if dist < 832 else 1005 if dist < 1005 else dist if dist < 1032 \
                 else 1032
-            t = math.atan(z / x)
-            xp = funcs.sign(x) * abs(o * math.cos(t))
-            zp = funcs.sign(z) * abs(o * math.sin(t))
+            t = np.arctan([z / x])[0]
+            xp = np.sign(x) * np.absolute([o * np.cos([t])[0]])[0]
+            zp = np.sign(z) * np.absolute([o * np.sin([t])[0]])[0]
             blocks = round(self.coordsDifference((x, z), (xp, zp)))
             await ctx.reply(
                 f"Build your portal at: **{round(xp)}, {round(zp)}** " +
@@ -630,18 +630,18 @@ class Minecraft(BaseCog, name="Minecraft",
             x, z, f = self.f3cProcessing(f3c)
             x0, z0, f0 = x, z, f
             f = (360 + f if f < 0 else f) - 180
-            r = (90 - f) * (math.pi / 180)
-            b = 8 - abs(abs(x) % 16) + 16
+            r = (90 - f) * (np.pi / 180)
+            b = 8 - np.absolute([np.absolute([x])[0] % 16])[0] + 16
             l = []
             s = 0
             while s < 11904:
-                d = b * funcs.sign(f)
+                d = b * np.sign(f)
                 x += d
-                z += d * -math.tan(r)
-                v = abs(abs(abs(z) % 16) - 8) + 0.5
+                z += d * -np.tan([r])[0]
+                v = np.absolute([np.absolute([np.absolute([z])[0] % 16])[0] - 8])[0] + 0.5
                 s = self.coordsDist(x, z)
                 if s > 1408:
-                    l.append({"k": x, "v": v, "j": v * v * math.sqrt(1 + len(l)), "r": z})
+                    l.append({"k": x, "v": v, "j": v * v * np.sqrt([1 + len(l)])[0], "r": z})
                 b = 16
             l.sort(key=lambda i: i["j"])
             xp, zp = l[0]["k"], l[0]["r"]
@@ -671,8 +671,8 @@ class Minecraft(BaseCog, name="Minecraft",
                         continue
                     break
                 try:
-                    a0 = math.tan(self.angleProcessing(f0) * math.pi / 180)
-                    a1 = math.tan(self.angleProcessing(f1) * math.pi / 180)
+                    a0 = np.tan([self.angleProcessing(f0) * np.pi / 180])[0]
+                    a1 = np.tan([self.angleProcessing(f1) * np.pi / 180])[0]
                     b = z0 - x0 * a0
                     xp = ((z1 - x1 * a1) - b) / (a0 - a1)
                     zp = xp * a0 + b

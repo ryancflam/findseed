@@ -6,8 +6,6 @@ from src.utils.funcs import minSecs
 
 class Minesweeper:
     def __init__(self):
-        self.__grid = []
-        self.__dispboard = []
         self.__row = 10
         self.__col = 10
         self.__mines = 10
@@ -16,11 +14,11 @@ class Minesweeper:
         self.__won = False
         self.__gameEnd = False
         self.__attempts = 0
+        self.__grid = [[0 for _ in range(self.__col)] for _ in range (self.__row)]
+        self.__dispboard = [["." for _ in range(self.__col)] for _ in range(self.__row)]
         self.__placeMines()
 
     def __placeMines(self):
-        self.__grid = [[0 for _ in range(self.__col)] for _ in range (self.__row)]
-        self.__dispboard = [["." for _ in range(self.__col)] for _ in range(self.__row)]
         minePlacements = 0
         while minePlacements != self.__mines:
             mpCol = randint(0, self.__col - 1)

@@ -3,6 +3,7 @@ from time import time
 
 from discord import Colour, Embed, File
 from discord.ext import commands
+from numpy import array
 from pandas import DataFrame, DatetimeIndex
 from plotly import express, graph_objects
 
@@ -227,7 +228,7 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
                     res = await funcs.getRequest(COINGECKO_URL + f"coins/{data['id']}/ohlc",
                                                  params={"vs_currency": fiat.casefold(), "days": days}
                     )
-                    ohlcData = res.json()
+                    ohlcData = array(res.json())
                     difference = ohlcData[-1][4] - ohlcData[0][1]
                     chartData = True
                 except:
@@ -300,7 +301,7 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
                 if chartData:
                     try:
                         df = DataFrame(
-                            [date[1:] for date in ohlcData], columns=["Open", "High", "Low", "Close"],
+                            array([date[1:] for date in ohlcData]), columns=["Open", "High", "Low", "Close"],
                             index=DatetimeIndex([datetime.utcfromtimestamp(date[0] / 1000) for date in ohlcData])
                         )
                         if line:

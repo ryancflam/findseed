@@ -11,7 +11,7 @@ GO_TO_PAGE = "❓"
 
 
 class PageButtons(ui.View):
-    def __init__(self, ctx, client, msg, embeds: list, timeout: int=300):
+    def __init__(self, ctx, client, msg, embeds, timeout: int=300):
         super().__init__(timeout=timeout)
         self.__ctx = ctx
         self.__client = client

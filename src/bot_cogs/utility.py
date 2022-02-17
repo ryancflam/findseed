@@ -2,7 +2,6 @@ from asyncio import TimeoutError, sleep
 from calendar import timegm
 from datetime import datetime, timedelta
 from json import JSONDecodeError, dumps
-from math import sqrt
 from platform import system
 from random import choice
 from statistics import mean, median, mode, pstdev, stdev
@@ -17,6 +16,7 @@ from discord import Embed, File, channel
 from discord.ext import commands
 from lyricsgenius import Genius
 from mendeleev import element
+from numpy import array, max, min, sqrt, sum
 from plotly import graph_objects as go
 from qrcode import QRCode
 
@@ -720,7 +720,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             except Exception as ex:
                 funcs.printError(ctx, ex)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 15, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song from Genius.",
                       aliases=["lyric", "song", "genius"], usage="<song keywords>")
     async def lyrics(self, ctx, *, keywords):
@@ -1128,7 +1128,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       aliases=["square", "root"], description="Calculates the square root of a given value or math expession.")
     async def sqrt(self, ctx, *, val):
         try:
-            e = Embed(description=funcs.formatting(funcs.removeDotZero(sqrt(funcs.evalMath(val)))))
+            e = Embed(description=funcs.formatting(funcs.removeDotZero(sqrt([funcs.evalMath(val)])[0])))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
@@ -1148,7 +1148,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 inp = inp
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        splt = funcs.replaceCharacters(inp, set(punctuation)).split()
+        splt = funcs.replaceCharacters(inp, punctuation).split()
         e = Embed(title="Word Count")
         e.add_field(name="Characters", value="`{:,}`".format(len(inp.strip())))
         e.add_field(name="Words", value="`{:,}`".format(len(splt)))
@@ -1459,13 +1459,14 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 raise Exception("Invalid input. Please separate the items with `;`.")
             while " " in itemslist:
                 itemslist.remove(" ")
-            data = sorted(list(map(float, [i.strip() for i in itemslist])))
+            data = array(list(map(float, [i.strip() for i in itemslist])))
+            data.sort()
             halflist = int(len(data) // 2)
             q3 = median(data[-halflist:])
             q1 = median(data[:halflist])
             e = Embed(title="Quartile Calculator",
                       description=f'Requested by: {ctx.author.mention}\n' +
-                                  f'{funcs.formatting("; ".join(funcs.removeDotZero(i)) for i in data)}')
+                                  f'{funcs.formatting("; ".join(funcs.removeDotZero(float(i)) for i in data))}')
             e.add_field(name="Total Values", value="`{:,}`".format(len(data)))
             e.add_field(name="Mean", value=f'`{funcs.removeDotZero(mean(data))}`')
             try:

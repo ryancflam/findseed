@@ -1,6 +1,8 @@
 from random import randint
 from time import time
 
+from numpy import array
+
 from src.utils.funcs import minSecs
 
 
@@ -25,7 +27,7 @@ class Battleship:
         self.__attempts = 0
         self.__startTime = time()
         self.__gameWon = False
-        self.__board = [["." for _ in range(self.__boardSize)] for _ in range(self.__boardSize)]
+        self.__board = array([["." for _ in range(self.__boardSize)] for _ in range(self.__boardSize)])
         self.__placeShips()
 
     def __placeShips(self):

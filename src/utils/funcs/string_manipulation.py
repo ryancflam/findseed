@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
 from dateutil import parser
+from numpy import array
 
 from src.utils.funcs.math_and_numbers import oneIn
 
@@ -16,8 +17,8 @@ def formatCogName(cog):
     return cog.casefold().replace(" ", "_").replace(".py", "")
 
 
-def replaceCharacters(string, toreplace: list, replaceto: str=""):
-    for char in toreplace:
+def replaceCharacters(string, toreplace, replaceto: str=""):
+    for char in set(toreplace):
         string = string.replace(char, replaceto)
     return string
 
@@ -27,7 +28,7 @@ def asciiIgnore(text):
 
 
 def multiString(string, limit: int=2000):
-    return [string[i:i + limit] for i in range(0, len(string), limit)]
+    return array([string[i:i + limit] for i in range(0, len(string), limit)])
 
 
 def weirdCase(text):

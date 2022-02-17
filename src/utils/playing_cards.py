@@ -1,18 +1,18 @@
-from random import sample
+from numpy import array, random
 
 
 class PlayingCards:
     def __init__(self):
-        self.__number = [
+        self.__number = array([
             "A  ", "2  ", "3  ", "4  ", "5  ", "6  ", "7  ", "8  ", "9  ", "10 ", "J  ", "Q  ", "K  "
-        ]
-        self.__suit = ["♠", "♦", "♥", "♣"]
-        self.__cards = [i + j for j in self.__suit for i in self.__number]
+        ])
+        self.__suit = array(["♠", "♦", "♥", "♣"])
+        self.__cards = array([i + j for j in self.__suit for i in self.__number])
 
     def randomCard(self, amount: int=1):
         if not 1 <= amount <= 52:
             raise Exception("Amount must be 1-52 inclusive.")
-        return sample(self.__cards, amount)
+        return random.choice(self.__cards, amount, replace=False)
 
     @staticmethod
     def returnCardName(card):

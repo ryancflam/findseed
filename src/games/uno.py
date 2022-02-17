@@ -79,10 +79,10 @@ class Uno:
 
     def __firstDeal(self):
         for _ in range(7):
-            for handsObject in self.__playerHands:
-                _ = self.__dealOne(handsObject)
+            for handObj in self.__playerHands:
+                _ = self.__dealOne(handObj)
 
-    def __dealOne(self, handsObject):
+    def __dealOne(self, handObj):
         if not self.__deck:
             discard = self.__discardPile[-1]
             self.__discardPile.pop()
@@ -92,7 +92,7 @@ class Uno:
             if not self.__deck:
                 return None
         card = self.__deck[randint(0, len(self.__deck) - 1)]
-        handsObject.addCard(card)
+        handObj.addCard(card)
         self.__deck.remove(card)
         return card
 

@@ -3,7 +3,7 @@ from src.utils.playing_cards import PlayingCards
 
 class CardTrick:
     def __init__(self):
-        self.__sample = PlayingCards().randomCard(21)
+        self.__sample = list(PlayingCards().randomCard(21))
 
     @staticmethod
     def piles(deck):
