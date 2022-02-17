@@ -16,7 +16,7 @@ from discord import Embed, File, channel
 from discord.ext import commands
 from lyricsgenius import Genius
 from mendeleev import element
-from numpy import array, max, min, sqrt, sum
+from numpy import append, array, max, min, sqrt, sum
 from plotly import graph_objects as go
 from qrcode import QRCode
 
@@ -610,14 +610,14 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             game = gameres.json()["data"]
             gameID = game["id"]
             gameName = game["names"]["international"]
-            queue = []
+            queue = array([])
             categories = {}
             queueres = await funcs.getRequest(
                 f"https://www.speedrun.com/api/v1/runs?game={gameID}&status=new&embed=players&max=200"
             )
             queuedata = queueres.json()
             for i in queuedata["data"]:
-                queue.append(i)
+                queue = append(queue, i)
                 cat = i["category"]
                 if cat not in categories:
                     catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
@@ -627,14 +627,14 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     queueres = await funcs.getRequest(queuedata["pagination"]["links"][-1]["uri"])
                     queuedata = queueres.json()
                     for i in queuedata["data"]:
-                        queue.append(i)
+                        queue = append(queue, i)
                         cat = i["category"]
                         if cat not in categories:
                             catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
                             categories[cat] = catres.json()["data"]["name"]
-            if queue:
+            if queue.any():
                 output = ""
-                outputlist = []
+                outputlist = array([])
                 pagecount, count, run = 0, 0, 0
                 total = len(queue) / 15
                 for i in queue:
@@ -659,7 +659,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png"
                         )
                         e.set_footer(text="Page {:,} of {:,}".format(pagecount, funcs.strictRounding(total)))
-                        outputlist.append(e)
+                        outputlist = append(outputlist, e)
                         output = ""
                         count = 0
                 m = await ctx.reply(embed=outputlist[0])
@@ -686,7 +686,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 terms = data["list"]
                 if not terms:
                     return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
-                embeds = []
+                embeds = array([])
                 pagecount = 0
                 for i, c in enumerate(terms):
                     pagecount += 1
@@ -714,7 +714,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         )
                     except ZeroDivisionError:
                         e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(i + 1, len(terms)))
-                    embeds.append(e)
+                    embeds = append(embeds, e)
                 m = await ctx.reply(embed=embeds[0])
                 await m.edit(view=PageButtons(ctx, self.client, m, embeds))
             except Exception as ex:
@@ -739,7 +739,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             originallyric = funcs.multiString(
                 Genius(config.geniusToken).search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048
             )
-            embeds = []
+            embeds = array([])
             pagecount = 0
             for p in originallyric:
                 pagecount += 1
@@ -747,7 +747,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 e.set_thumbnail(url=thumbnail)
                 e.add_field(name="Genius Link", value=link)
                 e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(originallyric)))
-                embeds.append(e)
+                embeds = append(embeds, e)
             m = await ctx.reply(embed=embeds[0])
             await m.edit(view=PageButtons(ctx, self.client, m, embeds))
         except Exception as ex:
@@ -1845,12 +1845,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             imgs.append((c["subpods"][0]["img"]["src"], c["title"]))
                         except:
                             pass
-                    embeds = []
+                    embeds = array([])
                     for i, c in enumerate(imgs):
                         emb = e.copy()
                         emb.set_image(url=c[0])
                         emb.set_footer(text="{}\nPage {:,} of {:,}".format(c[1], i + 1, len(imgs)))
-                        embeds.append(emb)
+                        embeds = append(embeds, emb)
                     m = await ctx.reply(embed=embeds[0])
                     return await m.edit(view=PageButtons(ctx, self.client, m, embeds))
                 else:
