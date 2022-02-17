@@ -95,13 +95,9 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
             if channels and request.method == "POST":
                 data = request.json
+                print(data)
                 e = github_embeds.push(data)
-                for channel in _getChannelObjects(client, channels):
-                    try:
-                        await channel.send(embed=e)
-                    except Exception as ex:
-                        print(ex)
-                # client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
+                client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
                 return "success", 200
         except:
             abort(400)
