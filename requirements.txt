@@ -4,7 +4,7 @@ aioshutil==1.1
 akinator.py[async]==5.0.0
 async-google-trans-new==1.4.3
 asyncpraw==7.5.0
-flask==2.0.2
+flask[async]==2.0.2
 httpx==0.13.3
 kaleido==0.2.1
 lyricsgenius==3.0.1

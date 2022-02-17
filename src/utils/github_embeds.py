@@ -1,6 +1,6 @@
 from discord import Embed
 
-from src.utils import funcs
+from src.utils.funcs import timeStrToDatetime
 
 
 def push(data):
@@ -19,5 +19,5 @@ def push(data):
                          f"{message[:100] + ('...' if len(message) > 100 else '')} " + \
                          f"- [{user}](https://github.com/{user})"
     e.description = e.description[:2048]
-    e.set_footer(text=f"Commit time: {funcs.timeStrToDatetime(headcommit['timestamp'])} UTC")
+    e.set_footer(text=f"Commit time: {timeStrToDatetime(headcommit['timestamp'])} UTC")
     return e

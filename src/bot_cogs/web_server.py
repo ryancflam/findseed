@@ -73,30 +73,30 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
 
     @staticmethod
     @app.before_request
-    def ssl():
+    async def ssl():
         if https and not request.is_secure:
             url = request.url.replace("http://", "https://", 1)
             return redirect(url, code=301)
 
     @staticmethod
     @app.route("/")
-    def index():
+    async def index():
         return render_template("index.html")
 
     @staticmethod
     @app.route("/robots.txt")
-    def robotstxt():
+    async def robotstxt():
         return send_from_directory(app.template_folder, "robots.txt")
 
     @staticmethod
     @app.route(gitLogRoute, methods=["POST"])
-    def git():
-        channels = run(funcs.readJson("data/channels_following_repo.json"))["channels"]
+    async def git():
+        channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
         if channels and request.method == "POST":
             data = request.json
             try:
                 e = github_embeds.push(data)
-                client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
+                await funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels))
             except:
                 pass
             return "success", 200
