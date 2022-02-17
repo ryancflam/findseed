@@ -98,9 +98,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 e = github_embeds.push(data)
                 client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
                 return "success", 200
-        except Exception as ex:
-            print(ex)
-        abort(400)
+        except:
+            abort(400)
 
 
 setup = WebServer.setup
