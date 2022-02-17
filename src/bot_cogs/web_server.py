@@ -3,6 +3,7 @@ from os import path
 
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
+from numpy import append, array
 
 from config import gitLogRoute, webServerPort
 from src.utils import funcs, github_embeds
@@ -17,12 +18,12 @@ client = None
 https = False
 
 
-def _getChannelObjects(bot, channelIDs: list):
-    channelList = []
+def _getChannelObjects(bot, channelIDs):
+    channelList = array([])
     for i in channelIDs:
         channel = bot.get_channel(i)
         if channel:
-            channelList.append(channel)
+            append(channelList, channel)
     return channelList
 
 
@@ -92,7 +93,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @app.route(gitLogRoute, methods=["POST"])
     async def git():
         try:
-            channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
+            channels = array((await funcs.readJson("data/channels_following_repo.json"))["channels"])
             if channels and request.method == "POST":
                 data = request.json
                 e = github_embeds.push(data)
