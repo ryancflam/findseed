@@ -91,15 +91,15 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @staticmethod
     @app.route(gitLogRoute, methods=["POST"])
     async def git():
-        channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
-        if channels and request.method == "POST":
-            data = request.json
-            try:
+        try:
+            channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
+            if channels and request.method == "POST":
+                data = request.json
                 e = github_embeds.push(data)
                 await funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels))
-            except:
-                pass
-            return "success", 200
+                return "success", 200
+        except Exception as ex:
+            print(ex)
         abort(400)
 
 
