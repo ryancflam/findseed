@@ -342,7 +342,7 @@ class General(BaseCog, name="General", description="Standard commands relating t
     async def channelid(self, ctx):
         await ctx.reply(f"`#{ctx.channel.id}`")
 
-    @commands.command(name="followgitrepo", description="Receive the bot's GitHub push commits for this channel.",
+    @commands.command(name="followgitrepo", description="Receive the bot's GitHub push commits for this channel.", hidden=True,
                       aliases=["followgit", "followrepo", "followgithub", "gitfollow", "githubfollow", "repofollow"])
     async def followgitrepo(self, ctx):
         if ctx.guild and not ctx.author.guild_permissions.manage_channels:
@@ -357,7 +357,7 @@ class General(BaseCog, name="General", description="Standard commands relating t
         await ctx.reply(embed=funcs.errorEmbed(None, "GitHub push commits are already enabled for this channel."))
 
     @commands.command(name="unfollowgitrepo", description="Stop receiving the bot's GitHub push commits for this channel.",
-                      aliases=["unfollowgit", "unfollowrepo", "unfollowgithub", "gitunfollow", "repounfollow"])
+                      aliases=["unfollowgit", "unfollowrepo", "unfollowgithub", "gitunfollow", "repounfollow"], hidden=True)
     async def unfollowgitrepo(self, ctx):
         if ctx.guild and not ctx.author.guild_permissions.manage_channels:
             raise commands.MissingPermissions(missing_permissions=["manage_channels"])
