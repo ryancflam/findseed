@@ -96,7 +96,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             if channels and request.method == "POST":
                 data = request.json
                 e = github_embeds.push(data)
-                await funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels))
+                client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
                 return "success", 200
         except Exception as ex:
             print(ex)
