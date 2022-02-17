@@ -23,8 +23,7 @@ def _getChannelObjects(bot, channelIDs):
     for i in channelIDs:
         channel = bot.get_channel(i)
         if channel:
-            append(channelList, channel)
-            print(channelList)
+            channelList = append(channelList, channel)
     return channelList
 
 
