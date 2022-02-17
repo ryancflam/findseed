@@ -16,9 +16,9 @@ HARD_DROP = "⏬"
 QUIT = "🗑️"
 
 
-def _chunks(lst, n):
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+def _chunks(arr: list, n: int):
+    for i in range(0, len(arr), n):
+        yield arr[i:i + n]
 
 
 def _getBlocks():
@@ -35,24 +35,24 @@ def _getBlocks():
     for figure in figures:
         array3D = []
         for rotation in figure:
-            array = [0 for _ in range(16)]
+            arr = [0 for _ in range(16)]
             for r in rotation:
-                array[r] = 1
-            array3D.append(list(_chunks(array, 4)))
+                arr[r] = 1
+            array3D.append(list(_chunks(arr, 4)))
         array4D.append(array3D)
     return array4D
 
 
 class Tetris:
     NEXT_BLOCK_IMAGES = [
-        "https://i.imgur.com/OCQkjvl.jpg",
-        "https://i.imgur.com/8DIq9pG.jpg",
-        "https://i.imgur.com/IuzUG8y.jpg",
-        "https://i.imgur.com/37KiWc1.jpg",
-        "https://i.imgur.com/AbKmjsx.jpg",
-        "https://i.imgur.com/Si3Uic2.jpg",
-        "https://i.imgur.com/jVVeS1o.jpg",
-        "https://i.imgur.com/WkbxL9l.jpg"
+        "https://i.imgur.com/Yj34R66.png",
+        "https://i.imgur.com/7YDXZpg.png",
+        "https://i.imgur.com/BWcO2Xb.png",
+        "https://i.imgur.com/9ecgV2Y.png",
+        "https://i.imgur.com/wVOK81Z.png",
+        "https://i.imgur.com/2cAsudy.png",
+        "https://i.imgur.com/4IZKK2a.png",
+        "https://i.imgur.com/qBHmbzl.png"
     ]
 
     def __init__(self, ctx, client):
