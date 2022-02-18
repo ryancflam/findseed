@@ -126,6 +126,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         raise Exception
                 except:
                     return await ctx.reply(embed=funcs.errorEmbed(None, f"Invalid input: `{minutes}`"))
+            if minutes > 100000000:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "That value is too big!"))
             reminder = {
                 "ID": funcs.randomHex(16),
                 "data": {
