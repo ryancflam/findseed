@@ -52,7 +52,6 @@ class BotInstance(commands.AutoShardedBot):
             case_insensitive=True,
             strip_after_prefix=True,
             chunk_guilds_at_startup=True,
-            max_messages=10000,
             slash_commands=False
         )
         self.startTime = time()

@@ -134,7 +134,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 }
             }
             self.remindersToAdd.append(reminder)
-            await ctx.reply("Added reminder: {}\n\nID: `{}`\n\nI will remind you in {} ({}).".format(
+            await ctx.reply("Added reminder: {}\n\nID: `{}`\n\nI will remind you in {} ({}). Be sure to have DMs on!".format(
                 reminder["data"]["reminder"],
                 reminder["ID"],
                 funcs.timeDifferenceStr(reminder["data"]["time"], now),

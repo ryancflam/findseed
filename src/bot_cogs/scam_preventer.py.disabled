@@ -54,7 +54,11 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
         await ctx.reply("<https://github.com/ryancflam/findseed/blob/master/resources/scam_preventer/scam_links.txt>")
 
     async def deleteEmbedOrAttachment(self, message, qrlink):
+        if not qrlink:
+            return False
         qr = await funcs.decodeQR(qrlink)
+        if not qr:
+            return False
         for url in self.scamlinks:
             if url in qr.casefold():
                 try:
@@ -64,7 +68,9 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                     break
         return False
 
-    async def detect(self, message, txt):
+    async def detectText(self, message, txt):
+        if not txt:
+            return False
         text = funcs.asciiIgnore(txt.casefold().replace(" ", ""))
         urls = findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", text)
         for link in urls:
@@ -101,7 +107,7 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
         return False
 
     async def processMessage(self, message):
-        if message.author == self.client.user \
+        if not message.guild and message.author == self.client.user \
                 or message.guild \
                 and message.guild.id not in (await funcs.readJson("data/scam_preventer.json"))["disallowed_servers"]:
             for a in message.attachments:
@@ -111,22 +117,24 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                         return
                 except:
                     pass
-            if await self.detect(message, message.content):
+            if await self.detectText(message, message.content):
                 return
             await sleep(3)
             for e in message.embeds:
-                if await self.detect(message, e.title) or await self.detect(message, e.description):
-                    return
-                for field in e.fields:
-                    if await self.detect(message, field.value) or await self.detect(message, field.name):
-                        return
                 try:
-                    if await self.deleteEmbedOrAttachment(message, e.thumbnail.url):
+                    if await self.detectText(message, e.title) or await self.detectText(message, e.description):
                         return
                 except:
                     pass
+                for field in e.fields:
+                    try:
+                        if await self.detectText(message, field.value) or await self.detectText(message, field.name):
+                            return
+                    except:
+                        pass
                 try:
-                    if await self.deleteEmbedOrAttachment(message, e.image.url):
+                    if await self.deleteEmbedOrAttachment(message, e.thumbnail.url) \
+                            or await self.deleteEmbedOrAttachment(message, e.image.url):
                         return
                 except:
                     pass
