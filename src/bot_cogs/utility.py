@@ -49,7 +49,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 try:
                     user = self.client.get_user(reminder["data"]["userID"])
                     e = Embed(title="⚠️ Reminder", description=reminder["data"]["reminder"])
-                    e.set_footer(text=f"Created: {str(datetime.utcfromtimestamp(rtime)).split('.')[0]} UTC")
+                    e.set_footer(text=f"Remind time: {str(datetime.utcfromtimestamp(rtime)).split('.')[0]} UTC")
                     await user.send(embed=e)
                 except:
                     pass
@@ -100,17 +100,24 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         reminders = await funcs.readJson("data/reminders.json")
         now = int(time())
         if not minutes and not r:
-            yourreminders = ""
+            yourreminders = []
             for reminder in reminders["list"]:
-                if reminder["data"]["userID"] == ctx.author.id and reminder["data"]["time"] > now:
-                    yourreminders += "ID: `{}`\nRemind Date: `{}`\nWill Remind In: `{}`\nMessage: `{}`\n\n".format(
-                        reminder["ID"],
-                        str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0],
-                        funcs.timeDifferenceStr(reminder["data"]["time"], now),
-                        reminder["data"]["reminder"].replace("`", "")
-                    )
-            yourreminders = yourreminders or "None"
-            await ctx.reply(f"== Your Reminders ==\n\n{yourreminders}"[:2000])
+                rtime = reminder["data"]["time"]
+                if reminder["data"]["userID"] == ctx.author.id and rtime > now:
+                    e = Embed(title="Your Reminders", description=reminder["data"]["reminder"])
+                    e.add_field(name="ID", value=f"`{reminder['ID']}`")
+                    e.add_field(name="Remind Date (UTC)",
+                                value=f'`{str(datetime.utcfromtimestamp(rtime)).split(".")[0]}`')
+                    e.add_field(name="Will Remind In", value=f'`{funcs.timeDifferenceStr(rtime, now)}`')
+                    yourreminders.append(e)
+            if not yourreminders:
+                yourreminders.append(Embed(title="Your Reminders", description="None"))
+            else:
+                for i, e in enumerate(yourreminders):
+                    e.set_footer(text="Page {:,} of {:,}".format(i + 1, len(yourreminders)))
+            m = await ctx.reply(embed=yourreminders[0])
+            if len(yourreminders) > 1:
+                await m.edit(view=PageButtons(ctx, self.client, m, yourreminders))
         else:
             try:
                 minutes = float(minutes)
@@ -126,8 +133,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         raise Exception
                 except:
                     return await ctx.reply(embed=funcs.errorEmbed(None, f"Invalid input: `{minutes}`"))
-            if minutes > 100000000:
-                return await ctx.reply(embed=funcs.errorEmbed(None, "That value is too big!"))
+            if minutes > 100000000 or len(r) > 500:
+                return await ctx.reply(embed=funcs.errorEmbed(None, "That value is too big or your input is too long."))
             reminder = {
                 "ID": funcs.randomHex(16),
                 "data": {
