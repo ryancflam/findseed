@@ -55,6 +55,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
             key = certs + keys["private_key"]
             if path.exists(cert) and path.exists(key):
                 kwargs = dict(ssl_context=(cert, key))
+                https = True
                 print(f"{self.name} - Attempting to use HTTPS...")
             t = BaseThread(target=app.run, args=("0.0.0.0", webServerPort), kwargs=kwargs)
             try:
@@ -92,8 +93,8 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     @app.route(gitLogRoute, methods=["POST"])
     async def git():
         try:
-            channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
-            if channels and request.method == "POST":
+            channels = await funcs.readJson("data/channels_following_repo.json")
+            if channels["channels"] and request.method == "POST":
                 data = request.json
                 e = github_embeds.push(data)
                 client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))

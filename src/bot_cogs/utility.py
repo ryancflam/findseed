@@ -740,7 +740,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         if cat not in categories:
                             catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
                             categories[cat] = catres.json()["data"]["name"]
-            if queue.any():
+            if queue:
                 output = ""
                 outputlist = []
                 pagecount, count, run = 0, 0, 0
