@@ -28,7 +28,7 @@ The bot also attempts to remove any scam links which can be seen in `!scamurls` 
 
 !findseed does not store any personal data or personally identifying information including usernames, IP addresses, and email addresses. Discord user IDs and server IDs are stored, however, only to record the preferences of the bot's users and servers. The data recorded are in no way used maliciously, personally, or financially—as with anything else with regard to this bot. ~~I can barely write good code let alone hack and steal user data...~~
 
-Users may be subject to being blocked from interacting with the bot in any way if found or using commands in a malicious, abusive, or exploitative manner, or being under the legal age of 13 to use Discord, in which case they shall also be reported to the Trust & Safety team of Discord at the earliest possible stage. Users take full responsibility for their actions with !findseed in Discord servers, and the bot developer is not to be liable for any damage caused.
+Users may be subject to being blocked from interacting with the bot in any way if found using commands in a malicious, abusive, or exploitative manner, or being under the legal age of 13 to use Discord, in which case they shall also be reported to the Trust & Safety team of Discord at the earliest possible stage. Users take full responsibility for their actions with !findseed in Discord servers, and the bot developer is not to be liable for any damage caused.
 
 Refrain from using any of the bot's services if you do not accept these terms.
 
