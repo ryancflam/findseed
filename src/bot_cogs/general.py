@@ -145,14 +145,15 @@ class General(BaseCog, name="General", description="Standard commands relating t
                 userID = str(ctx.author.id)
             else:
                 userID = funcs.removeMention(userID).replace(" ", "")
-            u = self.client.get_user(int(userID))
+            u = await self.client.fetch_user(int(userID))
             dt = u.created_at
             e = Embed(description=u.mention if u != self.client.user else "That's me!")
             e.set_author(name=str(u), icon_url=u.avatar)
-            e.set_thumbnail(url=u.avatar)
             e.add_field(name="Is Bot", value=f"`{str(u.bot)}`")
             e.add_field(name="User ID", value=f"`{u.id}`")
             e.add_field(name="Creation Date", value=funcs.dateBirthday(dt.day, dt.month, dt.year))
+            if u.banner:
+                e.set_image(url=u.banner.url if u.banner.is_animated() else u.banner.with_format("png").url)
             if ctx.guild:
                 try:
                     member = await ctx.guild.fetch_member(userID)

@@ -43,6 +43,7 @@ class Moderation(BaseCog, name="Moderation", description="Simple moderation and 
     @commands.bot_has_permissions(moderate_members=True)
     @commands.has_permissions(moderate_members=True)
     async def timeout(self, ctx, member: Member, minutes="1", *, reason=None):
+        limit = 40320
         try:
             if member == self.client.user:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "I don't want to time out myself, so I won't do it."))
@@ -62,6 +63,10 @@ class Moderation(BaseCog, name="Moderation", description="Simple moderation and 
                         raise Exception
                 except:
                     return await ctx.reply(embed=funcs.errorEmbed(None, f"Invalid input: `{minutes}`"))
+            if minutes > limit:
+                return await ctx.reply(
+                    embed=funcs.errorEmbed(None, "You cannot time out a user for longer than `{:,}` minutes.".format(limit))
+                )
             await member.timeout_for(duration=timedelta(minutes=minutes), reason=reason)
             try:
                 await member.send(f"You have been timed out in **{ctx.guild.name}** for {funcs.removeDotZero(minutes)} " +

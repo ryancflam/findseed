@@ -24,8 +24,12 @@ The bot also attempts to remove any scam links which can be seen in `!scamurls` 
 - Senior Developer - ryancflam's fingers
 - Assistant Developer - ryancflam's coffee
 
-### Other Notes
+### Privacy Policy/Terms of Use
 
 !findseed does not store any personal data or personally identifying information including usernames, IP addresses, and email addresses. Discord user IDs and server IDs are stored, however, only to record the preferences of the bot's users and servers. The data recorded are in no way used maliciously, personally, or financially—as with anything else with regard to this bot. ~~I can barely write good code let alone hack and steal user data...~~
 
-Users may be subject to being blocked from interacting with the bot in any way if found excessively spamming commands or using them in a malicious or exploitative manner.
+Users may be subject to being blocked from interacting with the bot in any way if found or using commands in a malicious, abusive, or exploitative manner, or being under the legal age of 13 to use Discord, in which case they shall be reported to Discord's Trust & Safety team. Users take full responsibility for their actions with !findseed in Discord servers and the bot developer ryancflam will not be liable for any damage caused.
+
+Refrain from using any of the bot's services if you do not accept these terms.
+
+Last updated: 18 February 2022

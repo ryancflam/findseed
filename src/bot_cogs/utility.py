@@ -1745,7 +1745,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(description="Adds a timestamp to a YouTube video link, " +
                                   "useful for mobile users who cannot copy links with timestamps.", hidden=True,
-                      aliases=["yt", "youtube"], usage="<YouTube video link> <timestamp>", name="yttimestamp")
+                      aliases=["yt", "ytts", "ytt"], usage="<YouTube video link> <timestamp>", name="yttimestamp")
     async def yttimestamp(self, ctx, link, timestamp):
         if "youtu" not in link.casefold():
             return await ctx.reply(embed=funcs.errorEmbed(None, "Not a YouTube link."))

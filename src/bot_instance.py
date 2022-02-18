@@ -32,9 +32,28 @@ class BotInstance(commands.AutoShardedBot):
     def __init__(self, loop):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
-            intents=Intents.all(),
+            intents=Intents(
+                guilds=True,
+                members=True,
+                bans=True,
+                emojis=False,
+                integrations=False,
+                webhooks=False,
+                invites=False,
+                voice_states=False,
+                presences=False,
+                guild_messages=True,
+                dm_messages=True,
+                guild_reactions=True,
+                dm_reactions=True,
+                guild_typing=True,
+                dm_typing=True
+            ),
             case_insensitive=True,
-            strip_after_prefix=True
+            strip_after_prefix=True,
+            chunk_guilds_at_startup=True,
+            max_messages=10000,
+            slash_commands=False
         )
         self.startTime = time()
         self.loop.create_task(self.__generateFiles())
