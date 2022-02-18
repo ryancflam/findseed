@@ -16,7 +16,7 @@ def push(data):
         user = commit["committer"]["username"]
         message = commit["message"].replace("_", "\_").replace("*", "\*")
         e.description += f"\n`{commit['id'][:7]}...{commit['id'][-7:]}` " + \
-                         f"{message[:100] + ('...' if len(message) > 100 else '')} " + \
+                         f"{message[:200] + ('...' if len(message) > 200 else '')} " + \
                          f"- [{user}](https://github.com/{user})"
     e.description = e.description[:2048]
     e.set_footer(text=f"Commit time: {timeStrToDatetime(headcommit['timestamp'])} UTC")
