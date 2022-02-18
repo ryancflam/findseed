@@ -44,16 +44,15 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         reminders = await funcs.readJson("data/reminders.json")
         for reminder in reminders["list"]:
             rtime = reminder["data"]["time"]
-            now = int(time())
-            if rtime <= now:
+            if rtime <= int(time()):
                 try:
                     user = self.client.get_user(reminder["data"]["userID"])
                     e = Embed(title="⚠️ Reminder", description=reminder["data"]["reminder"])
                     e.set_footer(text=f"Created: {str(datetime.utcfromtimestamp(rtime)).split('.')[0]} UTC")
                     await user.send(embed=e)
-                    self.reminderIDsToDelete.add(reminder["ID"])
                 except:
                     pass
+                self.reminderIDsToDelete.add(reminder["ID"])
             if reminder["ID"] in self.reminderIDsToDelete:
                 self.reminderIDsToDelete.remove(reminder["ID"])
                 reminders["list"].remove(reminder)
@@ -81,7 +80,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 break
         if toremove:
             self.reminderIDsToDelete.add(toremove)
-            await ctx.reply(f"Removed reminder `{toremove}`.")
+            await ctx.reply(f"Removed reminder with ID: `{toremove}`")
         else:
             await ctx.reply(
                 embed=funcs.errorEmbed(
@@ -126,25 +125,21 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         raise Exception
                 except:
                     return await ctx.reply(embed=funcs.errorEmbed(None, f"Invalid input: `{minutes}`"))
-            try:
-                reminder = {
-                    "ID": funcs.randomHex(16),
-                    "data": {
-                        "userID": ctx.author.id,
-                        "time": int(minutes * 60 + now),
-                        "reminder": r
-                    }
+            reminder = {
+                "ID": funcs.randomHex(16),
+                "data": {
+                    "userID": ctx.author.id,
+                    "time": int(minutes * 60 + now),
+                    "reminder": r
                 }
-                self.remindersToAdd.append(reminder)
-                await ctx.reply("Added reminder: {}\n\nID: `{}`\n\nI will remind you in {} minute{} ({}).".format(
-                    reminder["data"]["reminder"],
-                    reminder["ID"],
-                    funcs.removeDotZero(minutes),
-                    "" if minutes == 1 else "s",
-                    str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0]
-                ))
-            except Exception as ex:
-               funcs.printError(ctx, ex)
+            }
+            self.remindersToAdd.append(reminder)
+            await ctx.reply("Added reminder: {}\n\nID: `{}`\n\nI will remind you in {} ({}).".format(
+                reminder["data"]["reminder"],
+                reminder["ID"],
+                funcs.timeDifferenceStr(reminder["data"]["time"], now),
+                str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0]
+            ))
 
     async def gatherLabelsAndValues(self, ctx):
         labels, values = [], []
