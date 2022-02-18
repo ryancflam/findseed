@@ -41,6 +41,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
 
     @tasks.loop(seconds=1.0)
     async def reminderLoop(self):
+        await sleep(3)
         reminders = await funcs.readJson("data/reminders.json")
         for reminder in reminders["list"]:
             rtime = reminder["data"]["time"]
@@ -101,7 +102,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         if not minutes and not r:
             yourreminders = ""
             for reminder in reminders["list"]:
-                if reminder["data"]["userID"] == ctx.author.id:
+                if reminder["data"]["userID"] == ctx.author.id and reminder["data"]["time"] > now:
                     yourreminders += "ID: `{}`\nRemind Date: `{}`\nWill Remind In: `{}`\nMessage: `{}`\n\n".format(
                         reminder["ID"],
                         str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0],
