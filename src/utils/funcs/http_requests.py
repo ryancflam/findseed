@@ -34,12 +34,7 @@ async def postRequest(url, data=None, headers=None, timeout=None, verify=True, j
     return res
 
 
-async def getImageFile(url, headers=None, params=None, timeout=None, verify=True, name="image.png"):
+async def getImageFile(url, headers=None, params=None, timeout=None, verify=True, name="image.png", file=True):
     async with AsyncClient(verify=verify) as session:
         res = await session.get(url, headers=headers, params=params, timeout=timeout)
-    return File(BytesIO(res.content), name)
-
-
-async def decodeQR(link):
-    res = await getRequest("http://api.qrserver.com/v1/read-qr-code", params={"fileurl": link})
-    return res.json()[0]["symbol"][0]["data"]
+    return File(BytesIO(res.content), name) if file else BytesIO(res.content)

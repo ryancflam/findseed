@@ -1,5 +1,9 @@
 from re import split
 
+from PIL import Image
+from pyzbar.pyzbar import decode
+
+from src.utils.funcs.http_requests import getImageFile
 from src.utils.funcs.math_and_numbers import randomHex
 from src.utils.funcs.string_manipulation import monthNameToNumber, monthNumberToName
 from src.utils.item_cycle import ItemCycle
@@ -134,3 +138,13 @@ def yearToChineseZodiac(year):
 
 def githubRepoPic(repo):
     return f"https://opengraph.githubassets.com/{randomHex(64)}/{repo}"
+
+
+async def decodeQR(link):
+    img = Image.open(await getImageFile(link, file=False))
+    data = decode(img)
+    img.close()
+    res = ""
+    for i in data:
+        res += i.data.decode("utf-8") + "\n"
+    return res[:-1] if res else None
