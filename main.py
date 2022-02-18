@@ -9,7 +9,7 @@ def main():
     handler = StreamHandler(stream=stdout)
     handler.setLevel(20)
     getLogger().addHandler(handler)
-    client = BotInstance(loop()
+    client = BotInstance(loop())
     try:
         task = loop().create_task(client.startup())
         loop().run_until_complete(task)
