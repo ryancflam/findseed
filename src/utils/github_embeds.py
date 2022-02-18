@@ -1,6 +1,6 @@
 from discord import Embed
 
-from src.utils.funcs import timeStrToDatetime
+from src.utils.funcs import timeStrToDatetim
 
 
 def push(data):
