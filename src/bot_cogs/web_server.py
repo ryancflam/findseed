@@ -17,7 +17,7 @@ client = None
 https = False
 
 
-def _getChannelObjects(bot, channelIDs: list)
+def _getChannelObjects(bot, channelIDs: list):
     channelList = []
     for i in channelIDs:
         channel = bot.get_channel(i)
