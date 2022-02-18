@@ -53,21 +53,6 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
     async def scamurls(self, ctx):
         await ctx.reply("<https://github.com/ryancflam/findseed/blob/master/resources/scam_preventer/scam_links.txt>")
 
-    async def deleteEmbedOrAttachment(self, message, qrlink):
-        if not qrlink:
-            return False
-        qr = await funcs.decodeQR(qrlink)
-        if not qr:
-            return False
-        for url in self.scamlinks:
-            if url in qr.casefold():
-                try:
-                    await message.delete()
-                    return True
-                except:
-                    break
-        return False
-
     async def detectText(self, message, txt):
         if not txt:
             return False
@@ -106,6 +91,14 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                     pass
         return False
 
+    async def detectEmbedOrAttachment(self, message, qrlink):
+        if not qrlink:
+            return False
+        qr = await funcs.decodeQR(qrlink)
+        if await self.detectText(message, qr):
+            return True
+        return False
+
     async def processMessage(self, message):
         if not message.guild and message.author == self.client.user \
                 or message.guild \
@@ -113,7 +106,7 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
             for a in message.attachments:
                 try:
                     qrlink = a.url
-                    if await self.deleteEmbedOrAttachment(message, qrlink):
+                    if await self.detectEmbedOrAttachment(message, qrlink):
                         return
                 except:
                     pass
@@ -133,8 +126,8 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
                     except:
                         pass
                 try:
-                    if await self.deleteEmbedOrAttachment(message, e.thumbnail.url) \
-                            or await self.deleteEmbedOrAttachment(message, e.image.url):
+                    if await self.detectEmbedOrAttachment(message, e.thumbnail.url) \
+                            or await self.detectEmbedOrAttachment(message, e.image.url):
                         return
                 except:
                     pass
