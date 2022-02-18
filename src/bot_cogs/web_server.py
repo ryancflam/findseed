@@ -93,7 +93,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
     async def git():
         try:
             channels = (await funcs.readJson("data/channels_following_repo.json"))["channels"]
-            if channels.any() and request.method == "POST":
+            if channels and request.method == "POST":
                 data = request.json
                 e = github_embeds.push(data)
                 client.loop.create_task(funcs.sendEmbedToChannels(e, _getChannelObjects(client, channels)))
