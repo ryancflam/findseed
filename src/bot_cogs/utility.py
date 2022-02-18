@@ -13,10 +13,10 @@ from urllib import parse
 from async_google_trans_new import AsyncTranslator, constant
 from asyncpraw import Reddit
 from discord import Embed, File, channel
-from discord.ext import commands
+from discord.ext import commands, tasks
 from lyricsgenius import Genius
 from mendeleev import element
-from numpy import append, array, max, min, sqrt, sum
+from numpy import array, max, min, sqrt, sum
 from plotly import graph_objects as go
 from qrcode import QRCode
 
@@ -31,10 +31,123 @@ HCF_LIMIT = 1000000
 class Utility(BaseCog, name="Utility", description="Some useful commands for getting data or calculating things."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
+        self.reminderIDsToDelete = set()
+        self.remindersToAdd = []
+        self.client.loop.create_task(self.__generateFiles())
+
+    async def __generateFiles(self):
+        await funcs.generateJson("reminders", {"list": []})
+        self.reminderLoop.start()
+
+    @tasks.loop(seconds=1.0)
+    async def reminderLoop(self):
+        reminders = await funcs.readJson("data/reminders.json")
+        for reminder in reminders["list"]:
+            rtime = reminder["data"]["time"]
+            now = int(time())
+            if rtime <= now:
+                try:
+                    user = self.client.get_user(reminder["data"]["userID"])
+                    e = Embed(title="⚠️ Reminder", description=reminder["data"]["reminder"])
+                    e.set_footer(text=f"Created: {str(datetime.utcfromtimestamp(rtime)).split('.')[0]} UTC")
+                    await user.send(embed=e)
+                    self.reminderIDsToDelete.add(reminder["ID"])
+                except:
+                    pass
+            if reminder["ID"] in self.reminderIDsToDelete:
+                self.reminderIDsToDelete.remove(reminder["ID"])
+                reminders["list"].remove(reminder)
+        for reminder in self.remindersToAdd:
+            reminders["list"].append(reminder)
+            self.remindersToAdd.remove(reminder)
+        await funcs.dumpJson("data/reminders.json", reminders)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="reminderdel", description="Removes a reminder.", usage="<reminder ID>",
+                      aliases=["reminderdelete", "reminderemove", "removereminder", "deletereminder", "delreminder", "delremind"])
+    async def reminderdel(self, ctx, reminderID=None):
+        if not reminderID:
+            return await ctx.send(
+                embed=funcs.errorEmbed(
+                    None,
+                    f"You must specify a reminder ID! See `{self.client.command_prefix}reminders` for a list of your reminders."
+                )
+            )
+        reminders = await funcs.readJson("data/reminders.json")
+        toremove = None
+        for reminder in reminders["list"]:
+            if reminder["ID"] == reminderID.casefold() and reminder["data"]["userID"] == ctx.author.id:
+                toremove = reminder["ID"]
+                break
+        if toremove:
+            self.reminderIDsToDelete.add(toremove)
+            await ctx.reply(f"Removed reminder `{toremove}`.")
+        else:
+            await ctx.reply(
+                embed=funcs.errorEmbed(
+                    None,
+                    f"Unknown reminder ID. See `{self.client.command_prefix}reminders` for a list of your reminders."
+                )
+            )
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="reminder", description="Creates a reminder or shows a list of your reminders.",
+                      aliases=["remind", "remindme", "reminders"],
+                      usage="[Xm/h/d (replace X with number of minutes/hours/days)] <message>")
+    async def reminder(self, ctx, minutes=None, *, r=None):
+        if minutes and not r:
+            return await ctx.send(embed=funcs.errorEmbed(None, "Please leave a message!"))
+        reminders = await funcs.readJson("data/reminders.json")
+        now = int(time())
+        if not minutes and not r:
+            yourreminders = ""
+            for reminder in reminders["list"]:
+                if reminder["data"]["userID"] == ctx.author.id:
+                    yourreminders += "ID: `{}`\nRemind Date: `{}`\nWill Remind In: `{}`\nMessage: `{}`\n\n".format(
+                        reminder["ID"],
+                        str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0],
+                        funcs.timeDifferenceStr(reminder["data"]["time"], now),
+                        reminder["data"]["reminder"].replace("`", "")
+                    )
+            yourreminders = yourreminders or "None"
+            await ctx.reply(f"== Your Reminders ==\n\n{yourreminders}"[:2000])
+        else:
+            try:
+                minutes = float(minutes)
+            except:
+                try:
+                    if minutes.casefold().endswith("h"):
+                        minutes = float(minutes[:-1]) * 60
+                    elif minutes.casefold().endswith("d"):
+                        minutes = float(minutes[:-1]) * 1440
+                    elif minutes.casefold().endswith("m"):
+                        minutes = float(minutes[:-1])
+                    else:
+                        raise Exception
+                except:
+                    return await ctx.reply(embed=funcs.errorEmbed(None, f"Invalid input: `{minutes}`"))
+            try:
+                reminder = {
+                    "ID": funcs.randomHex(16),
+                    "data": {
+                        "userID": ctx.author.id,
+                        "time": int(minutes * 60 + now),
+                        "reminder": r
+                    }
+                }
+                self.remindersToAdd.append(reminder)
+                await ctx.reply("Added reminder: {}\n\nID: `{}`\n\nI will remind you in {} minute{} ({}).".format(
+                    reminder["data"]["reminder"],
+                    reminder["ID"],
+                    funcs.removeDotZero(minutes),
+                    "" if minutes == 1 else "s",
+                    str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0]
+                ))
+            except Exception as ex:
+               funcs.printError(ctx, ex)
 
     async def gatherLabelsAndValues(self, ctx):
-        labels = []
-        values = []
+        labels, values = [], []
         while len(labels) < 25:
             try:
                 await ctx.send(
@@ -610,14 +723,14 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             game = gameres.json()["data"]
             gameID = game["id"]
             gameName = game["names"]["international"]
-            queue = array([])
+            queue = []
             categories = {}
             queueres = await funcs.getRequest(
                 f"https://www.speedrun.com/api/v1/runs?game={gameID}&status=new&embed=players&max=200"
             )
             queuedata = queueres.json()
             for i in queuedata["data"]:
-                queue = append(queue, i)
+                queue.append(i)
                 cat = i["category"]
                 if cat not in categories:
                     catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
@@ -627,14 +740,14 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     queueres = await funcs.getRequest(queuedata["pagination"]["links"][-1]["uri"])
                     queuedata = queueres.json()
                     for i in queuedata["data"]:
-                        queue = append(queue, i)
+                        queue.append(i)
                         cat = i["category"]
                         if cat not in categories:
                             catres = await funcs.getRequest(f"https://www.speedrun.com/api/v1/categories/{cat}")
                             categories[cat] = catres.json()["data"]["name"]
             if queue.any():
                 output = ""
-                outputlist = array([])
+                outputlist = []
                 pagecount, count, run = 0, 0, 0
                 total = len(queue) / 15
                 for i in queue:
@@ -659,7 +772,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103813585240124/src.png"
                         )
                         e.set_footer(text="Page {:,} of {:,}".format(pagecount, funcs.strictRounding(total)))
-                        outputlist = append(outputlist, e)
+                        outputlist.append(e)
                         output = ""
                         count = 0
                 m = await ctx.reply(embed=outputlist[0])
@@ -686,7 +799,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 terms = data["list"]
                 if not terms:
                     return await ctx.reply(embed=funcs.errorEmbed(None, "Unknown term."))
-                embeds = array([])
+                embeds = []
                 pagecount = 0
                 for i, c in enumerate(terms):
                     pagecount += 1
@@ -714,7 +827,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         )
                     except ZeroDivisionError:
                         e.set_footer(text="Approval rate: n/a (0 👍 - 0 👎)\nPage {:,} of {:,}".format(i + 1, len(terms)))
-                    embeds = append(embeds, e)
+                    embeds.append(e)
                 m = await ctx.reply(embed=embeds[0])
                 await m.edit(view=PageButtons(ctx, self.client, m, embeds))
             except Exception as ex:
@@ -739,7 +852,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             originallyric = funcs.multiString(
                 Genius(config.geniusToken).search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048
             )
-            embeds = array([])
+            embeds = []
             pagecount = 0
             for p in originallyric:
                 pagecount += 1
@@ -747,7 +860,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 e.set_thumbnail(url=thumbnail)
                 e.add_field(name="Genius Link", value=link)
                 e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(originallyric)))
-                embeds = append(embeds, e)
+                embeds.append(e)
             m = await ctx.reply(embed=embeds[0])
             await m.edit(view=PageButtons(ctx, self.client, m, embeds))
         except Exception as ex:
@@ -1845,12 +1958,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             imgs.append((c["subpods"][0]["img"]["src"], c["title"]))
                         except:
                             pass
-                    embeds = array([])
+                    embeds = []
                     for i, c in enumerate(imgs):
                         emb = e.copy()
                         emb.set_image(url=c[0])
                         emb.set_footer(text="{}\nPage {:,} of {:,}".format(c[1], i + 1, len(imgs)))
-                        embeds = append(embeds, emb)
+                        embeds.append(emb)
                     m = await ctx.reply(embed=embeds[0])
                     return await m.edit(view=PageButtons(ctx, self.client, m, embeds))
                 else:

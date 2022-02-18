@@ -1,5 +1,5 @@
 from asyncio import new_event_loop as loop
-from logging import StreamHandler, getLogger, INFO
+from logging import StreamHandler, getLogger
 from sys import stdout
 
 from src.bot_instance import BotInstance
@@ -7,7 +7,7 @@ from src.bot_instance import BotInstance
 
 def main():
     handler = StreamHandler(stream=stdout)
-    handler.setLevel(INFO)
+    handler.setLevel(20)
     getLogger().addHandler(handler)
     client = BotInstance(loop())
     try:

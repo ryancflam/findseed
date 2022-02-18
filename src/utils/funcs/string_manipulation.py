@@ -1,7 +1,6 @@
 from datetime import date, datetime, timedelta
 
 from dateutil import parser
-from numpy import array
 
 from src.utils.funcs.math_and_numbers import oneIn
 
@@ -28,7 +27,7 @@ def asciiIgnore(text):
 
 
 def multiString(string, limit: int=2000):
-    return array([string[i:i + limit] for i in range(0, len(string), limit)])
+    return [string[i:i + limit] for i in range(0, len(string), limit)]
 
 
 def weirdCase(text):

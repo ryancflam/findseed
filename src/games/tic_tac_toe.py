@@ -1,7 +1,9 @@
 # Credit - https://github.com/kying18/tic-tac-toe
 
-from math import floor, inf
+from math import floor
 from time import time
+
+from numpy import inf
 
 from src.utils.base_player import BasePlayer
 from src.utils.funcs import minSecs

@@ -1,8 +1,9 @@
 # Credit - https://gist.github.com/poke/6934842
 
 from itertools import chain, groupby
-from math import inf
 from time import time
+
+from numpy import inf
 
 from src.utils.base_player import BasePlayer
 from src.utils.funcs import minSecs, numberEmojis

@@ -1,12 +1,10 @@
 from re import split
 
-from numpy import array, where
-
 from src.utils.funcs.math_and_numbers import randomHex
 from src.utils.funcs.string_manipulation import monthNameToNumber, monthNumberToName
 from src.utils.item_cycle import ItemCycle
 
-MUSICAL_NOTES = array(["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"])
+MUSICAL_NOTES = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"]
 
 
 def noteFinder(raw):
@@ -17,7 +15,7 @@ def noteFinder(raw):
     if flatsharp.endswith("-"):
         flatsharp = flatsharp[:-1]
         octave *= -1
-    cycle.updateIndex(where(MUSICAL_NOTES == raw[:1].upper())[0][0])
+    cycle.updateIndex(MUSICAL_NOTES.index(raw[:1].upper()))
     if flatsharp:
         for i in flatsharp:
             if i == "♯":

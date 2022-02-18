@@ -2,7 +2,6 @@ from json import dumps, loads
 from os import path
 
 from aiofiles import open, os
-from numpy import array
 from plotly import graph_objects as go
 
 from src.utils.base_cog import BaseCog
@@ -68,7 +67,7 @@ async def readTxt(pathstr, lines=False, encoding="utf-8"):
     async with open(f"{PATH}/{pathstr}", "r", encoding=encoding) as f:
         if lines:
             lines = await f.readlines()
-            content = array([i[:-1] for i in lines if i[:-1]])
+            content = [i[:-1] for i in lines if i[:-1]]
         else:
             content = await f.read()
     await f.close()
@@ -101,11 +100,11 @@ async def generateJson(name, data: dict):
 
 
 async def userNotBlacklisted(client, message):
-    if message.author.id in array((await readJson("data/whitelist.json"))["users"]):
+    if message.author.id in (await readJson("data/whitelist.json"))["users"]:
         return True
     data = await readJson("data/blacklist.json")
-    serverList = array(data["servers"])
-    userList = array(data["users"])
+    serverList = data["servers"]
+    userList = data["users"]
     allowed = True
     for serverID in serverList:
         server = client.get_guild(serverID)

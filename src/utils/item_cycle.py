@@ -1,5 +1,5 @@
 class ItemCycle:
-    def __init__(self, cycle):
+    def __init__(self, cycle: list):
         self.__cycle = cycle
         self.__index = 0
 
