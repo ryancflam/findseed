@@ -71,7 +71,7 @@ class ScamPreventer(BaseCog, name="Scam Preventer", command_attrs=dict(hidden=Tr
     async def detectText(self, message, txt):
         if not txt:
             return False
-        text = funcs.asciiIgnore(txt.casefold().replace(" ", ""))
+        text = funcs.asciiIgnore(txt.casefold().replace(" ", "").replace("\n", ""))
         urls = findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", text)
         for link in urls:
             try:
