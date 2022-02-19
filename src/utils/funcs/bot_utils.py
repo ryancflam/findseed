@@ -99,6 +99,14 @@ async def generateJson(name, data: dict):
         print(f"Generated file: {name}.json")
 
 
+async def userIDNotBlacklisted(userID):
+    if userID in (await readJson("data/whitelist.json"))["users"]:
+        return True
+    if userID in (await readJson("data/blacklist.json"))["users"]:
+        return False
+    return True
+
+
 async def userNotBlacklisted(client, message):
     if message.author.id in (await readJson("data/whitelist.json"))["users"]:
         return True

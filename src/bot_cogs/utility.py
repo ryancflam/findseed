@@ -39,13 +39,13 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await funcs.generateJson("reminders", {"list": []})
         self.reminderLoop.start()
 
-    @tasks.loop(seconds=1.0)
+    @tasks.loop(seconds=2.0)
     async def reminderLoop(self):
-        await sleep(3)
+        update = False
         reminders = await funcs.readJson("data/reminders.json")
         for reminder in reminders["list"]:
             rtime = reminder["data"]["time"]
-            if rtime <= int(time()):
+            if rtime <= int(time()) and await funcs.userIDNotBlacklisted(reminder["data"]["userID"]):
                 try:
                     user = self.client.get_user(reminder["data"]["userID"])
                     e = Embed(title="⚠️ Reminder", description=reminder["data"]["reminder"])
@@ -57,10 +57,13 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             if reminder["ID"] in self.reminderIDsToDelete:
                 self.reminderIDsToDelete.remove(reminder["ID"])
                 reminders["list"].remove(reminder)
+                update = True
         for reminder in self.remindersToAdd:
             reminders["list"].append(reminder)
             self.remindersToAdd.remove(reminder)
-        await funcs.dumpJson("data/reminders.json", reminders)
+            update = True
+        if update:
+            await funcs.dumpJson("data/reminders.json", reminders)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="reminderdel", description="Removes a reminder.", usage="<reminder ID>",
