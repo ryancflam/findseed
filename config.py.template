@@ -1,12 +1,15 @@
 production = False # automatically puts "b" in front of prefix if False
 githubRepo = "ryancflam/findseed"
+
 botToken = ""
 prefix = "!"
 activityName = "" # put "bitcoin" for auto Bitcoin prices
 activityType = 0 # 0 (Playing) / 2 (Listening to) / 3 (Watching)
 status = "online" # "online" / "idle" / "dnd" / "invisible"
+
 webServerPort = 8080
 gitLogRoute = "/git"
+
 statcordKey = "" # https://statcord.com/add
 owmKey = "" # https://openweathermap.org/api
 exchangeratesapiKey = "" # https://manage.exchangeratesapi.io/quickstart
