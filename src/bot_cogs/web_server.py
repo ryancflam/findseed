@@ -69,7 +69,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 "Web server is running on: <http{}://{}{}/>".format(
                     "s" if kwargs else "",
                     ip.content.decode("utf8"),
-                    "" if webServerPort == 80 else f":{webServerPort}")
+                    "" if webServerPort == 80 and not kwargs or webServerPort == 443 and kwargs else f":{webServerPort}")
             )
 
     @staticmethod
