@@ -392,7 +392,10 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                                                        "\n({}%)`".format(round(int(total['active_cases']
                                                            .replace(',', '').replace('N/A', '0')) / int(total['cases']
                                                            .replace(',', '').replace('N/A', '0')) * 100, 2)))
-                e.add_field(name="Critical Cases", value=f"`{total['serious_critical']}`")
+                e.add_field(name="Critical Cases", value=f"`{total['serious_critical']}" +
+                                                       "\n({}%)`".format(round(int(total['serious_critical']
+                                                           .replace(',', '').replace('N/A', '0')) / int(total['active_cases']
+                                                           .replace(',', '').replace('N/A', '0')) * 100, 2)))
                 e.add_field(name="Total Tests", value=f"`{total['total_tests']}`")
             else:
                 e.add_field(name="Total Cases", value=f"`{total['total_cases']}`")
