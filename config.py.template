@@ -7,6 +7,7 @@ activityName = "" # put "bitcoin" for auto Bitcoin prices
 activityType = 0 # 0 (Playing) / 2 (Listening to) / 3 (Watching)
 status = "online" # "online" / "idle" / "dnd" / "invisible"
 
+webServerHost = "0.0.0.0"
 webServerPort = 8080
 gitLogRoute = "/git"
 

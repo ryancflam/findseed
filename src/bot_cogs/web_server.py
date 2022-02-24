@@ -4,7 +4,7 @@ from os import path
 from discord.ext import commands
 from flask import Flask, abort, redirect, render_template, request, send_from_directory
 
-from config import gitLogRoute, webServerPort
+from config import gitLogRoute, webServerHost, webServerPort
 from src.utils import funcs, github_embeds
 from src.utils.base_cog import BaseCog
 from src.utils.base_thread import BaseThread
@@ -57,7 +57,7 @@ class WebServer(BaseCog, name="Web Server", command_attrs=dict(hidden=True),
                 kwargs = dict(ssl_context=(cert, key))
                 https = True
                 print(f"{self.name} - Attempting to use HTTPS...")
-            t = BaseThread(target=app.run, args=("0.0.0.0", webServerPort), kwargs=kwargs)
+            t = BaseThread(target=app.run, args=(webServerHost, webServerPort), kwargs=kwargs)
             try:
                 await t.start()
             except Exception as ex:
