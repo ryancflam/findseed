@@ -1295,6 +1295,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         e.add_field(name="Unique Words", value="`{:,}`".format(len(set(splt))))
         e.set_footer(text="Note: This may not be 100% accurate.")
         await ctx.reply(embed=e)
+        await funcs.deleteTempFile(filename)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="country", description="Shows information about a country.",
