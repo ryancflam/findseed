@@ -844,7 +844,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             except Exception as ex:
                 funcs.printError(ctx, ex)
 
-    @commands.cooldown(1, 15, commands.BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="lyrics", description="Gets the lyrics of a song from Genius.",
                       aliases=["lyric", "song", "genius"], usage="<song keywords>")
     async def lyrics(self, ctx, *, keywords):
@@ -860,9 +860,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             title = data2["title_with_featured"]
             link = data2["url"]
             thumbnail = data2["song_art_image_thumbnail_url"]
-            originallyric = funcs.multiString(
-                Genius(config.geniusToken).search_song(author, title).lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048
-            )
+            song = await funcs.funcToCoro(Genius(config.geniusToken).search_song, author, title)
+            originallyric = funcs.multiString(song.lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048)
             embeds = []
             pagecount = 0
             for p in originallyric:

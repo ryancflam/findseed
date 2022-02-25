@@ -3,6 +3,7 @@ from re import split
 from PIL import Image
 from pyzbar.pyzbar import decode
 
+from src.utils.funcs.bot_utils import funcToCoro
 from src.utils.funcs.http_requests import getImageFile
 from src.utils.funcs.math_and_numbers import randomHex
 from src.utils.funcs.string_manipulation import monthNameToNumber, monthNumberToName
@@ -141,9 +142,9 @@ def githubRepoPic(repo):
 
 
 async def decodeQR(link):
-    img = Image.open(await getImageFile(link, file=False))
-    data = decode(img)
-    img.close()
+    img = await funcToCoro(Image.open, (await getImageFile(link, file=False)))
+    data = await funcToCoro(decode, img)
+    await funcToCoro(img.close)
     res = ""
     for i in data:
         res += i.data.decode("utf-8") + "\n"

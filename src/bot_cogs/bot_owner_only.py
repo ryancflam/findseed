@@ -453,5 +453,17 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
+    @commands.command(name="speedtest", description="Tests the bot's internet speed.", aliases=["speed", "internet"])
+    @commands.is_owner()
+    async def _speedtest(self, ctx):
+        await ctx.send("Testing internet speed. Please wait...")
+        res = await funcs.funcToCoro(funcs.speedtest)
+        e = discord.Embed(title="Speedtest")
+        e.add_field(name="Download", value=f'`{funcs.removeDotZero(round(res["download"] / 2 ** 20, 2))} Mbps`')
+        e.add_field(name="Upload", value=f'`{funcs.removeDotZero(round(res["upload"] / 2 ** 20, 2))} Mbps`')
+        e.add_field(name="Ping", value=f'`{funcs.removeDotZero(round(res["ping"], 2))} ms`')
+        e.set_footer(text=f"Server: {res['server']['sponsor']}, {res['server']['country']}")
+        await ctx.reply(embed=e)
+
 
 setup = BotOwnerOnly.setup
