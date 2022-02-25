@@ -66,6 +66,10 @@ class BotInstance(commands.AutoShardedBot):
         self.__statcord = Client(self, config.statcordKey)
         self.__statcord.start_loop()
         self.__btcPresence = self.__activityName.casefold() == "bitcoin"
+        self.__btcPrice = None
+        self.__btcATH = None
+        self.__ethPrice = None
+        self.__ethATH = None
 
     def startup(self):
         for cog in listdir(f"{funcs.PATH}/{funcs.COGS_PATH}"):
@@ -121,11 +125,24 @@ class BotInstance(commands.AutoShardedBot):
                 params={"vs_currency": "usd", "ids": ("bitcoin" if self.__btcPresence else "ethereum")}
             )
             data = res.json()[0]
+            if self.__btcPresence:
+                self.__btcATH = data["ath"]
+                self.__btcPrice = data["current_price"]
+            else:
+                self.__ethATH = data["ath"]
+                self.__ethPrice = data["current_price"]
             ext = "🎉" if data["ath"] < data["current_price"] else ""
             msg = " @ ${:,}{}".format(data["current_price"], ext)
         except Exception as ex:
             print("Error - " + str(ex))
-            msg = ""
+            if self.__btcPresence and self.__btcPrice:
+                ext = "🎉" if self.__btcATH and self.__btcATH < self.__btcPrice else ""
+                msg = " @ ${:,}{}".format(self.__btcPrice, ext)
+            elif not self.__btcPresence and self.__ethPrice:
+                ext = "🎉" if self.__ethATH and self.__ethATH < self.__ethPrice else ""
+                msg = " @ ${:,}{}".format(self.__ethPrice, ext)
+            else:
+                msg = ""
         await self.__presence(("BTC" if self.__btcPresence else "ETH") + msg)
         self.__btcPresence = not self.__btcPresence
 
