@@ -134,7 +134,7 @@ async def userNotBlacklisted(client, message):
 async def testKaleido():
     print("Testing Kaleido...")
     try:
-        go.Figure().write_image(f"{PATH}/temp/test.png")
+        await funcToCoro(go.Figure().write_image, f"{PATH}/temp/test.png")
         await deleteTempFile("test.png")
         print("Kaleido installed and ready")
     except:

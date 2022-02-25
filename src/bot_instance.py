@@ -133,11 +133,12 @@ class BotInstance(commands.AutoShardedBot):
         await self.change_presence(activity=Activity(name=name, type=self.__activityType), status=self.__status)
 
     async def on_ready(self):
+        owner = (await self.application_info()).owner
+        await owner.send("Bot is online.")
         try:
             await funcs.testKaleido()
         except Exception as ex:
             print(f"Warning - {ex}")
-        owner = (await self.application_info()).owner
         data = await funcs.readJson("data/whitelist.json")
         wl = list(data["users"])
         if owner.id not in wl:
@@ -145,7 +146,6 @@ class BotInstance(commands.AutoShardedBot):
             data["users"] = wl
             await funcs.dumpJson("data/whitelist.json", data)
         print(f"Logged in as Discord user: {self.user}")
-        await owner.send("Bot is online.")
         if self.__btcPresence:
             print("Using Bitcoin/Ethereum price status")
             self.__bitcoin.start()

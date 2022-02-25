@@ -1,3 +1,6 @@
+# Credit - https://github.com/Littlemansmg/Discord-Meme-Generator
+# For genmeme
+
 from asyncio import TimeoutError, gather, sleep
 from random import choice, choices, randint, shuffle
 from time import time
