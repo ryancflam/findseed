@@ -6,6 +6,7 @@ from aiogtts import aiogTTS, lang
 from async_google_trans_new import AsyncTranslator
 from discord import Colour, Embed, File, User
 from discord.ext import commands
+from PIL import Image, ImageDraw, ImageFont
 
 import config
 from src.utils import funcs
@@ -30,6 +31,41 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         self.truths = await funcs.readTxt(funcs.getResource(self.name, "truths.txt"), lines=True)
         self.dares = await funcs.readTxt(funcs.getResource(self.name, "dares.txt"), lines=True)
         self.nhie = await funcs.readTxt(funcs.getResource(self.name, "nhie.txt"), lines=True)
+
+    def makeMeme(self, filename: str, topString: str, bottomString: str=""):
+        impact = funcs.PATH + funcs.getResource(self.name, "impact.ttf")
+        img = Image.open(filename)
+        imageSize = img.size
+        fontSize = int(imageSize[1] / 5)
+        fontSize2 = int(imageSize[1] / 5)
+        font = ImageFont.truetype(impact, fontSize)
+        font2 = ImageFont.truetype(impact, fontSize)
+        topTextSize = font.getsize(topString)
+        bottomTextSize = font2.getsize(bottomString)
+        while topTextSize[0] > imageSize[0] - 20:
+            fontSize = fontSize - 1
+            font = ImageFont.truetype(impact, fontSize)
+            topTextSize = font.getsize(topString)
+        while bottomTextSize[0] > imageSize[0] - 20:
+            fontSize2 = fontSize2 - 1
+            font2 = ImageFont.truetype(impact, fontSize2)
+            bottomTextSize = font2.getsize(bottomString)
+        topTextPosition = ((imageSize[0] / 2) - (topTextSize[0] / 2), 0)
+        bottomTextPosition = ((imageSize[0] / 2) - (bottomTextSize[0] / 2), imageSize[1] - bottomTextSize[1])
+        draw = ImageDraw.Draw(img)
+        outlineRange = int(fontSize / 15)
+        outlineRange2 = int(fontSize2 / 15)
+        for i in range(-outlineRange, outlineRange + 1):
+            for j in range(-outlineRange, outlineRange + 1):
+                draw.text((topTextPosition[0] + i, topTextPosition[1] + j), topString, (0, 0, 0), font=font)
+        for i in range(-outlineRange2, outlineRange2 + 1):
+            for j in range(-outlineRange2, outlineRange2 + 1):
+                draw.text((bottomTextPosition[0] + j, bottomTextPosition[1] + j), bottomString, (0, 0, 0), font=font2)
+        draw.text(topTextPosition, topString, (255, 255, 255), font=font)
+        draw.text(bottomTextPosition, bottomString, (255, 255, 255), font=font2)
+        imgName = f"{time()}.png"
+        img.save(f"{funcs.PATH}/temp/{imgName}")
+        return imgName
 
     @staticmethod
     def rgb(value):
@@ -789,7 +825,8 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         await ctx.reply(funcs.weirdCase(text))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="glitchtext", usage="<input>", aliases=["glitch", "textglitch"], description="Glitches text.", hidden=True)
+    @commands.command(name="glitchtext", usage="<input>", aliases=["glitch", "textglitch"],
+                      description="Glitches text.", hidden=True)
     async def glitchtext(self, ctx, *, text: str=""):
         if text == "":
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
@@ -831,6 +868,40 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="genmeme", description="Generates a meme with top text and bottom text.",
+                      aliases=["meme", "memegen", "memer", "makememe"],
+                      usage="<image attachment> <top text and bottom text separated with ;>")
+    async def genmeme(self, ctx, *, text=""):
+        if not ctx.message.attachments:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "No attachment detected."))
+        if not text:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        if len(text) > 50:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Please make your overall text 50 characters or less."))
+        await ctx.reply("Generating meme. Please wait...")
+        res = None
+        if ";" not in text:
+            bottom = ""
+            top = text
+        else:
+            while "; " in text:
+                text = text.replace("; ", ";")
+            top, bottom = text.split(";", 1)
+        attach = ctx.message.attachments[0]
+        filename = f"{time()}-{attach.filename}"
+        filepath = f"{funcs.PATH}/temp/{filename}"
+        try:
+            await attach.save(filepath)
+            res = await funcs.funcToCoro(self.makeMeme, filepath, top.upper(), bottom.upper())
+            file = File(f"{funcs.PATH}/temp/{res}")
+            await ctx.reply(file=file)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred, please try again."))
+        await funcs.deleteTempFile(filename)
+        await funcs.deleteTempFile(res)
 
 
 setup = RandomStuff.setup

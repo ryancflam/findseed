@@ -8,6 +8,7 @@ from time import time
 
 import discord
 from discord.ext import commands
+from speedtest import Speedtest
 
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
@@ -16,6 +17,14 @@ from src.utils.base_cog import BaseCog
 class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the bot owner.", command_attrs=dict(hidden=True)):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
+
+    @staticmethod
+    def speedtest():
+        st = Speedtest()
+        st.get_best_server()
+        st.download()
+        st.upload()
+        return st.results.dict()
 
     @commands.command(name="killbot", description="Kills the bot. Proceed with caution.")
     @commands.is_owner()
@@ -453,16 +462,20 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         except Exception as ex:
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
-    @commands.command(name="speedtest", description="Tests the bot's internet speed.", aliases=["speed", "internet"])
+    @commands.command(name="speedtest", description="Tests the internet speed of the bot's host.",
+                      aliases=["speed", "internet", "test"])
     @commands.is_owner()
     async def _speedtest(self, ctx):
         await ctx.send("Testing internet speed. Please wait...")
-        res = await funcs.funcToCoro(funcs.speedtest)
-        e = discord.Embed(title="Speedtest")
-        e.add_field(name="Download", value=f'`{funcs.removeDotZero(round(res["download"] / 2 ** 20, 2))} Mbps`')
-        e.add_field(name="Upload", value=f'`{funcs.removeDotZero(round(res["upload"] / 2 ** 20, 2))} Mbps`')
-        e.add_field(name="Ping", value=f'`{funcs.removeDotZero(round(res["ping"], 2))} ms`')
-        e.set_footer(text=f"Server: {res['server']['sponsor']}, {res['server']['country']}")
+        try:
+            res = await funcs.funcToCoro(self.speedtest)
+            e = discord.Embed(title="Speedtest")
+            e.add_field(name="Download", value=f'`{funcs.removeDotZero(round(res["download"] / 2 ** 20, 2))} Mbps`')
+            e.add_field(name="Upload", value=f'`{funcs.removeDotZero(round(res["upload"] / 2 ** 20, 2))} Mbps`')
+            e.add_field(name="Ping", value=f'`{funcs.removeDotZero(round(res["ping"], 2))} ms`')
+            e.set_footer(text=f"Server: {res['server']['sponsor']}, {res['server']['country']}")
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
 

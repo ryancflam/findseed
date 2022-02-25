@@ -323,7 +323,7 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
                                           xaxis_rangeslider_visible=False,
                                           xaxis_title="Date",
                                           template="plotly_dark")
-                        fig.write_image(f"{funcs.PATH}/temp/{imgName}")
+                        await funcs.funcToCoro(fig.write_image, f"{funcs.PATH}/temp/{imgName}")
                         image = File(f"{funcs.PATH}/temp/{imgName}")
                         e.set_image(url=f"attachment://{imgName}")
                     except Exception as ex:

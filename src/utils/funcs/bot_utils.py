@@ -5,7 +5,6 @@ from os import path
 
 from aiofiles import open, os
 from plotly import graph_objects as go
-from speedtest import Speedtest
 
 from src.utils.base_cog import BaseCog
 from src.utils.funcs.string_manipulation import formatCogName
@@ -59,14 +58,6 @@ def reloadCog(client, cog, force=False):
         print(f"Reloaded cog: {cog}")
     except Exception as ex:
         raise Exception(ex)
-
-
-def speedtest():
-    st = Speedtest()
-    st.get_best_server()
-    st.download()
-    st.upload()
-    return st.results.dict()
 
 
 def funcToCoro(func, *args, **kwargs):

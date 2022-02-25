@@ -18,6 +18,7 @@ from lyricsgenius import Genius
 from mendeleev import element
 from numpy import array, max, min, sqrt, sum
 from plotly import graph_objects as go
+from PyPDF2 import PdfFileReader
 from qrcode import QRCode
 
 import config
@@ -238,11 +239,11 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         return xtitle, ytitle
 
     @staticmethod
-    def makeChartEmbed(ctx, fig, labels, values, imgName, title):
+    async def makeChartEmbed(ctx, fig, labels, values, imgName, title):
         e = Embed(title=title, description=f"Requested by: {ctx.author.mention}")
         for i, c in enumerate(labels):
             e.add_field(name=c, value=f"`{funcs.removeDotZero(values[i])}`")
-        fig.write_image(f"{funcs.PATH}/temp/{imgName}")
+        await funcs.funcToCoro(fig.write_image, f"{funcs.PATH}/temp/{imgName}")
         image = File(f"{funcs.PATH}/temp/{imgName}")
         e.set_image(url=f"attachment://{imgName}")
         return e, image
@@ -263,7 +264,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         try:
             fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
             fig.update_layout(title=title)
-            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Pie Chart")
+            e, image = await self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Pie Chart")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -287,7 +288,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             fig = go.Figure(data=[go.Scatter(x=labels, y=values)])
             xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
             fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
-            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Line Chart")
+            e, image = await self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Line Chart")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -311,7 +312,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             fig = go.Figure(data=[go.Bar(x=labels, y=values)])
             xtitle, ytitle = await self.gatherXtitleAndYtitle(ctx)
             fig.update_layout(title=title, xaxis_title=xtitle, yaxis_title=ytitle)
-            e, image = self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Bar Chart")
+            e, image = await self.makeChartEmbed(ctx, fig, labels, values, imgName, title if title else "Bar Chart")
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "An error occurred, please try again later.")
@@ -1263,12 +1264,28 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                                "charcount", "wc", "countword", "word", "words", "countwords", "letter"],
                       usage="<input OR text attachment>")
     async def wordcount(self, ctx, *, inp=""):
+        filename = f"{time()}"
         if ctx.message.attachments:
             try:
                 inp = await funcs.readTxtAttachment(ctx.message)
-            except Exception as ex:
-                funcs.printError(ctx, ex)
-                inp = inp
+                if not inp:
+                    raise
+            except:
+                try:
+                    attach = ctx.message.attachments[0]
+                    filename += f"-{attach.filename}"
+                    filepath = f"{funcs.PATH}/temp/{filename}"
+                    await attach.save(filepath)
+                    pdf = await funcs.funcToCoro(open, filepath, "rb")
+                    reader = PdfFileReader(pdf)
+                    inp = ""
+                    for page in range(reader.numPages):
+                        pageobj = await funcs.funcToCoro(reader.getPage, page - 1)
+                        inp += (await funcs.funcToCoro(pageobj.extractText))
+                    await funcs.funcToCoro(pdf.close)
+                except Exception as ex:
+                    funcs.printError(ctx, ex)
+                    inp = inp
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         splt = funcs.replaceCharacters(inp, punctuation).split()
@@ -1611,7 +1628,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             fig.add_trace(go.Box(y=data, quartilemethod="inclusive", name="Inclusive Quartile"))
             fig.add_trace(go.Box(y=data, quartilemethod="exclusive", name="Exclusive Quartile"))
             fig.update_traces(boxpoints=boxpoints, jitter=0.3)
-            fig.write_image(f"{funcs.PATH}/temp/{imgName}")
+            await funcs.funcToCoro(fig.write_image, f"{funcs.PATH}/temp/{imgName}")
             image = File(f"{funcs.PATH}/temp/{imgName}")
             e.set_image(url=f"attachment://{imgName}")
         except Exception as ex:
