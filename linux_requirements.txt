@@ -1,1 +1,2 @@
 sudo apt-get install libzbar0
+sudo apt-get install libgl1-mesa-glx
