@@ -1,3 +1,6 @@
+# Credit - https://github.com/balajisrinivas/Detect-Face-and-Blur-OpenCV
+# For blurface
+
 from asyncio import TimeoutError, sleep
 from calendar import timegm
 from datetime import datetime, timedelta
@@ -12,11 +15,12 @@ from urllib import parse
 
 from async_google_trans_new import AsyncTranslator, constant
 from asyncpraw import Reddit
+from cv2 import GaussianBlur, dnn, imread, imwrite
 from discord import Embed, File, channel
 from discord.ext import commands, tasks
 from lyricsgenius import Genius
 from mendeleev import element
-from numpy import array, max, min, sqrt, sum
+from numpy import array, max, min, sqrt, squeeze, sum
 from plotly import graph_objects as go
 from PyPDF2 import PdfFileReader
 from qrcode import QRCode
@@ -39,6 +43,29 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     async def __generateFiles(self):
         await funcs.generateJson("reminders", {"list": []})
         self.reminderLoop.start()
+
+    def blurFace(self, filename: str):
+        imgName = f"{time()}.png"
+        prototxtPath = funcs.PATH + funcs.getResource(self.name, "deploy.prototxt")
+        modelPath = funcs.PATH + funcs.getResource(self.name, "model.caffemodel")
+        model = dnn.readNetFromCaffe(prototxtPath, modelPath)
+        image = imread(filename)
+        h, w = image.shape[:2]
+        kernelW = (w // 7) | 1
+        kernelH = (h // 7) | 1
+        blob = dnn.blobFromImage(image, 1.0, (300, 300), (104.0, 177.0, 123.0))
+        model.setInput(blob)
+        output = squeeze(model.forward())
+        for i in range(0, output.shape[0]):
+            confidence = output[i, 2]
+            if confidence > 0.4:
+                box = output[i, 3:7] * array([w, h, w, h])
+                startX, startY, endX, endY = box.astype(int)
+                face = image[startY:endY, startX:endX]
+                face = GaussianBlur(face, (kernelW, kernelH), 0)
+                image[startY:endY, startX:endX] = face
+                imwrite(f"{funcs.PATH}/temp/{imgName}", image)
+        return imgName
 
     @tasks.loop(seconds=2.0)
     async def reminderLoop(self):
@@ -2003,6 +2030,15 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             except Exception as ex:
                 funcs.printError(ctx, ex)
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Server error or query limit reached."))
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="blurface", description="Detects faces in an image and blurs them.", hidden=True,
+                      aliases=["faceblur", "blurfaces", "anonymize", "anonymise", "blur"], usage="<image attachment>")
+    async def blurface(self, ctx):
+        if not ctx.message.attachments:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "No attachment detected."))
+        await ctx.reply("Blurring faces. Please wait...")
+        await funcs.useImageFunc(ctx, self.blurFace)
 
 
 setup = Utility.setup

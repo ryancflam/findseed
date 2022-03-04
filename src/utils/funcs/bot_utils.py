@@ -2,11 +2,14 @@ from asyncio import get_event_loop
 from functools import partial
 from json import dumps, loads
 from os import path
+from time import time
 
 from aiofiles import open, os
+from discord import File
 from plotly import graph_objects as go
 
 from src.utils.base_cog import BaseCog
+from src.utils.funcs.discord_ops import errorEmbed
 from src.utils.funcs.string_manipulation import formatCogName
 
 PATH = path.dirname(path.realpath(__file__)).rsplit("src", 1)[0].replace("\\", "/")
@@ -62,6 +65,23 @@ def reloadCog(client, cog, force=False):
 
 def funcToCoro(func, *args, **kwargs):
     return get_event_loop().run_in_executor(None, partial(func, *args, **kwargs))
+
+
+async def useImageFunc(ctx, func, *args, **kwargs):
+    res = None
+    attach = ctx.message.attachments[0]
+    filename = f"{time()}-{attach.filename}"
+    filepath = f"{PATH}/temp/{filename}"
+    try:
+        await attach.save(filepath)
+        res = await funcToCoro(func, filepath, *args, **kwargs)
+        file = File(f"{PATH}/temp/{res}")
+        await ctx.reply(file=file)
+    except Exception as ex:
+        printError(ctx, ex)
+        await ctx.reply(embed=errorEmbed(None, "An error occurred, please try again."))
+    await deleteTempFile(filename)
+    await deleteTempFile(res)
 
 
 async def deleteTempFile(file: str):

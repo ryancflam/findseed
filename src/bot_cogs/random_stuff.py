@@ -874,7 +874,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="genmeme", description="Generates a meme with top text and bottom text.",
-                      aliases=["meme", "memegen", "memer", "makememe"],
+                      aliases=["meme", "memegen", "memer", "makememe"], hidden=True,
                       usage="<image attachment> <top text and bottom text separated with ;>")
     async def genmeme(self, ctx, *, text=""):
         if not ctx.message.attachments:
@@ -884,7 +884,6 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         if len(text) > 50:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Please make your overall text 50 characters or less."))
         await ctx.reply("Generating meme. Please wait...")
-        res = None
         if ";" not in text:
             bottom = ""
             top = text
@@ -892,19 +891,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             while "; " in text:
                 text = text.replace("; ", ";")
             top, bottom = text.split(";", 1)
-        attach = ctx.message.attachments[0]
-        filename = f"{time()}-{attach.filename}"
-        filepath = f"{funcs.PATH}/temp/{filename}"
-        try:
-            await attach.save(filepath)
-            res = await funcs.funcToCoro(self.makeMeme, filepath, top.upper(), bottom.upper())
-            file = File(f"{funcs.PATH}/temp/{res}")
-            await ctx.reply(file=file)
-        except Exception as ex:
-            funcs.printError(ctx, ex)
-            await ctx.reply(embed=funcs.errorEmbed(None, "An error occurred, please try again."))
-        await funcs.deleteTempFile(filename)
-        await funcs.deleteTempFile(res)
+        await funcs.useImageFunc(ctx, self.makeMeme, top.upper(), bottom.upper())
 
 
 setup = RandomStuff.setup
