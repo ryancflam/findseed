@@ -879,7 +879,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
         if len(text) > 50:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Please make your overall text 50 characters or less."))
-        await ctx.reply("Generating meme. Please wait...")
+        await ctx.send("Generating meme. Please wait...")
         if ";" not in text:
             bottom = ""
             top = text

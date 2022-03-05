@@ -2044,7 +2044,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     async def blurface(self, ctx):
         if not ctx.message.attachments:
             return await ctx.reply(embed=funcs.errorEmbed(None, "No attachment detected."))
-        await ctx.reply("Blurring faces. Please wait...")
+        await ctx.send("Blurring faces. Please wait...")
         await funcs.useImageFunc(ctx, self.blurFace)
 
 
