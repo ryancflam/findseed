@@ -13,9 +13,9 @@ from subprocess import PIPE, Popen, STDOUT
 from time import gmtime, mktime, time
 from urllib import parse
 
-from async_google_trans_new import AsyncTranslator, constant
 from asyncpraw import Reddit
 from cv2 import GaussianBlur, dnn, imread, imwrite
+from deep_translator import GoogleTranslator, constants
 from discord import Embed, File, channel
 from discord.ext import commands, tasks
 from lyricsgenius import Genius
@@ -587,12 +587,19 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       aliases=["t", "translator", "trans", "tr", "translation"], usage="<language code to translate to> <input>")
     async def translate(self, ctx, dest=None, *, text):
         try:
-            if dest.casefold() not in constant.LANGUAGES.keys():
+            dest = dest.casefold()
+            if dest == "zh-tw":
+                dest = "zh-TW"
+            elif dest == "zh-cn":
+                dest = "zh-CN"
+            if dest not in constants.GOOGLE_CODES_TO_LANGUAGES.keys():
                 e = funcs.errorEmbed(
-                    "Invalid language code!", f"Valid options:\n\n{', '.join(f'`{i}`' for i in sorted(constant.LANGUAGES.keys()))}"
+                    "Invalid language code!",
+                    f"Valid options:\n\n{', '.join(f'`{i}`' for i in sorted(constants.GOOGLE_CODES_TO_LANGUAGES.keys()))}"
                 )
             else:
-                output = await AsyncTranslator().translate(text, dest.casefold())
+                g = GoogleTranslator(source="auto", target=dest)
+                output = await funcs.funcToCoro(g.translate, text)
                 e = Embed(title="Translation", description=funcs.formatting(output))
         except Exception as ex:
             funcs.printError(ctx, ex)

@@ -1,12 +1,12 @@
 # Credit - https://github.com/Littlemansmg/Discord-Meme-Generator
 # For genmeme
 
-from asyncio import TimeoutError, gather, sleep
+from asyncio import TimeoutError, sleep
 from random import choice, choices, randint, shuffle
 from time import time
 
 from aiogtts import aiogTTS, lang
-from async_google_trans_new import AsyncTranslator
+from deep_translator import GoogleTranslator
 from discord import Colour, Embed, File, User
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
@@ -174,12 +174,10 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                                   "Translation may sometimes fail due to rate limit.",
                       aliases=["lc", "literaljapanese", "literalkorean"], hidden=True)
     async def literalchinese(self, ctx, *, inp):
-        g = AsyncTranslator()
+        g = GoogleTranslator(source="auto", target="en")
         try:
-            gathers = []
-            for text in list(inp.replace(" ", "").replace("\n", ""))[:50]:
-                gathers.append(g.translate(text, "en"))
-            e = Embed(title="Literal Chinese", description=funcs.formatting("".join((await gather(*gathers)))))
+            output = await funcs.funcToCoro(g.translate_batch, list(inp.replace(" ", "").replace("\n", ""))[:50])
+            e = Embed(title="Literal Chinese", description=funcs.formatting(" ".join(output)))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
@@ -190,12 +188,10 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                       description="Literally translates English words to Chinese one by one. " +
                                   "Translation may sometimes fail due to rate limit.", hidden=True)
     async def literalenglish(self, ctx, *, inp):
-        g = AsyncTranslator()
+        g = GoogleTranslator(source="auto", target="zh-TW")
         try:
-            gathers = []
-            for text in inp.split()[:50]:
-                gathers.append(g.translate(text, "zh-tw"))
-            e = Embed(title="Literal English", description=funcs.formatting("".join((await gather(*gathers))).replace(" ", "")))
+            output = await funcs.funcToCoro(g.translate_batch, inp.split()[:50])
+            e = Embed(title="Literal English", description=funcs.formatting("".join(output)))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Rate limit reached, try again later.")
