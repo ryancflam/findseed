@@ -883,7 +883,8 @@ class Minecraft(BaseCog, name="Minecraft",
     @commands.command(name="mapless", description="Shows the mapless treasure tutorial and practice map.", hidden=True,
                       aliases=["buriedtreasure"])
     async def mapless(self, ctx):
-        await ctx.reply("Tutorial: https://youtu.be/ho1rwmooHRg\n\nPractice Map: <https://cdn.discordapp.com/att" +
+        await ctx.reply("Tutorials: https://youtu.be/ho1rwmooHRg\n\nhttps://youtu.be/_dyD8ZwagDg" +
+                        "\n\nPractice Map: <https://cdn.discordapp.com/att" +
                         "achments/405839885509984256/885694752056541234/Mapless_Map.zip>")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
