@@ -1496,6 +1496,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/871621453521485864/882103596563431424/table.jpg")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="osi", description="Shows the OSI Model.",
+                      aliases=["osimodel", "7layers"], hidden=True)
+    async def osi(self, ctx):
+        await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/950404988369240104/unknown.png")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="normalbodytemp", description="Shows the normal body temperature range chart.",
                       aliases=["bodytemp", "nbt"], hidden=True)
     async def normalbodytemp(self, ctx):
