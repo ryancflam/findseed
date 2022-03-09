@@ -33,6 +33,7 @@ class BotInstance(commands.AutoShardedBot):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
             intents=Intents(
+                message_content=True,
                 guilds=True,
                 members=True,
                 bans=True,

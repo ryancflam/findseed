@@ -948,10 +948,11 @@ class Minecraft(BaseCog, name="Minecraft",
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="strongholdnav", aliases=["stronghold", "sh", "strongholds"],
+    @commands.command(name="strongholdnav", aliases=["stronghold", "sh", "strongholds", "nav"],
                       description="Shows the guides to stronghold navigation and hidden rooms.", hidden=True)
     async def strongholdnav(self, ctx):
-        await ctx.reply("https://www.youtube.com/watch?v=hEZfeUWA3hM\n\nhttps://www.youtube.com/watch?v=vztJNmUdyBY")
+        await ctx.reply("https://www.youtube.com/watch?v=hEZfeUWA3hM\n\nhttps://www.youtube.com/watch?v=vztJNmUdyBY" +
+                        "\n\nhttps://www.youtube.com/watch?v=2dWq2wXy43M (**NEW**)")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ruinedportals", description="Shows some useful ruined portal resources.", hidden=True,
