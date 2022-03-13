@@ -816,6 +816,38 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         await ctx.reply("https://imgur.com/gallery/IsWDJWa")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="titlecase", usage="<input>", aliases=["title", "capitalise", "capitalize"],
+                      description="Titlecase.", hidden=True)
+    async def titlecase(self, ctx, *, text: str=""):
+        if not text:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        await ctx.reply(text.title())
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="lowercase", usage="<input>", aliases=["lower", "casefold", "whisper"],
+                      description="lowercase.", hidden=True)
+    async def lowercase(self, ctx, *, text: str=""):
+        if not text:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        await ctx.reply(text.casefold())
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="uppercase", usage="<input>", aliases=["capslock", "shout", "scream", "upper", "caps"],
+                      description="UPPERCASE.", hidden=True)
+    async def uppercase(self, ctx, *, text: str=""):
+        if not text:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        await ctx.reply(text.upper())
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="reverse", usage="<input>", aliases=["reversed", "rev"],
+                      description=".txet ruoy sesreveR", hidden=True)
+    async def reverse(self, ctx, *, text: str=""):
+        if not text:
+            return await ctx.reply(embed=funcs.errorEmbed(None, "Empty input."))
+        await ctx.reply(text[::-1])
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="weirdcase", usage="<input>", aliases=["mixedcase", "weird"],
                       description="MakEs yOuR TExT lOok sOmEthInG LikE tHiS.", hidden=True)
     async def weirdcase(self, ctx, *, text: str=""):
