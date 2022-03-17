@@ -888,10 +888,16 @@ class Minecraft(BaseCog, name="Minecraft",
                         "achments/405839885509984256/885694752056541234/Mapless_Map.zip>")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="quadrants", description="Shows the four Nether quadrants.", hidden=True,
-                      aliases=["netheregions", "netheregion", "netherregion", "netherregions", "nether", "quadrant"])
-    async def quadrants(self, ctx):
+    @commands.command(name="quadrants1.16", description="Shows the four Nether quadrants for version 1.16.", hidden=True,
+                      aliases=["netheregions", "netheregion", "netherregion", "netherregions", "nether", "quadrant", "quadrants"])
+    async def quadrants116(self, ctx):
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/937755369072107520/ejAZNGq.png")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="quadrantspre1.9", description="Shows the four Nether quadrants for versions pre-1.9.", hidden=True,
+                      aliases=["quadrantspre19", "pre1.9quadrants", "pre19quadrants"])
+    async def quadrantspre19(self, ctx):
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/953978448404152340/unknown.png")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bedtiming", description="Shows the accurate bed timing for end fights.", hidden=True,
