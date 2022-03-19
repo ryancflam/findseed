@@ -1496,6 +1496,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/871621453521485864/882103596563431424/table.jpg")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="sohcahtoa", description="SOH CAH TOA.",
+                      aliases=["trigonometry", "triggernometry", "sincostan", "sinecostan", "sine", "cos", "tan"], hidden=True)
+    async def sohcahtoa(self, ctx):
+        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/954017475668885534/unknown.png")
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="osi", description="Shows the OSI Model.",
                       aliases=["osimodel", "7layers"], hidden=True)
     async def osi(self, ctx):

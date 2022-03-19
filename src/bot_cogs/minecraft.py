@@ -880,6 +880,13 @@ class Minecraft(BaseCog, name="Minecraft",
         await ctx.reply("https://github.com/ryguy2k4/ryguy2k4endpractice/releases")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="1.15route", description="Shows the 1.15 route.", hidden=True,
+                      aliases=["route1.15", "1.15routing", "routing1.15", "routing115", "115route",
+                               "115routing", "route115", "1.15", "115"])
+    async def route115(self, ctx):
+        await ctx.reply("https://imgur.com/gallery/CFJYKmw")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="mapless", description="Shows the mapless treasure tutorial and practice map.", hidden=True,
                       aliases=["buriedtreasure"])
     async def mapless(self, ctx):
