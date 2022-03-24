@@ -880,6 +880,18 @@ class Minecraft(BaseCog, name="Minecraft",
         await ctx.reply("https://github.com/ryguy2k4/ryguy2k4endpractice/releases")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="obt", description="Shows the One Block Tower tutorial for 1.7.", hidden=True,
+                      aliases=["tower1.7", "1.7tower", "oneblock", "oneblocktower"])
+    async def obt(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=a-E0eIOjfHI")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="zentower", description="Shows the Zen Tower tutorial for 1.8.", hidden=True,
+                      aliases=["tower1.8", "1.8tower", "zen"])
+    async def zentower(self, ctx):
+        await ctx.reply("https://www.youtube.com/watch?v=ryo3QbH2Zko")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="1.15route", description="Shows the 1.15 route.", hidden=True,
                       aliases=["route1.15", "1.15routing", "routing1.15", "routing115", "115route",
                                "115routing", "route115", "1.15", "115"])
