@@ -883,7 +883,7 @@ class Minecraft(BaseCog, name="Minecraft",
     @commands.command(name="obt", description="Shows the One Block Tower tutorial for 1.7.", hidden=True,
                       aliases=["tower1.7", "1.7tower", "oneblock", "oneblocktower"])
     async def obt(self, ctx):
-        await ctx.reply("https://www.youtube.com/watch?v=a-E0eIOjfHI")
+        await ctx.reply("https://www.youtube.com/watch?v=nYI6wOM1U4A")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="zentower", description="Shows the Zen Tower tutorial for 1.8.", hidden=True,
@@ -907,14 +907,14 @@ class Minecraft(BaseCog, name="Minecraft",
                         "achments/405839885509984256/885694752056541234/Mapless_Map.zip>")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="quadrants1.16", description="Shows the four Nether quadrants for version 1.16.", hidden=True,
+    @commands.command(name="quadrants1.16", description="Shows the four Nether quadrants for versions 1.16+.", hidden=True,
                       aliases=["netheregions", "netheregion", "netherregion", "netherregions", "nether", "quadrant", "quadrants"])
     async def quadrants116(self, ctx):
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/937755369072107520/ejAZNGq.png")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="quadrantspre1.9", description="Shows the four Nether quadrants for versions pre-1.9.", hidden=True,
-                      aliases=["quadrantspre19", "pre1.9quadrants", "pre19quadrants"])
+    @commands.command(name="quadrantspre1.16", description="Shows the four Nether quadrants for versions pre-1.16.", hidden=True,
+                      aliases=["quadrantspre116", "pre1.16quadrants", "pre116quadrants"])
     async def quadrantspre19(self, ctx):
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/953978448404152340/unknown.png")
 
@@ -923,6 +923,13 @@ class Minecraft(BaseCog, name="Minecraft",
                       aliases=["bedtimings", "onecycle", "timingbed", "bedtime", "bed", "beds"])
     async def bedtiming(self, ctx):
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771698457391136798/937078099789635614/unknown.png")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="1.8trading", description="Shows the trading tutorial for 1.8.", hidden=True,
+                      aliases=["pre1.9trading", "trading1.8", "trading18", "18trading", "tradingpre1.9", "trading"])
+    async def trading18(self, ctx):
+        await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/959506805908705320/unknown.png",
+                              message="https://youtu.be/1ksc3SSJkxs")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ninjabrainbot", aliases=["ninjabot", "ninjabrain", "nb", "nbb"], hidden=True,
