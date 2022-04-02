@@ -106,6 +106,15 @@ class Minecraft(BaseCog, name="Minecraft",
     def coordsDifference(self, coords1: tuple, coords2: tuple):
         return self.coordsDist(coords1[0] - coords2[0], coords1[1] - coords2[1])
 
+    def strongholdCalc(self, x0, z0, f0, x1, z1, f1):
+        a0 = np.tan([self.angleProcessing(f0) * np.pi / 180])[0]
+        a1 = np.tan([self.angleProcessing(f1) * np.pi / 180])[0]
+        b = z0 - x0 * a0
+        xp = ((z1 - x1 * a1) - b) / (a0 - a1)
+        zp = xp * a0 + b
+        blocks = round(self.coordsDifference((x1, z1), (xp, zp)))
+        return xp, zp, blocks
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="findseed", description="Everyone's favourite command. Test your luck using this command!",
                       aliases=["fs", "seed", "findseeds", "f"])
@@ -606,6 +615,22 @@ class Minecraft(BaseCog, name="Minecraft",
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="triangulationsimple", description="A simple stronghold triangulation command that takes in 6 values.",
+                      aliases=["trisimple", "simpletri", "strongholdsimple", "simplestronghold", "trisimp", "simptri",
+                               "simpletriangulation", "strongholdsimp", "simpstronghold"],
+                      usage="<x #1> <z #1> <angle #1> <x #2> <z #2> <angle #2>")
+    async def triangulationsimple(self, ctx, x0, z0, f0, x1, z1, f1):
+        try:
+            xp, zp, blocks = self.strongholdCalc(float(x0), float(z0), float(f0), float(x1), float(z1), float(f1))
+            await ctx.reply(
+                f"The stronghold could be at: **{round(xp)}, {round(zp)}** ({'{:,}'.format(blocks)} block" +
+                f"{'' if blocks == 1 else 's'} away)"
+            )
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input."))
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="triangulation", description="A *Minecraft: Java Edition* speedrunning tool tha" +
                                                         "t attempts to locate the stronghold using both " +
                                                         'the "8, 8" rule and triangulation. To use this ' +
@@ -671,12 +696,7 @@ class Minecraft(BaseCog, name="Minecraft",
                         continue
                     break
                 try:
-                    a0 = np.tan([self.angleProcessing(f0) * np.pi / 180])[0]
-                    a1 = np.tan([self.angleProcessing(f1) * np.pi / 180])[0]
-                    b = z0 - x0 * a0
-                    xp = ((z1 - x1 * a1) - b) / (a0 - a1)
-                    zp = xp * a0 + b
-                    blocks = round(self.coordsDifference((x1, z1), (xp, zp)))
+                    xp, zp, blocks = self.strongholdCalc(x0, z0, f0, x1, z1, f1)
                 except:
                     continue
                 await msg.reply(
