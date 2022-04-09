@@ -914,9 +914,10 @@ class Minecraft(BaseCog, name="Minecraft",
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="1.15route", description="Shows the 1.15 route.", hidden=True,
                       aliases=["route1.15", "1.15routing", "routing1.15", "routing115", "115route",
-                               "115routing", "route115", "1.15", "115"])
+                               "115routing", "route115", "1.15", "115", "doubleday"])
     async def route115(self, ctx):
-        await ctx.reply("https://imgur.com/gallery/CFJYKmw")
+        await ctx.reply("https://imgur.com/gallery/CFJYKmw\n\nDouble Day In-Depth Guide: " +
+                        "https://docs.google.com/document/d/1JhDCCpDww3o3oueROpP1lp01JaulaTdm-EhGOfgvkmk/edit")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="mapless", description="Shows the mapless treasure tutorial and practice map.", hidden=True,
@@ -931,12 +932,6 @@ class Minecraft(BaseCog, name="Minecraft",
                       aliases=["netheregions", "netheregion", "netherregion", "netherregions", "nether", "quadrant", "quadrants"])
     async def quadrants116(self, ctx):
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/937755369072107520/ejAZNGq.png")
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="quadrantspre1.16", description="Shows the four Nether quadrants for versions pre-1.16.", hidden=True,
-                      aliases=["quadrantspre116", "pre1.16quadrants", "pre116quadrants"])
-    async def quadrantspre19(self, ctx):
-        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/953978448404152340/unknown.png")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bedtiming", description="Shows the accurate bed timing for end fights.", hidden=True,
