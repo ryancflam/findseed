@@ -1026,6 +1026,11 @@ class Minecraft(BaseCog, name="Minecraft",
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="contariacalc", description="Download ContariaCalc here.", hidden=True)
+    async def contariacalc(self, ctx):
+        await ctx.reply("https://github.com/KingContaria/ContariaCalc")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="strongholdnav", aliases=["stronghold", "sh", "strongholds", "nav"],
                       description="Shows the guides to stronghold navigation and hidden rooms.", hidden=True)
     async def strongholdnav(self, ctx):
