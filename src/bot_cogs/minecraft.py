@@ -342,6 +342,37 @@ class Minecraft(BaseCog, name="Minecraft",
             )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="books", aliases=["book", "bookshelf", "bookshelves", "library"],
+                      usage="<books per emerald> <emeralds per eye> [eyes needed]",
+                      description="Calculates how many books you will need to get eyes of ender for pre-1.9 trading.")
+    async def books(self, ctx, book, emeralds, eyes="12"):
+        try:
+            book = int(book)
+            emeralds = int(emeralds)
+            eyes = int(eyes)
+            if not 8 <= book <= 10:
+                return await ctx.send(embed=funcs.errorEmbed(None, "Books per emerald must be 8-10 inclusive."))
+            if not 7 <= emeralds <= 11:
+                return await ctx.send(embed=funcs.errorEmbed(None, "Emeralds per eye must be 7-11 inclusive."))
+            if not 1 <= eyes <= 12:
+                return await ctx.send(embed=funcs.errorEmbed(None, "Eyes needed must be 1-12 inclusive."))
+            totalEmeralds = emeralds * eyes
+            totalBooks = totalEmeralds * book
+            booksPerEye = emeralds * book
+            bookshelves = funcs.strictRounding(totalBooks / 3)
+            await ctx.send("You want **{}** eye{} of ender.\nThe librarian sells one emera".format(eyes, "" if eyes == 1 else "s") +
+                           "ld for **{}** books.\nThe cleric sells one eye of ender for **{}** emeralds.\n".format(book, emeralds) +
+                           "\nYou will need:\n\n**{:,}** books{} for a total of".format(totalBooks, self.getExcessStr(totalBooks)) +
+                           " **{}** emeralds{}\nBooks per eye:".format(totalEmeralds, self.getExcessStr(totalEmeralds)) +
+                           " **{}**\nBookshelves to break: **{}**\n\n".format(booksPerEye, bookshelves) +
+                           "Big library: 699 books\nSmall library: 483 books")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(
+                embed=funcs.errorEmbed(None, "Invalid input.")
+            )
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="anchors", description="Calculates how many chargeable respawn anchors you can craft based on how " +
                                                   "much glowstone dust and crying obsidian you have.",
                       aliases=["anchor"], usage="<amount of glowstone dust> <amount of crying obdisian>")
