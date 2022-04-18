@@ -1021,6 +1021,12 @@ class Minecraft(BaseCog, name="Minecraft",
         )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="doubleinstant", aliases=["doubleinstanttravel", "doubleinstanttrav", "dit", "di"],
+                      description="Shows the tutorial for Double Instant Travel for pre-1.9 trading.", hidden=True)
+    async def doubleinstant(self, ctx):
+        await ctx.reply("https://youtu.be/XuZWIJRCyaY")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="speedrunigt", aliases=["igt"], description="Download the SpeedRunIGT mod here.", hidden=True)
     async def speedrunigt(self, ctx):
         await ctx.reply("https://redlime.github.io/SpeedRunIGT/")
