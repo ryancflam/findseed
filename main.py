@@ -3,7 +3,7 @@ from logging import StreamHandler, getLogger
 from sys import stdout
 
 from src.bot_instance import BotInstance
-q
+
 
 def main():
     handler = StreamHandler(stream=stdout)
