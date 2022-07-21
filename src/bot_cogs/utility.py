@@ -1496,12 +1496,6 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/871621453521485864/882103596563431424/table.jpg")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="sohcahtoa", description="SOH CAH TOA.",
-                      aliases=["trigonometry", "triggernometry", "sincostan", "sinecostan", "sine", "cos", "tan"], hidden=True)
-    async def sohcahtoa(self, ctx):
-        await funcs.sendImage(ctx, "https://media.discordapp.net/attachments/771404776410972161/954017475668885534/unknown.png")
-
-    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="osi", description="Shows the OSI Model.",
                       aliases=["osimodel", "7layers"], hidden=True)
     async def osi(self, ctx):
@@ -1707,63 +1701,6 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(lcm)}**')
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="zodiac", description="Converts a date to its zodiac sign.", hidden=True,
-                      aliases=["starsign", "horoscope", "zs"], usage="[month] [day]\n\nAlternative usage(s):\n\n- <zodiac sign>")
-    async def zodiac(self, ctx, month: str="", day: str=""):
-        try:
-            if month and not day:
-                try:
-                    z = funcs.getZodiacInfo(month)
-                    e = Embed(title=z[2] + f" :{z[2].casefold().replace('scorpio', 'scorpius')}:")
-                    e.add_field(name="Dates", value=f"`{z[1]}`")
-                    e.set_image(url=z[0])
-                except Exception as ex:
-                    e = funcs.errorEmbed("Invalid zodiac!", str(ex))
-            else:
-                if not month:
-                    month = month or datetime.now().month
-                if not day:
-                    day = day or datetime.now().day
-                try:
-                    month = funcs.monthNumberToName(int(month))
-                except:
-                    month = funcs.monthNumberToName(funcs.monthNameToNumber(month))
-                monthint = int(funcs.monthNameToNumber(month))
-                try:
-                    day = int(day)
-                except:
-                    day = int(day[:-2])
-                date = f"{month} {funcs.valueToOrdinal(day)}"
-                if day < 1 or day > 31 and monthint in [1, 3, 5, 7, 8, 10, 12] \
-                        or day > 30 and monthint in [4, 6, 9, 11] \
-                        or day > 29 and monthint == 2:
-                    raise Exception
-                z = funcs.dateToZodiac(date)
-                e = Embed(title=f"{date} Zodiac Sign :{z.casefold().replace('scorpio', 'scorpius')}:")
-                e.set_image(url=funcs.getZodiacInfo(z)[0])
-                e.set_footer(text=z)
-        except Exception:
-            e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.reply(embed=e)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="chinesezodiac", description="Converts a year to its Chinese zodiac sign.", usage="[year]",
-                      aliases=["cz", "zodiacchinese", "year", "yearofthe", "ly", "leap", "leapyear"], hidden=True)
-    async def chinesezodiac(self, ctx, year: str=""):
-        year = year or datetime.now().year
-        try:
-            year = int(year)
-            e = Embed(
-                title=f"{str(year) if year > 1 else str(year * -1 + 1) + ' B.C.'} Chinese Zodiac Sign",
-                description=funcs.formatting(funcs.yearToChineseZodiac(year))
-            )
-            ly = str(funcs.leapYear(year))
-            e.add_field(name="Leap Year", value=f"`{ly if ly != 'None' else 'Unknown'}`")
-        except Exception:
-            e = funcs.errorEmbed(None, "Invalid input.")
-        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
