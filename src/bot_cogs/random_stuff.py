@@ -72,6 +72,16 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         return imgName
 
     @staticmethod
+    def inputOrAttachment(ctx, inp):
+        if ctx.message.attachments:
+            try:
+                inp = await funcs.readTxtAttachment(ctx.message)
+            except Exception as ex:
+                funcs.printError(ctx, ex)
+                inp = inp
+        return inp
+
+    @staticmethod
     def rgb(value):
         if value is not None:
             try:
@@ -613,12 +623,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                 return await ctx.reply(embed=funcs.errorEmbed(
                     "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in sorted(langs.keys()))
                 ))
-        if ctx.message.attachments:
-            try:
-                inp = await funcs.readTxtAttachment(ctx.message)
-            except Exception as ex:
-                funcs.printError(ctx, ex)
-                inp = inp
+        inp = self.inputOrAttachment(ctx, inp)
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         location = f"{time()}.mp3"
@@ -633,18 +638,13 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="brian", description="Converts text to speech with the Brian voice.",
-                      usage='<input OR text attachment (3,065 characters or less)>')
+                      usage='<input OR text attachment (3,000 characters or less)>')
     async def brian(self, ctx, *, inp=""):
         url = "https://api.streamelements.com/kappa/v2/speech?voice=Brian&text="
-        if ctx.message.attachments:
-            try:
-                inp = await funcs.readTxtAttachment(ctx.message)
-            except Exception as ex:
-                funcs.printError(ctx, ex)
-                inp = inp
+        inp = self.inputOrAttachment(ctx, inp)
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
-        res = await funcs.getImageFile((url + inp.replace("\n", " "))[:3065], name="brian.mp3")
+        res = await funcs.getImageFile((url + inp.replace("\n", " "))[:3000], name=f"{time()}.mp3")
         try:
             await ctx.reply(file=res)
         except Exception as ex:
