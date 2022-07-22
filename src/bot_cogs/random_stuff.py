@@ -72,7 +72,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         return imgName
 
     @staticmethod
-    def inputOrAttachment(ctx, inp):
+    async def inputOrAttachment(ctx, inp):
         if ctx.message.attachments:
             try:
                 inp = await funcs.readTxtAttachment(ctx.message)
@@ -623,7 +623,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                 return await ctx.reply(embed=funcs.errorEmbed(
                     "Invalid language code!", "Valid options:\n\n" + ", ".join(f'`{i}`' for i in sorted(langs.keys()))
                 ))
-        inp = self.inputOrAttachment(ctx, inp)
+        inp = await self.inputOrAttachment(ctx, inp)
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         location = f"{time()}.mp3"
@@ -641,7 +641,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                       usage='<input OR text attachment (3,000 characters or less)>')
     async def brian(self, ctx, *, inp=""):
         url = "https://api.streamelements.com/kappa/v2/speech?voice=Brian&text="
-        inp = self.inputOrAttachment(ctx, inp)
+        inp = await self.inputOrAttachment(ctx, inp)
         if not inp:
             return await ctx.reply(embed=funcs.errorEmbed(None, "Cannot process empty input."))
         res = await funcs.getImageFile((url + inp.replace("\n", " "))[:3000], name=f"{time()}.mp3")
