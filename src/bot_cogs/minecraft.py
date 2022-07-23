@@ -826,7 +826,7 @@ class Minecraft(BaseCog, name="Minecraft",
             skin = data["textures"]["SKIN"]["url"]
             e = Embed(
                 title=username,
-                description=f"https://namemc.com/profile/{username}"
+                description=f"https://namemc.com/profile/{username}\nhttps://laby.net/@{username}"
             )
             e.set_image(url=skin)
         except Exception as ex:
