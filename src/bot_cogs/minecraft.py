@@ -831,7 +831,11 @@ class Minecraft(BaseCog, name="Minecraft",
             e.set_image(url=skin)
         except Exception as ex:
             funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Invalid skin or server error.")
+            if not 3 <= len(username) <= 16:
+                msg = "Username must be 3-16 characters inclusive."
+            else:
+                msg = "Invalid skin or server error."
+            e = funcs.errorEmbed(None, msg)
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
