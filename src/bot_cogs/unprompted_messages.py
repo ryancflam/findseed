@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randint
 from re import sub
 
 from discord.ext import commands
@@ -53,8 +53,10 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
         msg = f'`"@{self.client.user.name} <input>"` - Has a cleverbot respond to user input\n' + \
               f'`"I\'m <input>"` - "Hi <input>, I\'m {self.client.user.name}!"\n' + \
               '`"netvigator" in input` - "notvogotor"\n' + \
+              '`"gg"` - "pp"\n' + \
               '`"h"` - Responds with a gif (1 in 10), or "h"\n' + \
               '`"f"` - Responds with an image (1 in 10), or "f"\n' + \
+              '`"p"` - Responds with a random image/gif (1 in 10), or "p"\n' + \
               '`"staying alive" in input` - Responds with a gif\n' + \
               '`"hkeaa" in input` - Responds with an image\n' + \
               '`"hmmm (or with more m\'s)"` - Responds with a random gif\n' + \
@@ -123,6 +125,8 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                         await message.channel.send(f"Hi {im}, I'm {self.client.user.name}!")
                 elif "netvigator" in lowercase:
                     await message.channel.send("notvogotor")
+                elif lowercase == "gg":
+                    await message.channel.send("pp")
                 elif lowercase == "h":
                     if funcs.oneIn(10):
                         await funcs.sendImage(
@@ -140,6 +144,20 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                         )
                     else:
                         await message.channel.send("f")
+                elif lowercase == "p":
+                    if funcs.oneIn(10):
+                        rdm = randint(1, 3)
+                        if rdm == 1:
+                            await funcs.sendImage(
+                                message.channel,
+                                "https://cdn.discordapp.com/attachments/926862383660535898/1020988012768792606/IMG_1344.jpg"
+                            )
+                        elif rdm == 2:
+                            await message.channel.send("https://tenor.com/view/letter-p-gif-9063760")
+                        else:
+                            await message.channel.send("https://tenor.com/view/phantombot-letter-p-gif-15089580")
+                    else:
+                        await message.channel.send("p")
                 elif "gordon ramsay" in lowercase:
                     await message.channel.send("https://i.imgur.com/XezjUCZ.gifv")
                 elif "staying alive" in lowercase:
