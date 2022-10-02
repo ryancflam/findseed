@@ -918,6 +918,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 full = full[2:]
             if full.endswith("You might also like"):
                 full = full[:-19]
+            full = full.replace("\nYou might also like\n", "\n")
             originallyric = funcs.multiString(full, limit=2048)
             embeds = []
             pagecount = 0
