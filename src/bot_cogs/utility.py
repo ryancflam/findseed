@@ -902,7 +902,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             link = data2["url"]
             thumbnail = data2["song_art_image_thumbnail_url"]
             song = await funcs.funcToCoro(Genius(config.geniusToken).search_song, author, title)
-            full = funcs.replaceCharacters(song.lyrics, ["EmbedShare URLCopyEmbedCopy", f"{title} Lyrics"])
+            full = funcs.replaceCharacters(song.lyrics, ["EmbedShare URLCopyEmbedCopy", f"{data2['title']} Lyrics"])
             if full.endswith("Embed"):
                 full = self.delDigitFromLyrics(full[:-5])
             if full.endswith("K"):
