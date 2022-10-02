@@ -44,6 +44,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await funcs.generateJson("reminders", {"list": []})
         self.reminderLoop.start()
 
+    @staticmethod
+    def delDigitFromLyrics(full):
+        while full.endswith(("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")):
+            full = full[:-1]
+        return full
+
     def blurFace(self, filename: str):
         imgName = f"{time()}.png"
         prototxtPath = funcs.PATH + funcs.getResource(self.name, "deploy.prototxt")
@@ -896,7 +902,23 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             link = data2["url"]
             thumbnail = data2["song_art_image_thumbnail_url"]
             song = await funcs.funcToCoro(Genius(config.geniusToken).search_song, author, title)
-            originallyric = funcs.multiString(song.lyrics.replace("EmbedShare URLCopyEmbedCopy", ""), limit=2048)
+            full = funcs.replaceCharacters(song.lyrics, ["EmbedShare URLCopyEmbedCopy", f"{title} Lyrics"])
+            if full.endswith("Embed"):
+                full = self.delDigitFromLyrics(full[:-5])
+            if full.endswith("K"):
+                full = full[:-1]
+            full = self.delDigitFromLyrics(full)
+            if full.endswith("."):
+                full = full[:-1]
+            full = self.delDigitFromLyrics(full)
+            while "\n[" in full:
+                full = full.replace("\n[", "[")
+            full = full.replace("[", "\n\n[")
+            if full.startswith("\n\n["):
+                full = full[2:]
+            if full.endswith("You might also like"):
+                full = full[:-19]
+            originallyric = funcs.multiString(full, limit=2048)
             embeds = []
             pagecount = 0
             for p in originallyric:
