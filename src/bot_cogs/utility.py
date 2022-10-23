@@ -1115,6 +1115,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 data = res.json()
                 word = data[0]["word"].title()
                 output = ""
+                count = 1
+                outputlist = []
                 for i in data:
                     meanings = i["meanings"]
                     for j in meanings:
@@ -1126,11 +1128,26 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                         for k in definitions:
                             definition = k["definition"]
                             output += f"- {definition}{partOfSpeech}\n"
-                e = Embed(title=f'"{word}"').add_field(name="Definition(s)", value=funcs.formatting(output[:-1], limit=1000))
+                            count += 1
+                            if count == 11:
+                                outputlist.append(output[:-1])
+                                output = ""
+                                count = 1
+                if output:
+                    outputlist.append(output[:-1])
+                embeds = []
+                pagecount = 0
+                for p in outputlist:
+                    pagecount += 1
+                    e = Embed(title=f'"{word}"')
+                    e.add_field(name="Definition(s)", value=p)
+                    e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(outputlist)))
+                    embeds.append(e)
+                m = await ctx.reply(embed=embeds[0])
+                await m.edit(view=PageButtons(ctx, self.client, m, embeds))
             except Exception as ex:
                 funcs.printError(ctx, ex)
-                e = funcs.errorEmbed(None, "Unknown word.")
-        await ctx.reply(embed=e)
+                await ctx.reply(embed=funcs.errorEmbed(None, "Unknown word."))
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="reddit", description="Looks up a community or user on Reddit.",

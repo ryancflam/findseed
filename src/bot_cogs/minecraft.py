@@ -829,7 +829,7 @@ class Minecraft(BaseCog, name="Minecraft",
             data = loads(b64decode(res.json()["properties"][0]["value"]))
             skin = data["textures"]["SKIN"]["url"]
             e = Embed(
-                title=username,
+                title=username.replace("_", "\_"),
                 description=f"https://namemc.com/profile/{username}\nhttps://laby.net/@{username}"
             )
             e.set_image(url=skin)
