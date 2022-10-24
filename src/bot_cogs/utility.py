@@ -1129,7 +1129,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             definition = k["definition"]
                             output += f"- {definition}{partOfSpeech}\n"
                             count += 1
-                            if count == 11:
+                            if count == 6:
                                 outputlist.append(output[:-1])
                                 output = ""
                                 count = 1
@@ -1140,7 +1140,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 for p in outputlist:
                     pagecount += 1
                     e = Embed(title=f'"{word}"')
-                    e.add_field(name="Definition(s)", value=p)
+                    e.add_field(name="Definition(s)", value=p[:1024])
                     e.set_footer(text="Page {:,} of {:,}".format(pagecount, len(outputlist)))
                     embeds.append(e)
                 m = await ctx.reply(embed=embeds[0])
