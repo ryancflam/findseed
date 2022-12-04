@@ -1021,11 +1021,11 @@ class Minecraft(BaseCog, name="Minecraft",
         await ctx.reply("https://imgur.com/gallery/i3fIanf")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="mcspeedrunning", description="Shows some important *Minecraft: Java Edition* speedrunning resources.",
-                      aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning", "mcsr", "speedrun"])
-    async def mcspeedrunning(self, ctx):
+    @commands.command(name="mcsr", description="Shows some important *Minecraft: Java Edition* speedrunning resources.",
+                      aliases=["mcspeedrun", "minecraftspeedrun", "minecraftspeedrunning", "mcspeedrunning", "speedrun"])
+    async def mcsr(self, ctx):
         await ctx.reply(
-            "Setup Guide: https://www.youtube.com/watch?v=GAbnKAyireM\n\nWebsite: https://www.minecraftspeedrunning.com/"
+            "Setup Guide: https://youtu.be/VL8Syekw4Q0\n\nWebsite: https://www.minecraftspeedrunning.com/"
         )
 
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -1033,6 +1033,11 @@ class Minecraft(BaseCog, name="Minecraft",
                       description="Shows the tutorial for Double Instant Travel for pre-1.9 trading.", hidden=True)
     async def doubleinstant(self, ctx):
         await ctx.reply("https://youtu.be/XuZWIJRCyaY")
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="modcheck", aliases=["checkmod", "modscheck", "checkmods"], description="Download ModCheck here.")
+    async def modcheck(self, ctx):
+        await ctx.reply("https://github.com/RedLime/ModCheck/releases")
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="speedrunigt", aliases=["igt"], description="Download the SpeedRunIGT mod here.", hidden=True)
