@@ -847,6 +847,8 @@ class Minecraft(BaseCog, name="Minecraft",
                       usage="[server address]")
     async def mcserver(self, ctx, *, ipaddress: str=""):
         ipaddress = ipaddress.casefold().replace(" ", "") or "mc.hypixel.net"
+        file = None
+        filename = ""
         try:
             res = await funcs.getRequest(f"https://api.mcsrvstat.us/2/{ipaddress}", headers={"accept": "application/json"})
             data = res.json()
@@ -869,7 +871,10 @@ class Minecraft(BaseCog, name="Minecraft",
                         pass
                 e.add_field(name="Version", value=f'`{data["version"]}`')
                 e.add_field(name="Port", value=f'`{data["port"]}`')
-                e.set_thumbnail(url=f"https://eu.mc-api.net/v3/server/favicon/{ipaddress}")
+                favicon = b64decode(data["icon"].replace("data:image/png;base64,", ""))
+                filename = f"{time()}.png"
+                file = await funcs.saveB64Image(filename, favicon)
+                e.set_thumbnail(url="attachment://" + filename)
                 try:
                     e.add_field(name="Software", value=f'`{data["software"]}`')
                 except:
@@ -883,7 +888,8 @@ class Minecraft(BaseCog, name="Minecraft",
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid server address or server error?")
-        await ctx.reply(embed=e)
+        await ctx.reply(embed=e, file=file)
+        await funcs.deleteTempFile(filename)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="fossils", description="Brings up a fossil identification chart for divine travel.",

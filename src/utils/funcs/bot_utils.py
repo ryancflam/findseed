@@ -84,6 +84,13 @@ async def useImageFunc(ctx, func, *args, **kwargs):
     await deleteTempFile(res)
 
 
+async def saveB64Image(file: str, imgdata):
+    async with open(f"{PATH}/temp/{file}", "wb") as f:
+        await f.write(imgdata)
+    await f.close()
+    return File(f"{PATH}/temp/{file}", filename=file)
+
+
 async def deleteTempFile(file: str):
     if path.exists(f"{PATH}/temp/{file}"):
         await os.remove(f"{PATH}/temp/{file}")
