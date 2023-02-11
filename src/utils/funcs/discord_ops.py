@@ -28,6 +28,10 @@ def commandIsEE(command):
     return command.cog.name == "Easter Eggs"
 
 
+def commandIsDT(command):
+    return command.cog.name == "Deer Trio"
+
+
 def commandsListEmbed(client, menu: int=0):
     e = Embed(
         title=f"{'Miscellaneous' if menu == 1 else 'Bot Owner' if menu == 2 else 'All' if menu == 3 else client.user.name} Commands"
@@ -35,9 +39,9 @@ def commandsListEmbed(client, menu: int=0):
     cmds = 0
     for cog in sorted(client.cogs):
         commandsList = list(filter(
-            lambda x: (x.hidden and not commandIsEE(x) and not commandIsOwnerOnly(x)) if menu == 1
+            lambda x: (x.hidden and not commandIsDT(x) and not commandIsEE(x) and not commandIsOwnerOnly(x)) if menu == 1
             else commandIsOwnerOnly(x) if menu == 2
-            else not commandIsOwnerOnly(x) and not commandIsEE(x) if menu == 3
+            else not commandIsOwnerOnly(x) and not commandIsEE(x) and not commandIsDT(x) if menu == 3
             else not x.hidden,
             sorted(client.get_cog(cog).get_commands(), key=lambda y: y.name)
         ))
@@ -94,6 +98,10 @@ async def readTxtAttachment(message):
 
 async def easterEggsPredicate(ctx):
     return ctx.guild and ctx.guild.id in (await bot_utils.readJson("data/easter_eggs.json"))["servers"]
+
+
+async def deerTrioPredicate(ctx):
+    return ctx.author.id in (await bot_utils.readJson("data/deer_trio.json"))["members"]
 
 
 async def sendImage(ctx, url: str, name: str="image.png", message=None):

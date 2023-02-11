@@ -209,7 +209,8 @@ class General(BaseCog, name="General", description="Standard commands relating t
                 prefix = self.client.command_prefix
                 command = self.client.get_command(cmd[0].replace(prefix, "").casefold())
                 if funcs.commandIsOwnerOnly(command) and ctx.author != (await self.client.application_info()).owner \
-                        or funcs.commandIsEE(command) and not await funcs.easterEggsPredicate(ctx):
+                        or funcs.commandIsEE(command) and not await funcs.easterEggsPredicate(ctx) \
+                        or funcs.commandIsDT(command) and not await funcs.deerTrioPredicate(ctx):
                     raise Exception()
                 name = command.name
                 usage = command.usage
