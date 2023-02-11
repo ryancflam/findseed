@@ -2,6 +2,7 @@ config.py
 resources/easter_eggs/*
 src/bot_cogs/testcog.py
 src/bot_cogs/easter_eggs.py
+src/bot_cogs/deer_trio.py
 !/data
 /data/*
 !/data/web_server_certificates/default_certificates.json.template
