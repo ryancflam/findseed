@@ -348,9 +348,8 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
     @commands.command(name="topcoins", aliases=["tc", "topcrypto", "topcoin", "topcryptos", "top"],
                       description="Returns the top 25 cryptocurrencies by market capitalisation.")
     async def topcoins(self, ctx):
-        image = None
         try:
-            res = await funcs.getRequest(COINGECKO_URL + "coins")
+            res = await funcs.getRequest(COINGECKO_URL + "coins/")
             data = res.json()
             e = Embed(title="Top 25 Cryptocurrencies by Market Cap",
                       description="https://www.coingecko.com/en/coins/all")
@@ -367,7 +366,7 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Possible server error, please try again later.")
-        await ctx.reply(embed=e, file=image)
+        await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="ethgas", description="Shows the recommended gas prices for Ethereum transactions.",

@@ -13,8 +13,7 @@ async def getTickers():
             print("Getting CoinGecko tickers...")
             res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
             for coin in res.json():
-                if coin["symbol"] not in tickers:
-                    tickers[coin["symbol"]] = coin["id"]
+                tickers[coin["symbol"]] = coin["id"]
             print("Retrieved CoinGecko tickers")
             return tickers
         except JSONDecodeError as ex:

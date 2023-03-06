@@ -776,20 +776,24 @@ class Minecraft(BaseCog, name="Minecraft",
                          icon_url="https://cdn.discordapp.com/attachments/771698457391136798/842103816761114624/mc.png")
             urls = [
                 "klrzpjo1&var-wl33kewl=gq7zo9p1",
+                "klrzpjo1&var-wl33kewl=q5v9ev2l",
                 "klrzpjo1&var-wl33kewl=jq6j9571",
                 "klrzpjo1&var-wl33kewl=21go6e6q",
                 "klrzpjo1&var-wl33kewl=4qye4731",
                 "21d4zvp1&var-wl33kewl=gq7zo9p1",
+                "21d4zvp1&var-wl33kewl=q5v9ev2l",
                 "21d4zvp1&var-wl33kewl=jq6j9571",
                 "21d4zvp1&var-wl33kewl=21go6e6q",
                 "21d4zvp1&var-wl33kewl=4qye4731"
             ]
             categories = [
-                "Set Seed Glitchless (Pre-1.9)",
+                "Set Seed Glitchless (Pre-1.8)",
+                "Set Seed Glitchless (1.8)",
                 "Set Seed Glitchless (1.9-1.12)",
                 "Set Seed Glitchless (1.13-1.15)",
                 "Set Seed Glitchless (1.16+)",
-                "Random Seed Glitchless (Pre-1.9)",
+                "Random Seed Glitchless (Pre-1.8)",
+                "Random Seed Glitchless (1.8)",
                 "Random Seed Glitchless (1.9-1.12)",
                 "Random Seed Glitchless (1.13-1.15)",
                 "Random Seed Glitchless (1.16+)"
