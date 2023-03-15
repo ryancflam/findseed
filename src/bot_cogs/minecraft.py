@@ -875,10 +875,13 @@ class Minecraft(BaseCog, name="Minecraft",
                         pass
                 e.add_field(name="Version", value=f'`{data["version"]}`')
                 e.add_field(name="Port", value=f'`{data["port"]}`')
-                favicon = b64decode(data["icon"].replace("data:image/png;base64,", ""))
-                filename = f"{time()}.png"
-                file = await funcs.saveB64Image(filename, favicon)
-                e.set_thumbnail(url="attachment://" + filename)
+                try:
+                    favicon = b64decode(data["icon"].replace("data:image/png;base64,", ""))
+                    filename = f"{time()}.png"
+                    file = await funcs.saveB64Image(filename, favicon)
+                    e.set_thumbnail(url="attachment://" + filename)
+                except:
+                    pass
                 try:
                     e.add_field(name="Software", value=f'`{data["software"]}`')
                 except:
