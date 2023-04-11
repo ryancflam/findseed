@@ -1099,5 +1099,10 @@ class Minecraft(BaseCog, name="Minecraft",
                         "If you would like to use the generator locally for shorter wait times, follow this: " +
                         "<https://youtu.be/Gl7zOn2lLo4>\n\nPlease play the seed within 30 seconds after it has been generated.")
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="mrsrp", description="Gives ryancflam's MRSRP download link.", hidden=True)
+    async def mrsrp(self, ctx):
+        await ctx.reply("https://drive.google.com/file/d/1CV8Wh_gNZFsRC_2S978cDqdnbeMRm-U3/view?usp=share_link")
+
 
 setup = Minecraft.setup
