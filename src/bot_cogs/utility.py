@@ -673,7 +673,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     data = res.json()
                     wikipage = data["query"]
                     if list(wikipage["pages"])[0] == "-1":
-                        return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid article."))
+                        return await ctx.reply(
+                            embed=funcs.errorEmbed(
+                                None, "Invalid article. Maybe try this link:\n" +
+                                "https://en.wikipedia.org/w/index.php?search=" + page.replace(" ", "_")
+                            )
+                        )
                 if wikipage["pages"][list(wikipage["pages"])[0]]["extract"].casefold().startswith(f"{page} may refer to:\n\n"):
                     try:
                         splitthing = f"may refer to:\n\n"
@@ -696,6 +701,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 e.set_author(name=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
                              icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" +
                                       "677853982718165001/1122px-Wikipedia-logo-v2.png")
+                summary = summary.split("\n")[0].replace('....', '...')
                 e.add_field(name="Extract", value=f"```{summary}```")
             except Exception as ex:
                 funcs.printError(ctx, ex)
