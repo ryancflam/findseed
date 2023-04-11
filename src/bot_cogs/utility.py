@@ -1549,9 +1549,9 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
 
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Gets information and generates a citation for an article via DOI number.",
-                      aliases=["reference", "ref", "citation", "doi", "cit", "altmetric", "altmetrics", "cite", "art"],
-                      usage="<DOI number> [citation style]", name="article")
-    async def article(self, ctx, doi, style="apa"):
+                      aliases=["reference", "ref", "article", "doi", "cit", "altmetric", "altmetrics", "cite"],
+                      usage="<DOI number> [citation style]", name="citation")
+    async def citation(self, ctx, doi, style="apa"):
         await ctx.send("Getting article data. Please wait...")
         doi = f'https://doi.org/{funcs.replaceCharacters(doi, ["https://doi.org/", "doi:", "doi.org/"])}'.casefold()
         while doi.endswith("."):
@@ -1593,7 +1593,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     pass
                 try:
                     e.add_field(name="Journal",
-                                value=f"`{altmetric['journal']} (ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
+                                value=f"`{altmetric['journal'].replace('&amp;', '&')} " +
+                                      f"(ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
                 except:
                     pass
                 if altmetric["published_on"] < 0:
