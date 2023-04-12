@@ -1606,8 +1606,19 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 pass
             try:
                 publish_date = data["publish_date"].split(" ")
-                month = funcs.monthNumberToName(funcs.monthNameToNumber(publish_date[0]))
-                dateoryear = f"`{int(publish_date[1].replace(',', ''))} {month} {publish_date[2]}`"
+                mode = 0
+                if len(publish_date) == 1:
+                    publish_date = data["publish_date"].split("-")
+                    mode = 1
+                if mode:
+                    month = funcs.monthNumberToName(publish_date[1])
+                    day = int(publish_date[2])
+                    year = publish_date[0]
+                else:
+                    month = funcs.monthNumberToName(funcs.monthNameToNumber(publish_date[0]))
+                    day = int(publish_date[1].replace(',', ''))
+                    year = publish_date[2]
+                dateoryear = f"`{day} {month} {year}`"
             except:
                 dateoryear = f"`{data['publish_date']}`"
             e.add_field(name="Publish Date", value=dateoryear)
