@@ -13,6 +13,21 @@ class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidde
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
         self.client.loop.create_task(self.__readFiles())
+        self.roman_dict = {
+            "I": 1,
+            "IV": 4,
+            "V": 5,
+            "IX": 9,
+            "X": 10,
+            "XL": 40,
+            "L": 50,
+            "XC": 90,
+            "C": 100,
+            "CD": 400,
+            "D": 500,
+            "CM": 900,
+            "M": 1000
+        }
 
     async def __readFiles(self):
         self.morsecode = await funcs.readJson(funcs.getResource(self.name, "morse_code.json"))
@@ -515,6 +530,65 @@ class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidde
                     title="Kilograms to Pounds",
                     description=funcs.formatting(funcs.removeDotZero(value) + " lbs")
                 )
+            except ValueError:
+                e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="romantodecimal", description="Converts roman numeral to decimal.",
+                      aliases=["rtd", "rtn"], usage="<input>")
+    async def romantodecimal(self, ctx, *, text: str=""):
+        try:
+            roman = text.replace(" ", "").replace(",", "")
+            new_roman = ""
+            value = 0
+            for digit in roman:
+                if digit.upper() in self.roman_dict:
+                    new_roman += digit.upper()
+            if new_roman == "":
+                e = funcs.errorEmbed(None, "Cannot process empty input.")
+            else:
+                for i in range(len(new_roman) - 1):
+                    left = new_roman[i].upper()
+                    right = new_roman[i + 1].upper()
+                    if self.roman_dict[left] < self.roman_dict[right]:
+                        value -= self.roman_dict[left]
+                    else:
+                        value += self.roman_dict[left]
+                e = Embed(
+                    title="Roman Numeral to Decimal",
+                    description=funcs.formatting(funcs.removeDotZero(value + self.roman_dict[new_roman[-1]]))
+                )
+        except ValueError:
+            e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="decimaltoroman", description="Converts decimal to roman numeral.",
+                      aliases=["dtr", "ntr", "roman", "romannumeral", "romannumerals"], usage="<input>")
+    async def decimaltoroman(self, ctx, *, text: str=""):
+        if text == "":
+            e = funcs.errorEmbed(None, "Cannot process empty input.")
+        else:
+            try:
+                number = int(text.replace(" ", "").replace(",", "").replace(".", ""))
+                if not 1 <= number <= 100000:
+                    e = funcs.errorEmbed(None, "Input must be between 1 and 100,000.")
+                else:
+                    roman = ""
+                    i = 12
+                    vals = list(self.roman_dict.values())
+                    while number:
+                        div = number // vals[i]
+                        number %= vals[i]
+                        while div:
+                            roman += list(self.roman_dict.keys())[i]
+                            div -= 1
+                        i -= 1
+                    e = Embed(
+                        title="Decimal to Roman Numeral",
+                        description=funcs.formatting(roman)
+                    )
             except ValueError:
                 e = funcs.errorEmbed(None, "Conversion failed. Invalid input?")
         await ctx.reply(embed=e)
