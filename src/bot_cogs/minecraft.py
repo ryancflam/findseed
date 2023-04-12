@@ -342,7 +342,7 @@ class Minecraft(BaseCog, name="Minecraft",
             )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="books", aliases=["book", "bookshelf", "bookshelves", "library"],
+    @commands.command(name="books", aliases=["bookshelf", "bookshelves", "library"],
                       usage="<books per emerald> <emeralds per eye> [eyes needed]",
                       description="Calculates how many books you will need to get eyes of ender for pre-1.9 trading.")
     async def books(self, ctx, book, emeralds, eyes="12"):

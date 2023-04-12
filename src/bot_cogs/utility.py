@@ -1554,6 +1554,69 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await funcs.sendImage(ctx, "https://cdn.discordapp.com/attachments/771404776410972161/851367517241999380/image0.jpg")
 
     @commands.cooldown(1, 2, commands.BucketType.user)
+    @commands.command(description="Gets information about a book using a valid ISBN number.", aliases=["book"],
+                      usage="<ISBN number>", name="isbn")
+    async def isbn(self, ctx, *, isbn):
+        base_url = "https://openlibrary.org"
+        new_isbn = ""
+        for i in isbn:
+            try:
+                _ = int(i)
+                new_isbn += i
+            except:
+                if i == "X":
+                    new_isbn += i
+        try:
+            res = await funcs.getRequest(f"{base_url}/isbn/{new_isbn}.json")
+            data = res.json()
+            title = data["title"]
+            try:
+                title += ": " + data["subtitle"]
+            except:
+                pass
+            e = Embed(title=title, description=f"{base_url}/isbn/{new_isbn}")
+            try:
+                e.set_image(url=f"https://covers.openlibrary.org/b/id/{data['covers'][0]}-L.jpg")
+            except:
+                pass
+            authors_list = []
+            try:
+                raw_authors = data["authors"]
+            except:
+                works = await funcs.getRequest(f"{base_url}{data['works'][0]['key']}.json")
+                raw_authors = works.json()["authors"]
+            for i in raw_authors:
+                try:
+                    author_res = await funcs.getRequest(f"{base_url}{i['key']}.json")
+                except:
+                    author_res = await funcs.getRequest(f"{base_url}{i['author']['key']}.json")
+                authors_list.append(author_res.json()["name"])
+            e.add_field(name="Author(s)", value=", ".join(f"`{i}`" for i in authors_list))
+            try:
+                e.add_field(name="ISBN-10", value=f"`{data['isbn_10'][0]}`")
+            except:
+                pass
+            try:
+                e.add_field(name="ISBN-13", value=f"`{data['isbn_13'][0]}`")
+            except:
+                pass
+            try:
+                publish_date = data["publish_date"].split(" ")
+                month = funcs.monthNumberToName(funcs.monthNameToNumber(publish_date[0]))
+                dateoryear = f"`{int(publish_date[1].replace(',', ''))} {month} {publish_date[2]}`"
+            except:
+                dateoryear = f"`{data['publish_date']}`"
+            e.add_field(name="Publish Date", value=dateoryear)
+            try:
+                e.add_field(name="Publisher(s)", value=", ".join(f"`{i}`" for i in data["publishers"]))
+            except:
+                pass
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Unknown ISBN number.")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Gets information and generates a citation for an article via DOI number.",
                       aliases=["reference", "ref", "article", "doi", "cit", "altmetric", "altmetrics", "cite"],
                       usage="<DOI number> [citation style]", name="citation")
@@ -1568,7 +1631,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" "{doi}"'
         try:
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
-            res = obj.stdout.read().decode("utf-8").split("\n")
+            res = await funcs.funcToCoro(obj.stdout.read)
+            res = res.decode("utf-8").split("\n")
             if res[-1]:
                 res.append("")
             res = "".join(i.replace("\n", "") for i in res[4:-1])
