@@ -72,7 +72,7 @@ class BotOwnerOnly(BaseCog, name="Bot Owner Only", description="Commands for the
         else:
             await msg.reply("Git-pulling. Commencing restart...")
         obj = Popen(
-            f"{gitpull}sudo reboot --force", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
+            f"{gitpull}sudo reboot", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT,
             close_fds=False if system() == "Windows" else True
         )
         await ctx.send(embed=discord.Embed(description=funcs.formatting(obj.stdout.read().decode("utf-8"))))
