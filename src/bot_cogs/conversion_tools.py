@@ -536,7 +536,7 @@ class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidde
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="romantodecimal", description="Converts roman numeral to decimal.",
-                      aliases=["rtd", "rtn"], usage="<input>")
+                      aliases=["rtd", "rtn", "ramentodecimal"], usage="<input>")
     async def romantodecimal(self, ctx, *, text: str=""):
         try:
             roman = text.replace(" ", "").replace(",", "")
@@ -564,8 +564,9 @@ class ConversionTools(BaseCog, name="Conversion Tools", command_attrs=dict(hidde
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="decimaltoroman", description="Converts decimal to roman numeral.",
-                      aliases=["dtr", "ntr", "roman", "romannumeral", "romannumerals"], usage="<input>")
+    @commands.command(name="decimaltoroman", description="Converts decimal to roman numeral.", usage="<input>",
+                      aliases=["dtr", "ntr", "roman", "romannumeral", "romannumerals", "ramen",
+                               "ramennumeral", "ramennumerals", "romanumeral", "romanumerals"])
     async def decimaltoroman(self, ctx, *, text: str=""):
         if text == "":
             e = funcs.errorEmbed(None, "Cannot process empty input.")
