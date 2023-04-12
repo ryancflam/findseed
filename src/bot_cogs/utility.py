@@ -1574,6 +1574,10 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 title += ": " + data["subtitle"]
             except:
                 pass
+            try:
+                title += f" ({data['edition_name']})"
+            except:
+                pass
             e = Embed(title=title, description=f"{base_url}/isbn/{new_isbn}")
             try:
                 e.set_image(url=f"https://covers.openlibrary.org/b/id/{data['covers'][0]}-L.jpg")
