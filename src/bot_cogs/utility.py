@@ -664,6 +664,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         else:
             wikiurl = "https://en.wikipedia.org/w/api.php?format=json&action=query" + \
                       "&prop=extracts&exintro&explaintext&redirects=1&titles="
+            imgurl = "https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles="
             try:
                 res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_')}")
                 data = res.json()
@@ -695,14 +696,20 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"]
                 if len(summary) != len(wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000]):
                     summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000] + "..."
-                e = Embed(description="https://en.wikipedia.org/wiki/" +
-                                      f"{wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')}"
-                )
+                name = wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')
+                res = await funcs.getRequest(f"{imgurl}{name}")
+                e = Embed(description=f"https://en.wikipedia.org/wiki/{name}")
                 e.set_author(name=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
                              icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" +
                                       "677853982718165001/1122px-Wikipedia-logo-v2.png")
                 summary = summary.split("\n")[0].replace('....', '...')
                 e.add_field(name="Extract", value=f"```{summary}```")
+                try:
+                    dct = res.json()["query"]["pages"]
+                    img = dct[list(dct.keys())[0]]["original"]["source"]
+                    e.set_image(url=img)
+                except:
+                    pass
             except Exception as ex:
                 funcs.printError(ctx, ex)
                 e = funcs.errorEmbed(None, "Invalid input or server error.")
@@ -1637,7 +1644,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       usage="<DOI number> [citation style]", name="citation")
     async def citation(self, ctx, doi, style="apa"):
         await ctx.send("Getting article data. Please wait...")
-        doi = f'https://doi.org/{funcs.replaceCharacters(doi, ["https://doi.org/", "doi:", "doi.org/"])}'.casefold()
+        doi = 'https://doi.org/' + \
+              f'{funcs.replaceCharacters(doi, ["https://doi.org/", "doi:", "doi.org/", "http://doi.org/"])}'.casefold()
         while doi.endswith("."):
             doi = doi[:-1]
         style = style.casefold()
@@ -1657,6 +1665,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 res = res.replace("  ", " ")
             if "java.lang.Thread.run" in res:
                 res = "Invalid citation style!"
+            res = res.replace("&amp;", "&")
             doi = doi.replace('"', "")
             desc = doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "") + "\n"
             e = Embed(title="Article", description=desc + funcs.formatting(res))
@@ -1689,6 +1698,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 e.add_field(name="Publish Date", value="`%s %s %s`" % (pub.day, funcs.monthNumberToName(pub.month), pub.year))
                 try:
                     e.add_field(name="PMID", value=f"`{altmetric['pmid']}`")
+                    desc += "https://pubmed.ncbi.nlm.nih.gov/" + altmetric['pmid'] + "\n"
+                    e.description = desc + funcs.formatting(res)
                 except:
                     pass
                 citations = [
