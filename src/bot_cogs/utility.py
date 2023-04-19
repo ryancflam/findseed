@@ -666,7 +666,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       "&prop=extracts&exintro&explaintext&redirects=1&titles="
             imgurl = "https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles="
             try:
-                res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_')}")
+                res = await funcs.getRequest(f"{wikiurl}{page.replace(' ', '_').replace('&', '%26')}")
                 data = res.json()
                 wikipage = data["query"]
                 if list(wikipage["pages"])[0] == "-1":
@@ -697,7 +697,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 if len(summary) != len(wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000]):
                     summary = wikipage["pages"][list(wikipage["pages"])[0]]["extract"][:1000] + "..."
                 name = wikipage['pages'][list(wikipage['pages'])[0]]['title'].replace(' ', '_')
-                res = await funcs.getRequest(f"{imgurl}{name}")
+                res = await funcs.getRequest(f"{imgurl}{name.replace(' ', '_').replace('&', '%26')}")
                 e = Embed(description=f"https://en.wikipedia.org/wiki/{name}")
                 e.set_author(name=wikipage["pages"][list(wikipage["pages"])[0]]["title"],
                              icon_url="https://cdn.discordapp.com/attachments/659771291858894849/" +
