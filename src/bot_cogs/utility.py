@@ -1656,9 +1656,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             obj = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=False if system() == "Windows" else True)
             res = await funcs.funcToCoro(obj.stdout.read)
             res = res.decode("utf-8").split("\n")
-            if res[-1]:
-                res.append("")
-            res = "".join(i.replace("\n", "") for i in res[4:-1])
+            res = "".join(i.replace("\n", "") for i in res if "." in i or "," in i)
             if res.startswith(("<", " ")) or '{"status"' in res or not res:
                 raise Exception("Invalid DOI number or server error.")
             while "  " in res:
