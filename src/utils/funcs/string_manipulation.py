@@ -17,7 +17,7 @@ def formatCogName(cog):
 
 
 def replaceCharacters(string, toreplace, replaceto: str=""):
-    for char in set(toreplace):
+    for char in toreplace:
         string = string.replace(char, replaceto)
     return string
 
