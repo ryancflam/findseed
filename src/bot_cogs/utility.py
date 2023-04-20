@@ -1638,16 +1638,22 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             e = funcs.errorEmbed(None, "Unknown ISBN number.")
         await ctx.reply(embed=e)
 
+    @staticmethod
+    def doiFormatter(doi):
+        doi = funcs.replaceCharacters(
+            doi, ["https://doi.org/", "http://doi.org/", "http://dx.doi.org/", "https://dx.doi.org/", "doi:", "doi.org/"]
+        ).strip()
+        while doi.endswith("."):
+            doi = doi[:-1]
+        return doi.casefold().replace('"', "")
+
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Gets information and generates a citation for an article via DOI number.",
                       aliases=["reference", "ref", "article", "doi", "cit", "altmetric", "altmetrics", "cite"],
                       usage="<DOI number> [citation style]", name="citation")
     async def citation(self, ctx, doi, style="apa"):
         await ctx.send("Getting article data. Please wait...")
-        doi = 'https://doi.org/' + \
-              f'{funcs.replaceCharacters(doi, ["https://doi.org/", "doi:", "doi.org/", "http://doi.org/"])}'.casefold()
-        while doi.endswith("."):
-            doi = doi[:-1]
+        doi = 'https://doi.org/' + self.doiFormatter(doi)
         style = style.casefold()
         style = "chicago-author-date" if style.startswith("chig") or style.startswith("chic") else style
         style = "multidisciplinary-digital-publishing-institute" if style.startswith("mdpi") else style
@@ -1664,7 +1670,6 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             if "java.lang.Thread.run" in res:
                 res = "Invalid citation style!"
             res = res.replace("&amp;", "&")
-            doi = doi.replace('"', "")
             desc = doi + "\nhttps://sci-hub.mksa.top/" + doi.replace("https://doi.org/", "") + "\n"
             e = Embed(title="Article", description=desc + funcs.formatting(res))
             obj.kill()
@@ -1740,7 +1745,42 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 2, commands.BucketType.user)
+    @commands.command(name="abstract", usage="<DOI number>", aliases=["abs"], hidden=True,
+                      description="Gets the abstract of an article via DOI number. Does NOT work a lot of the time!")
+    async def abstract(self, ctx, doi):
+        doi = self.doiFormatter(doi)
+        res = await funcs.getRequest("https://api.crossref.org/works/" + doi)
+        try:
+            data = res.json()["message"]
+            try:
+                abstract = funcs.replaceCharacters(
+                    data["abstract"],
+                    ["</jats:p><jats:p>", "<jats:italic>", "</jats:italic>"], " "
+                )
+                abstract = funcs.replaceCharacters(
+                    abstract.strip(),
+                    ["</jats:p>", "<jats:p>", "<jats:title>Abstract</jats:title>", "\n"]
+                )
+                while "  " in abstract:
+                    abstract = abstract.replace("  ", " ")
+                while abstract.startswith(" "):
+                    abstract = abstract[1:]
+            except:
+                if doi == "10.1088/1751-8113/44/49/492001":
+                    abstract = "Probably not."
+                else:
+                    abstract = "No abstract available."
+            desc = "https://doi.org/" + doi + "\nhttps://sci-hub.mksa.top/" + doi + "\n" + \
+                   funcs.formatting(abstract, limit=2000)
+            e = Embed(title=funcs.replaceCharacters(data["title"][0], ["<i>", "</i>"], " ")[:256], description=desc)
+            e.set_footer(text=f"Citation command: {self.client.command_prefix}citation {data['DOI']}")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Invalid DOI number or server error.")
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(name="quartile", usage='<numbers separated with ;> ["all" to show all points]',
                       aliases=["avg", "average", "mean", "median", "mode", "q1", "q2",
                                "q3", "range", "sd", "iqr", "quartiles", "boxplot", "box", "qir"],
@@ -1813,7 +1853,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await ctx.reply(embed=e, file=image)
         await funcs.deleteTempFile(imgName)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(name="hcf", usage="<value #1 up to {:,}> <value #2 up to {:,}>".format(HCF_LIMIT, HCF_LIMIT),
                       aliases=["lcm", "gcf", "gcd", "hcd", "lcf", "hcm"],
                       description="Calculates the highest common factor and lowest common multiple of two values.")
