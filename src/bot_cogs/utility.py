@@ -1655,7 +1655,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await ctx.send("Getting article data. Please wait...")
         doi = 'https://doi.org/' + self.doiFormatter(doi)
         style = style.casefold()
-        style = "chicago-author-date" if style.startswith("chig") or style.startswith("chic") else style
+        style = "chicago-author-date" if style == "chig" or style == "chic" else style
+        style = "harvard-cite-them-right" if style == "harvard" or style == "ctr" or style == "harv" else style
         style = "multidisciplinary-digital-publishing-institute" if style.startswith("mdpi") else style
         cmd = f'curl -LH "Accept: text/x-bibliography; style={style}" "{doi}"'
         try:
