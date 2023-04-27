@@ -905,7 +905,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
 
     @commands.cooldown(1, 20, commands.BucketType.user)
     @commands.command(name="gentext", description="Generates text based on your input.",
-                      aliases=["tg", "textgen", "gt"], usage="<input>")
+                      aliases=["tg", "textgen", "gt", "chatgpt", "gpt", "chadgpt"], usage="<input>")
     async def gentext(self, ctx, *, text=""):
         try:
             if text:
