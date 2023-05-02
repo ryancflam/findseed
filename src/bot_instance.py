@@ -42,7 +42,7 @@ class BotInstance(commands.AutoShardedBot):
                 webhooks=False,
                 invites=False,
                 voice_states=False,
-                presences=False,
+                presences=True,
                 guild_messages=True,
                 dm_messages=True,
                 guild_reactions=True,
