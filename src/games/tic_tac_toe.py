@@ -1,9 +1,8 @@
 # Credit - https://github.com/kying18/tic-tac-toe
 
-from math import floor
+from math import floor, inf
+from random import choice
 from time import time
-
-from numpy import inf
 
 from src.utils.base_player import BasePlayer
 from src.utils.funcs import minSecs
@@ -69,7 +68,12 @@ class TicTacToe:
             return
         self.__switchPlayer()
         if not self.__currentPlayer.getPlayer() and not computerSim:
-            self.move(self.__computerMove(self.__currentPlayer.getPlayerType(), self.__currentPlayer.getPlayerType())[0] + 1)
+            self.move(
+                (
+                    self.__computerMove(self.__currentPlayer.getPlayerType(), self.__currentPlayer.getPlayerType())[0]
+                    or choice([i for i, c in enumerate(self.__board) if c == " "])
+                ) + 1
+            )
             if not self.__currentPlayer.getPlayer():
                 self.__switchPlayer()
 

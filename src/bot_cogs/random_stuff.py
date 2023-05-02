@@ -125,37 +125,38 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         await sleep(0.5)
         await m.delete()
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(name="wyr", description="Sends a random Would You Rather question.", aliases=["rather", "wouldyourather"])
-    async def wyr(self, ctx):
-        try:
-            res = await funcs.getRequest("http://either.io/questions/next/1")
-            data = res.json()["questions"][0]
-            total1 = int(data['option1_total'])
-            total2 = int(data['option2_total'])
-            total = total1 + total2
-            opt1 = data['option_1']
-            opt2 = data['option_2']
-            info = data['moreinfo']
-            e = Embed(title="Would You Rather",
-                      description=f"🔵 {opt1 + ('' if opt1.endswith('.') else '.')}\n🔴 {opt2 + ('' if opt1.endswith('.') else '.')}")
-            e.add_field(
-                name="Option #1 Votes", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2)))
-            )
-            e.add_field(
-                name="Option #2 Votes", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2)))
-            )
-            if info:
-                e.set_footer(text=info)
-            yes = True
-        except Exception as ex:
-            funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Server error.")
-            yes = False
-        msg = await ctx.send(embed=e)
-        if yes:
-            await msg.add_reaction("🔵")
-            await msg.add_reaction("🔴")
+    """ Disabled """
+    # @commands.cooldown(1, 5, commands.BucketType.user)
+    # @commands.command(name="wyr", description="Sends a random Would You Rather question.", aliases=["rather", "wouldyourather"])
+    # async def wyr(self, ctx):
+    #     try:
+    #         res = await funcs.getRequest("http://either.io/questions/next/1")
+    #         data = res.json()["questions"][0]
+    #         total1 = int(data['option1_total'])
+    #         total2 = int(data['option2_total'])
+    #         total = total1 + total2
+    #         opt1 = data['option_1']
+    #         opt2 = data['option_2']
+    #         info = data['moreinfo']
+    #         e = Embed(title="Would You Rather",
+    #                   description=f"🔵 {opt1 + ('' if opt1.endswith('.') else '.')}\n🔴 {opt2 + ('' if opt1.endswith('.') else '.')}")
+    #         e.add_field(
+    #             name="Option #1 Votes", value="`{:,} ({}%)`".format(total1, funcs.removeDotZero(round(total1 / total * 100, 2)))
+    #         )
+    #         e.add_field(
+    #             name="Option #2 Votes", value="`{:,} ({}%)`".format(total2, funcs.removeDotZero(round(total2 / total * 100, 2)))
+    #         )
+    #         if info:
+    #             e.set_footer(text=info)
+    #         yes = True
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
+    #         e = funcs.errorEmbed(None, "Server error.")
+    #         yes = False
+    #     msg = await ctx.send(embed=e)
+    #     if yes:
+    #         await msg.add_reaction("🔵")
+    #         await msg.add_reaction("🔴")
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="nhie", description="Sends a random Never Have I Ever question.",
@@ -415,14 +416,15 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         except Exception as ex:
             funcs.printError(ctx, ex)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="bird", description="Sends a random bird image.", hidden=True, aliases=["birb"])
-    async def bird(self, ctx):
-        try:
-            res = await funcs.getRequest("https://some-random-api.ml/img/birb")
-            await funcs.sendImage(ctx, res.json()["link"])
-        except Exception as ex:
-            funcs.printError(ctx, ex)
+    """ Disabled """
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="bird", description="Sends a random bird image.", hidden=True, aliases=["birb"])
+    # async def bird(self, ctx):
+    #     try:
+    #         res = await funcs.getRequest("https://some-random-api.ml/img/birb")
+    #         await funcs.sendImage(ctx, res.json()["link"])
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="coffee", description="Sends a random coffee image.", hidden=True)
