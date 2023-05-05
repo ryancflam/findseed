@@ -37,7 +37,7 @@ class BotInstance(commands.AutoShardedBot):
                 guilds=True,
                 members=True,
                 bans=True,
-                emojis=False,
+                emojis=True,
                 integrations=False,
                 webhooks=False,
                 invites=False,
