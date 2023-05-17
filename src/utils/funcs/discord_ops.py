@@ -104,6 +104,14 @@ async def deerTrioPredicate(ctx):
     return ctx.author.id in (await bot_utils.readJson("data/deer_trio.json"))["members"]
 
 
+async def invokeCommand(client, command: str, channelID: int, messageID: int, *args, **kkwargs):
+    cmd = client.get_command(command)
+    channel = client.get_channel(channelID)
+    msg = await channel.fetch_message(messageID)
+    ctx = await client.get_context(msg)
+    await ctx.invoke(cmd, *args, **kkwargs)
+
+
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
     try:
         await ctx.reply(message, file=(await http_requests.getImageFile(url, name=name)))
