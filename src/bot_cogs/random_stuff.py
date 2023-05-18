@@ -416,16 +416,6 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         except Exception as ex:
             funcs.printError(ctx, ex)
 
-    """ Disabled """
-    # @commands.cooldown(1, 3, commands.BucketType.user)
-    # @commands.command(name="bird", description="Sends a random bird image.", hidden=True, aliases=["birb"])
-    # async def bird(self, ctx):
-    #     try:
-    #         res = await funcs.getRequest("https://some-random-api.ml/img/birb")
-    #         await funcs.sendImage(ctx, res.json()["link"])
-    #     except Exception as ex:
-    #         funcs.printError(ctx, ex)
-
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="coffee", description="Sends a random coffee image.", hidden=True)
     async def coffee(self, ctx):

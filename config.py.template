@@ -11,7 +11,6 @@ webServerHost = "0.0.0.0"
 webServerPort = 8080
 gitLogRoute = "/git"
 
-statcordKey = "" # https://statcord.com/add
 owmKey = "" # https://openweathermap.org/api
 exchangeratesapiKey = "" # https://manage.exchangeratesapi.io/quickstart
 rapidApiKey = "" # https://docs.rapidapi.com/docs/keys
@@ -26,5 +25,5 @@ geniusToken = "" # https://genius.com/api-clients
 
 
 def ready():
-    return bool(botToken and statcordKey and owmKey and exchangeratesapiKey and rapidApiKey and glotIoKey and blockCypherKey
+    return bool(botToken and owmKey and exchangeratesapiKey and rapidApiKey and glotIoKey and blockCypherKey
                 and ethGasStationKey and redditClientID and redditClientSecret and deepAIKey and wolframID and geniusToken)

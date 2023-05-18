@@ -6,7 +6,6 @@ from aiofiles.os import mkdir
 from aioshutil import rmtree
 from discord import Activity, Intents
 from discord.ext import commands, tasks
-from statcord import Client
 
 from src.utils import funcs
 
@@ -64,8 +63,6 @@ class BotInstance(commands.AutoShardedBot):
         self.__activityName = config.activityName
         self.__activityType = config.activityType
         self.__status = config.status
-        self.__statcord = Client(self, config.statcordKey)
-        self.__statcord.start_loop()
         self.__btcPresence = self.__activityName.casefold() == "bitcoin"
         self.__btcPrice = None
         self.__btcATH = None
@@ -176,6 +173,3 @@ class BotInstance(commands.AutoShardedBot):
     async def on_message_edit(self, before, after):
         if before.content != after.content:
             await self.__invokeCommand(after)
-
-    async def on_command(self, ctx):
-        self.__statcord.command_run(ctx)

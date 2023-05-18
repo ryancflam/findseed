@@ -70,17 +70,6 @@ class General(BaseCog, name="General", description="Standard commands relating t
                     value="`{} GB`".format(
                         funcs.removeDotZero(round(float(dict(disk_usage('/')._asdict())['free']) / 1024 / 1024 / 1024, 2))
                     ))
-        try:
-            res = await funcs.getRequest(f"https://api.statcord.com/v3/{self.client.user.id}",
-                                         params={"Authorization": config.statcordKey})
-            statcord = res.json()
-            e.add_field(name="Bandwidth Usage",
-                        value="`{} MB`".format(funcs.removeDotZero(round(int(statcord["data"][0]["bandwidth"]) / 1024 / 1024, 2))))
-            popular = statcord["popular"][0]
-            e.add_field(name="Most Popular Command",
-                        value="`{}{} ({:,})`".format(self.client.command_prefix, popular['name'], int(popular['count'])))
-        except:
-            pass
         e.add_field(name="!findseed Calls", value="`{:,}`".format((await funcs.readJson("data/findseed.json"))['calls']))
         e.add_field(name="Local Time", value=f"`{str(datetime.fromtimestamp(int(time())))}`")
         e.set_footer(text=f"Bot uptime: {funcs.timeDifferenceStr(time(), self.client.startTime)}")

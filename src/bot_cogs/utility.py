@@ -1121,7 +1121,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         langcode = langcode.casefold() if langcode != "pt-BR" else langcode
         if langcode not in codes:
             codesList = ", ".join(f"`{code}` ({languages[codes.index(code)]})" for code in codes)
-            e = funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}")
+            await ctx.reply(embed=funcs.errorEmbed("Invalid language code!", f"Valid options:\n\n{codesList}"))
         else:
             try:
                 res = await funcs.getRequest(f"https://api.dictionaryapi.dev/api/v2/entries/{langcode}/{word}")
@@ -1613,11 +1613,11 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 pass
             try:
                 publish_date = data["publish_date"].split(" ")
-                mode = 0
+                datemode = 0
                 if len(publish_date) == 1:
                     publish_date = data["publish_date"].split("-")
-                    mode = 1
-                if mode:
+                    datemode = 1
+                if datemode:
                     month = funcs.monthNumberToName(publish_date[1])
                     day = int(publish_date[2])
                     year = publish_date[0]
@@ -1695,11 +1695,14 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                                       f"(ISSN: {'/'.join(issn for issn in altmetric['issns'])})`")
                 except:
                     pass
-                if altmetric["published_on"] < 0:
-                    pub = (datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])).date()
-                else:
-                    pub = datetime.utcfromtimestamp(int(altmetric["published_on"])).date()
-                e.add_field(name="Publish Date", value="`%s %s %s`" % (pub.day, funcs.monthNumberToName(pub.month), pub.year))
+                try:
+                    if altmetric["published_on"] < 0:
+                        pub = (datetime(1970, 1, 1) + timedelta(seconds=altmetric["published_on"])).date()
+                    else:
+                        pub = datetime.utcfromtimestamp(int(altmetric["published_on"])).date()
+                    e.add_field(name="Publish Date", value="`%s %s %s`" % (pub.day, funcs.monthNumberToName(pub.month), pub.year))
+                except:
+                    pass
                 try:
                     e.add_field(name="PMID", value=f"`{altmetric['pmid']}`")
                     desc += "https://pubmed.ncbi.nlm.nih.gov/" + altmetric['pmid'] + "\n"

@@ -785,7 +785,7 @@ class Cryptocurrency(BaseCog, name="Cryptocurrency", description="Cryptocurrency
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr", "addrg"], hidden=True,
+    @commands.command(name="btcaddrgen", aliases=["baddrg", "bgenaddr", "btcgenaddr", "addrg", "btcaddrg"], hidden=True,
                       description="Generates a Bitcoin address. This command should only be used for fun.")
     async def btcaddrgen(self, ctx):
         address = BitcoinAddress()
