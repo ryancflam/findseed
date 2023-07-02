@@ -2,7 +2,7 @@
 # For blurface
 
 from asyncio import TimeoutError, sleep
-from calendar import timegm
+from calendar import month as calmon, timegm
 from datetime import datetime, timedelta
 from json import JSONDecodeError, dumps
 from platform import system
@@ -1278,7 +1278,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="calc", description="Does simple math.",
-                      aliases=["calculate", "calculator", "cal", "math", "maths", "safeeval"], usage="<input>")
+                      aliases=["calculate", "calculator", "math", "maths", "safeeval"], usage="<input>")
     async def calc(self, ctx, *, inp):
         try:
             e = Embed(description=funcs.formatting(funcs.removeDotZero(funcs.evalMath(inp))))
@@ -1880,6 +1880,38 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             f'{funcs.removeDotZero(b)} is: **{funcs.removeDotZero(lcm)}**')
         except ValueError:
             await ctx.reply(embed=funcs.errorEmbed(None, "Invalid input. Values must be {:,} or below.".format(HCF_LIMIT)))
+
+    @commands.cooldown(1, 2, commands.BucketType.user)
+    @commands.command(name="calendar", description="Shows the calendar for a specified month in a specified year.",
+                      usage="[month] [year]", aliases=["calander", "calandar", "calender", "celender", "cal"])
+    async def calendar(self, ctx, month: str="", year: str=""):
+        try:
+            today = datetime.today()
+            if month:
+                try:
+                    month = int(month)
+                    if not 1 <= month <= 12:
+                        return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid month."))
+                except:
+                    try:
+                        month = int(funcs.monthNameToNumber(month))
+                    except Exception as ex:
+                        return await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+            else:
+                month = today.month
+            if year:
+                try:
+                    year = int(year)
+                    if not 1 <= year <= 9999:
+                        raise
+                except:
+                    return await ctx.reply(embed=funcs.errorEmbed(None, "Invalid year."))
+            else:
+                year = today.year
+            return await ctx.reply(embed=Embed(title="Calendar", description=funcs.formatting(calmon(year, month))))
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
 
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(description="Shows how far apart two dates are.", aliases=["weekday", "day", "days", "dates", "age", "today"],
