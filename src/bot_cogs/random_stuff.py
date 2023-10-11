@@ -28,6 +28,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         self.activeSpinners = []
         self.phoneWaitingChannels = []
         self.phoneCallChannels = []
+        self.riggedChoice = ""
 
     async def __readFiles(self):
         self.personalityTest = await funcs.readJson(funcs.getResource(self.name, "personality_test.json"))
@@ -814,7 +815,10 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             while " " in itemslist:
                 itemslist.remove(" ")
             itemslist = [i.strip() for i in itemslist]
-            item = choice(itemslist)
+            if ctx.author == (await self.client.application_info()).owner and self.riggedChoice in itemslist:
+                item = self.riggedChoice
+            else:
+                item = choice(itemslist)
             e = Embed(title=f"{self.client.user.name} Chooses...",
                       description=f"Requested by: {ctx.author.mention}\n{funcs.formatting(item)}")
             e.add_field(name="Items ({:,})".format(len(itemslist)), value=", ".join(f"`{i}`" for i in sorted(itemslist)))
@@ -822,6 +826,17 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
+
+    @commands.command(name="rigchoice", description="Rigs !randomchoice because it's funny.", aliases=["rig", "rigged", "riggy"],
+                      usage="[desired choice]")
+    @commands.is_owner()
+    async def rigchoice(self, ctx, *, text: str=""):
+        if not text:
+            self.riggedChoice = ""
+            await ctx.reply(f"No longer rigging {self.client.command_prefix}randomchoice")
+        else:
+            self.riggedChoice = text
+            await ctx.reply(f"Rigged {self.client.command_prefix}randomchoice to display the following item: `{text}`")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="shrek", description="Shrek.", hidden=True)
