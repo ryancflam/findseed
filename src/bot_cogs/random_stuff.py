@@ -928,6 +928,23 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             e = funcs.errorEmbed(None, "Invalid input or server error.")
         await ctx.reply(embed=e)
 
+    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.command(name="genimg", description="Generates images based on your input.",
+                      aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img"], usage="<input>")
+    async def genimg(self, ctx, *, text=""):
+        try:
+            if text:
+                await ctx.send("Processing text. Please wait...")
+            data = {"text": text}
+            res = await funcs.postRequest(
+                "https://api.deepai.org/api/text2img", data=data, headers={"api-key": config.deepAIKey}
+            )
+            e = Embed(title="Image Generation").set_image(url=res.json()["output_url"])
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, "Invalid input or server error.")
+        await ctx.reply(embed=e)
+
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="genmeme", description="Generates a meme with top text and bottom text.",
                       aliases=["meme", "memegen", "memer", "makememe"], hidden=True,
