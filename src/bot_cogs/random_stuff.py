@@ -929,8 +929,8 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="genimg", description="Generates images based on your input.",
-                      aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img"], usage="<input>")
+    @commands.command(name="genimg", description="Generates images based on your input.", usage="<input>",
+                      aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
     async def genimg(self, ctx, *, text=""):
         try:
             if text:
