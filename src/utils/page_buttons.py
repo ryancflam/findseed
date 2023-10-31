@@ -1,42 +1,24 @@
-from asyncio import TimeoutError, sleep
+from asyncio import TimeoutError
 
 from discord import ButtonStyle, ui
 
-from src.utils.funcs import errorEmbed, printError
+from src.utils.delete_button import DeleteButton
+from src.utils.funcs import errorEmbed
 
-DELETE = "🗑️"
 PREV = "⏮"
 NEXT = "⏭"
 GO_TO_PAGE = "❓"
 
 
-class PageButtons(ui.View):
+class PageButtons(DeleteButton):
     def __init__(self, ctx, client, msg, embeds: list, timeout: int=300):
-        super().__init__(timeout=timeout)
-        self.__ctx = ctx
-        self.__client = client
-        self.__msg = msg
+        super().__init__(ctx=ctx, client=client, msg=msg, timeout=timeout)
         self.__embeds = embeds
         self.__page = 1
         self.__pages = len(self.__embeds)
 
     async def __edit(self):
-        await self.__msg.edit(embed=self.__embeds[self.__page - 1])
-
-    async def interaction_check(self, interaction):
-        return interaction.user == self.__ctx.author
-
-    async def on_timeout(self):
-        await self.__msg.edit(view=None)
-
-    async def on_error(self, error, _, __):
-        printError(self.__ctx, error)
-
-    @ui.button(emoji=DELETE, style=ButtonStyle.danger)
-    async def delete(self, _, __):
-        await self.__msg.edit(content="Deleting this message...", embed=None, view=None)
-        await sleep(1)
-        await self.__msg.delete()
+        await self._getmsg().edit(embed=self.__embeds[self.__page - 1])
 
     @ui.button(emoji=PREV, style=ButtonStyle.primary)
     async def prev(self, _, __):
@@ -54,15 +36,15 @@ class PageButtons(ui.View):
     async def gotopage(self, _, __):
         if self.__pages > 1:
             mlist = [
-                await self.__ctx.send(
-                    f"{self.__ctx.author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__pages)})"
+                await self._getctx().send(
+                    f"{self._getctx().author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__pages)})"
                 )
             ]
             while True:
                 try:
-                    userm = await self.__client.wait_for(
-                        "message", check=lambda umsg: umsg.author == self.__ctx.author
-                                                      and umsg.channel == self.__ctx.channel, timeout=30
+                    userm = await self._getclient().wait_for(
+                        "message", check=lambda umsg: umsg.author == self._getctx().author
+                                                      and umsg.channel == self._getctx().channel, timeout=30
                     )
                     mlist.append(userm)
                     try:
@@ -71,7 +53,7 @@ class PageButtons(ui.View):
                             raise Exception
                         break
                     except:
-                        mlist.append(await self.__ctx.send(embed=errorEmbed(None, "Invalid page, please try again.")))
+                        mlist.append(await self._getctx().send(embed=errorEmbed(None, "Invalid page, please try again.")))
                 except TimeoutError:
                     page = 1
                     break

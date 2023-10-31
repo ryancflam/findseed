@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 import config
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
+from src.utils.delete_button import DeleteButton
 from src.utils.playing_cards import PlayingCards
 
 COIN_EDGE_ODDS = 6001
@@ -926,10 +927,12 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.reply(embed=e)
+        m = await ctx.reply(embed=e)
+        await m.edit(view=DeleteButton(ctx, self.client, m))
 
-    @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="genimg", description="Generates images based on your input.", usage="<input>",
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    @commands.command(name="genimg", usage="<input>",
+                      description="Generates images based on your input. Warning: May generate inappropriate images.",
                       aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
     async def genimg(self, ctx, *, text=""):
         try:
@@ -943,7 +946,8 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
-        await ctx.reply(embed=e)
+        m = await ctx.reply(embed=e)
+        await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="genmeme", description="Generates a meme with top text and bottom text.",
