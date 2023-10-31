@@ -142,9 +142,9 @@ class Minecraft(BaseCog, name="Minecraft",
         foundTime = "just now"
         if not update:
             timestr = funcs.timeDifferenceStr(time(), highestTime)
-            timestr_0 = int(timestr.split(" ")[0])
+            timestr_0 = int(timestr.replace(",", "").split(" ")[0])
             if timestr_0 > 2:
-                foundTime = f"{timestr_0} days"
+                foundTime = "{:,} days".format(timestr_0)
             else:
                 foundTime = timestr
         e = Embed(title=f"{self.client.command_prefix}findseed",
