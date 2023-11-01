@@ -1,4 +1,4 @@
-from asyncio import new_event_loop as loop
+from asyncio import all_tasks, gather
 from logging import StreamHandler, getLogger
 from sys import stdout
 
@@ -9,17 +9,18 @@ def main():
     handler = StreamHandler(stream=stdout)
     handler.setLevel(20)
     getLogger().addHandler(handler)
-    client = BotInstance(loop())
+    client = BotInstance()
+    loop = client.getLoop()
     try:
-        task = loop().create_task(client.startup())
-        loop().run_until_complete(task)
-        loop().run_forever()
+        task = loop.create_task(client.startup())
+        loop.run_until_complete(task)
+        loop.run_until_complete(gather(*all_tasks(loop=loop)))
     except (KeyboardInterrupt, RuntimeError):
         print(f"Shutting down - {client.kill()}")
     except Exception as ex:
         print(f"Error - {ex}")
     finally:
-        loop().close()
+        loop.close()
 
 
 if __name__ == "__main__":

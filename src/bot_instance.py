@@ -1,3 +1,4 @@
+from asyncio import get_event_loop
 from os import listdir, path
 from sys import exit
 from time import time
@@ -28,7 +29,7 @@ except ModuleNotFoundError:
 
 
 class BotInstance(commands.AutoShardedBot):
-    def __init__(self, loop):
+    def __init__(self):
         super().__init__(
             command_prefix="b" * (not config.production) + config.prefix,
             intents=Intents(
@@ -58,7 +59,7 @@ class BotInstance(commands.AutoShardedBot):
         self.loop.create_task(self.__generateFiles())
         self.remove_command("help")
         self.__getTickers.start()
-        self.__eventLoop = loop
+        self.__eventLoop = get_event_loop()
         self.__token = config.botToken
         self.__activityName = config.activityName
         self.__activityType = config.activityType
@@ -68,6 +69,9 @@ class BotInstance(commands.AutoShardedBot):
         self.__btcATH = None
         self.__ethPrice = None
         self.__ethATH = None
+
+    def getLoop(self):
+        return self.__eventLoop
 
     def startup(self):
         for cog in listdir(f"{funcs.PATH}/{funcs.COGS_PATH}"):

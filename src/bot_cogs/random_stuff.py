@@ -935,6 +935,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                       description="Generates images based on your input. Warning: May generate inappropriate images.",
                       aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
     async def genimg(self, ctx, *, text=""):
+        img = None
         try:
             if text:
                 await ctx.send("Processing text. Please wait...")
@@ -942,11 +943,13 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             res = await funcs.postRequest(
                 "https://api.deepai.org/api/text2img", data=data, headers={"api-key": config.deepAIKey}
             )
-            e = Embed(title="Image Generation").set_image(url=res.json()["output_url"])
+            imgname = str(time()) + ".png"
+            img = await funcs.getImageFile(res.json()["output_url"], name=imgname)
+            e = Embed(title="Image Generation").set_image(url="attachment://" + imgname)
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
-        m = await ctx.reply(embed=e)
+        m = await ctx.reply(embed=e, file=img)
         await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
