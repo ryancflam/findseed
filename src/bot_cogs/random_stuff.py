@@ -828,8 +828,8 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
-    @commands.command(name="rigchoice", description="Rigs !randomchoice because it's funny.", aliases=["rig", "rigged", "riggy"],
-                      usage="[desired choice]")
+    @commands.command(name="rigchoice", description="Rigs !randomchoice because it's funny.",
+                      usage="[desired choice]", hidden=True, aliases=["rigged", "riggy"])
     @commands.is_owner()
     async def rigchoice(self, ctx, *, text: str=""):
         if not text:

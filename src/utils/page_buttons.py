@@ -24,7 +24,7 @@ class PageButtons(DeleteButton):
             self.__nextButton.disabled = True
             self.__gtpButton.disabled = True
 
-    async def __edit(self, i):
+    async def __edit(self, interaction):
         if self.__page == 1:
             self.__prevButton.disabled = True
         elif self.__page > 1:
@@ -34,20 +34,20 @@ class PageButtons(DeleteButton):
         elif self.__page < self.__pages:
             self.__nextButton.disabled = False
         await self._getmsg().edit(embed=self.__embeds[self.__page - 1], view=self)
-        await i.response.defer()
+        await interaction.response.defer()
 
     @ui.button(emoji=PREV, style=ButtonStyle.primary, custom_id="prev_button")
-    async def prev(self, _, i):
+    async def prev(self, _, interaction):
         self.__page -= 1
-        await self.__edit(i)
+        await self.__edit(interaction)
 
     @ui.button(emoji=NEXT, style=ButtonStyle.primary, custom_id="next_button")
-    async def next(self, _, i):
+    async def next(self, _, interaction):
         self.__page += 1
-        await self.__edit(i)
+        await self.__edit(interaction)
 
     @ui.button(emoji=GO_TO_PAGE, style=ButtonStyle.secondary, custom_id="gtp_button")
-    async def gotopage(self, _, i):
+    async def gotopage(self, _, interaction):
         mlist = [
             await self._getctx().send(
                 f"{self._getctx().author.mention} Which page would you like to go to? (1-{'{:,}'.format(self.__pages)})"
@@ -76,4 +76,4 @@ class PageButtons(DeleteButton):
             except:
                 pass
         self.__page = page
-        await self.__edit(i)
+        await self.__edit(interaction)
