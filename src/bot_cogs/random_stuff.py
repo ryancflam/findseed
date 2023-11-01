@@ -918,9 +918,9 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         try:
             if text:
                 await ctx.send("Processing text. Please wait...")
-            data = {"text": text}
             res = await funcs.postRequest(
-                "https://api.deepai.org/api/text-generator", data=data, headers={"api-key": config.deepAIKey}
+                "https://api.deepai.org/api/text-generator",
+                data={"text": text}, headers={"api-key": config.deepAIKey}
             )
             data = res.json()
             e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
@@ -939,9 +939,9 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         try:
             if text:
                 await ctx.send("Processing text. Please wait...")
-            data = {"text": text}
             res = await funcs.postRequest(
-                "https://api.deepai.org/api/text2img", data=data, headers={"api-key": config.deepAIKey}
+                "https://api.deepai.org/api/text2img",
+                data={"text": text}, headers={"api-key": config.deepAIKey}
             )
             imgname = str(time()) + ".png"
             img = await funcs.getImageFile(res.json()["output_url"], name=imgname)
