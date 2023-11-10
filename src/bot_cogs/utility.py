@@ -1652,6 +1652,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       aliases=["reference", "ref", "article", "doi", "cit", "altmetric", "altmetrics", "cite"],
                       usage="<DOI number> [citation style]", name="citation")
     async def citation(self, ctx, doi, style="apa"):
+        img = None
         await ctx.send("Getting article data. Please wait...")
         doi = 'https://doi.org/' + self.doiFormatter(doi)
         style = style.casefold()
@@ -1682,7 +1683,9 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 e.description = desc + funcs.formatting(res)
                 if len(altmetric["title"]) < 257:
                     e.title = altmetric["title"]
-                e.set_thumbnail(url=altmetric["images"]["large"])
+                imgname = str(time()) + ".png"
+                img = await funcs.getImageFile(altmetric["images"]["large"], name=imgname)
+                e.set_thumbnail(url="attachment://" + imgname)
                 try:
                     e.add_field(name='Authors ({:,})'.format(len(altmetric["authors"])),
                                 value=", ".join(f"`{author}`" for author in altmetric["authors"][:10])
@@ -1747,7 +1750,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))
-        await ctx.reply(embed=e)
+        await ctx.reply(embed=e, file=img)
 
     @commands.cooldown(1, 2, commands.BucketType.user)
     @commands.command(name="abstract", usage="<DOI number>", aliases=["abs"], hidden=True,

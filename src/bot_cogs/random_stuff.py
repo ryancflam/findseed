@@ -924,11 +924,14 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             )
             data = res.json()
             e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
+            delbutton = True
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
+            delbutton = False
         m = await ctx.reply(embed=e)
-        await m.edit(view=DeleteButton(ctx, self.client, m))
+        if delbutton:
+            await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="genimg", usage="<input>",
@@ -946,11 +949,14 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             imgname = str(time()) + ".png"
             img = await funcs.getImageFile(res.json()["output_url"], name=imgname)
             e = Embed(title="Image Generation").set_image(url="attachment://" + imgname)
+            delbutton = True
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, "Invalid input or server error.")
+            delbutton = False
         m = await ctx.reply(embed=e, file=img)
-        await m.edit(view=DeleteButton(ctx, self.client, m))
+        if delbutton:
+            await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="genmeme", description="Generates a meme with top text and bottom text.",
