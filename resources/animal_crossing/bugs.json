@@ -10,8 +10,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught an agrias butterfly! I wonder if it finds me disagrias-able?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/10",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/10",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868867910418642/Agrias_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868883542577202/Agrias_Butterfly_NH.png",
         "museum-phrase": "Some say the agrias butterfly is one of the most beautiful butterflies in the world. Bah, I say! BAH! They may have brightly colored wings, but the way they flutter and flitter...SO FOUL! In fact, the agrias butterfly flies so fast, it is quite a feat to catch one. I suppose I should congratulate you on your good fortune... But catching any bug seems a misfortune to me.",
         "name": {
             "name-USen": "agrias butterfly"
@@ -30,8 +30,8 @@
             "time": ""
         },
         "catch-phrase": "I caught an ant! TELL ME WHERE THE QUEEN IS!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/69",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/69",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869018515279902/Ant_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869032314548274/Ant_NH.png",
         "museum-phrase": "I warn you, the ant may be a small bug, but it finds scary strength in numbers. You see, the ant itself is the strongest creature in the world in relation to its size. One of these diminutive fiends can carry 50 times its own bodyweight! And if it wants to lift something even larger... Why, it simply calls on its ant friends to join the effort. Creepy cooperation, I say...",
         "name": {
             "name-USen": "ant"
@@ -50,8 +50,8 @@
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught an Atlas moth! I bet it never gets lost!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/14",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/14",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869201294676078/Atlas_Moth_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869217212055562/Atlas_Moth_NH.png",
         "museum-phrase": "The Atlas moth is a monstrous thing! Not only is it one of the largest moths in the world... The tips of its wings look rather like the heads of venomous snakes! Despite its largeness and loathsome looks, the adult Atlas moth lives only for a few days. It emerges from its cocoon without a mouth, you see...and so cannot eat. I feel for the poor thing...but it is still foul!",
         "name": {
             "name-USen": "Atlas moth"
@@ -70,8 +70,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a bagworm! Guess I'm a bragworm!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/68",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/68",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869365828817017/Bagworm_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869382413095023/Bagworm_NH.png",
         "museum-phrase": "The bagworm is, in fact, not a worm at all, but a caterpillar instead. The filthy fraud uses silk and leaves to spin a cozy bag for it to hide inside\u2014hence the name. Some find it cute the way bagworms dangle from trees. But the truth is they're gluttonous monsters. These beasts love to stuff their bug- gullets full of leaves, devouring the very trees they hang upon. Wretched villains is what they are.",
         "name": {
             "name-USen": "bagworm"
@@ -90,8 +90,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I did it! Did you see that? I caught a banded dragonfly!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/34",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/34",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869528416817192/Banded_Dragonfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869544137072653/Banded_Dragonfly_NH.png",
         "museum-phrase": "The banded dragonfly is known for its black-and-yellow-striped body, as well as for its piercing green eyes. And it is those very eyes that help make dragonflies master hunters, you see. Alas, when one looks at me, I can't help but feel it is sizing me up for a meal! Hoot! The horrors! Look away, fiend!",
         "name": {
             "name-USen": "banded dragonfly"
@@ -110,8 +110,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I found a bell cricket! It would make a great bellhop!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/21",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/21",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869730905227284/Bell_Cricket_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869742137585705/Bell_Cricket_NH.png",
         "museum-phrase": "The call of the bell cricket heralds the arrival of autumn. And I concede it is a rather pleasant sound. What I do NOT find pleasant is the way these things rub their strange wings together to make their song! Ick and blech! And to make matters worse, bell crickets have been known to shed two of their four wings! And they simply leave these wings where they fall, as if it were litter! I simply cannot abide such odious behavior.",
         "name": {
             "name-USen": "bell cricket"
@@ -130,8 +130,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a blue weevil beetle! It's the lesser of blue weevils!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/49",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/49",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869881526878288/Blue_Weevil_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176869887440859217/Blue_Weevil_Beetle_NH.png",
         "museum-phrase": "Yes, yes. The blue weevil beetle does come in beautiful shades of blue and green. The colors are so bright, some say it looks like a living jewel. But I say it looks like a weevil...and weevil rhymes with EVIL. Draw your own conclusions from there. Hoot! I certainly have!",
         "name": {
             "name-USen": "blue weevil beetle"
@@ -150,8 +150,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a brown cicada! Now it probably feels blue, cicada.",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/26",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/26",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870016700919808/Brown_Cicada_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870094039687249/Brown_Cicada_NH.png",
         "museum-phrase": "Cicadas are obnoxious insects. And not just brown cicadas, mind you...but all cicadas! They flex ribbed membranes on their torso called tymbals to make a loud snapping sound. So rude! Hoo! Yes, it is only the males who make the noise. Sometimes at a volume that can produce pain at close range! Appallingly inconsiderate, I must say...",
         "name": {
             "name-USen": "brown cicada"
@@ -170,8 +170,8 @@
             "time": "4pm - 11pm"
         },
         "catch-phrase": "I caught a centipede! 99 more and I'll have a dollarpede!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/77",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/77",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870218874761238/Centipede_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870228844609606/Centipede_NH.png",
         "museum-phrase": "The centipede's name means \"100 legs.\" But I tell you now, that's a lie! These ugly bugs can have as few as 15 pairs of legs...or as many as 171. But because of how their bodies are segmented, they never have exactly 100! Hoo! It's true! You know what else is true? Centipedes are carnivorous, aggressive, and venomous! And their bite is quite painful too! HOO-rrible things, I say.",
         "name": {
             "name-USen": "centipede"
@@ -190,8 +190,8 @@
             "time": ""
         },
         "catch-phrase": "I found a cicada shell! I'm glad the little guy came out of it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/31",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/31",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870426010452068/Cicada_Shell_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870439528697926/Cicada_Shell_NH.png",
         "museum-phrase": "Cicadas! The nerve! Not only are they loud, they leave their cicada shells lying about! When it's time for a cicada nymph to turn into an adult, you see, it clings to a tree and sheds its exoskeleton. Then it just leaves this shell of its former self hanging right there! Awful manners, really...and awfully terrifying too.",
         "name": {
             "name-USen": "cicada shell"
@@ -210,8 +210,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a citrus long-horned beetle! Orange you happy for me?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/47",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/47",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870587054956644/Citrus_Long-Horned_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870593828765717/Citrus_Long-Horned_Beetle_NH.png",
         "museum-phrase": "The citrus long-horned beetle is a putrid pest and a grave threat to trees. Hoo! It's true! Adults possess powerful jaws and use them to chomp through hard wood and plant fibers with ease. The little larvae are no better, boring bullet-like holes into innocent trees with gusto\u2014citrus trees especially. Voracious and vile, indeed!",
         "name": {
             "name-USen": "citrus long-horned beetle"
@@ -230,8 +230,8 @@
             "time": "4am - 7pm"
         },
         "catch-phrase": "I caught a common bluebottle! I'll put it in a rare green jar!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/5",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/5",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870749156409464/Common_Bluebottle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870764503371816/Common_Bluebottle_NH.png",
         "museum-phrase": "The common bluebottle is a type of swallowtail butterfly with a bright blue line running down its wings. They fly quite nimbly, it seems, and are thus quite difficult to catch. But seeing how they've been known to slurp nutrients from MUD puddles... I simply CAN'T imagine wanting to catch one myself. What awful breath!",
         "name": {
             "name-USen": "common bluebottle"
@@ -250,8 +250,8 @@
             "time": "4am - 7pm"
         },
         "catch-phrase": "I caught a common butterfly! They often flutter by!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/1",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/1",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176870882153615460/Common_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871046419337227/Common_Butterfly_NH.png",
         "museum-phrase": "The common butterfly would have you believe it is but a beautiful friend flitting prettily about the flowers. Bah, I say! They may seem innocent things with their pretty white wings, but they hide a dark side! The common butterfly caterpillar is called a cabbage worm, you see, and it's a most voracious pest. The ravenous beasts chew through cabbage, broccoli, kale and the like with a devastating gusto. And my feathers! Their green coloring is truly GROSS! A hoo-rrific hue, I say.",
         "name": {
             "name-USen": "common butterfly"
@@ -270,8 +270,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a cricket! What a chirp thrill!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/20",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/20",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871146096951326/Cricket_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871160009461780/Cricket_NH.png",
         "museum-phrase": "I say, where shall I start with the cricket? Well, to begin with, they are mostly nocturnal creatures. And for that you day-loving diurnal types should be grateful! Hoo! It means you don't have to lay eyes upon their prickly legs or overly long antennae like us night owls! Of course, crickets are best known for the chirping sound they make by rubbing their wings together. Some find the noise lovely to listen to. Alas, it only serves to remind me of another unpleasant fact... Which is to say...you will find a cricket's ears right next to its knees! I've gone weak in the knees at the mention of it!",
         "name": {
             "name-USen": "cricket"
@@ -290,8 +290,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a cyclommatus stag! Those mandibles are a mouthful!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/59",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/59",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871315924332614/Cyclommatus_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871328549175316/Cyclommatus_Stag_NH.png",
         "museum-phrase": "The cyclommatus stag is known for its giant jaws, which can be even larger than its body. Its round eyes and silver color make it a beloved beetle. Though how one could love a beetle is beyond me. Imagine being pinched by those long jaws, and the pain it would cause! Ouch and ewww!",
         "name": {
             "name-USen": "cyclommatus stag"
@@ -310,8 +310,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a damselfly! Now it's a damselfly in distress!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/35",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/35",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871476377423982/Damselfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871491296575518/Damselfly_NH.png",
         "museum-phrase": "The colorful damselfly is similar to its cousin, the dragonfly, though it tends to be smaller and thinner. But don't let the delicate looks fool you! Much like the dragonfly, the damselfly is a ruthless predator. It loves to catch flies midair and eat them, and has been known to snack on spiders it plucks from the web! In short, it is not a dinner guest I would recommend... And it is not a menu I could keep down.",
         "name": {
             "name-USen": "damselfly"
@@ -330,8 +330,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a darner dragonfly! It better watch its mouth!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/33",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/33",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871628680999033/Darner_Dragonfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871645395300422/Darner_Dragonfly_NH.png",
         "museum-phrase": "The darner dragonfly is the fastest dragonfly there is, flying at speeds up to 40 miles per hour! They all have a distinctive green hue, but the males have blue underbellies while females have yellow ones. It all sounds pleasant enough, no? Well, did you know their young eat tadpoles...and even some small fish! Worse, these creepy carnivores will eat each other in a pinch! Grotesque does not describe it...",
         "name": {
             "name-USen": "darner dragonfly"
@@ -350,8 +350,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a diving beetle! Now I'm making a splash!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/39",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/39",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871770800783402/Diving_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871785472463018/Diving_Beetle_NH.png",
         "museum-phrase": "Ah, the dastardly diving beetle! Famous for its distinctive round shape...and its voracious appetite. This powerful predator uses thick back legs covered in hairs to paddle after its prey. And it uses suction cups on its front legs to grip its quarry for good. My own legs have gone weak thinking about it...",
         "name": {
             "name-USen": "diving beetle"
@@ -370,8 +370,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a drone beetle! Shouldn't you have more propellers?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/53",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/53",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871904490033182/Drone_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176871918977163324/Drone_Beetle_NH.png",
         "museum-phrase": "I must say, the drone beetle is like that boorish acquaintance who is much too loud for polite company. That is, it is a large bug with a square head and is so named for the droning noise it makes when it flies. Furthermore, it has hooks on its feet that help it to cling tightly to trees. HOOK FEET... How gauche!",
         "name": {
             "name-USen": "drone beetle"
@@ -390,8 +390,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a dung beetle! This species likes feces!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/50",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/50",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872032063987852/Dung_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872046467223622/Dung_Beetle_NH.png",
         "museum-phrase": "What can I say? The aptly-named dung beetle feeds on the feces of animals. Hoo! You heard right! This putrid pest rolls up balls of dung...and then rolls them away to dine on at a later date. As if that weren't atrocious enough, some dung beetles lay their eggs in the feces too! What a dreadful place to raise the young.",
         "name": {
             "name-USen": "dung beetle"
@@ -410,8 +410,8 @@
             "time": ""
         },
         "catch-phrase": "I caught an earth-boring dung beetle! It's not boring at all!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/51",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/51",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872227237535805/Earth-Boring_Dung_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872240197947462/Earth-Boring_Dung_Beetle_NH.png",
         "museum-phrase": "Earth-boring dung beetles are considered quite handsome by some, thanks to their metallic luster. In fact, some even think them to be good omens and bringers of favorable fortune. But I must protest! These field- ravaging pests love to burrow under piles of dung and lay their eggs. They raise their young under DUNG! Need I say more? Ick. I think not.",
         "name": {
             "name-USen": "earth-boring dung beetle"
@@ -430,8 +430,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught an emperor butterfly! It's not your average monarch!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/9",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/9",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872391650066562/Emperor_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872407504535702/Emperor_Butterfly_NH.png",
         "museum-phrase": "The emperor butterfly is called the jewel of the forest. But its vivid blue hue... Ewww, let me tell you! The color does not come from a dye, but rather from light reflecting off layers of translucent scales. Yes, butterfly wings are covered in tiny scales! SCALES! Butterfly? Bah! More like snake of the sky!",
         "name": {
             "name-USen": "emperor butterfly"
@@ -453,8 +453,8 @@
             "time": "4am - 8am & 4pm - 7pm"
         },
         "catch-phrase": "I caught an evening cicada! Better than an odding cicada...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/30",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/30",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872566565113887/Evening_Cicada_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872580859314337/Evening_Cicada_NH.png",
         "museum-phrase": "The evening cicada certainly knows how to ruin a quiet moment. As the sun sets, it strikes up a sad song so sonorous, one can't hear one's own thoughts! I'd feel sorry for its melancholy moods if it weren't so very vocal about how it feels. Ugh, please pipe down...",
         "name": {
             "name-USen": "evening cicada"
@@ -473,8 +473,8 @@
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught a firefly! I'm on fire now!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/36",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/36",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872710937260142/Firefly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872728259739660/Firefly_NH.png",
         "museum-phrase": "The firefly isn't a fly at all! It is a beetle, you see\u2014and one known for its ghastly glowing backside. This light is called \"bioluminescence\" and it is caused by...by...a chemical reaction in the rump. Males flash about in the night sky to attract females, while their larvae turn on the glow to put off predators. Speaking of their yucky young, firefly larvae love to dine on snails! Hoo! Ewwww!",
         "name": {
             "name-USen": "firefly"
@@ -493,8 +493,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a flea! The curse is lifted.",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/74",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/74",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872846962728980/Flea_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872861848326184/Flea_NH.png",
         "museum-phrase": "Allow me to be blunt. The flea is foul! It is also disgusting, repugnant, and vile! Hoo! But I digress... This horrid pest sucks the blood of humans and animals. In fact, it is the flea's own saliva that makes us itch! And did you know their legs are so strong, they can jump more than 50 times their body length? So you see, it's all too easy for a flea to jump from you to me! I itch at the very thought.",
         "name": {
             "name-USen": "flea"
@@ -513,8 +513,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a fly! I was just wingin' it...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/72",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/72",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176872989044768769/Fly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873002885972088/Fly_NH.png",
         "museum-phrase": "The foul fly is quite the disquieting creature. I tell you, it tastes its food with its feet! Yeep! In fact, when flies rub their legs together, they do so to get rid of debris blocking their taste receptors. And did you know, their hairy toes release a sticky goo so they can walk on any surface? Even your ceiling! This gross goo gets on your food too!",
         "name": {
             "name-USen": "fly"
@@ -536,8 +536,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a giant cicada! I guess it's PRETTY big...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/28",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/28",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873399285469184/Giant_Cicada_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873425801859142/Giant_Cicada_NH.png",
         "museum-phrase": "The giant cicada is rather aptly named. That is, it's a truly enormous bug. Ugh! These beasts spend most of their lives underground where they gorge on tree roots. But once they emerge, they make an awful racket. In fact, some say their song sounds like a shrieking siren. I would rather listen to nails on a chalkboard.",
         "name": {
             "name-USen": "giant cicada"
@@ -556,8 +556,8 @@
             "time": "11pm - 8am"
         },
         "catch-phrase": "Whoaaa! I caught a giant stag! I'm gonna need way bigger pockets...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/57",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/57",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873566759813120/Giant_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873581980950660/Giant_Stag_NH.png",
         "museum-phrase": "It is said the giant stag is a popular pet among bug enthusiasts. Though how one might consider oneself enthusiastic about bugs is quite beyond me... But I digress. Giant stags look fearsome with their enormous curved mandibles. But in truth, they're really quite cowardly. Oh how they love to hide away in rotting wood, only to reveal themselves under the cover of dark. Hoot! I shall never turn off the lights again!",
         "name": {
             "name-USen": "giant stag"
@@ -576,8 +576,8 @@
             "time": "7pm - 8am"
         },
         "catch-phrase": "I caught a giant water bug! It should've stayed in the water!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/40",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/40",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873734129319996/Giant_Water_Bug_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873750604566539/Giant_Water_Bug_NH.png",
         "museum-phrase": "How to put this gently? Ah yes... BEWARE the giant water bug! I tell you, this vicious predator has been known to attack fish, frogs, and even snakes! SNAKES! Truth be told, no one is safe! Its nickname is \"the toe-biter,\" for goodness sakes! Now, one final fact before I faint... The gruesome bug uses its nose...to inject its prey...with digestive juices. Hoo... Must stop thinking about...the unthinkable.",
         "name": {
             "name-USen": "giant water bug"
@@ -596,8 +596,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a giraffe stag! Does that make it a longhorn?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/61",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/61",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873900647391306/Giraffe_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176873921841201172/Giraffe_Stag_NH.png",
         "museum-phrase": "The giraffe stag beetle is a bug of preposterous proportions. Not only is its body rather large, it has two long, jagged jaws that can put it over five inches in size! The giraffe stag beetle's long jaws have been compared to the long neck of the giraffe...hence the name. But I say such comparisons are a stretch. Giraffe necks are NOT lined with spikes! If I were a giraffe, I would protest.",
         "name": {
             "name-USen": "giraffe stag"
@@ -616,8 +616,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "Wooooow! I caught a golden stag! Does this mean I can retire?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/60",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/60",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874062140678195/Golden_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874077122740247/Golden_Stag_NH.png",
         "museum-phrase": "Yes. Yes. The golden stag beetle is quite the prize thanks to its metallic gold coloring. But let me speak plainly... The golden stag is NOT made of gold. It is made of BUG, through and through. And thus it is vile! Golden stag? Bah! Gross stag is more like it.",
         "name": {
             "name-USen": "golden stag"
@@ -636,8 +636,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a goliath beetle! Am I a legend or what?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/54",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/54",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874256773152778/Goliath_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874268164890734/Goliath_Beetle_NH.png",
         "museum-phrase": "Hoo! Ewww! The goliath beetle is a colossal creature that can grow up to four-inches long. Yes, they love to sup on sap and pollen, and frolic among the flowers. But did you know, the goliath beetle has a horn upon its head that it uses to fight its foes? And picture this... Each one of this behemoth's legs ends in pincers! Deep...calming...breaths...",
         "name": {
             "name-USen": "goliath beetle"
@@ -656,8 +656,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a grasshopper! They're a grass act!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/19",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/19",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874393025134602/Grasshopper_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874408057503815/Grasshopper_NH.png",
         "museum-phrase": "Grasshoppers are known for making a \"chirping\" sound. Though it doesn't sound like chirping to me... They make this rude racket by rubbing their hind legs against their wings. And though they eat seeds and pollen, they sometimes prey on smaller insects too. I say! Such violent table manners should not be tolerated! Horrible hoppers.",
         "name": {
             "name-USen": "grasshopper"
@@ -676,8 +676,8 @@
             "time": "4am - 7pm"
         },
         "catch-phrase": "I caught a great purple emperor! Its purple reign is over now!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/7",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/7",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874544112341052/Great_Purple_Emperor_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874558444294286/Great_Purple_Emperor_NH.png",
         "museum-phrase": "The great purple emperor lives high in the treetops and is renowned for its pretty purple-hued wings. Its impressive bird-like wingspan and elusive nature have made it a favorite among butterfly aficionados. But truth be told, the so-called great purple emperor has some not-so-great personal peculiarities. For one...it has two horrid HORNS upon its head when it is in its caterpillar form. For two...it has been known to dine on feces and animal carcasses! Hoo! That's why I call it the Emperor of EWWW!",
         "name": {
             "name-USen": "great purple emperor"
@@ -696,8 +696,8 @@
             "time": "7pm - 8am"
         },
         "catch-phrase": "I caught a hermit crab! I think it wanted to be left alone!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/70",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/70",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874699276435577/Hermit_Crab_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874715873300547/Hermit_Crab_NH.png",
         "museum-phrase": "The hermit crab is not an insect... Though it most certainly resembles one. Blech! It looks much like a spider\u2014what with its creepy eyes and crawly legs\u2014but is, in fact, a crustacean. As such, the hermit crab has 10 legs and also wears a shell. But it doesn't grow this shell itself. It slips its soft body into shells left behind by snails, you see, and moves into ever-larger ones as it grows. Talk about a strange way to make a home.",
         "name": {
             "name-USen": "hermit crab"
@@ -716,8 +716,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a honeybee! Ah, sweet success!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/24",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/24",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874842964885584/Honeybee_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176874856944513164/Honeybee_NH.png",
         "museum-phrase": "Did you know it takes a team of honeybees working together to transform flower nectar into honey? Indeed, forager bees suck nectar from flowers into their \"honey stomachs\" and then fly it to the hive. Hive bees then chew the substance and spit it into the honeycomb, fluttering their wings to dry it out. Yes, you could say honey is a tasty tribute to the hard work of the humble honeybee. Oh! Oh my! You mustn't confuse my lengthy description for admiration! At the end of the day, honeybees are still insects, and thus still ghastly! A wee bit less ghastly than most, I admit.",
         "name": {
             "name-USen": "honeybee"
@@ -736,8 +736,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a horned atlas! I didn't even need a map!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/63",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/63",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875001761235055/Horned_Atlas_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875015564693546/Horned_Atlas_NH.png",
         "museum-phrase": "Beware the horned atlas! I tell you, this rhinoceros beetle is known for its violent temperament! The males use the three large horns on their heads to fight amongst each other for dominance. But it is their young that truly give me the cold sweats. You see, their larvae grow quite large and, worst of all...they bite! It is the stuff of nightmares, I say.",
         "name": {
             "name-USen": "horned atlas"
@@ -756,8 +756,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a horned dynastid! I'd hate to hear it honk that schnoz!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/62",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/62",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875133802139649/Horned_Dynastid_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875147387490375/Horned_Dynastid_NH.png",
         "museum-phrase": "The horned dynastid's head is shaped like a samurai warrior's helmet, hootie-hoo! It would be a most impressive fact if their large size wasn't so horrifying! Adult males use their huge horned heads for fighting and digging, while the females have no such need. As for their larvae and pupae, they too are quite large and feed on rotting wood at a tremendous pace. A foul feast, indeed!",
         "name": {
             "name-USen": "horned dynastid"
@@ -776,8 +776,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a horned elephant! I think it's too small to ride...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/64",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/64",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875260084244531/Horned_Elephant_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875276462985256/Horned_Elephant_NH.png",
         "museum-phrase": "The horned elephant beetle certainly lives up to its namesake. Not only does the horn on its head resemble the trunk of an elephant... It is also one of the heaviest beetles in the world! Size aside, allow me to reveal the real reason I find horned elephant beetles so repugnant... Their backs are covered in a fine coat of hair! Hirsute beetles! Hoot! The horror!",
         "name": {
             "name-USen": "horned elephant"
@@ -796,8 +796,8 @@
             "time": "5pm - 8am"
         },
         "catch-phrase": "I caught a horned hercules! Guess I was stronger!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/65",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/65",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875391642779758/Horned_Hercules_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875406293487776/Horned_Hercules_NH.png",
         "museum-phrase": "The horned hercules is not only known for its tremendous strength, but for its size as well. It can grow up to seven-inches long and has powerful pincers covered in hair that help with gripping! As if this weren't ghastly enough, these behemoth beetles let loose a foul odor that fends off enemies... And offends my sense of smell.",
         "name": {
             "name-USen": "horned hercules"
@@ -816,8 +816,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a jewel beetle! It's a real gem!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/45",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/45",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875546609713293/Jewel_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875560694190230/Jewel_Beetle_NH.png",
         "museum-phrase": "The green shimmer of the jewel beetle's wings is nothing short of nauseating...yes? No? Well, so says you. Though...jewel beetles were once prized by collectors who turned their iridescent wings into pretty jewelry. Why anyone would want to wear bug parts on their body is beyond me. Fashion foul indeed.",
         "name": {
             "name-USen": "jewel beetle"
@@ -836,8 +836,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a ladybug! Sorry to disturb you, ma'am.",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/43",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/43",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875679728549998/Ladybug_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875703589937253/Ladybug_NH.png",
         "museum-phrase": "Yes. Yes. Ladybugs are quite beloved thanks to their tiny round shape and adorable spots. To that I say BAH! The fact of the matter is, some have stripes instead of spots. And SOME have no markings at all! No, I shall never understand why it is said that when a ladybug lands on you...you'll have good luck. I shall only have a fainting spell.",
         "name": {
             "name-USen": "ladybug"
@@ -856,8 +856,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a long locust! Or, as I call it, a looooocust.",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/16",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/16",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875833378480128/Long_Locust_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875847265832970/Long_Locust_NH.png",
         "museum-phrase": "As if the average locust weren't large enough...we must suffer the long locust too! The wretched beasts are known for their unusually long hind legs as well as their elongated heads. But that is hardly the long locusts' worst trait... I tell you, they spit brown goo when they're scared!",
         "name": {
             "name-USen": "long locust"
@@ -876,8 +876,8 @@
             "time": "8am - 4pm"
         },
         "catch-phrase": "I caught a Madagascan sunset moth! Wow, you're not from around here!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/15",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/15",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176875997363179560/Madagascan_Sunset_Moth_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876013783879742/Madagascan_Sunset_Moth_NH.png",
         "museum-phrase": "The Madagascan sunset moth is said to be the most beautiful moth in the world...a sentiment even I can't deny. While most moths are nocturnal, this one flutters about during the day, making good use of the light. That is, when the daylight reflects off its wings, a kaleidoscope of colors are revealed! Oh! Eh...too bad it has such startling red feet as a caterpillar. I might have found it almost tolerable otherwise. Almost, but not quite.",
         "name": {
             "name-USen": "Madagascan sunset moth"
@@ -896,8 +896,8 @@
             "time": "7pm - 8am"
         },
         "catch-phrase": "I caught a man-faced stink bug! Reminds me of my uncle!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/42",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/42",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876163860271175/Man-Faced_Stink_Bug_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876171229675590/Man-Faced_Stink_Bug_NH.png",
         "museum-phrase": "Never mind this stink bug's smell. What you have here is a bug...with a FACE...on its BACK!! Wot-wot! Simply put, the man-faced stink bug has markings on its shell that resemble a human face. Once you notice this face, you cannot UN-notice it. Indeed, this face might haunt you forever. At least the face will distract you from the stink.",
         "name": {
             "name-USen": "man-faced stink bug"
@@ -916,8 +916,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a mantis! Man, 'tis so cool!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/22",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/22",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876318084837408/Mantis_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876331447889940/Mantis_NH.png",
         "museum-phrase": "Hoo! Don't let the mantis's angelic pose fool you...for it is truly monstrous. The mantis is known for its large size and tremendous strength...and for sickle-like arms that pack a punch. And though they tend to eat bugs and spiders...mantises have been known to dine on small animals too! And those eerie eyes! Oh my! Did you know it has five of them! Two big ones and three small! I shall faint if I think on it further...",
         "name": {
             "name-USen": "mantis"
@@ -936,8 +936,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a migratory locust! Things just went south for this guy!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/17",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/17",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876466772910090/Migratory_Locust_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876479884300350/Migratory_Locust_NH.png",
         "museum-phrase": "Ah yes, the lone migratory locust. It seems like such a harmless hopper as it bounces about in the grass. But beware! When these pests band together and travel in swarms, they leave devastation in their wake! Migratory locusts have gathered by the millions throughout history, wiping out crops and causing famine. That's why I always say, \"Never let a locust hang out with its friends!\". That is precisely how a plague begins.",
         "name": {
             "name-USen": "migratory locust"
@@ -956,8 +956,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a miyama stag! Its mandibles are jaw-dropping!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/56",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/56",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876620712267817/Miyama_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876634125635584/Miyama_Stag_NH.png",
         "museum-phrase": "The miyama stag has protrusions on its head that resemble ears... And yet, the ugly lumps are not ears! It is, however, called a \"stag\" beetle because of the large, deer-like horns upon its head. And the word \"miyama\" in its name means \"deep mountain\" in Japanese. Feel free to call it what you like. I will simply call it DISGUSTING. \"Disgusting stag beetle\" does have a ring.",
         "name": {
             "name-USen": "miyama stag"
@@ -976,8 +976,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a mole cricket! I really dug it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/37",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/37",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876765340258354/Mole_Cricket_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876783207993424/Mole_Cricket_NH.png",
         "museum-phrase": "Be warned, there is nowhere one might hide from the mole cricket. This plump pest has powerful front claws made for digging holes, and oh how it loves to burrow underground! A cousin to the grasshopper, it also has wings and can easily take to the air. And I swear this on my pinfeathers... Some have even been seen walking on water! Oh mercy, I may need a moment. This is making me feel rather woozy...",
         "name": {
             "name-USen": "mole cricket"
@@ -996,8 +996,8 @@
             "time": "4am - 5pm"
         },
         "catch-phrase": "I caught a monarch butterfly! Guess the butterflies are a democracy now!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/8",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/8",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876918642049024/Monarch_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176876932965609632/Monarch_Butterfly_NH.png",
         "museum-phrase": "Did you know the monarch butterfly migrates south for the winter and returns north for the summer? Indeed, these horrid orange beasties do not tolerate the cold and travel 3,000 miles to escape the winter. During the journey, they cluster together in trees by the thousands just to stay warm. Imagine! Hordes of the foul flittering fiends huddled together in one place! If only they'd put on tiny coats instead.",
         "name": {
             "name-USen": "monarch butterfly"
@@ -1016,8 +1016,8 @@
             "time": "5pm - 4am"
         },
         "catch-phrase": "I caught a mosquito! It's itching for a fight!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/73",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/73",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176877081997606973/Mosquito_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176877094815404122/Mosquito_NH.png",
         "museum-phrase": "As everyone knows, the mosquito is a vampiric pest that sucks blood from innocent bystanders. But did you know that only the females suck blood? Hoo! It's true! They need it to make their eggs. When they sink their snout into our skin, they inject us with a saliva that helps them slurp up their meal. It's that saliva that makes us itch and scratch, you know. Hoo! So rude!",
         "name": {
             "name-USen": "mosquito"
@@ -1036,8 +1036,8 @@
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught a moth! And I had a ball doing it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/13",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/13",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176877856249360454/Moth_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176877869616595026/Moth_NH.png",
         "museum-phrase": "Many think the moth is strictly a nocturnal creature. Alas, no! These frightful fluttering beasts have been known to haunt the daylight and twilight hours too. Thus, there is no time of day one might escape the moth trait I dislike most of all\u2014those feathery antennae! The mere thought of them gives my feathers goosebumps. And I'm no goose.",
         "name": {
             "name-USen": "moth"
@@ -1056,8 +1056,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught an orchid mantis! Our friendship is blooming!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/23",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/23",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176877993491181671/Orchid_Mantis_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878007852466257/Orchid_Mantis_NH.png",
         "museum-phrase": "The orchid mantis is a bug whose brilliant colors and petal-shaped limbs give it the look of a flower. This masterful mimicry allows it to hide from predators in among the orchids. But oh this fraudulent flower! It lures other insects in to drink its nectar... And makes a meal of them instead! Imagine! To behold a beautiful bud... only to discover it's a bug instead! A repulsive revelation indeed!",
         "name": {
             "name-USen": "orchid mantis"
@@ -1076,8 +1076,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a paper kite butterfly! Do I read it, fly it, or spreadit on toast?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/6",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/6",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878163331121164/Paper_Kite_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878179038806076/Paper_Kite_Butterfly_NH.png",
         "museum-phrase": "With its black-and-white-striped wing pattern, the paper kite butterfly is both elegant and pretty... PRETTY POISONOUS I MEAN! Hoo dear! Where was I? Oh yes... Even this butterfly's black-and-white-striped larva and little golden pupae are toxic to predators. Indeed, the paper kite butterfly's foul flavor is famous, and thus birds, in particular, steer clear of the fiends. THIS bird most of all!",
         "name": {
             "name-USen": "paper kite butterfly"
@@ -1096,8 +1096,8 @@
             "time": "4am - 7pm"
         },
         "catch-phrase": "I caught a peacock butterfly! Now it's my turn to strut my stuff!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/4",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/4",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878303353782332/Peacock_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878317786386493/Peacock_Butterfly_NH.png",
         "museum-phrase": "Pretty as a peacock? Bah, I say! The wings of the peacock butterfly may have a pattern similar to that of the beautiful bird... But its forewings are also often covered in a dark, velvety hair! You heard right! HAIRY wings! A hair-raising revelation indeed!",
         "name": {
             "name-USen": "peacock butterfly"
@@ -1116,8 +1116,8 @@
             "time": "11pm - 4pm"
         },
         "catch-phrase": "I caught a pill bug! That's a tough act to swallow!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/76",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/76",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878440503332874/Pill_Bug_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878456085172325/Pill_Bug_NH.png",
         "museum-phrase": "Blech, the pill bug! Children delight at the way these beasts roll into balls when poked... But the appeal is utterly lost on me. One look at their leggy undersides... Hoo! Ewww! How they wriggle! Young pill bugs shed their exo- skeletons as they grow, and in doing so, sprout another pair of legs. As if 12 appendages weren't alarming enough! Yuck, I say. Yuck!",
         "name": {
             "name-USen": "pill bug"
@@ -1136,8 +1136,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a pondskater! Wonder if it can do a pond ollie...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/38",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/38",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878603640766524/Pondskater_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878614260760627/Pondskater_NH.png",
         "museum-phrase": "Putrid pondskaters! They walk on water, you know...which is most preposterous! It is a trick they perform by secreting oil onto the hairs of their feet. To which I say BLEEECH! And one must wonder... What will they do next? Walk on air? Walk through walls? Perish the thought...",
         "name": {
             "name-USen": "pondskater"
@@ -1156,8 +1156,8 @@
             "time": "8am - 4pm"
         },
         "catch-phrase": "I caught a Queen Alexandra's birdwing! That's a feather in my cap!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/12",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/12",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878753452937236/Queen_Alexandras_Birdwing_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878769110270022/Queen_Alexandras_Birdwing_NH.png",
         "museum-phrase": "Hoo! The horror! This behemoth butterfly may be called a Queen Alexandra's birdwing... But I call it the Queen of My Nightmares! It is huge! Indeed, the world's hugest. No butterfly can best its foot-long wingspan. The larvae alone grow to more than 4 inches. As if that weren't appalling enough...they're poisonous! Murderous monsters, indeed!",
         "name": {
             "name-USen": "Queen Alexandra's birdwing"
@@ -1176,8 +1176,8 @@
             "time": "7pm - 8am"
         },
         "catch-phrase": "I caught a rainbow stag! Its rainbow armor is so shiny!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/58",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/58",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878894536728576/Rainbow_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176878908721872936/Rainbow_Stag_NH.png",
         "museum-phrase": "Rainbows are beautiful things, I'm sure we all agree. But rainbow stag beetles? Bleech! Yes, yes, this beetle's back and belly shine with a pretty rainbow- colored luster. But that does not change the fact this bug has large pincers on its face and loves to pick a fight! If one can wish upon a rainbow, then I wish to stay far away from the rainbow stag. Perhaps I've picked the wrong profession.",
         "name": {
             "name-USen": "rainbow stag"
@@ -1196,8 +1196,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a Rajah Brooke's birdwing! Nothing else I'd rajah be doing!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/11",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/11",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176885957396537406/Rajah_Brookes_Birdwing_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176885970075922482/Rajah_Brookes_Birdwing_NH.png",
         "museum-phrase": "Did you know that the repulsive Rajah Brooke's birdwing loves to luxuriate in hot-springs water? It's true! Hoo! The males gather in groups to sip the moisture while the females hide in jungle trees. And though they dress to impress in red and green, these fluttering fiends are not just stylish... They're also quite malicious! Their little larvae pack a poisonous punch that's supposed to protect them from predators... But I suspect more diabolical designs.",
         "name": {
             "name-USen": "Rajah Brooke's birdwing"
@@ -1216,8 +1216,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a red dragonfly! Didn't even have to roll for initiative!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/32",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/32",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886128503160872/Red_Dragonfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886145246834780/Red_Dragonfly_NH.png",
         "museum-phrase": "I won't deny that the wretched red dragonfly is an elegant aeronaut. It manipulates its four wings quite uniquely so it can hover and maneuver through the air with ease. But the veins on its wings! What ghastly things! One can't help but gasp at the sight of them... Appalling aerodynamics, indeed!",
         "name": {
             "name-USen": "red dragonfly"
@@ -1236,8 +1236,8 @@
             "time": "8am - 7pm"
         },
         "catch-phrase": "I caught a rice grasshopper! I've been looking for agluten-free alternative...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/18",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/18",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886320086401034/Rice_Grasshopper_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886334762274836/Rice_Grasshopper_NH.png",
         "museum-phrase": "In point of fact, rice grasshoppers are an awful pest! They devour rice plants and wipe out the crucial crop. But revenge is sweet! These bugs are edible, you see, and so some folks eat them as way to get rid of them. When boiled in soy sauce, rice grasshoppers are quite tasty, it's said. Though why anyone would put an insect in their mouth is beyond me. The mere thought gives me the gags!",
         "name": {
             "name-USen": "rice grasshopper"
@@ -1259,8 +1259,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a robust cicada! It DOES seem pretty lively!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/27",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/27",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886536692834365/Robust_Cicada_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886552350175293/Robust_Cicada_NH.png",
         "museum-phrase": "The robust cicada got its name from the chirping sound it makes, which is said to be quite...well...robust. But \"robust\" hardly describes it. Abrasive! Bombastic! Cacophonous! That's more like it! Beside the horrid caterwauling, this bug is known for its long wings, short body, and green coloring. But looking at a robust cicada is just as unpleasant as listening to one. My eyes AND my ears are offended.",
         "name": {
             "name-USen": "robust cicada"
@@ -1279,8 +1279,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a rosalia batesi beetle! That's easier to do than say!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/48",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/48",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886716636860456/Rosalia_Batesi_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886732239679489/Rosalia_Batesi_Beetle_NH.png",
         "museum-phrase": "The rosalia batesi beetle is a type of longhorn beetle, so named for the long antenna upon its head. But did you know that longhorn beetles often grow antenna LONGER than their very own bodies, wot wot? As if this weren't odious enough, look closely and you will find these antenna...are covered in tufts of hair! Best not look closely, I say.",
         "name": {
             "name-USen": "rosalia batesi beetle"
@@ -1299,8 +1299,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a saw stag! Now I can't unsee it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/55",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/55",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886941443170324/Saw_Stag_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176886957331193967/Saw_Stag_NH.png",
         "museum-phrase": "The saw stag got its name from the shape of its pincers. That is, its pincers look like jagged saws! And I tell you, the bigger the beetle, the more saw-like teeth its giant jaws have. I say the saw stag seems more at home in a horror film than in nature. I have terrified myself just talking about it.",
         "name": {
             "name-USen": "saw stag"
@@ -1319,8 +1319,8 @@
             "time": "11pm - 8am"
         },
         "catch-phrase": "I caught a scarab beetle! It's just a dung beetle with better hobbies.",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/52",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/52",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887111782256660/Scarab_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887124444848138/Scarab_Beetle_NH.png",
         "museum-phrase": "Collectors consider the scarab beetle quite the prize, thanks to its shiny metallic shell. But did you know this bug has no nose and uses its antenna to sense smells instead? In fact, the scarab beetle's plated antenna are quite unique and set it apart from other beetles. But ALL antennae are equally awful in my book.",
         "name": {
             "name-USen": "scarab beetle"
@@ -1339,8 +1339,8 @@
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught a scorpion! It was a sting operation!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/80",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/80",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887276828110939/Scorpion_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887295920570448/Scorpion_NH.png",
         "museum-phrase": "The scorpion...how should I put this? Those legs! Those pincers! That tail! And that venomous stinger! It's as if someone took all the most awful insect parts...and put them together to make the scorpion! All scorpions are venomous, you know! Though I understand that only a few kinds are truly deadly. I fear I might die just thinking about it.",
         "name": {
             "name-USen": "scorpion"
@@ -1359,8 +1359,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a snail! It's...not much to brag about.",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/75",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/75",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887407820406794/Snail_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887420856303756/Snail_NH.png",
         "museum-phrase": "Snails are not insects, I'll admit. But they're just as revolting to me. Snails are mollusks, you see, and are born wearing shells they cannot remove. Instead, their shells get bigger and bigger as they grow. Hoo! They must get heavy, don't you know! I suppose that's why they need a trail of mucus to move about. A truly foul form of transportation.",
         "name": {
             "name-USen": "snail"
@@ -1379,8 +1379,8 @@
             "time": "7pm - 8am"
         },
         "catch-phrase": "I caught a spider! I spied 'er first!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/78",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/78",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887560094625834/Spider_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887576670523453/Spider_NH.png",
         "museum-phrase": "The spider is renowned for having eight eyes and eight legs... WHICH IS SIX TOO MANY, I SAY! Oh dear. I do apologize. Now where was I? Most spiders are carnivorous. In fact, some will eat creatures several times larger than themselves. To catch their prey, many of these ruthless predators spin sticky webs of surprising strength. Worse yet, they've also been known to ambush their victims, and some even chase down their meals! All this talk about the feeding habits of spiders... I'm feeling quite queasy. Hoot! The horror!",
         "name": {
             "name-USen": "spider"
@@ -1399,8 +1399,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a stinkbug! It lives up to its name!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/41",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/41",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887711030841374/Stinkbug_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887724330979438/Stinkbug_NH.png",
         "museum-phrase": "I daresay the name says it all... Stinkbugs are known for their stench. Hoo! Peeyew! As it happens, these crop-eating pests use straw-like mouths to pierce plants and drink the juices. And when threatened, they use a smelly chemical in their belly to release their odious odor! Hoo! How DO they live with themselves?",
         "name": {
             "name-USen": "stinkbug"
@@ -1419,8 +1419,8 @@
             "time": "7pm - 4am"
         },
         "catch-phrase": "I caught a tarantula! This situation just got hairy!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/79",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/79",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887856875188284/Tarantula_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176887871572033696/Tarantula_NH.png",
         "museum-phrase": "As giant spiders go, the tarantula is said to be quite docile. But have you ever seen such foul fuzziness?! It is a fact, tarantulas have barbed belly hair! I say again...BARBED. BELLY. HAIR! These awful arachnids let loose their spiky, itchy hairs to protect themselves from predators. But seeing how tarantulas also prey on frogs, mice, and even birds, one must ask... Who needs protecting from whom?! Hoo! Who indeed!",
         "name": {
             "name-USen": "tarantula"
@@ -1439,8 +1439,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a tiger beetle! I pounced first!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/44",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/44",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176888010948755476/Tiger_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176888024336977940/Tiger_Beetle_NH.png",
         "museum-phrase": "The tiger beetle is extremely fleet of foot, though it runs in a rather peculiar way. That is, it sprints, then stops, then sprints again...using these speedy maneuvers to run down its prey. You see, the tiger beetle\u2014like a real tiger\u2014is a powerful predator. The mere thought of it giving chase gives me the willies. Tigers are terrifying at any size.",
         "name": {
             "name-USen": "tiger beetle"
@@ -1459,8 +1459,8 @@
             "time": "4am - 7pm"
         },
         "catch-phrase": "I caught a tiger butterfly! I've earned my stripes!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/3",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/3",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176889381756350504/Tiger_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176889395450748988/Tiger_Butterfly_NH.png",
         "museum-phrase": "Tiger butterflies are known for their majestic wings, which many consider quite beautiful. Truth be told, I find them monstrous! Those strange striped patterns... They give this owl the goose bumps! And while you may imagine young tiger butterfly larvae to look like lovely green caterpillars...it's not so! Why, when tiger butterflies are but babes, they're covered in unsightly white, brown, and black spots. In this way, they camouflage themselves as...as...bird droppings! Putrid pests, indeed!",
         "name": {
             "name-USen": "tiger butterfly"
@@ -1479,8 +1479,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a violin beetle! Apparently I'm as fit as a fiddle!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/46",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/46",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176889659779973202/Violin_Beetle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176889678444642314/Violin_Beetle_NH.png",
         "museum-phrase": "The violin beetle gets its name from its shape. That is, SOME think it resembles the stringed instrument. If you ask me, this is an insult to violins! With its flat body and small head, the violin beetle looks like nothing but a repulsive bug, plain and simple. In fact it is so repulsive, it oozes a foul liquid when frightened! Ugh! This insect strikes a sour note indeed.",
         "name": {
             "name-USen": "violin beetle"
@@ -1502,8 +1502,8 @@
             "time": "8am - 5pm"
         },
         "catch-phrase": "I caught a walker cicada! Pffft... I walk all the time and no one calls me \"Walker ....\"",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/29",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/29",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176889870048829500/Walker_Cicada_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176889885764886599/Walker_Cicada_NH.png",
         "museum-phrase": "The walker cicada is quite the noisy thing. I tell you, this impolite pest simply canNOT abide the quiet. In the heat of summer, the male strikes up a strange rattling song, hoping to woo a mate. When other male cicadas hear this rhythmic racket, they join right in... As if it were a sing-along! My head aches at the thought of it.",
         "name": {
             "name-USen": "walker cicada"
@@ -1522,8 +1522,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a walking leaf! It seems to be taking it in stride!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/67",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/67",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890043147759696/Walking_Leaf_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890059673325678/Walking_Leaf_NH.png",
         "museum-phrase": "What a fraud! What a phony! The walking leaf is, in fact, the very embodiment of a lie! This master mimic looks like a tree leaf all the way down to the tiniest details. In fact, this bug has been known to sway to and fro as it walks...just so it looks like a leaf blown by the wind! And the fakery works! These insects look so much like leaves that even leaf-eating insects nibble on them! Lying liars, indeed!",
         "name": {
             "name-USen": "walking leaf"
@@ -1542,8 +1542,8 @@
             "time": "4am - 8am & 5pm - 7pm"
         },
         "catch-phrase": "I caught a walking stick! Check out its walking schtick! Look, these are the jokes, OK?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/66",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/66",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890175503204352/Walking_Stick_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890188023201823/Walking_Stick_NH.png",
         "museum-phrase": "The walking stick looks just like a twig, does it not? Hoo! It even has knots like a real twig would! These bashful bugs mimic plants in this way to hide from predators. A noble goal, you might say. But though the deceptive wretches fool some, they do not fool me! I see these bugs for what they are... Monsters, plain and simple! I say, did you know that walking sticks can grow to two feet long?! Imagine running into one! Surely I would faint.",
         "name": {
             "name-USen": "walking stick"
@@ -1562,8 +1562,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a wasp! That's gotta sting...",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/25",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/25",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890300296347678/Wasp_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890316721233940/Wasp_NH.png",
         "museum-phrase": "Hoo! Allow me to share a fact with you! Wasps are sometimes called \"meat bees\" because... They. Eat. MEAT! MEAT! Of almost any sort! Surely you've seen what a menace they make of themselves at picnics. 'Tis hardly the worst of it, wot wot! Aggressive predators with venomous stingers, wasps not only hunt and eat other insects... they paralyze their prey, then drag their victims home ALIVE, leaving them for their larva to feed upon. Suddenly a simple sting seems quite tolerable.",
         "name": {
             "name-USen": "wasp"
@@ -1582,8 +1582,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a wharf roach! This water-loving roach has no pier!",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/71",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/71",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890900501241956/Wharf_Roach_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176890913973354657/Wharf_Roach_NH.png",
         "museum-phrase": "The wharf roach is an omnivore, which is merely a polite way of saying it will eat almost anything. This skittering scavenger and its uncouth appetite help keep beaches clean, it's said. But I dare say, their long antenna and bulging eyes turn MY stomach. Unappetizing indeed...",
         "name": {
             "name-USen": "wharf roach"
@@ -1602,8 +1602,8 @@
             "time": "4am - 7pm"
         },
         "catch-phrase": "I caught a yellow butterfly! Shouldn't all BUTTERflies be yellow?",
-        "icon_uri": "https://acnhapi.com/v1/icons/bugs/2",
-        "image_uri": "https://acnhapi.com/v1/images/bugs/2",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176891051164831744/Yellow_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176891084899631154/Yellow_Butterfly_NH.png",
         "museum-phrase": "Allow me to enlighten you... The yellow butterfly is named for its yellow wings. Need I say more? If I must, then allow me to note that the female yellow butterfly can lay up to 600 eggs at a time! Bleech! And their creepy crawly caterpillars just love to chomp on clover plants. A recipe for disaster, I say. Just imagine reaching for a four-leaf clover, only to touch a larva instead! Yuck! The worst of luck!",
         "name": {
             "name-USen": "yellow butterfly"

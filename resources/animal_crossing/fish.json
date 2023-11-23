@@ -10,8 +10,8 @@
             "time": "4am - 9pm"
         },
         "catch-phrase": "I caught an anchovy! Stay away from my pizza!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/56",
-        "image_uri": "https://acnhapi.com/v1/images/fish/56",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176855886677942282/Anchovy_Fish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176855904113672222/Anchovy_Fish_NH.png",
         "museum-phrase": "There are more than 140 species of anchovy, but they do all have some things in common. They are small and feed by simply swimming with their mouths open to filter food particles from the sea. (In my sleepier moments, I sometimes wish I could do that...)",
         "name": {
             "name-USen": "anchovy"
@@ -31,8 +31,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught an angelfish! That other fish told me to do it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/36",
-        "image_uri": "https://acnhapi.com/v1/images/fish/36",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856051329544222/Angelfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856066491945023/Angelfish_NH.png",
         "museum-phrase": "The angelfish is truly a beautiful creature. Just look at the elegance of those fins!Despite the name, however, these lovelies are known to be rather aggressive. They've no qualms about relentlessly pursuing fish much smaller than themselves! Why, they even attack their own kin! It seems no fish is safe around these \"angelic\" bullies. It makes one wonder who comes up with these names. Appearances\u2014 and names\u2014 can be deceiving.",
         "name": {
             "name-USen": "angelfish"
@@ -52,8 +52,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught an arapaima! How did it get here? Arapaiknow!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/44",
-        "image_uri": "https://acnhapi.com/v1/images/fish/44",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856224952754206/Arapaima_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856246574395422/Arapaima_NH.png",
         "museum-phrase": "The stately arapaima is quite large. Indeed, it is among the largest freshwater fish there are. Furthermore, these fascinating fish make quite the family unit. That is to say, male arapaimas protect their young by holding them gently in their mouths. Meanwhile, female arapaimas swim circles around these full-mouthed fathers fending off predators. It simply goes to show that cold-blooded creatures can be heartwarming too.",
         "name": {
             "name-USen": "arapaima"
@@ -73,8 +73,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught an arowana! I'd make a joke, but I don't 'wana.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/41",
-        "image_uri": "https://acnhapi.com/v1/images/fish/41",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856411574112297/Arowana_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856428439412749/Arowana_NH.png",
         "museum-phrase": "It would seem your angling expertise knows no bounds! This beauteous arowana fetches a pretty Bell, though I'd venture to say that its true price is beyond measure. The arowana has been on the endangered-species list for some time. It's up to us to remain educated and do all we can to help preserve such magnificent creatures. Not to worry, old bean. This lovely fishy friend is in good wings here! On behalf of the museum, I thank you warmly for your unending generosity!",
         "name": {
             "name-USen": "arowana"
@@ -94,8 +94,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a barred knifejaw! They must have a hard time eating!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/58",
-        "image_uri": "https://acnhapi.com/v1/images/fish/58",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856568768237640/Barred_Knifejaw_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856597557952594/Barred_Knifejaw_NH.png",
         "museum-phrase": "Wonderful! I would love nothing more! The barred knifejaw, also called the striped beakfish, is a lovely fish with a distinctive striped pattern. It is reportedly also a very curious fish in that it has been known to approach swimmers to \"greet\" them. They also tend to be good at avoiding fishing hooks, so well done on outwitting this one!",
         "name": {
             "name-USen": "barred knifejaw"
@@ -115,8 +115,8 @@
             "time": "9pm - 4am"
         },
         "catch-phrase": "I caught a barreleye! Like eyeing fish in a barrel!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/79",
-        "image_uri": "https://acnhapi.com/v1/images/fish/79",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856738817912852/Barreleye_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856753875464212/Barreleye_NH.png",
         "museum-phrase": "The barreleye is a deep-sea fish with protuberant eyes and a clear head, so some of its organs are... visible. At first blush, a transparent head seems absurd, but there is a reason: so it can see things directly above! But I must confess - the more I learn about deep-sea fish, the happier I am to live on dry land, wot.",
         "name": {
             "name-USen": "barreleye"
@@ -136,8 +136,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a betta! I betta not drop it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/37",
-        "image_uri": "https://acnhapi.com/v1/images/fish/37",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856865259401216/Betta_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176856885589196891/Betta_NH.png",
         "museum-phrase": "The betta has long fins and beautiful coloring. It is a tropical fish popular in decorative aquariums. They're very territorial and will fight to complete exhaustion, so aquarists must keep them carefully. Rarely do such beauty and violence commingle outside the rowdiest of sunset-viewing parties.",
         "name": {
             "name-USen": "betta"
@@ -157,8 +157,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a bitterling! It's mad at me, but only a little.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/1",
-        "image_uri": "https://acnhapi.com/v1/images/fish/1",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857050765066250/Bitterling_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857067366142025/Bitterling_NH.png",
         "museum-phrase": "Bitterlings hide their eggs inside large bivalves\u2014like clams\u2014where the young can stay safe until grown. The bitterling isn't being sneaky. No, their young help keep the bivalve healthy by eating invading parasites! It's a wonderful bit of evolutionary deal making, don't you think? Each one keeping the other safe... Though eating parasites does not sound like a happy childhood... Is that why the fish is so bitter?",
         "name": {
             "name-USen": "bitterling"
@@ -178,8 +178,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a black bass! The most metal of all fish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/22",
-        "image_uri": "https://acnhapi.com/v1/images/fish/22",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857244143452170/Black_Bass_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857260597719050/Black_Bass_NH.png",
         "museum-phrase": "The black bass is a formidably strong fish and, as such, is a common target for sport anglers. In some areas, there are even those who professionally catch just black bass! Yet in other areas where they are NOT native, they are considered an ecological nuisance. Invasive, even. One cannot help but wonder who is to blame for their invasion, hoo.",
         "name": {
             "name-USen": "black bass"
@@ -199,8 +199,8 @@
             "time": "9pm - 4am"
         },
         "catch-phrase": "I caught a blowfish! I'm blown away!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/54",
-        "image_uri": "https://acnhapi.com/v1/images/fish/54",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857419071102997/Blowfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857438012584016/Blowfish_NH.png",
         "museum-phrase": "As you may know, blowfish carry a deadly poison and are among the most toxic creatures on earth. What you may not have known is that poison and spines are not the limit of this animal's defenses! A predator that tries to swallow a blowfish before it inflates can find itself quickly choking. To be honest, if said predator can get past poison, spines, AND choking hazards, I feel they've earned a meal.",
         "name": {
             "name-USen": "blowfish"
@@ -220,8 +220,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a blue marlin! Listen to this fish. it's got a point.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/67",
-        "image_uri": "https://acnhapi.com/v1/images/fish/67",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857591549276160/Blue_Marlin_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857610599800882/Blue_Marlin_NH.png",
         "museum-phrase": "The blue marlin has a distinctive angular shape and no scales. It is an unusual relative of the tuna. These mighty fish can exceed 13 feet from bill to tail. Some accounts even have it fighting with whales! No wonder it's a popular target for sport fishing: unlike most fish, it seems like a worthy opponent.",
         "name": {
             "name-USen": "blue marlin"
@@ -241,8 +241,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a bluegill! Do you think it calls me \"pinklung\"?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/20",
-        "image_uri": "https://acnhapi.com/v1/images/fish/20",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857734105284709/Bluegill_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857749032808488/Bluegill_NH.png",
         "museum-phrase": "The bluegill is incredibly common. A bit too common, depending upon where you are. They eat anything that fits in their mouths and are highly adaptable. The bane of fishermen in some areas, bluegill is often the only fish to be caught! But looking in its wee beady eyes, I must say I see no ill will in it...",
         "name": {
             "name-USen": "bluegill"
@@ -262,8 +262,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a butterfly fish! Did it change from a caterpillar fish?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/51",
-        "image_uri": "https://acnhapi.com/v1/images/fish/51",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857883955183667/Butterfly_Fish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176857898702360617/Butterfly_Fish_NH.png",
         "museum-phrase": "Ah, the butterfly fish is just charming with its beautiful colors and elegant movements. I refer to it as a butterfly fish, but it's actually a grouping in which there are over 100 types! These beautiful aquatic friends swim in schools amid coral, fluttering back and forth with the tides. The sheer awe one must experience when witnessing such a sight. It must be a dream! So much better than actual butterflies...",
         "name": {
             "name-USen": "butterfly fish"
@@ -283,8 +283,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a carp! If I catch another they can carpool!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/5",
-        "image_uri": "https://acnhapi.com/v1/images/fish/5",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858026897063936/Carp_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858043716223067/Carp_NH.png",
         "museum-phrase": "Oh, the carp... have you ever seen their teeth? For your sake, I hope you have not! Carp have teeth in their throat strong enough to crunch on hard things like shells and fingers! A good rule of thumb when dealing with other species is to keep your fingers out of their mouths. Although, having neither thumbs nor fingers, I am quite safe from this little fellow!",
         "name": {
             "name-USen": "carp"
@@ -304,8 +304,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a catfish! I'm more of a dogfish person...",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/18",
-        "image_uri": "https://acnhapi.com/v1/images/fish/18",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858164814155887/Catfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858185693417583/Catfish_NH.png",
         "museum-phrase": "Catfish don't have scales and are rather slimy. Believe it or not, this slime helps them breathe! Some species of catfish are nocturnal, and they'll feed on almost anything. They use a suctioning action to pull in their food. Did I mention they can grow as large as you or I?",
         "name": {
             "name-USen": "catfish"
@@ -325,8 +325,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a char! Now I'm gonna sit on it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/28",
-        "image_uri": "https://acnhapi.com/v1/images/fish/28",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858327142109204/Char_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858343709605928/Char_NH.png",
         "museum-phrase": "The char is one of the bigger first around the world, and, in the world of fish, that's quite an accomplishment! They are territorial predators, and therefore must constantly defend their 'turf' from others. So when you see a large char like this one, it is likely a skilled fighter and veteran of many battles. My feathers! I hope it never has cause to go into battle with me!",
         "name": {
             "name-USen": "char"
@@ -346,8 +346,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a cherry salmon! It's the perfect topper for a marlin sundae!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/27",
-        "image_uri": "https://acnhapi.com/v1/images/fish/27",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858475972788314/Cherry_Salmon_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858493119119380/Cherry_Salmon_NH.png",
         "museum-phrase": "The cherry salmon is related to the salmon, and is known for its distinctive pattern of \"polka dots\". There polka dots disappear as they mature, but ONLY in the first of certain geographic regions. Pity the poor researchers that must make sense of the cherry salmon's fickle fashion sense.",
         "name": {
             "name-USen": "cherry salmon"
@@ -367,8 +367,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a clown fish! How many can fit in a carfish?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/49",
-        "image_uri": "https://acnhapi.com/v1/images/fish/49",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858617002086463/Clown_Fish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858631921209414/Clown_Fish_NH.png",
         "museum-phrase": "Few can deny the delightful qualities of the clown fish. These vibrant fishes make their home among venomous anemones. It's a mutually beneficial arrangement. The clown fish finds safety in the anemone's wriggling arms, as well as leftover scraps of food. In return, clown fish ward off parasites and predators for the anemone. Thus these colorful fish remind us of the importance of maintaining good cheer among our roommates.",
         "name": {
             "name-USen": "clown fish"
@@ -388,8 +388,8 @@
             "time": ""
         },
         "catch-phrase": "Blast from the past! I caught a coelacanth! Think positive! Be a coela-CAN!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/80",
-        "image_uri": "https://acnhapi.com/v1/images/fish/80",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858754034176031/Coelacanth_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858769599242281/Coelacanth_NH.png",
         "museum-phrase": "The coelacanth is a deep-sea fish that has been around since the age of the dinosaurs. They were long thought extinct, so when living specimens were discovered, it was quite a shock! Now I'll just have to figure out where in the museum to display it\u2014 fish or fossils!",
         "name": {
             "name-USen": "coelacanth"
@@ -409,8 +409,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a crawfish! Or else it's a lobster and I'm a giant!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/11",
-        "image_uri": "https://acnhapi.com/v1/images/fish/11",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858895633891328/Crawfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176858907960938497/Crawfish_NH.png",
         "museum-phrase": "Ohoo! So you have found a crawfish. Neither crab nor lobster, crawfish evolved in an interesting manner. Beware their fearsome pinchy pinchers! Behold their many legs! I say! It is a big bug-like, eh wot...The more I look at it, the more unsettled I feel... Let's be done with this and never speak of it again, shall we?",
         "name": {
             "name-USen": "crawfish"
@@ -430,8 +430,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a crucian carp! My skills are sharp!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/3",
-        "image_uri": "https://acnhapi.com/v1/images/fish/3",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859069592653875/Crucian_Carp_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859076915896430/Crucian_Carp_NH.png",
         "museum-phrase": "I wonder... Do you know how to tell the difference between a crucian carp and a standard-issue carp? It's quite easy to tell the two apart... One must simply locate the barbels. Or, rather, the lack of them! And just what is a barbel, you ask? Well, a barbel looks a little something like a mustache. A run-of-the-mill carp will sport this unsightly \"facial hair,\" while a crucian carp is considerably better groomed! I tried to grow a mustache when I was younger. It never did fill in quite right... All for the best in the end, as mustaches go so much better with noses than with beaks!",
         "name": {
             "name-USen": "crucian carp"
@@ -451,8 +451,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a dab! Not bad!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/61",
-        "image_uri": "https://acnhapi.com/v1/images/fish/61",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859213629227030/Dab_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859230012198953/Dab_NH.png",
         "museum-phrase": "The dab is a flatfish that bears some resemblance to the olive flounder, though their mouths are different. Personally, I am morbidly fascinated by each fish's eye placement. The dab's eyes are both on its right side, while the olive flounder's are on the left. These fish spend lots of time lying on their sides in the sand, so the odd eye placement makes some sense... But its-how can I put this? Creepy? Viscerally disturbing? Profoundly upsetting to fans of symmetry?",
         "name": {
             "name-USen": "dab"
@@ -472,8 +472,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a dace! Hope I have some space!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/4",
-        "image_uri": "https://acnhapi.com/v1/images/fish/4",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859345338773504/Dace_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859360136278046/Dace_NH.png",
         "museum-phrase": "Dace are shiny little fish that enjoy freshwater streams with gravelly bottoms and plenty of sunlight. What a fishy paradise...until the larger fish move in and begin eating the dace! Sadly, the shiny dace are easy for other fish to spot, which makes them a popular snack. However, this particular specimen here has no need to worry. There's a strict \"No Eating Your Neighbor\" policy at this institution.",
         "name": {
             "name-USen": "dace"
@@ -493,8 +493,8 @@
             "time": "4am - 9pm"
         },
         "catch-phrase": "I caught a dorado! I say \"dorado,\" you say \"doraydo.\"",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/42",
-        "image_uri": "https://acnhapi.com/v1/images/fish/42",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859479527137290/Dorado_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859495226421320/Dorado_NH.png",
         "museum-phrase": "Woo-hoo! So shiny! This massive fish's name, dorado, means \"golden\" in Spanish\u2014 a fitting title. They are also quite valuable, I understand. I congratulate you on your top-notch angling! They are rather large, eh wot? It makes one wonder what all they might feed on... Fowl, perhaps?! One quivers at the very thought! Well, it'll be safe behind glass, no doubt. Quite safe, hoo",
         "name": {
             "name-USen": "dorado"
@@ -514,8 +514,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a football fish! Some countries call it a soccer fish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/77",
-        "image_uri": "https://acnhapi.com/v1/images/fish/77",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859640454184960/Football_Fish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859653951471698/Football_Fish_NH.png",
         "museum-phrase": "The football fish is a strange and grotesque deep-sea fish with a lantern-like light on its forehead. Its light is apparently powered by luminous bacteria and other glowing microorganisms. One theory says it can spray these luminescent sidekicks when prey approaches in order to dazzle them...The deep contains many mysteries...as well as some things that are just sort of odd and off-putting.",
         "name": {
             "name-USen": "football fish"
@@ -535,8 +535,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a freshwater goby! Time to go bye-bye!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/16",
-        "image_uri": "https://acnhapi.com/v1/images/fish/16",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859786990604309/Freshwater_Goby_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859802115252244/Freshwater_Goby_NH.png",
         "museum-phrase": "The freshwater goby is an unassuming specimen. But beneath that calm, fish exterior, true gluttony resides! It will eat anything that will fit in its mouth...And its mouth is quite the gaping maw, so I recommend you refrain from drawing attention to yourself!",
         "name": {
             "name-USen": "freshwater goby"
@@ -556,8 +556,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a frog! Or it's a new neighbor...and I have some apologizing to do.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/15",
-        "image_uri": "https://acnhapi.com/v1/images/fish/15",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859936114868264/Frog_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176859949272412173/Frog_NH.png",
         "museum-phrase": "I understand that frogs converse with fellow frogs through a number of varied calls, as it were. Ribbit! My prince has arrived! Gribbit riiibbit! This pond is tragic! Ribbity rib't! I think you're splendid! Hoo hoo, of course I have no clue what they're saying, but I like to think if I practice enough, I might!",
         "name": {
             "name-USen": "frog"
@@ -577,8 +577,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a gar! Yar! It's a gar! Har har!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/43",
-        "image_uri": "https://acnhapi.com/v1/images/fish/43",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860065542709310/Gar_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860081636249660/Gar_NH.png",
         "museum-phrase": "Hoo hoo! So you have snagged a gar. Did you know this beastly fish can grow up to nine feet long? Indeed, the gar is a remnant of times long past\u2014 a living fossil, if you will. It not only has sharp teeth and armor-like scalesn, it has the ability to take breaths of air as well! Ah, to look upon this unusual fish is to get a glimpse of our prehistoric past.",
         "name": {
             "name-USen": "gar"
@@ -598,8 +598,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a giant snakehead! Um...but I asked for a medium?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/19",
-        "image_uri": "https://acnhapi.com/v1/images/fish/19",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860220157337731/Giant_Snakehead_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860235051319336/Giant_Snakehead_NH.png",
         "museum-phrase": "The giant snakehead is quite a sight to behold, wot! One glance conjurs up visions of its namesake. This resilient creature can even find a home in the mud, where it is able to breathe. As a matter of fact, it dislikes cold weather, so during wintertime the mud serves as its temporary home. I hear that they eat anything that swims past their head. While odd, I feel a sense of owlship with them.",
         "name": {
             "name-USen": "giant snakehead"
@@ -619,8 +619,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a giant trevally! Yeah, I'm pretty well-trevalled.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/68",
-        "image_uri": "https://acnhapi.com/v1/images/fish/68",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860399916818492/Giant_Trevally_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860412600389642/Giant_Trevally_NH.png",
         "museum-phrase": "The giant trevally, as befits its name, can reach six feet in length and 180 pounds! Its size and strength have made it a favored opponent for anglers since time immemorial. They are also ingenious hunters, sometimes taking advantage of other predators to distract their prey. There have even been documented cases of them attacking \u2014gulp\u2014 birds.",
         "name": {
             "name-USen": "giant trevally"
@@ -640,8 +640,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a golden trout! But the real treasure? Friendship.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/29",
-        "image_uri": "https://acnhapi.com/v1/images/fish/29",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860546100908043/Golden_Trout_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860562341236827/Golden_Trout_NH.png",
         "museum-phrase": "The golden trout is a beautifully colored fish that can only live in very clean waters. They are difficult to come across since they are found only in high mountain streams. As a side note, I find it much easier to appreciate fish that aren't such prima donnas about everything.",
         "name": {
             "name-USen": "golden trout"
@@ -661,8 +661,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a goldfish! It's worth its weight in fish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/7",
-        "image_uri": "https://acnhapi.com/v1/images/fish/7",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860760404676728/Goldfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860801554980955/Goldfish_NH.png",
         "museum-phrase": "Goldfish are so cute and delicate... but do you know how big they can get? Why, they can grow up to... a foot in length! Well, sometimes. The size of the tank they're kept in tends to restrict their growth. And just how big will this goldfish get in our large museum tank? I look forward to finding out!",
         "name": {
             "name-USen": "goldfish"
@@ -682,8 +682,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a great white shark! Watch out for its jaws!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/74",
-        "image_uri": "https://acnhapi.com/v1/images/fish/74",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860947604844584/Great_White_Shark_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176860964310749204/Great_White_Shark_NH.png",
         "museum-phrase": "Great white sharks are obviously known first and foremost for their biting. They are masters of the craft! They do lose teeth regularly through biting-related activities, but, luckily, those teeth grow back quickly. In fact, their missing teeth can be regrown in a single day. Just imagine their tooth-fairy-related income!",
         "name": {
             "name-USen": "great white shark"
@@ -703,8 +703,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a guppy! Welcome to the team, newbie!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/34",
-        "image_uri": "https://acnhapi.com/v1/images/fish/34",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861071194206208/Guppy_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861083319926885/Guppy_NH.png",
         "museum-phrase": "Oh my! Would you look at that! Such a beautiful, snazzy little fellow that guppy is! The shape and coloration of guppy fins are all unique. Quite eye-catching, I must say. Do you imagine they host contests for \"most snazzy\"? And...do you suppose I might receive an invite?",
         "name": {
             "name-USen": "guppy"
@@ -724,8 +724,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a hammerhead shark! I hit the nail on the head!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/73",
-        "image_uri": "https://acnhapi.com/v1/images/fish/73",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861235074052136/Hammerhead_Shark_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861238320439336/Hammerhead_Shark_NH.png",
         "museum-phrase": "The hammerhead shark is known for its distinctive, hammer-shaped head, hence the name. Er, obviously. Anyhoot, this oddly shaped head allows the beast to see 360 degrees around itself, from top to bottom. Imagine being able to see so widely! You could check for untied shoelaces AND imminent rain simultaneously!",
         "name": {
             "name-USen": "hammerhead shark"
@@ -745,8 +745,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a horse mackerel! Of course, Mack...er...el.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/57",
-        "image_uri": "https://acnhapi.com/v1/images/fish/57",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861381564313610/Horse_Mackerel_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861394268864612/Horse_Mackerel_NH.png",
         "museum-phrase": "Supposedly the horse mackerel derives its name from a-false-myth about its strengh as a swimmer. The gist of it is that these fish are so powerful underwater that smaller fish can ride them as steeds! It's absurd, of course. Where would these alleged fish jockeys attach a saddle, much less horseshoes? One does wish that people would construct their legends with a BIT more scientific plausibility!",
         "name": {
             "name-USen": "horse mackerel"
@@ -766,8 +766,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a killifish! The streams are safe again.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/10",
-        "image_uri": "https://acnhapi.com/v1/images/fish/10",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861532563439626/Killifish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861550846423060/Killifish_NH.png",
         "museum-phrase": "Ah, the magnificent killifish! Did you know there are over 1,000 different species? My own favorite killifish species are the mangrove, which can live on land for weeks, breathing air! And the mummichog, the first fish ever brought to space. I wonder if the killifish you've brought me is related to either those intrepid explorers?",
         "name": {
             "name-USen": "killifish"
@@ -787,8 +787,8 @@
             "time": ""
         },
         "catch-phrase": "WOO-HOO! I caught a King salmon! Checkmate!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/32",
-        "image_uri": "https://acnhapi.com/v1/images/fish/32",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861693456949318/King_Salmon_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861709923799050/King_Salmon_NH.png",
         "museum-phrase": "The king salmon didn't get its name for nothing.This stately fish can weigh in at up to 130 pounds! It's clear why it's referred to as the king of salmon. I imagine even the mightiest net can catch no more than a few at a time.I must say it's a miracle to me that you didn't get dragged out to sea by this one, wot!",
         "name": {
             "name-USen": "king salmon"
@@ -808,8 +808,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a koi! I don't know why it's so shy... or such a bad speller...",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/6",
-        "image_uri": "https://acnhapi.com/v1/images/fish/6",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861822742188122/Koi_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861840807043103/Koi_NH.png",
         "museum-phrase": "Koi are a variety of carp bred for their color mutations...starting more than a thousand years ago! Well, one glance at their impressive coloring tells you that the centuries of effort were worth it. And even today people still selectively breed koi in search of new color combinations! One marvels at the thought of what the koi may look like in another thousand years.",
         "name": {
             "name-USen": "koi"
@@ -829,8 +829,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a loach! It's...looking at me with reproach.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/17",
-        "image_uri": "https://acnhapi.com/v1/images/fish/17",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861961191952394/Loach_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176861974756327424/Loach_NH.png",
         "museum-phrase": "Loaches are a large group of bottom-feeding freshwater fish. Because there are so many species, it is difficult to generalize about them all. The one thing they all have in common is perhaps their most unappealing trait; the name 'loach.' Repellent, isn't it? They should have just called it the 'cockloach' and been done with it, eh wot! Loach...loach... It just tastes terrible in the beak.",
         "name": {
             "name-USen": "loach"
@@ -850,8 +850,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a mahi-mahi! It's all mahine-mahine.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/69",
-        "image_uri": "https://acnhapi.com/v1/images/fish/69",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862143996493934/Mahi-Mahi_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862170898767923/Mahi-Mahi_NH.png",
         "museum-phrase": "The mahi-mahi is an ocean fish known for its wide, somewhat-cute face. It can reach over six feet long. It is known by different names including \"dolphinfish,\" even though it has no relation to dolphins. They live in only in warm, tropical waters...which perhaps explains the relaxed, happy look on their faces.",
         "name": {
             "name-USen": "mahi-mahi"
@@ -871,8 +871,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a mitten crab! One more and I'm ready for winter!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/33",
-        "image_uri": "https://acnhapi.com/v1/images/fish/33",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862527230062624/Mitten_Crab_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862543692693504/Mitten_Crab_NH.png",
         "museum-phrase": "The mitten crab was named for its impossibly adorable and fuzzy little pincers. These cute crustaceans embark on quite the journey. They're first born in brackish waters. Then they mature in freshwater. Finally, they travel to the ocean to create more mitten crabs!Hoo! How I delight in the thought of thousands of tiny mittened crabs scuttling about!",
         "name": {
             "name-USen": "mitten crab"
@@ -892,8 +892,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a moray eel! When you're in love, that's a moray!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/64",
-        "image_uri": "https://acnhapi.com/v1/images/fish/64",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862670960472126/Moray_Eel_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862678690570380/Moray_Eel_NH.png",
         "museum-phrase": "Despite its rather frightening features, the moray eel is really a very cowardly fish. It lives its life hiding in caves, and will only attack if you're looking for a fight. You've heard of a \"bark that is worse than the bite\"? Well, the moray eel has a face that's worse than its fight!",
         "name": {
             "name-USen": "moray eel"
@@ -913,8 +913,8 @@
             "time": "4am - 9pm"
         },
         "catch-phrase": "I caught a Napoleonfish! It's not as big as it thinks!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/52",
-        "image_uri": "https://acnhapi.com/v1/images/fish/52",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862839886073866/Napoleonfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862867929182268/Napoleonfish_NH.png",
         "museum-phrase": "Quite the catch you've brought! The stately and debonair Napoleonfish is truly something to behold. Those beady eyes! That bumpy head! That bold blue-green coloring! Alas, this quirky creature is quite endangered due to a variety of factors. Needless to say, we must do our very best to take care of our lumpy friend and its environment.",
         "name": {
             "name-USen": "Napoleonfish"
@@ -934,8 +934,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a neon tetra! Wasn't hard to track.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/38",
-        "image_uri": "https://acnhapi.com/v1/images/fish/38",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176862997336043520/Neon_Tetra_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863012611694592/Neon_Tetra_NH.png",
         "museum-phrase": "Hoo! Wonderful! The neon tetra is truly a marvel of the tropical-fish world. Just look at how tiny it is! And how very filled with...neon! I imagine its environment must be just as flashy as it is for it to have developed such colors. I wonder how flashy I might be, had I been raised somewhere even half as vibrant?",
         "name": {
             "name-USen": "neon tetra"
@@ -955,8 +955,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a nibble fish! Come to think of it, I could use a bite!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/35",
-        "image_uri": "https://acnhapi.com/v1/images/fish/35",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863171634536458/Nibble_Fish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863186616602704/Nibble_Fish_NH.png",
         "museum-phrase": "Nibble fish are best known for their use in a certain skin treatment. This treatment has apparently been used for thousands of years. I have never experienced said treatment because they eat your dead skin with their little toothless mouths! Can you imagine anything so repellent?! Please don't ask me any follow-up questions. Hoo.",
         "name": {
             "name-USen": "nibble fish"
@@ -976,8 +976,8 @@
             "time": ""
         },
         "catch-phrase": "I caught an oarfish! I hope I catch morefish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/78",
-        "image_uri": "https://acnhapi.com/v1/images/fish/78",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863313729163364/Oarfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863330590277712/Oarfish_NH.png",
         "museum-phrase": "The oarfish is a long, eel-like fish that can supposedly reach up to 36 feet in length. They appear in various legends as things like messengers of the gods. It seems to me a creature like that could explain the myth of massive, ship-crushing sea serpents. It is, of course, well documented that people tend to exaggerate the size of \"the one that got away\".",
         "name": {
             "name-USen": "oarfish"
@@ -997,8 +997,8 @@
             "time": "4am - 9pm"
         },
         "catch-phrase": "I caught an ocean sunfish! Good thing I'm wearing ocean sunscreen!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/70",
-        "image_uri": "https://acnhapi.com/v1/images/fish/70",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863454687150110/Ocean_Sunfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863471854428240/Ocean_Sunfish_NH.png",
         "museum-phrase": "The ocean sunfish is a large relative of the blowfish with an unusual shape, like a fish head with a tail. They are a fairly relaxed species, often content to ride where the currents take them. This is fortunate as, otherwise, the sight of a large head coming toward you might be alarming!",
         "name": {
             "name-USen": "ocean sunfish"
@@ -1018,8 +1018,8 @@
             "time": ""
         },
         "catch-phrase": "I caught an olive flounder! That's not the pits!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/62",
-        "image_uri": "https://acnhapi.com/v1/images/fish/62",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863601089327124/Olive_Flounder_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863616763437107/Olive_Flounder_NH.png",
         "museum-phrase": "Did you know that the olive flounder is the same shape as other fish when it hatches? But as it grows, it gets both wider and flatter, and can reach some three feet long. These flat fish spend much of their lives buried under the sandy ocean floor, waiting for prey to happen by. Imagine the surprise for said prey when they strike. It would be as if your kitchen floor were to bite you.",
         "name": {
             "name-USen": "olive flounder"
@@ -1039,8 +1039,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a pale chub! That name seems a bit judgy...",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/2",
-        "image_uri": "https://acnhapi.com/v1/images/fish/2",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863758820311092/Pale_Chub_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863772732817428/Pale_Chub_NH.png",
         "museum-phrase": "The pale chub is a river fish with simple back-and-silver coloring. Interestingly, the males' coloring becomes most vibrant when he's trying to attract a mate! Though normally plain, these fellows really know how to look stylish when they want to. Perhaps I could learn a thing or two from the pale chub...",
         "name": {
             "name-USen": "pale chub"
@@ -1060,8 +1060,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a pike! Think a swordfish would be up for a duel?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/24",
-        "image_uri": "https://acnhapi.com/v1/images/fish/24",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863877544292533/Pike_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176863894929690664/Pike_NH.png",
         "museum-phrase": "The pike has always reminded me a bit of salmon, although a pike can grow rather larger. These brutes can grow to over four feet long, sometimes MUCH over! Hoo hoo! It is carnivorous and preys not only on other fish, but also mammals and some waterfowl. If I were to ever meet one in the water, I would have a most difficult time keeping my wits about me.",
         "name": {
             "name-USen": "pike"
@@ -1081,8 +1081,8 @@
             "time": "9am - 4pm & 9pm - 4am"
         },
         "catch-phrase": "I caught a piranha! Sure hope it was the only one!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/40",
-        "image_uri": "https://acnhapi.com/v1/images/fish/40",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864019013963946/Piranha_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864034381889566/Piranha_NH.png",
         "museum-phrase": "I am not exactly a fan of the piranha, despite knowing that they're mostly harmless. But those nasty, pointy teeth, Hoo. These infamous little blighters will attack when in groups. Imagine all of those hundreds of tiny teeth! To think that they're floundering about our peaceful waters, just waiting to strike. Well, never fear\u2014 I shall keep THIS one under the strictest lock and key, with nary a bathroom break allowed!",
         "name": {
             "name-USen": "piranha"
@@ -1102,8 +1102,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a pond smelt! Whoever smelt it dealt it!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/25",
-        "image_uri": "https://acnhapi.com/v1/images/fish/25",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864170927456317/Pond_Smelt_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864181543247902/Pond_Smelt_NH.png",
         "museum-phrase": "For many, thinking of pond smelt inevitably leads to thoughts of ice fishing in frozen rivers and lakes. Ice fishing involves making a round hole in the ice, dropping in your fishing line, and...waiting. Not to rain on anyone else's idea of fun, but...well, perhaps I shouldn't say anything.",
         "name": {
             "name-USen": "pond smelt"
@@ -1123,8 +1123,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I got a pop-eyed goldfish! It looks so...surprised!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/8",
-        "image_uri": "https://acnhapi.com/v1/images/fish/8",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864355946594394/Pop-Eyed_Goldfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864370941243413/Pop-Eyed_Goldfish_NH.png",
         "museum-phrase": "Pop-eyed goldfish have, as the name suggests, huge round eyes. But as babies they look like other goldfish! As they grow, their eyes begin to pop out and they gain their, hoo, distinct appearance... Imagine the poor fish fancier who unknowingly bought one! Their eyes might well pop out just as far!",
         "name": {
             "name-USen": "pop-eyed goldfish"
@@ -1144,8 +1144,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a puffer fish! I thought you would be tougher, fish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/55",
-        "image_uri": "https://acnhapi.com/v1/images/fish/55",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864512352206848/Puffer_Fish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864527372005446/Puffer_Fish_NH.png",
         "museum-phrase": "Like its cousin the blowfish, when the puffer fish feels threatened it inflates into a spiky balloon. The biggest difference between them is that the puffer fish is not deadly poisonous like its kin. So while it may look scary, the substantially reduced risk to life and limb makes it much better company.",
         "name": {
             "name-USen": "puffer fish"
@@ -1165,8 +1165,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a rainbowfish! Where's my pot of goldfish?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/39",
-        "image_uri": "https://acnhapi.com/v1/images/fish/39",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864648511897600/Rainbowfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864663892398151/Rainbowfish_NH.png",
         "museum-phrase": "The rainbowfish is a tropical fish known for its metallic colors and beautiful fins. There are over 50 different species, each unique and pleasing color. I must say, it does make me wish for feathers of a more exciting hue than \"underbaked brownie.\"",
         "name": {
             "name-USen": "rainbowfish"
@@ -1186,8 +1186,8 @@
             "time": "9am - 4pm"
         },
         "catch-phrase": "I caught a ranchu goldfish! But I prefer balsamicu goldfish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/9",
-        "image_uri": "https://acnhapi.com/v1/images/fish/9",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864789771849799/Ranchu_Goldfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864805009756180/Ranchu_Goldfish_NH.png",
         "museum-phrase": "The ranchu goldfish is a charming relative of the goldfish with a bumpy head and stout, round body. They have ordinary heads when born, but develop impressive rectangular heads after about three years. Supposedly their head shape changes depending on factors like the size of their tank... So ranchu goldfish enthusiasts aim to raise perfectly shaped specimens and work hard to achieve this. Of course, no one asks the ranchu goldfish themselves what shape they want their heads to be...",
         "name": {
             "name-USen": "ranchu goldfish"
@@ -1207,8 +1207,8 @@
             "time": "4am - 9pm"
         },
         "catch-phrase": "I caught a ray! A few more and I'll have a tan!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/71",
-        "image_uri": "https://acnhapi.com/v1/images/fish/71",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864924367061062/Ray_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176864938761920522/Ray_NH.png",
         "museum-phrase": "The ray is an unusually shaped fish with a flat body and a long body, somewhat related to sharks. Seen from the bottom, the mouth on its stomach appears to be smiling, which is objectively adorable. But be cautious\u2014unlike most cute animals, some rays are extremely venomous. BEWARE THE SMILE.",
         "name": {
             "name-USen": "ray"
@@ -1228,8 +1228,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a red snapper! It looks pretty dapper!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/60",
-        "image_uri": "https://acnhapi.com/v1/images/fish/60",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865070857322576/Red_Snapper_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865088112689282/Red_Snapper_NH.png",
         "museum-phrase": "'Red snapper' is the common name of dozens of fish species, and I wonder why it is so popular. Are there so many types of fish that are both a shade of red and have a tendency to snap? Were there no other names? What about 'burgundy biter'? 'Garnet grasper'? 'Puce pincher'?",
         "name": {
             "name-USen": "red snapper"
@@ -1249,8 +1249,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a ribbon eel! Can it tie itself into a bow?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/65",
-        "image_uri": "https://acnhapi.com/v1/images/fish/65",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865227875295232/Ribbon_Eel_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865242794442772/Ribbon_Eel_NH.png",
         "museum-phrase": "The ribbon eel is related to the moray eel, though its bright coloration distinguishes it. It also has an unusual plant-like appendage at the tip of its nose that flutters as the creature moves. I like to think of it as having an extremely friendly nose that waves a greeting to those nearby!",
         "name": {
             "name-USen": "ribbon eel"
@@ -1270,8 +1270,8 @@
             "time": "9pm - 4am"
         },
         "catch-phrase": "Wow! A saddled bichir! And me without my tiny riding crop...",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/45",
-        "image_uri": "https://acnhapi.com/v1/images/fish/45",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865409773883524/Saddled_Bichir_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865423908671578/Saddled_Bichir_NH.png",
         "museum-phrase": "What an elegant specimen you've found. The saddled bichir has a look entirely its own. They have poor eyesight, so they use their fine-tuned sniffers to seek out prey. Can you imagine relying solely on your sense of smell to find food? And if one nostril became clogged, would you be unable to tell how far away the scent was?",
         "name": {
             "name-USen": "saddled bichir"
@@ -1291,8 +1291,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a salmon! It's all upstream from here!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/31",
-        "image_uri": "https://acnhapi.com/v1/images/fish/31",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865539835047977/Salmon_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865555173613678/Salmon_NH.png",
         "museum-phrase": "Ah, salmon! Did you know their coloration is due specifically to their diet? Indeed, this is the case! The more they fill their diet with crustaceans such as krill and shrimp, the deeper shade of pink they are. If they ate a bushel of carrots, might they turn orange?",
         "name": {
             "name-USen": "salmon"
@@ -1312,8 +1312,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a saw shark! You could call it a sea saw!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/72",
-        "image_uri": "https://acnhapi.com/v1/images/fish/72",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865684882456636/Saw_Shark_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865700489465976/Saw_Shark_NH.png",
         "museum-phrase": "As you might expect from the name, the saw shark is a shark with a head that resembles a saw. This unusual appendage is used both to dig potential prey out of the sand and as a weapon against said prey. Given that, it seems like a more appropriate name would have been \"shovel-sword shark,\" eh wot?",
         "name": {
             "name-USen": "saw shark"
@@ -1333,8 +1333,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a sea bass! No, wait- it's at least a C+!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/59",
-        "image_uri": "https://acnhapi.com/v1/images/fish/59",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865899798610040/Sea_Bass_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176865915300749353/Sea_Bass_NH.png",
         "museum-phrase": "Sea bass is a name given to a variety of different species of saltwater fish. They are a varied bunch with some as small as four inches and some as staggeringly ginormous as eight feet! 'Sea bass' is a bit pedestrian though. Many species have better names, such as 'redbanded perch.' Or the delightfully whimsical dusky grouper! Or the potato cod! WILL NO ONE THINK OF THE PINK MAOMAO?!",
         "name": {
             "name-USen": "sea bass"
@@ -1354,8 +1354,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a sea butterfly! Try not to confuse it for a sea moth!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/47",
-        "image_uri": "https://acnhapi.com/v1/images/fish/47",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866045114450028/Sea_Butterfly_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866056564903946/Sea_Butterfly_NH.png",
         "museum-phrase": "Such mystery! Such grace! Did you know that the sea butterfly's scientific name is Thecosomata? A very rough translation of that is 'shell body.' Indeed, this illustrious creature is related to snails! However, it reminds me much more of an elegant feathered friend, the way it flies through the water. With such grace in flying, one shouldn't wonder if it's related to the owl, hoo hoo!",
         "name": {
             "name-USen": "sea butterfly"
@@ -1375,8 +1375,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a sea horse! But...where's its sea jockey?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/48",
-        "image_uri": "https://acnhapi.com/v1/images/fish/48",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866189834715136/Sea_Horse_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866198365937744/Sea_Horse_NH.png",
         "museum-phrase": "Ah, a favorite of mine, to be sure! The sea horse is such a very unique creature and is indeed a fish! Though, as far as fish go, sea horses are not great swimmers. The sea horse, you see, has but a wee fin on its back, which propels it through water rather poorly. Thus these fish are often found using their prehensile tails to hold tight in amongst the sea grass. And here's one final fact for you... Sea horses have no stomach and so must constantly feed to stay alive! Indeed, the life of a land horse sounds far easier than that of the hardworking horse of the sea.",
         "name": {
             "name-USen": "sea horse"
@@ -1396,8 +1396,8 @@
             "time": "9pm - 4am"
         },
         "catch-phrase": "I caught a snapping turtle! How can it snap without fingers?",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/13",
-        "image_uri": "https://acnhapi.com/v1/images/fish/13",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866333846147072/Snapping_Turtle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866349742575697/Snapping_Turtle_NH.png",
         "museum-phrase": "The snapping turtle is a large turtle known for it's crocodile-like body and long claws. No, wait-- it is better known for it's ferocious bite, which it can deliver with shocking speed for a turtle. NO, WAIT-- it is BEST known for that time one chased me across a parking lot and I had to climb on top of a car.",
         "name": {
             "name-USen": "snapping turtle"
@@ -1420,8 +1420,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "I caught a soft-shelled turtle! I can really shell it out!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/12",
-        "image_uri": "https://acnhapi.com/v1/images/fish/12",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866491178692689/Soft-Shelled_Turtle_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866506924118056/Soft-Shelled_Turtle_NH.png",
         "museum-phrase": "These relatives of common turtles will not let go when they decide to bite down on something. Although they can be quite shy, they will become a bit aggressive when threatened. They are often found in water and are very good swimmers because of the flat shape of their shells. They swim with their snouts over the surface of the water so they can breathe. Soft-shelled turtles aren't safe to hold because they are so prone to biting at the slightest movement. However, if one bites down on you, it will usually let go when you put it safely back in the water.",
         "name": {
             "name-USen": "soft-shelled turtle"
@@ -1445,8 +1445,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a squid! It's off the hook!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/63",
-        "image_uri": "https://acnhapi.com/v1/images/fish/63",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866685194604645/Squid_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866700482838558/Squid_NH.png",
         "museum-phrase": "Well, first off, squids are members of the mollusk family, just like the octopus. Many mollusks like snails and clams have shells, but the squid's body is almost completely soft. The exception is a long, narrow bit of hard material going through its main body - the last remnant of its shell. Of course, having your shell INSIDE is not a best practice. Perhaps they lost the owner's manual!",
         "name": {
             "name-USen": "squid"
@@ -1466,8 +1466,8 @@
             "time": "4pm - 9am"
         },
         "catch-phrase": "OH MY GOSH! I caught a stringfish! Five more and I'll have a guitarfish!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/30",
-        "image_uri": "https://acnhapi.com/v1/images/fish/30",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866807831855168/Stringfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176866823820546098/Stringfish_NH.png",
         "museum-phrase": "The stringfish grows slowly, but also lives quite a long time for a fish, with up to 15 years being typical. Consequently, while it takes a while, they can get quite large-perhaps even up to six feet long! The stringfish is perhaps the best embodiment in the fish world of 'slow and steady wins the race'",
         "name": {
             "name-USen": "stringfish"
@@ -1487,8 +1487,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a sturgeon! Wonder if it can perform sturgery...",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/46",
-        "image_uri": "https://acnhapi.com/v1/images/fish/46",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867083989045289/Sturgeon_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867105350635570/Sturgeon_NH.png",
         "museum-phrase": "The sturgeon is a large and long-lived fish which has changed little in the last 300 million years. One curious behavior of theirs is leaping high out of the water and falling back in on their sides. The smacking sounds of their re-entry can be heard for up to half a mile away, likely more underwater! No one knows why they do it, but I like to think it's their impression of bread popping out of a toaster!",
         "name": {
             "name-USen": "sturgeon"
@@ -1508,8 +1508,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a suckerfish! I thought it was a shark! Oh, wait - now I get it. \"Sucker\"...",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/76",
-        "image_uri": "https://acnhapi.com/v1/images/fish/76",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867212854820954/Suckerfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867230407991347/Suckerfish_NH.png",
         "museum-phrase": "The suckerfish is a curious fish that likes to attach itself with its sucker mouth to larger marine animals. The benefit to the suckerfish is that it gets to eat smaller parasites and dead skin off the host's body. Amusingly, some people have used suckerfish on cords to catch large turtles with the fish's own suction! I imagine this practice is the cause of some awkward conversations between fish and turtle, eh wot",
         "name": {
             "name-USen": "suckerfish"
@@ -1529,8 +1529,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a surgeonfish! Scalpel! Forceps! Fish hook!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/50",
-        "image_uri": "https://acnhapi.com/v1/images/fish/50",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867355574411274/Surgeonfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867370782957638/Surgeonfish_NH.png",
         "museum-phrase": "Hoo! Careful, now! These fish are particularly dangerous, despite their seemingly docile appearance. With its saturated blue and yellow tones, the surgeonfish is quite breathtaking. It's got to keep up with all the other vibrant fish that live in the coral too, I wager. Quite the competition! Its spine is sharp as a blade, so care must be taken when handling these beauties...",
         "name": {
             "name-USen": "surgeonfish"
@@ -1550,8 +1550,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a sweetfish! Hope it's not artificially sweet!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/26",
-        "image_uri": "https://acnhapi.com/v1/images/fish/26",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867540669050910/Sweetfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867557328826408/Sweetfish_NH.png",
         "museum-phrase": "Sweetfish are the damp heralds of summer! These slippery fellows appear in numbers when it warms up. They hatch in a river, then swim to the ocean. Once mature, they return to the river where they were born. But when they return depends on the river temperature\u2014 if it's too cold their fishing season will start later. Some even say summer can't start without sweetfish despite the KEY role played by the earth's axial tilt!",
         "name": {
             "name-USen": "sweetfish"
@@ -1571,8 +1571,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a tadpole... It's just a tad small.",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/14",
-        "image_uri": "https://acnhapi.com/v1/images/fish/14",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867709837910056/Tadpole_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867722844438578/Tadpole_NH.png",
         "museum-phrase": "Undoubtedly you know that tadpoles eventually turn into frogs. I must say, I find them impossibly adorable with their squiggly little tails. But even cuter... when they sprout legs! Why, we can witness accelerated evolution in these squirmy little ones. Hoo, it makes me so emotional!",
         "name": {
             "name-USen": "tadpole"
@@ -1592,8 +1592,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a tilapia! It makes me happy-a!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/23",
-        "image_uri": "https://acnhapi.com/v1/images/fish/23",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867843137077279/Tilapia_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867859155136574/Tilapia_NH.png",
         "museum-phrase": "Wherever the waters are warm, the tilapia can be found. It is a highly adaptable river fish. They mainly feed on algae, but they will also eat larvae and dead fish\u2014 or whatever fits in their mouths. I will confess that, as a growing owlet, I similarly defined food as 'anything that fits in my beak.'",
         "name": {
             "name-USen": "tilapia"
@@ -1613,8 +1613,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a tuna! It's a little off-key!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/66",
-        "image_uri": "https://acnhapi.com/v1/images/fish/66",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176867993637105774/Tuna_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868009311207504/Tuna_NH.png",
         "museum-phrase": "The tuna is a large ocean fish that can reach upwards of nine feet long. Besides its great size, it's notable for continuing to swim even when it's sleeping! Well, to be fair, if it doesn't keep swimming, it won't be able to breathe and will of course die... But sleep should be restful, eh wot! If I were the tuna I would feel very hard done by!",
         "name": {
             "name-USen": "tuna"
@@ -1634,8 +1634,8 @@
             "time": ""
         },
         "catch-phrase": "Thar she blows! I caught a whale shark! I'm tellin' ya, it was thiiiiiiiiiiiiiiiiiiiis big!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/75",
-        "image_uri": "https://acnhapi.com/v1/images/fish/75",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868136784511037/Whale_Shark_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868164601135114/Whale_Shark_NH.png",
         "museum-phrase": "The mighty whale shark is the largest species of fish in the world with specimens up to 60 feet long! Unlike many of their kin in the shark family, whale sharks are nonviolent, eating only plankton and such. They grow slowly and live long, relaxed lives of filter feeding and leisure in warm waters. So if you ever have to choose a fish as a roommate, you could do worse than the whale shark. Unless you can't swim.",
         "name": {
             "name-USen": "whale shark"
@@ -1655,8 +1655,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a yellow perch! Those yellow birds have to sit somewhere!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/21",
-        "image_uri": "https://acnhapi.com/v1/images/fish/21",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868312139960390/Yellow_Perch_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868323200344145/Yellow_Perch_NH.png",
         "museum-phrase": "The yellow perch is certainly worth squawking about. I find it a sight to behold! That jagged dorsal fin! Those brilliant stripes! Those glorious colours! Hoo, truly it is quite the specimen. I would be thrilled to witness it firsthand in its natural environment... But the yellow perch's peak season is winter, I'm afraid. (So very afraid... of winter's biting chill...)",
         "name": {
             "name-USen": "yellow perch"
@@ -1676,8 +1676,8 @@
             "time": ""
         },
         "catch-phrase": "I caught a zebra turkeyfish! Land, air, water--make up your mind!",
-        "icon_uri": "https://acnhapi.com/v1/icons/fish/53",
-        "image_uri": "https://acnhapi.com/v1/images/fish/53",
+        "icon_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868470558826527/Zebra_Turkeyfish_NH_Icon.png",
+        "image_uri": "https://cdn.discordapp.com/attachments/1174770028109901896/1176868485767372850/Zebra_Turkeyfish_NH.png",
         "museum-phrase": "The sheer brilliance and diversity found in the aquatic underworld never cease to amaze me. This zebra turkeyfish is as stunning to gaze upon as it is deadly. Those spines that are part of its defining physique are chock-full of venom. Fortunately, zebra turkeyfish are not susceptible to another's venom. Though solitary, I imagine they give one another a mean fin bump when passing each other by.",
         "name": {
             "name-USen": "zebra turkeyfish"

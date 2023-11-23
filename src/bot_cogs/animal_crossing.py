@@ -1,4 +1,3 @@
-from asyncio import TimeoutError
 from datetime import datetime
 from random import choice
 
@@ -104,95 +103,95 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             e = funcs.errorEmbed(None, str(ex))
         return e
 
-    async def furnitureEmbed(self, ctx, ftype: str, name: str):
-        name = funcs.replaceCharacters(name.replace(" ", "_"), ["‘", "’"], "'")
-        try:
-            res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
-            data = res.json()
-            if len(data) > 1:
-                await ctx.reply(
-                    "`Please select a number: {}`".format(
-                        ", ".join(f"{str(i)} ({c['variant']})" for i, c in enumerate(data))
-                    )
-                )
-                try:
-                    pchoice = await self.client.wait_for(
-                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=20
-                    )
-                    variant = int(pchoice.content) if -1 < int(pchoice.content) < len(data) else 0
-                except (TimeoutError, ValueError):
-                    variant = 0
-            else:
-                variant = 0
-            tags = [
-                i for i in [
-                    "DIY" if data[variant]["isDIY"] else 0,
-                    "Catalogue" if data[variant]["isCatalog"] else 0,
-                    "Customisable Body" if data[variant]["canCustomizeBody"] else 0,
-                    "Customisable Pattern" if data[variant]["canCustomizePattern"] else 0,
-                    "Interactive" if data[variant]["isInteractive"] else 0,
-                    "Outdoor" if data[variant]["isOutdoor"] else 0
-                ] if i
-            ]
-            try:
-                if data[variant]["isDoorDeco"]:
-                    tags.append("Door Decoration")
-            except:
-                pass
-            e = Embed(title=data[variant]["name"]["name-USen"])
-            e.set_image(url=data[variant]["image_uri"].replace("https", "http"))
-            e.set_thumbnail(url=AC_LOGO)
-            e.set_footer(text="Note: Version 2.0 furniture items may not be available.")
-            e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
-            e.add_field(name="Source", value=f"`{data[variant]['source']}`")
-            e.add_field(name="Size", value=f"`{data[variant]['size']}`")
-            e.add_field(name="Version Added", value=f"`{data[variant]['version']}`")
-            if tags:
-                e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
-            if data[variant]["variant"]:
-                e.add_field(name="Variant", value=f"`{data[variant]['variant']}`")
-            if data[variant]["body-title"]:
-                e.add_field(name="Body Title", value=f"`{data[variant]['body-title']}`")
-            if data[variant]["pattern"]:
-                e.add_field(name="Pattern", value=f"`{data[variant]['pattern']}`")
-            if data[variant]["pattern-title"]:
-                e.add_field(name="Pattern-Title", value=f"`{data[variant]['pattern-title']}`")
-            if data[variant]["kit-cost"]:
-                e.add_field(name="Kit Cost", value=f"`{data[variant]['kit-cost']}`")
-            if data[variant]["color-1"]:
-                e.add_field(name="Colour", value=f"`{data[variant]['color-1']}`")
-            if data[variant]["color-2"]:
-                e.add_field(name="Secondary Colour", value=f"`{data[variant]['color-2']}`")
-            if data[variant]["hha-concept-1"]:
-                e.add_field(
-                    name="HHA Concept", value="`{}`".format(data[variant]['hha-concept-1'].title().replace("'S", "'s"))
-                )
-            if data[variant]["hha-concept-2"]:
-                e.add_field(
-                    name="Secondary HHA Concept", value="`{}`".format(data[variant]['hha-concept-2'].title().replace("'S", "'s"))
-                )
-            if data[variant]["hha-series"]:
-                e.add_field(name="HHA Series", value="`{}`".format(data[variant]['hha-series'].title().replace("'S", "'s")))
-            if data[variant]["hha-set"]:
-                e.add_field(name="HHA Set", value="`{}`".format(data[variant]['hha-set'].title().replace("'S", "'s")))
-            try:
-                if data[variant]["speaker-type"]:
-                    e.add_field(name="Speaker Type", value=f"`{data[variant]['speaker-type']}`")
-            except:
-                pass
-            if data[variant]["lighting-type"]:
-                e.add_field(name="Lighting Type", value=f"`{data[variant]['lighting-type']}`")
-            if data[variant]["buy-price"]:
-                e.add_field(name="Buy Price", value="`{:,}`".format(data[variant]["buy-price"]))
-            e.add_field(name="Sell Price", value="`{:,}`".format(data[variant]["sell-price"]))
-        except Exception:
-            pref = self.client.command_prefix
-            e = funcs.errorEmbed(
-                None, "Not found, please check your spelling. Furniture names are case sensitive." +
-                      " (e.g. `acoustic guitar` or `Bunny Day arch`)\n\nOr is this even the right category? " +
-                      f"(`{pref}achouseware`/`{pref}acmisc`/`{pref}acwallmounted`)"
-            )
-        return e
+    # async def furnitureEmbed(self, ctx, ftype: str, name: str):
+    #     name = funcs.replaceCharacters(name.replace(" ", "_"), ["‘", "’"], "'")
+    #     try:
+    #         res = await funcs.getRequest(f"https://acnhapi.com/v1/{ftype}/{name}")
+    #         data = res.json()
+    #         if len(data) > 1:
+    #             await ctx.reply(
+    #                 "`Please select a number: {}`".format(
+    #                     ", ".join(f"{str(i)} ({c['variant']})" for i, c in enumerate(data))
+    #                 )
+    #             )
+    #             try:
+    #                 pchoice = await self.client.wait_for(
+    #                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=20
+    #                 )
+    #                 variant = int(pchoice.content) if -1 < int(pchoice.content) < len(data) else 0
+    #             except (TimeoutError, ValueError):
+    #                 variant = 0
+    #         else:
+    #             variant = 0
+    #         tags = [
+    #             i for i in [
+    #                 "DIY" if data[variant]["isDIY"] else 0,
+    #                 "Catalogue" if data[variant]["isCatalog"] else 0,
+    #                 "Customisable Body" if data[variant]["canCustomizeBody"] else 0,
+    #                 "Customisable Pattern" if data[variant]["canCustomizePattern"] else 0,
+    #                 "Interactive" if data[variant]["isInteractive"] else 0,
+    #                 "Outdoor" if data[variant]["isOutdoor"] else 0
+    #             ] if i
+    #         ]
+    #         try:
+    #             if data[variant]["isDoorDeco"]:
+    #                 tags.append("Door Decoration")
+    #         except:
+    #             pass
+    #         e = Embed(title=data[variant]["name"]["name-USen"])
+    #         e.set_image(url=data[variant]["image_uri"].replace("https", "http"))
+    #         e.set_thumbnail(url=AC_LOGO)
+    #         e.set_footer(text="Note: Version 2.0 furniture items may not be available.")
+    #         e.add_field(name="Type", value="`{}`".format(data[variant]['tag'].title().replace("'S", "'s")))
+    #         e.add_field(name="Source", value=f"`{data[variant]['source']}`")
+    #         e.add_field(name="Size", value=f"`{data[variant]['size']}`")
+    #         e.add_field(name="Version Added", value=f"`{data[variant]['version']}`")
+    #         if tags:
+    #             e.add_field(name="Tags", value=", ".join(f"`{i}`" for i in tags))
+    #         if data[variant]["variant"]:
+    #             e.add_field(name="Variant", value=f"`{data[variant]['variant']}`")
+    #         if data[variant]["body-title"]:
+    #             e.add_field(name="Body Title", value=f"`{data[variant]['body-title']}`")
+    #         if data[variant]["pattern"]:
+    #             e.add_field(name="Pattern", value=f"`{data[variant]['pattern']}`")
+    #         if data[variant]["pattern-title"]:
+    #             e.add_field(name="Pattern-Title", value=f"`{data[variant]['pattern-title']}`")
+    #         if data[variant]["kit-cost"]:
+    #             e.add_field(name="Kit Cost", value=f"`{data[variant]['kit-cost']}`")
+    #         if data[variant]["color-1"]:
+    #             e.add_field(name="Colour", value=f"`{data[variant]['color-1']}`")
+    #         if data[variant]["color-2"]:
+    #             e.add_field(name="Secondary Colour", value=f"`{data[variant]['color-2']}`")
+    #         if data[variant]["hha-concept-1"]:
+    #             e.add_field(
+    #                 name="HHA Concept", value="`{}`".format(data[variant]['hha-concept-1'].title().replace("'S", "'s"))
+    #             )
+    #         if data[variant]["hha-concept-2"]:
+    #             e.add_field(
+    #                 name="Secondary HHA Concept", value="`{}`".format(data[variant]['hha-concept-2'].title().replace("'S", "'s"))
+    #             )
+    #         if data[variant]["hha-series"]:
+    #             e.add_field(name="HHA Series", value="`{}`".format(data[variant]['hha-series'].title().replace("'S", "'s")))
+    #         if data[variant]["hha-set"]:
+    #             e.add_field(name="HHA Set", value="`{}`".format(data[variant]['hha-set'].title().replace("'S", "'s")))
+    #         try:
+    #             if data[variant]["speaker-type"]:
+    #                 e.add_field(name="Speaker Type", value=f"`{data[variant]['speaker-type']}`")
+    #         except:
+    #             pass
+    #         if data[variant]["lighting-type"]:
+    #             e.add_field(name="Lighting Type", value=f"`{data[variant]['lighting-type']}`")
+    #         if data[variant]["buy-price"]:
+    #             e.add_field(name="Buy Price", value="`{:,}`".format(data[variant]["buy-price"]))
+    #         e.add_field(name="Sell Price", value="`{:,}`".format(data[variant]["sell-price"]))
+    #     except Exception:
+    #         pref = self.client.command_prefix
+    #         e = funcs.errorEmbed(
+    #             None, "Not found, please check your spelling. Furniture names are case sensitive." +
+    #                   " (e.g. `acoustic guitar` or `Bunny Day arch`)\n\nOr is this even the right category? " +
+    #                   f"(`{pref}achouseware`/`{pref}acmisc`/`{pref}acwallmounted`)"
+    #         )
+    #     return e
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " +
@@ -235,6 +234,11 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                 e.add_field(name="Sell Price", value="`{:,}`".format(artdata['sell-price']))
                 e.set_image(url=artdata["image_uri"].replace("https", "http"))
                 e.set_thumbnail(url=AC_LOGO)
+                e.set_footer(
+                    text="Brought to you by Polygon.com.",
+                    icon_url="https://cdn.discordapp.com/attachments/1174770028109901896/"
+                             + "1177201714659610644/941450_609208285758470_875871287_n.0.png"
+                )
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
@@ -313,7 +317,11 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                       aliases=["acnhfossil", "acfossils", "acnhfossils"], usage="<fossil name>")
     async def acfossil(self, ctx, *, fossil):
         try:
-            fossildata = self.findData(self.fossils, fossil)
+            fossildata = self.findData(
+                self.fossils,
+                funcs.replaceCharacters(fossil.casefold(), ["t.rex", "t. rex", "t-rex"], "trex")
+                    .replace("shark tooth", "shark-tooth")
+            )
             e = Embed(title=fossildata["name"]["name-USen"].title().replace("'S", "'s"),
                       description=fossildata["museum-phrase"])
             e.add_field(name="Sell Price", value="`{:,}`".format(fossildata['price']))
@@ -392,9 +400,11 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             found, villagerdata = False, None
             for villagerID in list(self.villagers):
                 villagerdata = self.villagers[villagerID]
+                if villager.casefold().endswith("jr"):
+                    villager += "."
                 if villagerdata["name"]["name-USen"].casefold().replace(" ", "_") \
-                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'")\
-                        .replace("etoile", "étoile").replace("renee", "renée"):
+                        == villager.casefold().replace(" ", "_").replace("‘", "'").replace("’", "'").replace("crackle", "spork") \
+                        .replace("etoile", "étoile").replace("renee", "renée").replace("jakey", "jacob"):
                     found = True
                     break
             if not found:
@@ -531,33 +541,33 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
 
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
-                      description="Shows information about an *Animal Crossing: New Horizons* houseware furniture item.")
-    async def achouseware(self, ctx, *, item):
-        try:
-            await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
-        except Exception as ex:
-            funcs.printError(ctx, ex)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
-                      usage="<item name (case sensitive)>",
-                      description="Shows information about an *Animal Crossing: New Horizons* wallmounted furniture item.")
-    async def acwallmounted(self, ctx, *, item):
-        try:
-            await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
-        except Exception as ex:
-            funcs.printError(ctx, ex)
-
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
-                      description="Shows information about an *Animal Crossing: New Horizons* miscellaneous furniture item.")
-    async def acmisc(self, ctx, *, item):
-        try:
-            await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
-        except Exception as ex:
-            funcs.printError(ctx, ex)
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
+    #                   description="Shows information about an *Animal Crossing: New Horizons* houseware furniture item.")
+    # async def achouseware(self, ctx, *, item):
+    #     try:
+    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
+    #
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
+    #                   usage="<item name (case sensitive)>",
+    #                   description="Shows information about an *Animal Crossing: New Horizons* wallmounted furniture item.")
+    # async def acwallmounted(self, ctx, *, item):
+    #     try:
+    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
+    #
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
+    #                   description="Shows information about an *Animal Crossing: New Horizons* miscellaneous furniture item.")
+    # async def acmisc(self, ctx, *, item):
+    #     try:
+    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips", "stalk", "stalks"],
