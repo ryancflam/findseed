@@ -212,16 +212,14 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                       aliases=["acnhart", "artwork", "acartwork", "acnhartwork", "aca"], usage="[artwork name]")
     async def acart(self, ctx, *, art: str=""):
         if not art:
-            e = Embed(title="Animal Crossing Artwork")
+            e = Embed(title="Animal Crossing: New Horizons Artwork")
             e.set_thumbnail(url=AC_LOGO)
-            paintings = [
-                self.art[i]['name']['name-USen'] for i in list(self.art.keys())
-                if not self.art[i]['name']['name-USen'].endswith(" statue")
-            ]
-            statues = [
-                self.art[i]['name']['name-USen'] for i in list(self.art.keys())
-                if self.art[i]['name']['name-USen'].endswith(" statue")
-            ]
+            statues, paintings = [], []
+            for i in list(self.art.keys()):
+                if self.art[i]['name']['name-USen'].endswith(" statue"):
+                    statues.append(self.art[i]['name']['name-USen'])
+                else:
+                    paintings.append(self.art[i]['name']['name-USen'])
             e.add_field(name="Paintings ({:,})".format(len(paintings)), value=", ".join(f"`{i.title()}`" for i in paintings))
             e.add_field(name="Statues ({:,})".format(len(statues)), value=", ".join(f"`{i.title()}`" for i in statues))
             e.set_footer(text=f"Use {self.client.command_prefix}acart <artwork name> for more information.")
@@ -232,7 +230,7 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                 e.add_field(name="Has Fake", value=f"`{str(artdata['hasFake'])}`")
                 e.add_field(name="Buy Price", value="`{:,}`".format(artdata['buy-price']))
                 e.add_field(name="Sell Price", value="`{:,}`".format(artdata['sell-price']))
-                e.set_image(url=artdata["image_uri"].replace("https", "http"))
+                e.set_image(url=artdata["image_uri"])
                 e.set_thumbnail(url=AC_LOGO)
                 e.set_footer(
                     text="Brought to you by Polygon.com.",
@@ -264,7 +262,7 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                 text='"{}"'.format(choice(catchphrases).replace('"', "'").replace("Walker ...", f"Walker {ctx.author.name}"))
             )
             e.set_author(name=bugdata["name"]["name-USen"].title().replace("'S", "'s"),
-                         icon_url=bugdata["icon_uri"].replace("https", "http"))
+                         icon_url=bugdata["icon_uri"])
             e.add_field(name="Location", value=f"`{bugdata['availability']['location']}`")
             e.add_field(name="Rarity", value=f"`{bugdata['availability']['rarity']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
@@ -272,7 +270,7 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value="`{:,}`".format(bugdata['price']))
             e.add_field(name="Sell Price (Flick)", value="`{:,}`".format(bugdata['price-flick']))
-            e.set_image(url=bugdata["image_uri"].replace("https", "http"))
+            e.set_image(url=bugdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -296,8 +294,7 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             except:
                 catchphrases = [fishdata["catch-phrase"]]
             e.set_footer(text='"{}"'.format(choice(catchphrases).replace('"', "'")))
-            e.set_author(name=fishdata["name"]["name-USen"].title().replace("'S", "'s"),
-                         icon_url=fishdata["icon_uri"].replace("https", "http"))
+            e.set_author(name=fishdata["name"]["name-USen"].title(), icon_url=fishdata["icon_uri"])
             e.add_field(name="Shadow",value=f"`{fishdata['shadow']}`")
             e.add_field(name="Location", value=f"`{fishdata['availability']['location']}`")
             e.add_field(name="Rarity", value=f"`{fishdata['availability']['rarity']}`")
@@ -306,7 +303,7 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value="`{:,}`".format(fishdata['price']))
             e.add_field(name="Sell Price (C.J.)", value="`{:,}`".format(fishdata['price-cj']))
-            e.set_image(url=fishdata["image_uri"].replace("https", "http"))
+            e.set_image(url=fishdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -322,11 +319,10 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                 funcs.replaceCharacters(fossil.casefold(), ["t.rex", "t. rex", "t-rex"], "trex")
                     .replace("shark tooth", "shark-tooth")
             )
-            e = Embed(title=fossildata["name"]["name-USen"].title().replace("'S", "'s"),
-                      description=fossildata["museum-phrase"])
+            e = Embed(title=fossildata["name"]["name-USen"].title(), description=fossildata["museum-phrase"])
             e.add_field(name="Sell Price", value="`{:,}`".format(fossildata['price']))
             e.add_field(name="Part Of", value=f"`{fossildata['part-of'].title()}`")
-            e.set_image(url=fossildata["image_uri"].replace("https", "http"))
+            e.set_image(url=fossildata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -347,8 +343,7 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
         else:
             try:
                 personalitydata = self.findData(self.personalities, personality)
-                e = Embed(title=personalitydata["name"],
-                          description=personalitydata["desc"])
+                e = Embed(title=personalitydata["name"], description=personalitydata["desc"])
                 e.add_field(name="Gender", value=f"`{personalitydata['gender']}`")
                 e.add_field(name="Sleep Time", value=f"`{personalitydata['sleep-time']}`")
                 i = 0
@@ -378,15 +373,14 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             time = seadata["availability"]["time"] if seadata["availability"]["time"] != "" else "All Day"
             e = Embed(description=seadata["museum-phrase"])
             e.set_footer(text='"{}"'.format(seadata["catch-phrase"]))
-            e.set_author(name=seadata["name"]["name-USen"].title().replace("'S", "'s"),
-                         icon_url=seadata["icon_uri"].replace("https", "http"))
+            e.set_author(name=seadata["name"]["name-USen"].title(), icon_url=seadata["icon_uri"])
             e.add_field(name="Shadow",value=f"`{seadata['shadow']}`")
             e.add_field(name="Speed",value=f"`{seadata['speed']}`")
             e.add_field(name="Northern Months", value=f"`{northmonths}`")
             e.add_field(name="Southern Months", value=f"`{southmonths}`")
             e.add_field(name="Time", value=f"`{time}`")
             e.add_field(name="Sell Price", value="`{:,}`".format(seadata["price"]))
-            e.set_image(url=seadata["image_uri"].replace("https", "http"))
+            e.set_image(url=seadata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -410,8 +404,8 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             if not found:
                 return await ctx.reply(embed=funcs.errorEmbed(None, "Not found, please check your spelling."))
             e = Embed(description='"' + villagerdata["saying"] + '"')
-            e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"].replace("https", "http"))
-            e.set_image(url=villagerdata["image_uri"].replace("https", "http"))
+            e.set_author(name=villagerdata["name"]["name-USen"].title(), icon_url=villagerdata["icon_uri"])
+            e.set_image(url=villagerdata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
             e.add_field(
                 name="Personality",
