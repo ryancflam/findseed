@@ -48,6 +48,23 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
         return newlist
 
     @staticmethod
+    def critterAvailability(data: dict):
+        northmonths = data["availability"]["month-northern"] if data["availability"]["month-northern"] != "" else "All Year"
+        southmonths = data["availability"]["month-southern"] if data["availability"]["month-southern"] != "" else "All Year"
+        time = data["availability"]["time"] if data["availability"]["time"] != "" else "All Day"
+        return northmonths, southmonths, time
+
+    @staticmethod
+    def getCritterCatchPhrase(data: dict):
+        try:
+            catchphrases = data["alt-catch-phrase"]
+            if data["catch-phrase"] not in catchphrases:
+                catchphrases.append(data["catch-phrase"])
+        except:
+            catchphrases = [data["catch-phrase"]]
+        return choice(catchphrases).replace('"', "'")
+
+    @staticmethod
     def isArrivingOrLeaving(monthsstr, month, mode):
         args = monthsstr.split(" & ")
         for i in range(len(args)):
@@ -192,6 +209,34 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
     #                   f"(`{pref}achouseware`/`{pref}acmisc`/`{pref}acwallmounted`)"
     #         )
     #     return e
+    #
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
+    #                   description="Shows information about an *Animal Crossing: New Horizons* houseware furniture item.")
+    # async def achouseware(self, ctx, *, item):
+    #     try:
+    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
+    #
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
+    #                   usage="<item name (case sensitive)>",
+    #                   description="Shows information about an *Animal Crossing: New Horizons* wallmounted furniture item.")
+    # async def acwallmounted(self, ctx, *, item):
+    #     try:
+    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
+    #
+    # @commands.cooldown(1, 3, commands.BucketType.user)
+    # @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
+    #                   description="Shows information about an *Animal Crossing: New Horizons* miscellaneous furniture item.")
+    # async def acmisc(self, ctx, *, item):
+    #     try:
+    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="acnew", description="Returns a list of critters arriving in a " +
@@ -247,19 +292,10 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
     async def acbug(self, ctx, *, bug):
         try:
             bugdata = self.findData(self.bugs, bug)
-            northmonths = bugdata["availability"]["month-northern"] if bugdata["availability"]["month-northern"] != "" \
-                          else "All Year"
-            southmonths = bugdata["availability"]["month-southern"] if bugdata["availability"]["month-southern"] != "" \
-                          else "All Year"
-            time = bugdata["availability"]["time"] if bugdata["availability"]["time"] != "" else "All Day"
+            northmonths, southmonths, time = self.critterAvailability(bugdata)
             e = Embed(description=bugdata["museum-phrase"])
-            try:
-                catchphrases = bugdata["alt-catch-phrase"]
-                catchphrases.append(bugdata["catch-phrase"])
-            except:
-                catchphrases = [bugdata["catch-phrase"]]
             e.set_footer(
-                text='"{}"'.format(choice(catchphrases).replace('"', "'").replace("Walker ...", f"Walker {ctx.author.name}"))
+                text='"{}"'.format(self.getCritterCatchPhrase(bugdata).replace("Walker ...", f"Walker {ctx.author.name}"))
             )
             e.set_author(name=bugdata["name"]["name-USen"].title().replace("'S", "'s"),
                          icon_url=bugdata["icon_uri"])
@@ -282,18 +318,9 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
     async def acfish(self, ctx, *, fish):
         try:
             fishdata = self.findData(self.fish, fish)
-            northmonths = fishdata["availability"]["month-northern"] if fishdata["availability"]["month-northern"] != "" \
-                          else "All Year"
-            southmonths = fishdata["availability"]["month-southern"] if fishdata["availability"]["month-southern"] != "" \
-                          else "All Year"
-            time = fishdata["availability"]["time"] if fishdata["availability"]["time"] != "" else "All Day"
+            northmonths, southmonths, time = self.critterAvailability(fishdata)
             e = Embed(description=fishdata["museum-phrase"])
-            try:
-                catchphrases = fishdata["alt-catch-phrase"]
-                catchphrases.append(fishdata["catch-phrase"])
-            except:
-                catchphrases = [fishdata["catch-phrase"]]
-            e.set_footer(text='"{}"'.format(choice(catchphrases).replace('"', "'")))
+            e.set_footer(text='"{}"'.format(self.getCritterCatchPhrase(fishdata)))
             e.set_author(name=fishdata["name"]["name-USen"].title(), icon_url=fishdata["icon_uri"])
             e.add_field(name="Shadow",value=f"`{fishdata['shadow']}`")
             e.add_field(name="Location", value=f"`{fishdata['availability']['location']}`")
@@ -304,6 +331,28 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
             e.add_field(name="Sell Price", value="`{:,}`".format(fishdata['price']))
             e.add_field(name="Sell Price (C.J.)", value="`{:,}`".format(fishdata['price-cj']))
             e.set_image(url=fishdata["image_uri"])
+            e.set_thumbnail(url=AC_LOGO)
+        except Exception as ex:
+            e = funcs.errorEmbed(None, str(ex))
+        await ctx.reply(embed=e)
+
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.command(name="acsea", description="Shows information about an *Animal Crossing: New Horizons* sea creature.",
+                      aliases=["acnhsea", "acsc", "acnhsc", "acs"], usage="<sea creature name>")
+    async def acsea(self, ctx, *, sea):
+        try:
+            seadata = self.findData(self.sea, sea)
+            northmonths, southmonths, time = self.critterAvailability(seadata)
+            e = Embed(description=seadata["museum-phrase"])
+            e.set_footer(text='"{}"'.format(self.getCritterCatchPhrase(seadata)))
+            e.set_author(name=seadata["name"]["name-USen"].title(), icon_url=seadata["icon_uri"])
+            e.add_field(name="Shadow",value=f"`{seadata['shadow']}`")
+            e.add_field(name="Speed",value=f"`{seadata['speed']}`")
+            e.add_field(name="Northern Months", value=f"`{northmonths}`")
+            e.add_field(name="Southern Months", value=f"`{southmonths}`")
+            e.add_field(name="Time", value=f"`{time}`")
+            e.add_field(name="Sell Price", value="`{:,}`".format(seadata["price"]))
+            e.set_image(url=seadata["image_uri"])
             e.set_thumbnail(url=AC_LOGO)
         except Exception as ex:
             e = funcs.errorEmbed(None, str(ex))
@@ -358,32 +407,6 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
                 e.set_thumbnail(url=AC_LOGO)
             except Exception as ex:
                 e = funcs.errorEmbed(None, str(ex))
-        await ctx.reply(embed=e)
-
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="acsea", description="Shows information about an *Animal Crossing: New Horizons* sea creature.",
-                      aliases=["acnhsea", "acsc", "acnhsc", "acs"], usage="<sea creature name>")
-    async def acsea(self, ctx, *, sea):
-        try:
-            seadata = self.findData(self.sea, sea)
-            northmonths = seadata["availability"]["month-northern"] if seadata["availability"]["month-northern"] != "" \
-                          else "All Year"
-            southmonths = seadata["availability"]["month-southern"] if seadata["availability"]["month-southern"] != "" \
-                          else "All Year"
-            time = seadata["availability"]["time"] if seadata["availability"]["time"] != "" else "All Day"
-            e = Embed(description=seadata["museum-phrase"])
-            e.set_footer(text='"{}"'.format(seadata["catch-phrase"]))
-            e.set_author(name=seadata["name"]["name-USen"].title(), icon_url=seadata["icon_uri"])
-            e.add_field(name="Shadow",value=f"`{seadata['shadow']}`")
-            e.add_field(name="Speed",value=f"`{seadata['speed']}`")
-            e.add_field(name="Northern Months", value=f"`{northmonths}`")
-            e.add_field(name="Southern Months", value=f"`{southmonths}`")
-            e.add_field(name="Time", value=f"`{time}`")
-            e.add_field(name="Sell Price", value="`{:,}`".format(seadata["price"]))
-            e.set_image(url=seadata["image_uri"])
-            e.set_thumbnail(url=AC_LOGO)
-        except Exception as ex:
-            e = funcs.errorEmbed(None, str(ex))
         await ctx.reply(embed=e)
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -534,34 +557,6 @@ class AnimalCrossing(BaseCog, name="Animal Crossing", description="Commands rela
         except Exception:
             e = funcs.errorEmbed(None, "Invalid input.")
         await ctx.reply(embed=e)
-
-    # @commands.cooldown(1, 3, commands.BucketType.user)
-    # @commands.command(name="achouseware", aliases=["houseware", "acnhhouseware", "ach"], usage="<item name (case sensitive)>",
-    #                   description="Shows information about an *Animal Crossing: New Horizons* houseware furniture item.")
-    # async def achouseware(self, ctx, *, item):
-    #     try:
-    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "houseware", item))
-    #     except Exception as ex:
-    #         funcs.printError(ctx, ex)
-    #
-    # @commands.cooldown(1, 3, commands.BucketType.user)
-    # @commands.command(name="acwallmounted", aliases=["wallmounted", "acnhwallmounted", "acw"],
-    #                   usage="<item name (case sensitive)>",
-    #                   description="Shows information about an *Animal Crossing: New Horizons* wallmounted furniture item.")
-    # async def acwallmounted(self, ctx, *, item):
-    #     try:
-    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "wallmounted", item))
-    #     except Exception as ex:
-    #         funcs.printError(ctx, ex)
-    #
-    # @commands.cooldown(1, 3, commands.BucketType.user)
-    # @commands.command(name="acmisc", aliases=["acnhmisc", "acm"], usage="<item name (case sensitive)>",
-    #                   description="Shows information about an *Animal Crossing: New Horizons* miscellaneous furniture item.")
-    # async def acmisc(self, ctx, *, item):
-    #     try:
-    #         await ctx.reply(embed=await self.furnitureEmbed(ctx, "misc", item))
-    #     except Exception as ex:
-    #         funcs.printError(ctx, ex)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="acturnips", aliases=["stalkmarket", "turnips", "turnip", "acturnip", "acnhturnips", "stalk", "stalks"],
