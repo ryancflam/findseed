@@ -934,7 +934,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="genimg", usage="<input>",
+    @commands.command(name="genimg", usage="<input> [\"-hq\" or \"-hd\" for high quality]",
                       description="Generates images based on your input. Warning: May generate inappropriate images.",
                       aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
     async def genimg(self, ctx, *, text=""):
@@ -942,9 +942,13 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
         try:
             if text:
                 await ctx.send("Processing text. Please wait...")
+                if text.casefold().endswith("-hq") or text.casefold().endswith("-hd"):
+                    data = {"text": text, "image_generator_version": "hd"}
+                else:
+                    data = {"text": text}
             res = await funcs.postRequest(
                 "https://api.deepai.org/api/text2img",
-                data={"text": text}, headers={"api-key": config.deepAIKey}
+                data=data, headers={"api-key": config.deepAIKey}
             )
             imgname = str(time()) + ".png"
             img = await funcs.getImageFile(res.json()["output_url"], name=imgname)
