@@ -915,19 +915,23 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
     @commands.command(name="gentext", description="Generates text based on your input.",
                       aliases=["tg", "textgen", "gt", "chatgpt", "gpt", "chadgpt"], usage="<input>")
     async def gentext(self, ctx, *, text=""):
+        empty = False
         try:
             if text:
                 await ctx.send("Processing text. Please wait...")
+            else:
+                empty = True
+                raise Exception("Empty input.")
             res = await funcs.postRequest(
                 "https://api.deepai.org/api/text-generator",
                 data={"text": text}, headers={"api-key": config.deepAIKey}
             )
-            data = res.json()
-            e = Embed(title="Text Generation", description=funcs.formatting(data["output"]))
+            e = Embed(title="Text Generation", description=funcs.formatting(res.json()["output"]))
             delbutton = True
         except Exception as ex:
-            funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Invalid input or server error.")
+            if not empty:
+                funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, str(ex))
             delbutton = False
         m = await ctx.reply(embed=e)
         if delbutton:
@@ -939,13 +943,20 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                       aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
     async def genimg(self, ctx, *, text=""):
         img = None
+        empty = False
         try:
             if text:
-                await ctx.send("Processing text. Please wait...")
                 if text.casefold().endswith("-hq") or text.casefold().endswith("-hd"):
+                    text = text[:-3]
                     data = {"text": text, "image_generator_version": "hd"}
+                    hq = True
                 else:
                     data = {"text": text}
+                    hq = False
+                await ctx.send(f"Generating {'HQ ' if hq else ''}image. Please wait...")
+            else:
+                empty = True
+                raise Exception("Empty input.")
             res = await funcs.postRequest(
                 "https://api.deepai.org/api/text2img",
                 data=data, headers={"api-key": config.deepAIKey}
@@ -955,8 +966,9 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             e = Embed(title="Image Generation").set_image(url="attachment://" + imgname)
             delbutton = True
         except Exception as ex:
-            funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Invalid input or server error.")
+            if not empty:
+                funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, str(ex))
             delbutton = False
         m = await ctx.reply(embed=e, file=img)
         if delbutton:
