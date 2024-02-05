@@ -137,6 +137,27 @@ def yearToChineseZodiac(year):
     return "Rabbit (兔)"
 
 
+def itemSeparator(items: str, unique=False):
+    while items.startswith(";"):
+        items = items[1:]
+    while items.endswith(";"):
+        items = items[:-1]
+    while "  " in items:
+        items = items.replace("  ", " ")
+    while "; ;" in items:
+        items = items.replace("; ;", ";")
+    while ";;" in items:
+        items = items.replace(";;", ";")
+    itemslist = items.split(";")
+    if "" in itemslist:
+        raise Exception("Invalid input. Please separate the items with `;`.")
+    while " " in itemslist:
+        itemslist.remove(" ")
+    if unique:
+        itemslist = set(itemslist)
+    return sorted([i.strip() for i in list(itemslist)])
+
+
 def githubRepoPic(repo):
     return f"https://opengraph.githubassets.com/{randomHex(64)}/{repo}"
 

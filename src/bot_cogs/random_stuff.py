@@ -800,29 +800,14 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                       aliases=["shuffle", "list", "choose", "choice"], description="Picks a random item from a given list.")
     async def randomchoice(self, ctx, *, items):
         try:
-            while items.startswith(";"):
-                items = items[1:]
-            while items.endswith(";"):
-                items = items[:-1]
-            while "  " in items:
-                items = items.replace("  ", " ")
-            while "; ;" in items:
-                items = items.replace("; ;", ";")
-            while ";;" in items:
-                items = items.replace(";;", ";")
-            itemslist = items.split(";")
-            if "" in itemslist:
-                raise Exception("Invalid input. Please separate the items with `;`.")
-            while " " in itemslist:
-                itemslist.remove(" ")
-            itemslist = [i.strip() for i in itemslist]
+            itemslist = funcs.itemSeparator(items)
             if ctx.author == (await self.client.application_info()).owner and self.riggedChoice in itemslist:
                 item = self.riggedChoice
             else:
                 item = choice(itemslist)
             e = Embed(title=f"{self.client.user.name} Chooses...",
                       description=f"Requested by: {ctx.author.mention}\n{funcs.formatting(item)}")
-            e.add_field(name="Items ({:,})".format(len(itemslist)), value=", ".join(f"`{i}`" for i in sorted(itemslist)))
+            e.add_field(name="Items ({:,})".format(len(itemslist)), value=", ".join(f"`{i}`" for i in itemslist))
         except Exception as ex:
             funcs.printError(ctx, ex)
             e = funcs.errorEmbed(None, str(ex))

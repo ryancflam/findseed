@@ -188,6 +188,63 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0]
             ))
 
+    @commands.cooldown(1, 2, commands.BucketType.user)
+    @commands.command(name="scorekeeper", usage="<items separated with ;>", aliases=["score", "sk", "scores", "points"],
+                      description="Keeps track of the scores of a maximum of 20 specified items.")
+    async def scorekeeper(self, ctx, *, items):
+        try:
+            itemslist = funcs.itemSeparator(items, unique=True)[:20]
+            itemsdict, scores, final = {}, {}, {}
+            for i, j in enumerate(itemslist):
+                itemsdict[i + 1] = j
+                scores[i + 1] = 0
+            while True:
+                try:
+                    await ctx.send(
+                        f"**Score Keeper** (Requested by {ctx.author.mention})\n\nItems:\n" +
+                        "\n".join(f"{i}. {itemsdict[i]}: {funcs.removeDotZero(scores[i])}" for i in list(scores.keys())) +
+                        "\n\nTo score a point for an item, use the following syntax: " +
+                        "`<item number> <points to add or subtract>`\n" +
+                        f"Example message to add 2 points to the item \"{itemslist[0]}\": `1 2`\n" +
+                        f"Example message to subtract 2 points from the item \"{itemslist[0]}\": `1 -2`\n" +
+                        "Enter `!done` to finish. **15 minutes of inactivity will cancel the command!**"
+                    )
+                    entry = await self.client.wait_for(
+                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=900
+                    )
+                except TimeoutError:
+                    break
+                if entry.content.casefold() == "!done":
+                    break
+                try:
+                    content = entry.content.split(" ", 1)
+                    scores[int(content[0].replace(".", ""))] += float(content[1].replace(" ", "").replace(",", ""))
+                except KeyError:
+                    await ctx.send(embed=funcs.errorEmbed(None, "Item number not found."))
+                except:
+                    await ctx.send(
+                        embed=funcs.errorEmbed(
+                            None, "Invalid syntax. Use: `<item number> <points to add or subtract>`"
+                        )
+                    )
+            for _, (item, score) in enumerate(scores.items()):
+                if score not in final.keys():
+                    final[score] = [item]
+                else:
+                    final[score].append(item)
+            final = dict(sorted(final.items(), reverse=True))
+            finalmsg = ""
+            rank, counter = 1, 1
+            for score in list(final.keys()):
+                rank = counter
+                for item in final[score]:
+                    finalmsg += f"**#{rank}** - {itemsdict[item]}: {funcs.removeDotZero(score)}\n"
+                    counter += 1
+            await ctx.send(f"**Final Scores** (Requested by {ctx.author.mention})\n\n{finalmsg}")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))
+
     async def gatherLabelsAndValues(self, ctx):
         labels, values = [], []
         while len(labels) < 25:
@@ -1807,22 +1864,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     items = items[:-1]
             else:
                 boxpoints = False
-            while items.startswith(";"):
-                items = items[1:]
-            while items.endswith(";"):
-                items = items[:-1]
-            while "  " in items:
-                items = items.replace("  ", " ")
-            while "; ;" in items:
-                items = items.replace("; ;", ";")
-            while ";;" in items:
-                items = items.replace(";;", ";")
-            itemslist = items.split(";")
-            if "" in itemslist:
-                raise Exception("Invalid input. Please separate the items with `;`.")
-            while " " in itemslist:
-                itemslist.remove(" ")
-            data = array(list(map(float, [i.strip() for i in itemslist])))
+            data = array(list(map(float, funcs.itemSeparator(items))))
             data.sort()
             halflist = int(len(data) // 2)
             q3 = median(data[-halflist:])
