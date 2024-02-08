@@ -54,12 +54,12 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
               f'`"I\'m <input>"` - "Hi <input>, I\'m {self.client.user.name}!"\n' + \
               '`"netvigator" in input` - "notvogotor"\n' + \
               '`"gg"` - "pp"\n' + \
-              '`"h"` - Responds with a gif (1 in 10), or "h"\n' + \
+              '`"h"` - Responds with an image (1 in 10), or "h"\n' + \
               '`"f"` - Responds with an image (1 in 10), or "f"\n' + \
-              '`"p"` - Responds with a random image/gif (1 in 10), or "p"\n' + \
+              '`"p"` - Responds with an image (1 in 10), or "p"\n' + \
               '`"staying alive" in input` - Responds with a gif\n' + \
               '`"hkeaa" in input` - Responds with an image\n' + \
-              '`"hmmm (or with more m\'s)"` - Responds with a random gif\n' + \
+              '`"hmmm (or with more m\'s)"` - Responds with a gif\n' + \
               '`"gordon ramsay" in input` - Responds with a gif'
         await ctx.reply(
             f"{msg}\n\nUser inputs are case-insensitive. Use `{self.client.command_prefix}umenable` to enable unprompted messages."
@@ -129,11 +129,19 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                     await message.channel.send("pp")
                 elif lowercase == "h":
                     if funcs.oneIn(10):
-                        await funcs.sendImage(
-                            message.channel,
-                            "https://cdn.discordapp.com/attachments/665656727332585482/667138135091838977/4a1862c.gif",
-                            name="h.gif"
-                        )
+                        rdm = randint(1, 3)
+                        if rdm == 1:
+                            await funcs.sendImage(
+                                message.channel,
+                                "https://media.discordapp.net/attachments/928912635011932201/1205087424514891826/DTiE9MtU8AAULcs.jpeg"
+                            )
+                        elif rdm == 2:
+                            await funcs.sendImage(
+                                message.channel,
+                                "https://media.discordapp.net/attachments/928912635011932201/1205093293986291763/83a.png"
+                            )
+                        else:
+                            await message.channel.send("https://tenor.com/view/letter-h-gif-9063752")
                     else:
                         await message.channel.send("h")
                 elif lowercase == "f":

@@ -188,8 +188,9 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 str(datetime.utcfromtimestamp(reminder["data"]["time"])).split(".")[0]
             ))
 
-    @commands.cooldown(1, 2, commands.BucketType.user)
-    @commands.command(name="scorekeeper", usage="<items separated with ;>", aliases=["score", "sk", "scores", "points"],
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="scorekeeper", usage="<items separated with ;>",
+                      aliases=["score", "sk", "scores", "points", "scorekeep", "keepscore"],
                       description="Keeps track of the scores of a maximum of 20 specified items.")
     async def scorekeeper(self, ctx, *, items):
         try:
