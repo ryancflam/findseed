@@ -113,7 +113,31 @@ class BotInstance(commands.AutoShardedBot):
             if ctx.valid and not ctx.author.bot:
                 if not funcs.commandIsEE(ctx.command):
                     await message.channel.trigger_typing()
+                ref = ctx.message.reference
+                if ref and " " not in message.content.strip():
+                    ref.cached_message.author = message.author
+                    if ref.cached_message.attachments:
+                        try:
+                            return await self.__processCommandRef(message, ref, ref.cached_message.attachments[0].url)
+                        except:
+                            pass
+                    if ref.cached_message.embeds:
+                        try:
+                            return await self.__processCommandRef(message, ref, ref.cached_message.embeds[0].thumbnail.url)
+                        except:
+                            try:
+                                return await self.__processCommandRef(message, ref, ref.cached_message.embeds[0].image.url)
+                            except:
+                                pass
+                    if ref.cached_message.content:
+                        return await self.__processCommandRef(message, ref, ref.cached_message.content)
                 await self.process_commands(message)
+
+    async def __processCommandRef(self, message, ref, content):
+        while content.startswith(self.command_prefix) and " " in content:
+            content = content.split(" ", 1)[1]
+        ref.cached_message.content = message.content + " " + content
+        await self.process_commands(ref.cached_message)
 
     @tasks.loop(hours=24.0)
     async def __getTickers(self):

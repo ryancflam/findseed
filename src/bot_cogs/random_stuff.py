@@ -912,7 +912,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                 data={"text": text}, headers={"api-key": config.deepAIKey}
             )
             resjson = res.json()
-            e = Embed(title="Text Generation", description=funcs.formatting(resjson["output"]))
+            e = Embed(title="Text Generation", description=funcs.formatting(resjson["output"].replace("```", "")))
             delbutton = True
         except Exception as ex:
             if not empty:
@@ -928,8 +928,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                       description="Generates images based on your input. Warning: May generate inappropriate images.",
                       aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
     async def genimg(self, ctx, *, text=""):
-        img = None
-        empty = False
+        empty, resjson, img = False, None, None
         try:
             if text:
                 if text.casefold().endswith("-hq") or text.casefold().endswith("-hd"):
@@ -947,18 +946,48 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                 "https://api.deepai.org/api/text2img",
                 data=data, headers={"api-key": config.deepAIKey}
             )
+            resjson = res.json()
             imgname = str(time()) + ".png"
-            img = await funcs.getImageFile(res.json()["output_url"], name=imgname)
+            img = await funcs.getImageFile(resjson["output_url"], name=imgname)
             e = Embed(title="Image Generation").set_image(url="attachment://" + imgname)
             delbutton = True
         except Exception as ex:
             if not empty:
                 funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, str(ex))
+            e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
             delbutton = False
         m = await ctx.reply(embed=e, file=img)
         if delbutton:
             await m.edit(view=DeleteButton(ctx, self.client, m))
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="colouriser", description="Colourises a black-and-white image.", usage="<image URL OR image attachment>",
+                      aliases=["colourise", "coloriser", "colorise", "colourizer", "colourize", "colorizer", "colorize"])
+    async def colouriser(self, ctx, url=None):
+        resjson, img = None, None
+        if not ctx.message.attachments:
+            await sleep(3)
+        try:
+            if ctx.message.attachments:
+                imglink = ctx.message.attachments[0].url
+            elif url:
+                imglink = url
+            else:
+                raise Exception("No attachment or URL detected, please try again.")
+            await ctx.send("Reading image. Please wait... " +
+                           "(URL embeds take longer to process than image attachments)")
+            res = await funcs.postRequest(
+                "https://api.deepai.org/api/colorizer",
+                data={"image": imglink}, headers={"api-key": config.deepAIKey}
+            )
+            resjson = res.json()
+            imgname = str(time()) + ".png"
+            img = await funcs.getImageFile(resjson["output_url"], name=imgname)
+            e = Embed(title="Colouriser").set_image(url="attachment://" + imgname)
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
+        await ctx.reply(embed=e, file=img)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="genmeme", description="Generates a meme with top text and bottom text.",

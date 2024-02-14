@@ -234,9 +234,15 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     break
                 try:
                     content = entry.content.split(" ", 1)
-                    scores[int(content[0].replace(".", ""))] += float(content[1].replace(" ", "").replace(",", ""))
+                    points = float(content[1].replace(" ", "").replace(",", ""))
+                    if -9999999999 <= (scores[int(content[0].replace(".", ""))] + points) <= 9999999999:
+                        scores[int(content[0].replace(".", ""))] += points
+                    else:
+                        raise ValueError
                 except KeyError:
                     await ctx.send(embed=funcs.errorEmbed(None, "Item number not found."))
+                except ValueError:
+                    await ctx.send(embed=funcs.errorEmbed(None, "Out of bounds!"))
                 except:
                     await ctx.send(
                         embed=funcs.errorEmbed(
@@ -1054,14 +1060,17 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name="qrread", description="Reads a QR code.", aliases=["qrscan", "qrr", "readqr"],
                       usage="<image URL OR image attachment>")
-    async def qrread(self, ctx):
+    async def qrread(self, ctx, url=None):
         await ctx.send("Reading image. Please wait... " +
                        "(URL embeds take longer to process than image attachments)")
         if not ctx.message.attachments:
             await sleep(3)
-        if ctx.message.attachments or ctx.message.embeds:
+        if ctx.message.attachments or url:
             try:
-                qrlink = ctx.message.attachments[0].url if ctx.message.attachments else ctx.message.embeds[0].thumbnail.url
+                try:
+                    qrlink = ctx.message.attachments[0].url
+                except:
+                    qrlink = url
                 qr = await funcs.decodeQR(qrlink)
                 e = Embed(title="QR Code Message", description=funcs.formatting(qr)) if qr \
                     else funcs.errorEmbed(None, "Cannot detect QR code. Maybe try making the image clearer?")
