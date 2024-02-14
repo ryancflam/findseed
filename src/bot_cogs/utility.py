@@ -36,6 +36,7 @@ HCF_LIMIT = 1000000
 class Utility(BaseCog, name="Utility", description="Some useful commands for getting data or calculating things."):
     def __init__(self, botInstance, *args, **kwargs):
         super().__init__(botInstance, *args, **kwargs)
+        self.scorekeeperChannels = []
         self.reminderIDsToDelete = set()
         self.remindersToAdd = []
         self.client.loop.create_task(self.__generateFiles())
@@ -43,6 +44,17 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     async def __generateFiles(self):
         await funcs.generateJson("reminders", {"list": []})
         self.reminderLoop.start()
+
+    async def checkScorekeeperInChannel(self, ctx):
+        if ctx.channel.id in self.scorekeeperChannels:
+            e = funcs.errorEmbed(
+                None,
+                f"A scorekeeper is already in progress in this channel (`{ctx.channel.id}`), " +
+                "please be patient or use another channel!"
+            )
+            await ctx.reply(embed=e)
+            return True
+        return False
 
     @staticmethod
     def delDigitFromLyrics(full):
@@ -193,6 +205,9 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                       aliases=["score", "sk", "scores", "points", "scorekeep", "keepscore"],
                       description="Keeps track of the scores of a maximum of 20 specified items.")
     async def scorekeeper(self, ctx, *, items):
+        if await self.checkScorekeeperInChannel(ctx):
+            return
+        self.scorekeeperChannels.append(ctx.channel.id)
         try:
             itemslist = funcs.itemSeparator(items, unique=True)[:20]
             itemsdict, scores, final = {}, {}, {}
@@ -242,6 +257,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     finalmsg += f"**#{rank}** - {itemsdict[item]}: {funcs.removeDotZero(score)}\n"
                     counter += 1
             await ctx.send(f"**Final Scores** (Requested by {ctx.author.mention})\n\n{finalmsg}")
+            self.scorekeeperChannels.remove(ctx.channel.id)
         except Exception as ex:
             funcs.printError(ctx, ex)
             await ctx.reply(embed=funcs.errorEmbed(None, str(ex)))

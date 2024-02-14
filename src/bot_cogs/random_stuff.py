@@ -900,7 +900,7 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
     @commands.command(name="gentext", description="Generates text based on your input.",
                       aliases=["tg", "textgen", "gt", "chatgpt", "gpt", "chadgpt"], usage="<input>")
     async def gentext(self, ctx, *, text=""):
-        empty = False
+        empty, resjson = False, None
         try:
             if text:
                 await ctx.send("Processing text. Please wait...")
@@ -911,12 +911,13 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
                 "https://api.deepai.org/api/text-generator",
                 data={"text": text}, headers={"api-key": config.deepAIKey}
             )
-            e = Embed(title="Text Generation", description=funcs.formatting(res.json()["output"]))
+            resjson = res.json()
+            e = Embed(title="Text Generation", description=funcs.formatting(resjson["output"]))
             delbutton = True
         except Exception as ex:
             if not empty:
                 funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, str(ex))
+            e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
             delbutton = False
         m = await ctx.reply(embed=e)
         if delbutton:
