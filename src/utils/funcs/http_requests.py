@@ -9,7 +9,7 @@ from httpx import AsyncClient
 async def getTickers():
     while True:
         try:
-            tickers = {}
+            tickers = {"btc": "bitcoin", "eth": "ethereum"}
             print("Getting CoinGecko tickers...")
             res = await getRequest("https://api.coingecko.com/api/v3/coins/list")
             for coin in res.json():
