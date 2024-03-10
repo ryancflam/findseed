@@ -113,11 +113,22 @@ async def invokeCommand(client, command: str, channelID: int, messageID: int, *a
 
 
 async def sendImage(ctx, url: str, name: str="image.png", message=None):
+    message = "" if not message else message
+    if url.casefold().startswith("https://cdn.discordapp.com") or url.casefold().startswith("https://media.discordapp.net"):
+        discordURL = True
+    else:
+        discordURL = False
     try:
-        await ctx.reply(message, file=(await http_requests.getImageFile(url, name=name)))
+        if discordURL:
+            await ctx.reply(message + " " + url)
+        else:
+            await ctx.reply(message, file=(await http_requests.getImageFile(url, name=name)))
     except:
         try:
-            await ctx.send(message, file=(await http_requests.getImageFile(url, name=name)))
+            if discordURL:
+                await ctx.send(message + " " + url)
+            else:
+                await ctx.send(message, file=(await http_requests.getImageFile(url, name=name)))
         except Exception as ex:
             bot_utils.printError(ctx, ex)
 

@@ -129,16 +129,18 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                     await message.channel.send("pp")
                 elif lowercase == "h":
                     if funcs.oneIn(10):
-                        rdm = randint(1, 3)
+                        rdm = randint(1, 4)
                         if rdm == 1:
-                            await funcs.sendImage(
-                                message.channel,
+                            await message.channel.send(
                                 "https://media.discordapp.net/attachments/928912635011932201/1205087424514891826/DTiE9MtU8AAULcs.jpeg"
                             )
                         elif rdm == 2:
-                            await funcs.sendImage(
-                                message.channel,
+                            await message.channel.send(
                                 "https://media.discordapp.net/attachments/928912635011932201/1205093293986291763/83a.png"
+                            )
+                        elif rdm == 3:
+                            await message.channel.send(
+                                "https://cdn.discordapp.com/attachments/1129707134632857680/1213809668367843398/h.gif"
                             )
                         else:
                             await message.channel.send("https://tenor.com/view/letter-h-gif-9063752")
@@ -146,8 +148,7 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                         await message.channel.send("h")
                 elif lowercase == "f":
                     if funcs.oneIn(10):
-                        await funcs.sendImage(
-                            message.channel,
+                        await message.channel.send(
                             "https://cdn.discordapp.com/attachments/663264341126152223/842785581602701312/assets_f.jpg"
                         )
                     else:
@@ -156,8 +157,7 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                     if funcs.oneIn(10):
                         rdm = randint(1, 3)
                         if rdm == 1:
-                            await funcs.sendImage(
-                                message.channel,
+                            await message.channel.send(
                                 "https://cdn.discordapp.com/attachments/926862383660535898/1020988012768792606/IMG_1344.jpg"
                             )
                         elif rdm == 2:
@@ -171,14 +171,13 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                 elif "staying alive" in lowercase:
                     await message.channel.send("https://tenor.com/view/stayin-alive-staying-alive-bee-gees-gif-14315934")
                 elif "hkeaa" in lowercase:
-                    await funcs.sendImage(
-                        message.channel,
+                    await message.channel.send(
                         "https://cdn.discordapp.com/attachments/659771291858894849/663420485438275594/HKEAA_DENIED.png"
                     )
                 elif lowercase.startswith("hmmm"):
                     if all(m in "m" for m in lowercase.split("hmm", 1)[1].replace(" ", "")):
-                        await funcs.sendImage(
-                            message.channel, choice(
+                        await message.channel.send(
+                            choice(
                                 [
                                     "https://media.giphy.com/media/8lQyyys3SGBoUUxrUp/giphy.gif",
                                     "https://i.redd.it/qz6eknd73qvy.gif",
@@ -187,7 +186,7 @@ class UnpromptedMessages(BaseCog, name="Unprompted Messages", command_attrs=dict
                                     "https://i.imgur.com/o7EsvoS.gif",
                                     "https://i.imgur.com/8DxmZY6.gif"
                                 ]
-                            ), name="hmmm.gif"
+                            )
                         )
 
 
