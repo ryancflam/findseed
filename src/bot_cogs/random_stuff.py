@@ -896,32 +896,32 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
             res += char + "".join(glitch)
         await ctx.reply(res[:2000])
 
-    @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.command(name="gentext", description="Generates text based on your input.",
-                      aliases=["tg", "textgen", "gt", "chatgpt", "gpt", "chadgpt"], usage="<input>")
-    async def gentext(self, ctx, *, text=""):
-        empty, resjson = False, None
-        try:
-            if text:
-                await ctx.send("Processing text. Please wait...")
-            else:
-                empty = True
-                raise Exception("Empty input.")
-            res = await funcs.postRequest(
-                "https://api.deepai.org/api/text-generator",
-                data={"text": text}, headers={"api-key": config.deepAIKey}
-            )
-            resjson = res.json()
-            e = Embed(title="Text Generation", description=funcs.formatting(resjson["output"].replace("```", "")))
-            delbutton = True
-        except Exception as ex:
-            if not empty:
-                funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
-            delbutton = False
-        m = await ctx.reply(embed=e)
-        if delbutton:
-            await m.edit(view=DeleteButton(ctx, self.client, m))
+    # @commands.cooldown(1, 20, commands.BucketType.user)
+    # @commands.command(name="gentext", description="Generates text based on your input.",
+    #                   aliases=["tg", "textgen", "gt", "chatgpt", "gpt", "chadgpt"], usage="<input>")
+    # async def gentext(self, ctx, *, text=""):
+    #     empty, resjson = False, None
+    #     try:
+    #         if text:
+    #             await ctx.send("Processing text. Please wait...")
+    #         else:
+    #             empty = True
+    #             raise Exception("Empty input.")
+    #         res = await funcs.postRequest(
+    #             "https://api.deepai.org/api/text-generator",
+    #             data={"text": text}, headers={"api-key": config.deepAIKey}
+    #         )
+    #         resjson = res.json()
+    #         e = Embed(title="Text Generation", description=funcs.formatting(resjson["output"].replace("```", "")))
+    #         delbutton = True
+    #     except Exception as ex:
+    #         if not empty:
+    #             funcs.printError(ctx, ex)
+    #         e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
+    #         delbutton = False
+    #     m = await ctx.reply(embed=e)
+    #     if delbutton:
+    #         await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name="genimg", usage="<input> [\"-hq\" or \"-hd\" for high quality]",
