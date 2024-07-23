@@ -2278,6 +2278,17 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await ctx.send("Blurring faces. Please wait...")
         await funcs.useImageFunc(ctx, self.blurFace)
 
+    @staticmethod
+    def getMilliseconds(ms):
+        milliseconds = 0
+        ms_total = "100"
+        for char in str(ms):
+            milliseconds += int(char) * int(ms_total)
+            ms_total = ms_total[:-1]
+            if not ms_total:
+                break
+        return milliseconds
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="addtime", description="Adds up the total time provided.",
                       aliases=["timeadd", "totaltime", "timetotal"], usage="<items separated with ;>")
@@ -2298,17 +2309,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                             h1, m, s = i.split(":")
                         if "." in s:
                             s, ms = s.split(".")
-                            ms_total = "100"
-                            for char in ms:
-                                milliseconds += int(char) * int(ms_total)
-                                ms_total = ms_total[:-1]
-                                if not ms_total:
-                                    break
+                            milliseconds += self.getMilliseconds(ms)
                         seconds += int(h1) * 3600 + int(m) * 60 + int(s)
                     else:
                         sss, mss = i.split(".")
                         seconds += int(sss)
-                        milliseconds += int(mss)
+                        milliseconds += self.getMilliseconds(mss)
             ss, ms = funcs.stacksAndExcess(milliseconds, 1000)
             m, s = funcs.stacksAndExcess(seconds + ss, 60)
             h2, mm = funcs.stacksAndExcess(m, 60)
