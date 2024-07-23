@@ -2321,6 +2321,8 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                 finaltime = f"{h2}:" + finaltime
             if ms:
                 finaltime += f".{ms}"
+                while finaltime.endswith("0"):
+                    finaltime = finaltime[:-1]
             e = Embed(title="Total Time", description=f"{funcs.formatting(finaltime)}")
         except Exception as ex:
             funcs.printError(ctx, ex)
