@@ -2278,5 +2278,55 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
         await ctx.send("Blurring faces. Please wait...")
         await funcs.useImageFunc(ctx, self.blurFace)
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="addtime", description="Adds up the total time provided.",
+                      aliases=["timeadd", "totaltime", "timetotal"], usage="<items separated with ;>")
+    async def addtime(self, ctx, *, items):
+        try:
+            itemslist = funcs.itemSeparator(items)
+            seconds = 0
+            milliseconds = 0
+            for i in itemslist:
+                try:
+                    seconds += int(i)
+                except:
+                    if ":" in i:
+                        try:
+                            m, s = i.split(":")
+                            h1 = 0
+                        except:
+                            h1, m, s = i.split(":")
+                        if "." in s:
+                            s, ms = s.split(".")
+                            ms_total = "100"
+                            for char in ms:
+                                milliseconds += int(char) * int(ms_total)
+                                ms_total = ms_total[:-1]
+                                if not ms_total:
+                                    break
+                        seconds += int(h1) * 3600 + int(m) * 60 + int(s)
+                    else:
+                        sss, mss = i.split(".")
+                        seconds += int(sss)
+                        milliseconds += int(mss)
+            ss, ms = funcs.stacksAndExcess(milliseconds, 1000)
+            m, s = funcs.stacksAndExcess(seconds + ss, 60)
+            h2, mm = funcs.stacksAndExcess(m, 60)
+            if s < 10:
+                s = "0" + str(s)
+            finaltime = f"{mm}:{s}"
+            if h2:
+                if mm < 10:
+                    finaltime = "0" + finaltime
+                finaltime = f"{h2}:" + finaltime
+            if ms:
+                finaltime += f".{ms}"
+            e = Embed(title="Total Time", description=f"{funcs.formatting(finaltime)}")
+        except Exception as ex:
+            funcs.printError(ctx, ex)
+            e = funcs.errorEmbed("Incorrect usage!",
+                                 f"Example usage: `{self.client.command_prefix}addtime 4:45.741; 0:56.856; 1:57.791`")
+        await ctx.reply(embed=e)
+
 
 setup = Utility.setup

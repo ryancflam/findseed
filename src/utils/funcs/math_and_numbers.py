@@ -136,4 +136,4 @@ def fahrenheitToCelsius(value: float):
 
 def stacksAndExcess(total: int, stackMax: int=64):
     stacks = total / stackMax
-    return int(stacks), int((stacks - int(stacks)) * stackMax)
+    return int(stacks), total - stackMax * int(stacks)
