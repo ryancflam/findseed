@@ -1085,7 +1085,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
     @commands.command(name="compile", description="Compiles code.", aliases=["comp"])
     async def compile(self, ctx):
         try:
-            res = await funcs.getRequest("https://run.glot.io/languages", verify=False)
+            res = await funcs.getRequest("https://glot.io/api/run", verify=False)
             data = res.json()
             languages = [i["name"] for i in data]
             output = ", ".join(f'`{j}`' for j in languages)
@@ -1107,7 +1107,7 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     return await ctx.send("Cancelling compilation...")
             if language == "quit":
                 return await option.reply("Cancelling compilation...")
-            versionurl = f"https://run.glot.io/languages/{language}"
+            versionurl = f"https://glot.io/api/run/{language}"
             res = await funcs.getRequest(versionurl, verify=False)
             data = res.json()
             url = data["url"]
