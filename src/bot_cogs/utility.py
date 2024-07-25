@@ -2326,6 +2326,10 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
                     finaltime = "0" + finaltime
                 finaltime = f"{h2}:" + finaltime
             if ms:
+                if ms < 10:
+                    ms = "00" + str(ms)
+                elif ms < 100:
+                    ms = "0" + str(ms)
                 finaltime += f".{ms}"
                 while finaltime.endswith("0"):
                     finaltime = finaltime[:-1]
