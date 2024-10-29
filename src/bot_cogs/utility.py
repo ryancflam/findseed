@@ -1012,6 +1012,12 @@ class Utility(BaseCog, name="Utility", description="Some useful commands for get
             full = full.replace("\nYou might also like\n", "\n")
             if not "You might also like " in full:
                 full = full.replace("You might also like", "")
+            full1, full2 = full.split(" ", 1)
+            if full2.startswith("Contributor"):
+                full2 = full2[11:]
+                if full2.startswith("s"):
+                    full2 = full2[1:]
+                full = full2
             originallyric = funcs.multiString(full, limit=2048)
             embeds = []
             pagecount = 0
