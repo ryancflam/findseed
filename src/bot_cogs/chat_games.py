@@ -4,8 +4,8 @@ from random import choice, randint, shuffle
 from string import ascii_lowercase
 from time import time
 
-from akinator import CantGoBackAnyFurther
-from akinator.async_aki import Akinator
+# from akinator import CantGoBackAnyFurther
+# from akinator.async_aki import Akinator
 from discord import Colour, Embed, File, User
 from discord.ext import commands, tasks
 
@@ -498,57 +498,57 @@ class ChatGames(BaseCog, name="Chat Games", description="Fun chat games for you 
         await funcs.sendTime(ctx, m, s)
         self.gameChannels.remove(ctx.channel.id)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="akinator", description="Play Akinator.", aliases=["ak", "akin", "aki"])
-    async def akinator(self, ctx):
-        if await self.checkGameInChannel(ctx):
-            return
-        self.gameChannels.append(ctx.channel.id)
-        akimage = "https://i.pinimg.com/originals/02/e3/02/02e3021cfd7210e2ebd2faac8ce289ba.png"
-        await ctx.send("Starting Akinator instance...")
-        try:
-            aki = Akinator()
-            game = await aki.start_game()
-            while aki.progression <= 80:
-                try:
-                    await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage).set_footer(
-                        text=f"Progress: {round(aki.progression / 80 * 100, 2)}%\nRequested by: {ctx.author}"))
-                    resp = await self.client.wait_for(
-                        "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
-                        timeout=60
-                    )
-                except TimeoutError:
-                    self.gameChannels.remove(ctx.channel.id)
-                    return await ctx.send(f"`{ctx.author.name} has left Akinator for idling for too long.`")
-                if resp.content.casefold() == "b":
-                    try:
-                        game = await aki.back()
-                    except CantGoBackAnyFurther:
-                        await ctx.send(embed=funcs.errorEmbed(None, "Cannot go back any further."))
-                elif resp.content.casefold().startswith("q"):
-                    self.gameChannels.remove(ctx.channel.id)
-                    return await ctx.send(f"`{ctx.author.name} has left Akinator.`")
-                else:
-                    try:
-                        game = await aki.answer(resp.content)
-                    except:
-                        await ctx.send(embed=funcs.errorEmbed("Invalid answer!",
-                            "Valid options:\n\n`y` or `yes` for yes;\n`n` or `no` for no;\n" +
-                            "`i` or `idk` for I don't know;\n`p` or `probably` for probably;\n" +
-                            "`pn` or `probably not` for probably not;\n`b` for back;\n`q` or `quit` to quit the game."))
-            await aki.win()
-            e = Embed(
-                title="Akinator",
-                description="I think it is **{0.first_guess[name]} - {0.first_guess[description]}**\n\nWas I right?".format(aki)
-            )
-            e.set_footer(text=f"Thanks for playing, {ctx.author.name}!")
-            e.set_image(url=aki.first_guess["absolute_picture_path"])
-            e.set_thumbnail(url=akimage)
-        except Exception as ex:
-            funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, "Server error.")
-        await ctx.send(embed=e)
-        self.gameChannels.remove(ctx.channel.id)
+    # @commands.cooldown(1, 10, commands.BucketType.user)
+    # @commands.command(name="akinator", description="Play Akinator.", aliases=["ak", "akin", "aki"])
+    # async def akinator(self, ctx):
+    #     if await self.checkGameInChannel(ctx):
+    #         return
+    #     self.gameChannels.append(ctx.channel.id)
+    #     akimage = "https://i.pinimg.com/originals/02/e3/02/02e3021cfd7210e2ebd2faac8ce289ba.png"
+    #     await ctx.send("Starting Akinator instance...")
+    #     try:
+    #         aki = Akinator()
+    #         game = await aki.start_game()
+    #         while aki.progression <= 80:
+    #             try:
+    #                 await ctx.send(embed=Embed(title="Akinator", description=game).set_image(url=akimage).set_footer(
+    #                     text=f"Progress: {round(aki.progression / 80 * 100, 2)}%\nRequested by: {ctx.author}"))
+    #                 resp = await self.client.wait_for(
+    #                     "message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel,
+    #                     timeout=60
+    #                 )
+    #             except TimeoutError:
+    #                 self.gameChannels.remove(ctx.channel.id)
+    #                 return await ctx.send(f"`{ctx.author.name} has left Akinator for idling for too long.`")
+    #             if resp.content.casefold() == "b":
+    #                 try:
+    #                     game = await aki.back()
+    #                 except CantGoBackAnyFurther:
+    #                     await ctx.send(embed=funcs.errorEmbed(None, "Cannot go back any further."))
+    #             elif resp.content.casefold().startswith("q"):
+    #                 self.gameChannels.remove(ctx.channel.id)
+    #                 return await ctx.send(f"`{ctx.author.name} has left Akinator.`")
+    #             else:
+    #                 try:
+    #                     game = await aki.answer(resp.content)
+    #                 except:
+    #                     await ctx.send(embed=funcs.errorEmbed("Invalid answer!",
+    #                         "Valid options:\n\n`y` or `yes` for yes;\n`n` or `no` for no;\n" +
+    #                         "`i` or `idk` for I don't know;\n`p` or `probably` for probably;\n" +
+    #                         "`pn` or `probably not` for probably not;\n`b` for back;\n`q` or `quit` to quit the game."))
+    #         await aki.win()
+    #         e = Embed(
+    #             title="Akinator",
+    #             description="I think it is **{0.first_guess[name]} - {0.first_guess[description]}**\n\nWas I right?".format(aki)
+    #         )
+    #         e.set_footer(text=f"Thanks for playing, {ctx.author.name}!")
+    #         e.set_image(url=aki.first_guess["absolute_picture_path"])
+    #         e.set_thumbnail(url=akimage)
+    #     except Exception as ex:
+    #         funcs.printError(ctx, ex)
+    #         e = funcs.errorEmbed(None, "Server error.")
+    #     await ctx.send(embed=e)
+    #     self.gameChannels.remove(ctx.channel.id)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="guessthenumber", description="Play Guess the Number.", aliases=["gtn", "gn"])
