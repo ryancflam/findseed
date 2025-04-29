@@ -15,7 +15,6 @@ from PIL import Image, ImageDraw, ImageFont
 import config
 from src.utils import funcs
 from src.utils.base_cog import BaseCog
-from src.utils.delete_button import DeleteButton
 from src.utils.playing_cards import PlayingCards
 
 COIN_EDGE_ODDS = 6001
@@ -923,42 +922,42 @@ class RandomStuff(BaseCog, name="Random Stuff", description="Some fun, random co
     #     if delbutton:
     #         await m.edit(view=DeleteButton(ctx, self.client, m))
 
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    @commands.command(name="genimg", usage="<input> [\"-hq\" or \"-hd\" for high quality]",
-                      description="Generates images based on your input. Warning: May generate inappropriate images.",
-                      aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
-    async def genimg(self, ctx, *, text=""):
-        empty, resjson, img = False, None, None
-        try:
-            if text:
-                if text.casefold().endswith("-hq") or text.casefold().endswith("-hd"):
-                    text = text[:-3]
-                    data = {"text": text, "image_generator_version": "hd"}
-                    hq = True
-                else:
-                    data = {"text": text}
-                    hq = False
-                await ctx.send(f"Generating {'HQ ' if hq else ''}image. Please wait...")
-            else:
-                empty = True
-                raise Exception("Empty input.")
-            res = await funcs.postRequest(
-                "https://api.deepai.org/api/text2img",
-                data=data, headers={"api-key": config.deepAIKey}
-            )
-            resjson = res.json()
-            imgname = str(time()) + ".png"
-            img = await funcs.getImageFile(resjson["output_url"], name=imgname)
-            e = Embed(title="Image Generation").set_image(url="attachment://" + imgname)
-            delbutton = True
-        except Exception as ex:
-            if not empty:
-                funcs.printError(ctx, ex)
-            e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
-            delbutton = False
-        m = await ctx.reply(embed=e, file=img)
-        if delbutton:
-            await m.edit(view=DeleteButton(ctx, self.client, m))
+    # @commands.cooldown(1, 30, commands.BucketType.user)
+    # @commands.command(name="genimg", usage="<input> [\"-hq\" or \"-hd\" for high quality]",
+    #                   description="Generates images based on your input. Warning: May generate inappropriate images.",
+    #                   aliases=["ti", "imggen", "genimage", "imagegen", "imgen", "image", "img", "gi", "ig"])
+    # async def genimg(self, ctx, *, text=""):
+    #     empty, resjson, img = False, None, None
+    #     try:
+    #         if text:
+    #             if text.casefold().endswith("-hq") or text.casefold().endswith("-hd"):
+    #                 text = text[:-3]
+    #                 data = {"text": text, "image_generator_version": "hd"}
+    #                 hq = True
+    #             else:
+    #                 data = {"text": text}
+    #                 hq = False
+    #             await ctx.send(f"Generating {'HQ ' if hq else ''}image. Please wait...")
+    #         else:
+    #             empty = True
+    #             raise Exception("Empty input.")
+    #         res = await funcs.postRequest(
+    #             "https://api.deepai.org/api/text2img",
+    #             data=data, headers={"api-key": config.deepAIKey}
+    #         )
+    #         resjson = res.json()
+    #         imgname = str(time()) + ".png"
+    #         img = await funcs.getImageFile(resjson["output_url"], name=imgname)
+    #         e = Embed(title="Image Generation").set_image(url="attachment://" + imgname)
+    #         delbutton = True
+    #     except Exception as ex:
+    #         if not empty:
+    #             funcs.printError(ctx, ex)
+    #         e = funcs.errorEmbed(None, str(ex) if not resjson else resjson["err"])
+    #         delbutton = False
+    #     m = await ctx.reply(embed=e, file=img)
+    #     if delbutton:
+    #         await m.edit(view=DeleteButton(ctx, self.client, m))
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="colouriser", description="Colourises a black-and-white image.", usage="<image URL OR image attachment>",
