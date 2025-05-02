@@ -19,11 +19,10 @@ blockCypherKey = "" # https://www.blockcypher.com/dev/
 ethGasStationKey = "" # https://docs.ethgasstation.info/
 redditClientID = "" # https://www.reddit.com/prefs/apps/
 redditClientSecret = "" # https://www.reddit.com/prefs/apps/
-deepAIKey = "" # https://deepai.org/dashboard/profile
 wolframID = "" # https://developer.wolframalpha.com/portal/myapps/
 geniusToken = "" # https://genius.com/api-clients
 
 
 def ready():
     return bool(botToken and owmKey and exchangeratesapiKey and rapidApiKey and glotIoKey and blockCypherKey
-                and ethGasStationKey and redditClientID and redditClientSecret and deepAIKey and wolframID and geniusToken)
+                and ethGasStationKey and redditClientID and redditClientSecret and wolframID and geniusToken)
